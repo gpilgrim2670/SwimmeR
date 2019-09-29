@@ -1,10 +1,9 @@
-#' Swimming Course Convertor
+#' Course converter, returns dataframe
 #'
-#' Used to convert times between Long Course Meters, Short Course Meters and Short Course Yards
+#' Used to convert times between Long Course Meters, Short Course Meters and Short Course Yards, returns dataframe
 #'
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
-#' @import tibble
 #' @import dplyr
 #' @import stringr
 #' @import purrr
@@ -14,12 +13,22 @@
 #' @param course_to The course to convert the time to as \code{"LCM"}, \code{"SCM"} or \code{"SCY"}
 #' @param event The event swum as \code{"100 Fly"}, \code{"200 IM"}, \code{"400 Free"}, \code{"50 Back"}, \code{"200 Breast"} etc.
 #'
+#' @return @return This function returns a \code{data.frame} including columns:
+#' \itemize{
+#'  \item time
+#'  \item course
+#'  \item course_to
+#'  \item event
+#'  \item Time_Converted_sec
+#'  \itme Time_Converted_mmss
+#' }
+#'
 #' @note Relays are not presently supported.
-#' @references Uses the USA swimming age group method decribed here: \url{https://support.teamunify.com/en/articles/260}
+#' @references Uses the USA swimming age group method decribed here \url{https://support.teamunify.com/en/articles/260}
 #'
 #' @export
 
-course_convert <- function(time, course, course_to, event) {
+course_convert_DF <- function(time, course, course_to, event) {
   Swim <- tibble(time, course, course_to, event)
   Swim$time <- map_dbl(Swim$time, sec_format)
   Swim$course <- str_to_upper(Swim$course, locale = "en")
@@ -63,15 +72,16 @@ course_convert <- function(time, course, course_to, event) {
                          event_stroke == "IM" & event_distance == 400 & course == "LCM" & course_to == "SCY" ~ 6.4),
       fIncre = ifelse(is.na(fIncre) == TRUE, 0, fIncre),
       Time_Converted_sec = case_when(course == "SCY" & course_to %in% c("LCM", "SCM") ~ time * fFactor + fIncre,
-                                 course == "LCM" & course_to %in% c("SCY", "SCM") ~ (time-fIncre)/fFactor,
-                                 course == "SCM" & course_to == "SCY" ~ time/fFactor,
-                                 course == "SCM" & course_to == "LCM" ~ time + fIncre,
-                                 course == course_to ~ time),
+                                     course == "LCM" & course_to %in% c("SCY", "SCM") ~ (time-fIncre)/fFactor,
+                                     course == "SCM" & course_to == "SCY" ~ time/fFactor,
+                                     course == "SCM" & course_to == "LCM" ~ time + fIncre,
+                                     course == course_to ~ time),
       Time_Converted_mmss = mmss_format(Time_Converted_sec),
       Time_Converted_sec = sprintf("%05.2f", Time_Converted_sec),
       time = mmss_format((time))
     )
 
 
-  return(Swim$Time_Converted_mmss)
+  return(Swim %>%
+           select(time, course, course_to, event, Time_Converted_sec, Time_Converted_mmss))
 }
