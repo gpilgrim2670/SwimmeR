@@ -1,3 +1,4 @@
+utils::globalVariables(c("fFactor", "fIncre", "Time_Converted_sec", "Time_Converted_mmss"))
 #' Course converter, returns dataframe
 #'
 #' Used to convert times between Long Course Meters, Short Course Meters and Short Course Yards, returns dataframe

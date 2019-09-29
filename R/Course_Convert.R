@@ -1,3 +1,4 @@
+utils::globalVariables(c("fFactor", "fIncre", "Time_Converted_sec"))
 #' Swimming Course Convertor
 #'
 #' Used to convert times between Long Course Meters, Short Course Meters and Short Course Yards
@@ -69,7 +70,7 @@ course_convert <- function(time, course, course_to, event) {
                                  course == course_to ~ time),
       Time_Converted_mmss = mmss_format(Time_Converted_sec),
       Time_Converted_sec = sprintf("%05.2f", Time_Converted_sec),
-      time = mmss_format((time))
+      time = mmss_format(time)
     )
 
 
