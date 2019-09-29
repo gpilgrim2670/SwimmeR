@@ -78,7 +78,7 @@ course_convert_DF <- function(time, course, course_to, event) {
                                      course == "SCM" & course_to == "LCM" ~ time + fIncre,
                                      course == course_to ~ time),
       Time_Converted_mmss = mmss_format(Time_Converted_sec),
-      Time_Converted_sec = sprintf("%05.2f", Time_Converted_sec),
+      Time_Converted_sec = as.numeric(sprintf("%05.2f", Time_Converted_sec)),
       time = mmss_format((time))
     )
 
