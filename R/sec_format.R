@@ -14,7 +14,7 @@
 #' @export
 
 
-sec_format <- function(x, ...) {
+sec_format <- function(x) {
   x <- map_dbl(x, sec_format_helper)
   return(x)
 }

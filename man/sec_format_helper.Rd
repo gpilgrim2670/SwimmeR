@@ -4,7 +4,7 @@
 \alias{sec_format_helper}
 \title{Helper fucntion for formatting mm:ss.tt times as seconds}
 \usage{
-sec_format_helper(x, ...)
+sec_format_helper(x)
 }
 \arguments{
 \item{x}{A character vector of time(s) in swimming format (eg 1:35.93) to be converted to seconds (95.93)}

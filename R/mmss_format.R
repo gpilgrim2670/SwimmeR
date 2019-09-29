@@ -10,7 +10,7 @@
 #'
 #' @export
 
-mmss_format <- function(x, ...) {
+mmss_format <- function(x) {
   sec <- x%%60
   min <- x%/%60
   sec <- base::sprintf("%05.2f", sec)

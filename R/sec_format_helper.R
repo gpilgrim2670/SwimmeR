@@ -10,7 +10,7 @@
 #'
 
 
-sec_format_helper <- function(x, ...) {
+sec_format_helper <- function(x) {
   x <- as.character(x)
   if (str_detect(x, ":")){
     min <- as.numeric(str_split_fixed(x, ":", n = 2)[,1])

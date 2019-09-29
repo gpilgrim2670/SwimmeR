@@ -4,7 +4,7 @@
 \alias{mmss_format}
 \title{Formatting seconds as mm:ss.tt}
 \usage{
-mmss_format(x, ...)
+mmss_format(x)
 }
 \arguments{
 \item{x}{A number of seconds to be converted to swimming format}
