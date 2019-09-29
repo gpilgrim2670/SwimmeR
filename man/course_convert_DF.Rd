@@ -23,7 +23,7 @@ course_convert_DF(time, course, course_to, event)
  \item course_to
  \item event
  \item Time_Converted_sec
- \itme Time_Converted_mmss
+ \item Time_Converted_mmss
 }
 }
 \description{

@@ -20,7 +20,7 @@
 #'  \item course_to
 #'  \item event
 #'  \item Time_Converted_sec
-#'  \itme Time_Converted_mmss
+#'  \item Time_Converted_mmss
 #' }
 #'
 #' @note Relays are not presently supported.
