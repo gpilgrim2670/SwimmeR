@@ -4,7 +4,7 @@ SwimmeR package
 SwimmeR is intended to assist those working with times from competitive pool swimming races, such as those conducted under the NCAA or FINA.
 
 #Usage
-Version 1.0.0 does two things.  First, it converts swimming times (performances) between the computationally useful 
+Version 0.1.0.0 does two things.  First, it converts swimming times (performances) between the computationally useful 
 format of seconds, reported to the 100ths place (eg 95.37) and the conventional swimming format (1:35.37).  This is accomplished with `sec_format` and `mmss_format`, which are inverses of one another.
 
 ```r
