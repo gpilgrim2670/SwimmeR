@@ -2,7 +2,7 @@
 % Please edit documentation in R/sec_format_helper.R
 \name{sec_format_helper}
 \alias{sec_format_helper}
-\title{Helper fucntion for formatting mm:ss.tt times as seconds}
+\title{Helper function for formatting mm:ss.tt times as seconds}
 \usage{
 sec_format_helper(x)
 }
@@ -10,7 +10,7 @@ sec_format_helper(x)
 \item{x}{A character vector of time(s) in swimming format (eg 1:35.93) to be converted to seconds (95.93)}
 }
 \description{
-Helper fucntion for formatting mm:ss.tt times as seconds
+Helper function for formatting mm:ss.tt times as seconds
 }
 \author{
 Greg Pilgrim \email{gpilgrim2670@gmail.com}

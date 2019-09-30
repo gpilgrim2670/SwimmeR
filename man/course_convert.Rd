@@ -22,7 +22,7 @@ Used to convert times between Long Course Meters, Short Course Meters and Short 
 Relays are not presently supported.
 }
 \references{
-Uses the USA swimming age group method decribed here: \url{https://support.teamunify.com/en/articles/260}
+Uses the USA swimming age group method described here: \url{https://support.teamunify.com/en/articles/260}
 }
 \author{
 Greg Pilgrim \email{gpilgrim2670@gmail.com}

@@ -8,7 +8,7 @@
 \description{
 SwimmeR does two things.  First, it converts swimming times (performances) between the computationally useful 
     format of seconds, reported to the 100ths place (eg 95.37) and the conventional reporting format (1:35.37) used in the swimming community.
-    Secondly SwimmeR converts times between the various pool sizes used in competative swimming, namely 50m length (LCM), 25m length (SCM)
+    Secondly SwimmeR converts times between the various pool sizes used in competitive swimming, namely 50m length (LCM), 25m length (SCM)
     and 25y length (SCY).
 }
 \author{

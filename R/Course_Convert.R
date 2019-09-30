@@ -16,7 +16,7 @@ utils::globalVariables(c("fFactor", "fIncre", "Time_Converted_sec"))
 #' @param event The event swum as \code{"100 Fly"}, \code{"200 IM"}, \code{"400 Free"}, \code{"50 Back"}, \code{"200 Breast"} etc.
 #'
 #' @note Relays are not presently supported.
-#' @references Uses the USA swimming age group method decribed here: \url{https://support.teamunify.com/en/articles/260}
+#' @references Uses the USA swimming age group method described here: \url{https://support.teamunify.com/en/articles/260}
 #'
 #' @export
 

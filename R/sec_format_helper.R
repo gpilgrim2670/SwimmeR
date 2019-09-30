@@ -1,4 +1,4 @@
-#' Helper fucntion for formatting mm:ss.tt times as seconds
+#' Helper function for formatting mm:ss.tt times as seconds
 #'
 #'
 #'
