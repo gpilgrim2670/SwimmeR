@@ -10,7 +10,7 @@ output: html_document
 * local Windows 10 install, R 3.6.1
 
 ## R CMD check results
-There were no ERRORs or WARNINGs or NOTEs.
+There were no ERRORs or WARNINGs or NOTEs
 
 ## Downstream dependencies
 This is a new package.  There are no downstream dependencies.

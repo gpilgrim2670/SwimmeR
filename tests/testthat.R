@@ -1,4 +1,4 @@
 library(testthat)
-library(SwimR)
+library(SwimmeR)
 
-test_check("SwimR")
+test_check("SwimmeR")
