@@ -1,6 +1,6 @@
 Package: SwimmeR
 Title: Formatting and Conversions for Swimming Times
-Version: 0.1.0.0000
+Version: 0.1.0.0
 Authors@R: 
     person(given = "Greg",
            family = "Pilgrim",
@@ -10,7 +10,7 @@ Description: There are two goals for SwimmeR as presently constructed.  First, i
     format of seconds, reported to the 100ths place (eg 95.37) and the conventional reporting format (1:35.37) used in the swimming community.
     Secondly SwimmeR converts times between the various pool sizes used in competitive swimming, namely 50m length (LCM), 25m length (SCM)
     and 25y length (SCY).
-License: file LICENSE
+License: MIT + file LICENSE
 Imports:
     purrr,
     dplyr,
