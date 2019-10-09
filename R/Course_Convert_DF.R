@@ -35,6 +35,7 @@ utils::globalVariables(c("fFactor", "fIncre", "Time_Converted_sec", "Time_Conver
 
 course_convert_DF <- function(time, event, course, course_to) {
 
+  `%notin%` <- Negate(`%in%`)
   Swim <- tibble(time, course, course_to, event)
   Swim$time <- ifelse(is.character(Swim$time) == TRUE, map_dbl(Swim$time, sec_format), Swim$time)
   Swim$course <- str_to_upper(Swim$course, locale = "en")
@@ -43,8 +44,8 @@ course_convert_DF <- function(time, event, course, course_to) {
   if(any(Swim$course_to %notin% c("LCM", "SCY", "SCM")) == TRUE) stop("Enter a correctly formatted course_to")
   Swim$event_distance <- as.numeric(str_split_fixed(Swim$event, " ", n = 2)[,1])
   Swim$event_stroke <- str_split_fixed(Swim$event, " ", n = 2)[,2]
-  Swim$event_stroke <- str_to_lower(Swim$event_stroke)
-  if(any(Swim$event_stroke) %notin% c("free", "fly", "back", "breast", "im") == TRUE) stop("Enter a correct swimming stroke")
+  Swim$event_stroke <- str_to_title(Swim$event_stroke, locale = "en")
+  if(Swim$event_stroke %notin% c("Free", "Fly", "Back", "Breast", "Im") == TRUE) stop("Enter a correct swimming stroke")
   Swim <- Swim %>%
     mutate(
       fFactor = 1,
@@ -64,13 +65,13 @@ course_convert_DF <- function(time, event, course, course_to) {
                         event_stroke == "Back" ~ .6,
                         event_stroke == "Breast" ~ 1.0,
                         event_stroke == "Free" ~ .8,
-                        event_stroke == "IM" ~ .8),
+                        event_stroke == "Im" ~ .8),
       fIncre = case_when(event_distance == 50 ~ Incre,
                          event_distance == 100 ~ 2*Incre,
                          event_distance == 200 ~ 4*Incre,
                          # event_distance == 400 ~ 8*Incre,
-                         event_distance == 400 & event_stroke == "IM" & course == "LCM" & course_to == "SCY" ~ 6.4,
-                         event_distance == 400 & event_stroke == "IM" & course == "SCY" & course_to == "LCM" ~ 6.4,
+                         event_distance == 400 & event_stroke == "Im" & course == "LCM" & course_to == "SCY" ~ 6.4,
+                         event_distance == 400 & event_stroke == "Im" & course == "SCY" & course_to == "LCM" ~ 6.4,
                          event_distance > 200 & event_stroke %in% c("Free", "Fly", "Back", "Breast") & course == "LCM" & course_to == "SCY" ~ 0,
                          event_distance > 200 & event_stroke %in% c("Free", "Fly", "Back", "Breast") & course == "SCY" & course_to == "LCM" ~ 0,
                          event_distance %in% c(400, 500) & course == "SCM" & course_to == "LCM" ~ 6.4,
@@ -79,7 +80,7 @@ course_convert_DF <- function(time, event, course, course_to) {
                          event_distance %in% c(400, 500) & course == "LCM" & course_to == "SCM" ~ 6.4,
                          event_distance %in% c(800, 1000) & course == "LCM" & course_to == "SCM" ~ 12.8,
                          event_distance %in% c(1500, 1650) & course == "LCM" & course_to == "SCM" ~ 24.0,
-                         event_stroke == "IM" & event_distance == 400 & course == "LCM" & course_to == "SCY" ~ 6.4),
+                         event_stroke == "Im" & event_distance == 400 & course == "LCM" & course_to == "SCY" ~ 6.4),
       fIncre = ifelse(is.na(fIncre) == TRUE, 0, fIncre),
       Time_Converted_sec = case_when(course == "SCY" & course_to %in% c("LCM", "SCM") ~ time * fFactor + fIncre,
                                      course == "LCM" & course_to %in% c("SCY", "SCM") ~ (time-fIncre)/fFactor,

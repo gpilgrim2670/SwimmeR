@@ -12,9 +12,6 @@ sec_format_helper(x)
 \description{
 Helper function for formatting mm:ss.hh times as seconds
 }
-\examples{
-sec_format_helper("1:35.37")
-}
 \author{
 Greg Pilgrim \email{gpilgrim2670@gmail.com}
 }

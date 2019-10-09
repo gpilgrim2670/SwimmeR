@@ -7,9 +7,6 @@
 #' @import stringr
 #'
 #' @param x A character vector of time(s) in swimming format (eg 1:35.93) to be converted to seconds (95.93)
-#'
-#' @examples
-#' sec_format_helper("1:35.37")
 
 
 sec_format_helper <- function(x) {

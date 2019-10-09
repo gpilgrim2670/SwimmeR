@@ -1,3 +1,3 @@
 test_that("course_convert_works", {
-  expect_equivalent(course_convert(53.89, "SCY", "LCM", "100 Fly"), "1:01.22")
+  expect_equivalent(course_convert(time = 53.89, event = "100 Fly", course = "SCY", course_to = "LCM"), "1:01.22")
 })

@@ -21,7 +21,7 @@
 
 
 sec_format <- function(x) {
-  if(sum(map_lgl(x, is.character)) != 1) stop("Enter swim formatted time as character string eg '1:35.97'")
+  if(sum(map_lgl(x, is.character)) != length(x)) stop("Enter swim formatted time as character string eg '1:35.97'")
   x <- map_dbl(x, sec_format_helper)
   return(x)
 }
