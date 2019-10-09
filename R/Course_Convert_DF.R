@@ -44,8 +44,7 @@ course_convert_DF <- function(time, event, course, course_to) {
   Swim$event_distance <- as.numeric(str_split_fixed(Swim$event, " ", n = 2)[,1])
   Swim$event_stroke <- str_split_fixed(Swim$event, " ", n = 2)[,2]
   Swim$event_stroke <- str_to_lower(Swim$event_stroke)
-  if(any(Swim$event_stroke) %notin% c("free", "fly", "back", "breast", "im") == TRUE) stop("Enter a correct swimming event")
-  suppressWarnings(
+  if(any(Swim$event_stroke) %notin% c("free", "fly", "back", "breast", "im") == TRUE) stop("Enter a correct swimming stroke")
   Swim <- Swim %>%
     mutate(
       fFactor = 1,
@@ -91,7 +90,7 @@ course_convert_DF <- function(time, event, course, course_to) {
       Time_Converted_sec = round(as.numeric(sprintf("%05.2f", Time_Converted_sec)), 2),
       time = mmss_format((time))
     )
-  )
+
 
 
   return(as.data.frame(Swim %>%

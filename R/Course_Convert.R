@@ -27,11 +27,15 @@ utils::globalVariables(c("fFactor", "fIncre", "Time_Converted_sec"))
 
 course_convert <- function(time, event, course, course_to) {
   Swim <- tibble(time, course, course_to, event)
-  Swim$time <- map_dbl(Swim$time, sec_format)
+  Swim$time <- ifelse(is.character(Swim$time) == TRUE, map_dbl(Swim$time, sec_format), Swim$time)
   Swim$course <- str_to_upper(Swim$course, locale = "en")
+  if(any(Swim$course %notin% c("LCM", "SCY", "SCM")) == TRUE) stop("Enter a correctly formatted course")
   Swim$course_to <- str_to_upper(Swim$course_to, locale = "en")
+  if(any(Swim$course_to %notin% c("LCM", "SCY", "SCM")) == TRUE) stop("Enter a correctly formatted course_to")
   Swim$event_distance <- as.numeric(str_split_fixed(Swim$event, " ", n = 2)[,1])
   Swim$event_stroke <- str_split_fixed(Swim$event, " ", n = 2)[,2]
+  Swim$event_stroke <- str_to_lower(Swim$event_stroke)
+  if(any(Swim$event_stroke) %notin% c("free", "fly", "back", "breast", "im") == TRUE) stop("Enter a correct swimming stroke")
   Swim <- Swim %>%
     mutate(
       fFactor = 1,
