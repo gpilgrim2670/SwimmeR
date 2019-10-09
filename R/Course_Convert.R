@@ -11,16 +11,21 @@ utils::globalVariables(c("fFactor", "fIncre", "Time_Converted_sec"))
 #' @import purrr
 #'
 #' @param time A time, or vector of times to convert.  Can be in either seconds (numeric, \code{95.97}) format or swim (character, \code{"1:35.97"}) format
+#' @param event The event swum as \code{"100 Fly"}, \code{"200 IM"}, \code{"400 Free"}, \code{"50 Back"}, \code{"200 Breast"} etc.
 #' @param course The course in which the time was swum as \code{"LCM"}, \code{"SCM"} or \code{"SCY"}
 #' @param course_to The course to convert the time to as \code{"LCM"}, \code{"SCM"} or \code{"SCY"}
-#' @param event The event swum as \code{"100 Fly"}, \code{"200 IM"}, \code{"400 Free"}, \code{"50 Back"}, \code{"200 Breast"} etc.
+#' @return returns the \code{time} for a specified \code{event} and \code{course} converted to a time for the specified \code{course_to} in swimming format
+#'
+#' @examples course_convert(time = "1:35.93", event = "200 Free", course = "SCY", course_to = "LCM")
+#' course_convert(time = 95.93, event = "200 Free", course = "scy", course_to = "lcm")
+#' course_convert(time = 53.89, event = "100 Fly", course = "scm", course_to = "scy")
 #'
 #' @note Relays are not presently supported.
 #' @references Uses the USA swimming age group method described here: \url{https://support.teamunify.com/en/articles/260}
 #'
 #' @export
 
-course_convert <- function(time, course, course_to, event) {
+course_convert <- function(time, event, course, course_to) {
   Swim <- tibble(time, course, course_to, event)
   Swim$time <- map_dbl(Swim$time, sec_format)
   Swim$course <- str_to_upper(Swim$course, locale = "en")
@@ -69,7 +74,7 @@ course_convert <- function(time, course, course_to, event) {
                                  course == "SCM" & course_to == "LCM" ~ time + fIncre,
                                  course == course_to ~ time),
       Time_Converted_mmss = mmss_format(Time_Converted_sec),
-      Time_Converted_sec = sprintf("%05.2f", Time_Converted_sec),
+      Time_Converted_sec = round(as.numeric(sprintf("%05.2f", Time_Converted_sec)), 2),
       time = mmss_format(time)
     )
 

@@ -2,15 +2,25 @@
 % Please edit documentation in R/mmss_format.R
 \name{mmss_format}
 \alias{mmss_format}
-\title{Formatting seconds as mm:ss.tt}
+\title{Formatting seconds as mm:ss.hh}
 \usage{
 mmss_format(x)
 }
 \arguments{
 \item{x}{A number of seconds to be converted to swimming format}
 }
+\value{
+the number of seconds \code{x} converted to convetional swimming format mm:ss.hh
+}
 \description{
 Takes a numeric item or list of numeric items representing seconds (eg 95.37) and converts to a character string or list of strings in swimming format ("1:35.37").
+}
+\examples{
+mmss_format(95.37)
+mmss_format(200.95)
+mmss_format(59.47)
+mmss_format(c(95.37, 200.95, 59.47))
+
 }
 \seealso{
 \code{\link{sec_format}} \code{mmss_format} is the reverse of \code{sec_format}

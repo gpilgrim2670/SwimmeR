@@ -4,19 +4,19 @@
 \alias{course_convert_DF}
 \title{Course converter, returns dataframe}
 \usage{
-course_convert_DF(time, course, course_to, event)
+course_convert_DF(time, event, course, course_to)
 }
 \arguments{
 \item{time}{A time, or vector of times to convert.  Can be in either seconds (numeric, \code{95.97}) format or swim (character, \code{"1:35.97"}) format}
 
+\item{event}{The event swum as \code{"100 Fly"}, \code{"200 IM"}, \code{"400 Free"}, \code{"50 Back"}, \code{"200 Breast"} etc.}
+
 \item{course}{The course in which the time was swum as \code{"LCM"}, \code{"SCM"} or \code{"SCY"}}
 
 \item{course_to}{The course to convert the time to as \code{"LCM"}, \code{"SCM"} or \code{"SCY"}}
-
-\item{event}{The event swum as \code{"100 Fly"}, \code{"200 IM"}, \code{"400 Free"}, \code{"50 Back"}, \code{"200 Breast"} etc.}
 }
 \value{
-@return This function returns a \code{data.frame} including columns:
+This function returns a \code{data.frame} including columns:
 \itemize{
  \item time
  \item course
@@ -31,6 +31,12 @@ Used to convert times between Long Course Meters, Short Course Meters and Short 
 }
 \note{
 Relays are not presently supported.
+}
+\examples{
+course_convert_DF(time = "1:35.93", event = "200 Free", course = "SCY", course_to = "LCM")
+course_convert_DF(time = 95.93, event = "200 Free", course = "scy", course_to = "lcm")
+course_convert_DF(time = 53.89, event = "100 Fly", course = "scm", course_to = "scy")
+
 }
 \references{
 Uses the USA swimming age group method described here \url{https://support.teamunify.com/en/articles/260}
