@@ -1,5 +1,6 @@
 ## Resubmission
-As requested the version number was reduced to 0.1.0.0 and a standard FOSS (MIT) license was added
+As requested the version number was reduced to 0.1.0.0 and a standard FOSS (MIT) license was added.
+Also as requested examples where added for functions and the package name was written in single quotes ('SwimmeR') in description fields
 
 ## Test environments
 * local OS X install, R 3.6.1
@@ -8,6 +9,6 @@ As requested the version number was reduced to 0.1.0.0 and a standard FOSS (MIT)
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
+0 errors | 0 warnings | 0 notes
 
 * This is a new release.
