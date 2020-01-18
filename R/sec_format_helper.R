@@ -10,10 +10,11 @@
 
 
 sec_format_helper <- function(x) {
-  if(is.na(x) == TRUE){ return(x)
-} else {
+#   if(is.na(x) == TRUE) {return(x)
+# } else {
   x <- as.character(x)
-  if (str_detect(x, ":")){
+  if(is.na(x) == TRUE) return(NA)
+  if (str_detect(x, ":") == TRUE) {
     min <- as.numeric(str_split_fixed(x, ":", n = 2)[,1])
     sec <- as.numeric(str_split_fixed(x, ":", n = 2)[,2])
     if (sec > 60) stop("Seconds cannot be greater than 60 in a swim formatted time")
@@ -22,5 +23,5 @@ sec_format_helper <- function(x) {
     as.numeric(x)
   }
   return(as.numeric(x))
-}
+# }
 }
