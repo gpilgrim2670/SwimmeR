@@ -10,6 +10,8 @@
 
 
 sec_format_helper <- function(x) {
+  if(is.na(x) == TRUE){ return(x)
+} else {
   x <- as.character(x)
   if (str_detect(x, ":")){
     min <- as.numeric(str_split_fixed(x, ":", n = 2)[,1])
@@ -20,4 +22,5 @@ sec_format_helper <- function(x) {
     as.numeric(x)
   }
   return(as.numeric(x))
+}
 }
