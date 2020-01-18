@@ -14,6 +14,7 @@
 #' sec_format("16:45.19")
 #' sec_format("25.43")
 #' sec_format(c("1:35.93", "16:45.19", "25.43"))
+#' sec_format(c("1:35.93", "16:45.19", NA, "25.43"))
 #'
 #' @seealso \code{\link{mmss_format}} \code{sec_format} is the reverse of \code{mmss_format}
 #'
