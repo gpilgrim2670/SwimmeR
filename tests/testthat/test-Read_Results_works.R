@@ -1,5 +1,3 @@
-library(stringr)
-
 test_that("Read_Result PDF works", {
   expect_match(
     Read_Results("Texas-Florida-Indiana.pdf")[298],
@@ -10,8 +8,8 @@ test_that("Read_Result PDF works", {
 
 test_that("Read_Result HTML works", {
   expect_match(
-    Read_Results("2008 NYSPHAA Federation Championship - 2_29_2008 to 3_1_2008.html", node = "pre")[531],
-    "\n  1 Jack Wagner         10 CS-HOLY TRINITY        21.39      21.22 AAA     24"
+    Read_Results("2008 NYSPHAA Federation Championship - 2_29_2008 to 3_1_2008.html", node = "pre")[683],
+    "\n  1 Ricky Henahan       12 5-WEST IRONDEQUO       50.36      49.76 AAA     24"
   )
 
 })
