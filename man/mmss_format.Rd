@@ -19,7 +19,7 @@ Takes a numeric item or list of numeric items representing seconds (eg 95.37) an
 mmss_format(95.37)
 mmss_format(200.95)
 mmss_format(59.47)
-mmss_format(c(95.37, 200.95, 59.47))
+mmss_format(c(95.37, 200.95, 59.47, NA))
 
 }
 \seealso{
