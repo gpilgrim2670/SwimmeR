@@ -5,14 +5,14 @@
 \title{Formats swimming and diving data read in with Read_Results into dataframe}
 \usage{
 Swim_Parse(
-  x,
+  file,
   avoid = avoid_default,
   typo = typo_default,
   replacement = replacement_default
 )
 }
 \arguments{
-\item{x}{output from \code{Read_Results}}
+\item{file}{output from \code{Read_Results}}
 
 \item{avoid}{a list of strings.  Rows in \code{x} containing these strings will not be included. For example "Pool:", often used to label pool records, could be passed to \code{avoid}.  The default is \code{avoid_default}, which contains many strings similar to "Pool:", such as "STATE:" and "Qual:".  Users can supply their own lists to \code{avoid}.}
 
@@ -27,10 +27,14 @@ returns a dataframe with columns \code{Name}, \code{Place}, \code{Grade}, \code{
 Takes the output of Read_Results and cleans it.
 }
 \examples{
-Swim_Parse(Read_Results("2008 NYSPHAA Federation Championship - 2_29_2008 to 3_1_2008.html", node = "pre"), typo = c("-1NORTH ROCKL"), replacement = c("1-NORTH ROCKL"))
-Swim_Parse(Read_Results("Texas-Florida-Indiana.pdf"), typo =  c("Indiana  University", ", University of"),
-replacement = c("Indiana University", ""))
-
+\dontrun{
+Swim_Parse(Read_Results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm", node = "pre"),
+ typo = c("-1NORTH ROCKL"), replacement = c("1-NORTH ROCKL"))
+ }
+\dontrun{
+Swim_Parse(Read_Results("data/Texas-Florida-Indiana.pdf"),
+ typo =  c("Indiana  University", ", University of"), replacement = c("Indiana University", ""))
+ }
 }
 \seealso{
 \code{Swim_Parse} must be run on the output of \code{\link{Read_Results}}

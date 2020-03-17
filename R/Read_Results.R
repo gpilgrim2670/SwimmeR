@@ -5,32 +5,34 @@
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
 #' @import stringr
-#' @import rvest
+#' @importFrom rvest html_nodes
+#' @importFrom rvest html_text
 #' @import pdftools
 #'
-#' @param x a .pdf or .html file (could be a url) where containing swimming results.  Must be formatted in a "normal" fashion - see vignette
+#'
+#'
+#' @param file a .pdf or .html file (could be a url) where containing swimming results.  Must be formatted in a "normal" fashion - see vignette
 #' @param node a CSS node where html results are stored.  Required for html results.
 #' @return returns a list of strings containing the information from \code{x}.  Should then be parsed with \code{Swim_Parse}
 #'
-#' @examples Read_Results("2008 NYSPHAA Federation Championship - 2_29_2008 to 3_1_2008.html", node = "pre")
-#' Read_Results("Texas-Florida-Indiana.pdf")
+#' @examples \dontrun{Read_Results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm", node = "pre")}
 #'
-#' @seealso \code{Read_Results} is mean to be followed by \code{\link{Swim_Parse}}
+#' @seealso \code{Read_Results} is meant to be followed by \code{\link{Swim_Parse}}
 #'
 #' @export
 
-Read_Results <- function(x, node = NULL) {
+Read_Results <- function(file, node = NULL) {
   '%!in%' <- function(x,y)!('%in%'(x,y))
   ### PDF ###
-  if(str_detect(x, "\\.pdf$") == TRUE) {
-  results <- pdf_text(x)
+  if(str_detect(file, "\\.pdf$") == TRUE) {
+  results <- pdf_text(file)
 
-  } else if (str_detect(x, "\\.htm") == TRUE) {
+  } else if (str_detect(file, "\\.htm") == TRUE) {
   ### HTML ###
     if(is.character(node) == FALSE) {
   stop(" Please supply a value for node")
     } else {
-  webpage <- read_html(x)
+  webpage <- read_html(file)
   html <- html_nodes(webpage, node)
   results <- html_text(html)
 

@@ -1,0 +1,22 @@
+utils::globalVariables(
+  c(
+    ".",
+    "V1",
+    "V2",
+    "V3",
+    "V4",
+    "V5",
+    "V6",
+    "V7",
+    "Event_Row_Min",
+    "Grade",
+    "Finals_Time",
+    "School",
+    "Name",
+    "Prelims_Time",
+    "Place",
+    "Points",
+    "Row_Numb",
+    "read_html"
+  )
+)

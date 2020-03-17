@@ -4,10 +4,10 @@
 \alias{Read_Results}
 \title{Reads swimming and diving results into a list of strings in preparation for parsing with \code{Swim_Parse}}
 \usage{
-Read_Results(x, node = NULL)
+Read_Results(file, node = NULL)
 }
 \arguments{
-\item{x}{a .pdf or .html file (could be a url) where containing swimming results.  Must be formatted in a "normal" fashion - see vignette}
+\item{file}{a .pdf or .html file (could be a url) where containing swimming results.  Must be formatted in a "normal" fashion - see vignette}
 
 \item{node}{a CSS node where html results are stored.  Required for html results.}
 }
@@ -18,12 +18,11 @@ returns a list of strings containing the information from \code{x}.  Should then
 Outputs list of strings to be processed by \code{Swim_Parse}
 }
 \examples{
-Read_Results("2008 NYSPHAA Federation Championship - 2_29_2008 to 3_1_2008.html", node = "pre")
-Read_Results("Texas-Florida-Indiana.pdf")
+\dontrun{Read_Results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm", node = "pre")}
 
 }
 \seealso{
-\code{Read_Results} is mean to be followed by \code{\link{Swim_Parse}}
+\code{Read_Results} is meant to be followed by \code{\link{Swim_Parse}}
 }
 \author{
 Greg Pilgrim \email{gpilgrim2670@gmail.com}

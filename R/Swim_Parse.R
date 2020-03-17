@@ -7,23 +7,32 @@
 #' @import dplyr
 #' @import stringr
 #' @import purrr
+#' @importFrom rvest html_nodes
+#' @importFrom rvest html_text
+#' @import pdftools
+#' @importFrom stats setNames
 #'
-#' @param x output from \code{Read_Results}
+#'
+#' @param file output from \code{Read_Results}
 #' @param avoid a list of strings.  Rows in \code{x} containing these strings will not be included. For example "Pool:", often used to label pool records, could be passed to \code{avoid}.  The default is \code{avoid_default}, which contains many strings similar to "Pool:", such as "STATE:" and "Qual:".  Users can supply their own lists to \code{avoid}.
 #' @param typo a list of strings that are typos in the original results.  \code{Swim_Parse} is particularly sensitive to accidental double spaces, so "Central  High School", with two spaces between "Central" and "High" is a problem, which can be fixed.  Pass "Central High School" to \code{typo}.  Unexpected commas as also an issue, for example "Texas, University of" should be fixed using \code{typo} and \code{replacement}
 #' @param replacement a list of fixes for the strings in \code{typo}.  Here one could pass "Central High School" (one space between "Central" and "High") and "Texas" to \code{replacement} fix the issues described in \code{typo}
 #' @return returns a dataframe with columns \code{Name}, \code{Place}, \code{Grade}, \code{School}, \code{Prelims_Time}, \code{Finals_Time}, \code{Points}, & \code{Event}.  Note all swims will have a \code{Finals_Time}, even if that time was actually swam in the prelims (i.e. a swimmer did not qualify for finals).  This is so that final results for an event can be generated from just one column.
 #'
-#' @examples Swim_Parse(Read_Results("2008 NYSPHAA Federation Championship - 2_29_2008 to 3_1_2008.html", node = "pre"), typo = c("-1NORTH ROCKL"), replacement = c("1-NORTH ROCKL"))
-#' Swim_Parse(Read_Results("Texas-Florida-Indiana.pdf"), typo =  c("Indiana  University", ", University of"),
-#' replacement = c("Indiana University", ""))
-#'
+#' @examples \dontrun{
+#' Swim_Parse(Read_Results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm", node = "pre"),
+#'  typo = c("-1NORTH ROCKL"), replacement = c("1-NORTH ROCKL"))
+#'  }
+#' \dontrun{
+#' Swim_Parse(Read_Results("data/Texas-Florida-Indiana.pdf"),
+#'  typo =  c("Indiana  University", ", University of"), replacement = c("Indiana University", ""))
+#'  }
 #' @seealso \code{Swim_Parse} must be run on the output of \code{\link{Read_Results}}
 #'
 #' @export
 
 
-Swim_Parse <- function(x, avoid = avoid_default, typo = typo_default, replacement = replacement_default) {
+Swim_Parse <- function(file, avoid = avoid_default, typo = typo_default, replacement = replacement_default) {
 
   '%!in%' <- function(x,y)!('%in%'(x,y))
 
@@ -43,8 +52,8 @@ Swim_Parse <- function(x, avoid = avoid_default, typo = typo_default, replacemen
 
   replacement_default <- c("typo")
 
-  row_numbs <- seq(1, length(x), 1)
-  as_lines_list_2 <- paste(x, row_numbs, sep = "  ")
+  row_numbs <- seq(1, length(file), 1)
+  as_lines_list_2 <- paste(file, row_numbs, sep = "  ")
 
   events <- as_lines_list_2 %>%
     .[map_lgl(., str_detect, "Event \\d{1,}")]
@@ -80,7 +89,7 @@ Swim_Parse <- function(x, avoid = avoid_default, typo = typo_default, replacemen
     .[map_lgl(., str_detect, "[:alpha:]{2,}")] %>%
     .[map_lgl(., ~ !any(str_detect(., avoid)))] %>%
     str_replace_all("\n", "") %>%
-    str_replace_all(setNames(replacement, typo)) %>%
+    str_replace_all(stats::setNames(replacement, typo)) %>%
     trimws()
 
   data_1 <-
