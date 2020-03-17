@@ -4,8 +4,14 @@
 \alias{Swim_Equation}
 \title{Equation for computing swimming times from DPS, turn and start times}
 \usage{
-Swim_Equation(Swim_Time, Reaction_Time, Underwater_Time, Turn_Time,
-  Cycle_Count, Stroke_Rate)
+Swim_Equation(
+  Swim_Time,
+  Reaction_Time,
+  Underwater_Time,
+  Turn_Time,
+  Cycle_Count,
+  Stroke_Rate
+)
 }
 \arguments{
 \item{Swim_Time}{total time for a swim}
@@ -31,9 +37,6 @@ Takes a numeric item or list of numeric items representing seconds (eg 95.37) an
 }
 \references{
 from \url{https://www.usaswimming.org/docs/default-source/clinics/regional-coach-clinics/pittsburgh-rcc/race-stats---every-coach-can-use-everyday-for-every-athlete-rcc.pdf}
-}
-\seealso{
-\code{\link{sec_format}} \code{mmss_format} is the reverse of \code{sec_format}
 }
 \author{
 Greg Pilgrim \email{gpilgrim2670@gmail.com}
