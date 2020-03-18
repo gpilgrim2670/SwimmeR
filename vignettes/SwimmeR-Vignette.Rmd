@@ -19,6 +19,7 @@ library(SwimmeR)
 library(rvest)
 library(dplyr)
 library(ggplot2)
+library(scales)
 ```
 
 SwimmeR was developed to work with results from swimming competitions.  Results are often shared as webpages (.html) or PDF documents, which are nice to read, but make data difficult to access.
