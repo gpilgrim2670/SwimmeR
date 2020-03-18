@@ -56,7 +56,7 @@ Swim_Parse <- function(file, avoid = avoid_default, typo = typo_default, replace
   as_lines_list_2 <- paste(file, row_numbs, sep = "  ")
 
   events <- as_lines_list_2 %>%
-    .[map_lgl(., str_detect, "Event \\d{1,}")]
+    .[map_lgl(., str_detect, "Event \\d{1,}|Women .* Yard|Men .* Yard")]
   events <- str_replace(events, ".*Event \\d{1,4} ", "")
   events <- str_replace(events, "Open  ", "") ## Addition
   events <- str_replace(events, "1 M  ", "1 M ") ## Addition
@@ -74,7 +74,7 @@ Swim_Parse <- function(file, avoid = avoid_default, typo = typo_default, replace
                           row.names = FALSE,
                           stringsAsFactors = FALSE) %>%
     mutate(
-      Event = str_extract(V1, "[[:alnum:] ]*"),
+      Event = str_extract(V1, "[[:graph:] ]*"),
       Event_Row_Min = as.numeric(V2),
       Event_Row_Max = lead(Event_Row_Min, 1L, default = length(as_lines_list_2)) - 1,
       V1 = NULL,
