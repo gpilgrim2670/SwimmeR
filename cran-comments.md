@@ -1,3 +1,8 @@
+# Version 0.2.0.0
+
+
+
+# Version 0.1.0.0
 ## Resubmission
 As requested the version number was reduced to 0.1.0.0 and a standard FOSS (MIT) license was added.
 Also as requested examples where added for functions and the package name was written in single quotes ('SwimmeR') in description fields
