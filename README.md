@@ -24,7 +24,7 @@ Swim_Parse(
 ```
 
 SwimmeR can only read files in single column format, not double
-![Will not work](inst/extdata/DoubleColumnPDF.png)
+![Will not work](inst/extdata/DoubleColumnPDF.PNG)
 ![Will work](inst/extdata/HSEmpireMeet.png)
 ![Will also work](inst/extdata/Texas-Florida-Indiana_image.png)
 
