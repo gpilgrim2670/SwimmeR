@@ -1,5 +1,5 @@
 ---
-title: "SwimmeR-Vignette"
+title: "SwimmeR"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{SwimmeR-Vignette}
@@ -22,9 +22,9 @@ library(ggplot2)
 library(scales)
 ```
 
-SwimmeR was developed to work with results from swimming competitions.  Results are often shared as webpages (.html) or PDF documents, which are nice to read, but make data difficult to access.
+`SwimmeR` was developed to work with results from swimming competitions.  Results are often shared as webpages (.html) or PDF documents, which are nice to read, but make data difficult to access.
 
-SwimmeR solves this problem by importing & cleaning .html and .pdf files containing swimming results, and returns a dataframe.
+`SwimmeR` solves this problem by importing & cleaning .html and .pdf files containing swimming results, and returns a tidy dataframe.
 
 Importing is performed by `Read_Results` which takes as an argument a file path as `file` and a `node` (for .html only).
 
@@ -44,13 +44,13 @@ file_read[294:303]
 
 Here we see a subsection of the meet - the top three finishers in the Women's 100 Yard Breaststroke featuring Olympic gold metalist Lilly King.
 
-The next step is to convert this data to a dataframe using `Swim_Parse`.  Because `Swim_Parse` works on text strings it is very sensitive to typos and/or foolish naming conventions.  "Texas-Florida-Indiana.pdf" has two examples of these potential problems.
+The next step is to convert this data to a dataframe using `Swim_Parse`.  Because `Swim_Parse` works on text strings it is very sensitive to typos and/or nonstandard naming conventions.  "Texas-Florida-Indiana.pdf" has two examples of these potential problems.
 
 The first is that `Indiana University` is sometimes entered as `Indiana  University`, with two spaces between `Indiana` and `University`.  This is a problem because `Swim_Parse` will interpret two spaces as a column separator, and will not properly capture `Indiana  University` (two spaces) as a team name.
 
 The second issue is that `Texas` is styled as `Texas, University of` which will cause `Swim_Parse` to interpret it as `Lastname, Firstname`.
 
-Both of these issues can be fixed with the `typo` and `replacement` arguments to `Swim_Parse`.  Elements of `typo` will be replaced by the element of `replacement` with which they share an index, so the first element of `typo` will be replaced by the first element of `replacement` etc. etc.  Not specifying `typo` or `replacement` will not produce an error, but might negatively impact the results.  If your results look strange, or are missing values, look in for typos related to those swims.
+Both of these issues can be fixed with the `typo` and `replacement` arguments to `Swim_Parse`.  Elements of `typo` will be replaced by the element of `replacement` with which they share an index, so all instacnes of the first element of `typo` will be replaced by the first element of `replacement` etc. etc.  Not specifying `typo` or `replacement` will not produce an error, but might negatively impact the results.  If your results look strange, or are missing values, look for typos related to those swims.
 
 There is a third arguement to `Swim_Parse` called `avoid` which will be addressed in the section on reading in html results below.
 
@@ -65,7 +65,7 @@ df[67:69,]
 *Please note that `SwimmeR` does not capture split times.*
 
 # Reading HTML Results
-Reading html results is very similar, but a value must be specified to `node`, for which CSS node the `Read_Results` should look in for results.  Here results from the New York State 2003 Girls Championship meet will be read in.
+Reading html results is very similar to reading pdf results, but a value must be specified to `node`, containing which CSS node the `Read_Results` should look in for results.  Here results from the New York State 2003 Girls Championship meet will be read in, from the "pre" node.
 
 ```{r Read_Results html, message = FALSE}
 url <- "http://www.nyhsswim.com/Results/Girls/2003/NYS/Single.htm"
@@ -76,7 +76,7 @@ url_read <- Read_Results(file = url, node = "pre")
 url_read[587:598]
 ```
 
-Looking at the raw results above one will a line containing `NY State Rcd:`, where the NYS record is displayed in a header.  This is a common feature in swimming results, but because it contains a recognizable swimming time, without being a result per say, it can cause problems for `Swim_Parse`.  Like typos these will not cause an error, but might produce nonsense rows.  `Swim_Parse` deals with strings that should not be included with the `avoid` argument.  By default `avoid` contains a lot of common formulations of these header items under `avoid_default`.  You can create your own list of strings as pass it to `avoid`, or add to `avoid_default` via `avoid_new <- c(avoid_default, "your string here")`.
+Looking at the raw results above one will see that line 2 is a header and contains `NY State Rcd:`, showing the New York State record.  Lines of this type are a common feature in swimming results, but because they contain a recognizable swimming time, without being a result per say, they can cause problems for `Swim_Parse`.  Like typos these will not cause an error, but might produce nonsense rows in the resulting dataframe.  `Swim_Parse` deals with strings that should not be included in results with the `avoid` argument.  By default `avoid` contains a lot of common formulations of these header items under `avoid_default`.  You can create your own list of strings as pass it to `avoid`, or add to `avoid_default` via `avoid_new <- c(avoid_default, "your string here")`.  `Avoid` should also include `"r\\:"` if your results have reaction times (`avoid_default` already includes `"r\\:"`). 
 
 ```{r Swim_Parse html, message = FALSE}
 df_1 <- Swim_Parse(file = url_read, avoid = c("NY State Rcd:"))
