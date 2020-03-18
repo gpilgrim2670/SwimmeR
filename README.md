@@ -23,6 +23,10 @@ Swim_Parse(
   )
 ```
 
+SwimmeR can only read files in single column format, not double
+![Will not work](inst/extdata/DoubleColumnPDF.png)
+![Will work](inst/extdata/HSEmpireMeet.png)
+![Will also work](inst/extdata/Texas-Florida-Indiana_image.png)
 
 The second thing `SwimmeR` does is converts swimming times (performances) between  the conventional swimming format of minutes:seconds.hundreths (1:35.37) and the computationally useful format of seconds, reported to the 100ths place (eg 95.37).  This is accomplished with `sec_format` and `mmss_format`, which are inverses of one another.  Both `sec_format` and `mmss_format` work well with `tidyverse` functions.
 
