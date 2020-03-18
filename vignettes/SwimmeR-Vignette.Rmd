@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, message = FALSE}
 library(SwimmeR)
 library(rvest)
 library(dplyr)
@@ -94,24 +94,24 @@ King_2019 <- readRDS("~/SwimmeR/data/King_2019.rds")
 King_2019
 ```
 
-Included in `SwimmeR` is `King_2019`, containing Lilly King's best times for the 2018-2019 NCAA season.  They're recorded as character values, in standard minutes:seconds.hundreths format.  We can use `sec_format` to format them as seconds, and `mmss_format` to go back to minutes:seconds.hundreths.  Both functions work well with the `tidyverse` packages.
+Included in `SwimmeR` is `King_200BR`, containing all Lilly King's 200 Breaststroke times for her NCAA career.  Times recorded as character values, in standard minutes:seconds.hundreths format.  We can use `sec_format` to format them as seconds, and `mmss_format` to go back to minutes:seconds.hundreths.  Both functions work well with the `tidyverse` packages.
 
 ```{r formatting times 2}
-King_2019 <- King_2019 %>% 
-  mutate(Time_sec = sec_format(Time_swim),
+King_200BR <- data("King_200BR.rds")
+King_200BR <- King_200BR %>% 
+  mutate(Time_sec = sec_format(Time),
          Time_swim_2 = mmss_format(Time_sec))
-King_2019
+King_200BR
 ```
 
 This is useful for comparing times, or plotting
 ```{r formatted times plot}
 
-King_2019 %>% 
-  ggplot(aes(x = Event, y = Time_sec)) +
+King_200BR %>% 
+  ggplot(aes(x = Date, y = Time_sec)) +
   geom_point() +
-  scale_y_continuous(labels = scales::trans_format("identity", mmss_format),
-                     breaks = seq(30, 270, 30)) +
+  scale_y_continuous(labels = scales::trans_format("identity", mmss_format)) +
   theme_bw() +
   labs(y= "Time",
-       title = "Lilly King Best Times 2018-2019")
+       title = "Lilly King NCAA 200 Breaststroke")
 ```
