@@ -61,4 +61,4 @@ course_convert_DF(time = Swim$time, course = Swim$course, course_to = Swim$cours
 ```
 
 ## Getting help
-If you find bug, please provide a minimal reproducible example at [github][https://github.com/gpilgrim2670/SwimmeR]. For questions please contact the [creator][gpilgrim2670@gmail.com]
+If you find bug, please provide a minimal reproducible example at [github](https://github.com/gpilgrim2670/SwimmeR). For questions please contact the [creator](gpilgrim2670@gmail.com)
