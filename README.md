@@ -4,9 +4,11 @@
 
 # Usage
 
-Version 0.2.0.0 of `SwimmeR` has two major uses.
+Version 0.2.0.0 of `SwimmeR` has two major uses - importing results and formating times
 
-First it reads swimming results into R and outputs tidy dataframes of the results.  `SwimmeR` uses `Read_Result` to read in either a PDF or HTML file (like a url) and the `Swim_Parse` to convert the read file to a tidy dataframe.
+## Importing Results
+
+`SwimmeR` reads swimming results into R and outputs tidy dataframes of the results.  `SwimmeR` uses `Read_Result` to read in either a PDF or HTML file (like a url) and the `Swim_Parse` to convert the read file to a tidy dataframe.
 
 `Read_Result` has two arguements, `file`, which is the file path to read in, and `node`, required only for HTML files, this is a CSS node where the results reside
 
@@ -23,12 +25,20 @@ Swim_Parse(
   )
 ```
 
-SwimmeR can only read files in single column format, not double
+`SwimmeR` can only read files in single column format, not double
+
+### Will not work
 ![Will not work](inst/extdata/DoubleColumnPDF.PNG)
+
+### Will work
 ![Will work](inst/extdata/HSEmpireMeet.png)
+
+### Will also work
 ![Will also work](inst/extdata/Texas-Florida-Indiana_image.png)
 
-The second thing `SwimmeR` does is converts swimming times (performances) between  the conventional swimming format of minutes:seconds.hundreths (1:35.37) and the computationally useful format of seconds, reported to the 100ths place (eg 95.37).  This is accomplished with `sec_format` and `mmss_format`, which are inverses of one another.  Both `sec_format` and `mmss_format` work well with `tidyverse` functions.
+## Formatting results
+
+`SwimmeR` also converts swimming times (performances) between  the conventional swimming format of minutes:seconds.hundreths (1:35.37) and the computationally useful format of seconds, reported to the 100ths place (eg 95.37).  This is accomplished with `sec_format` and `mmss_format`, which are inverses of one another.  Both `sec_format` and `mmss_format` work well with `tidyverse` functions.
 
 ```r
 times <- c("1:35.97", "57.34", "16:53.19", NA)
@@ -38,6 +48,7 @@ times_mmss <- mmss_format(times_sec)
 times_mmss
 all.equal(times, times_mmss)
 ```
+### Course conversions
 
 Additionally 'SwimmeR' also converts between the various pool sizes used in competitive swimming, namely 50m length (LCM), 25m length (SCM) and 25y length (SCY).  This is accomplished with either `convert_courses` or `convert_courses_DF`, both of which have the same basic functionality.  The difference is the `convert_courses_DF` returns a dataframe including the input variables whereas `convet_courses` only returns the converted time(s).  Both functions will take inputs in either seconds or swimming format.
 
