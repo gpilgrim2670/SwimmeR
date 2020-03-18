@@ -90,24 +90,22 @@ df_1[313:315,]
 Once results are captured in R as tidy dataframes the real fun can begin - but there's another problem.  Times in swimming are recorded as minutes:seconds.hundreths.  This is fine when a time is less than a minute, because `59.99` can be of class `numeric` in R, but times greater than or equal to a minute `1:00.00` are stuck as class `character`.  `SwimmeR` provides two functions, `sec_format` and `mmss_format` to convert between times as seconds (for doing math), and times as minutes:seconds.hundreths, for swimming-specific display.
 
 ```{r formatting times}
-King_2019 <- readRDS("~/SwimmeR/data/King_2019.rds")
-King_2019
+data(King200Breast)
+King200Breast
 ```
 
-Included in `SwimmeR` is `King_200BR`, containing all Lilly King's 200 Breaststroke times for her NCAA career.  Times recorded as character values, in standard minutes:seconds.hundreths format.  We can use `sec_format` to format them as seconds, and `mmss_format` to go back to minutes:seconds.hundreths.  Both functions work well with the `tidyverse` packages.
+Included in `SwimmeR` is `King200Breast`, containing all Lilly King's 200 Breaststroke times for her NCAA career.  Times recorded as character values, in standard minutes:seconds.hundreths format.  We can use `sec_format` to format them as seconds, and `mmss_format` to go back to minutes:seconds.hundreths.  Both functions work well with the `tidyverse` packages.
 
 ```{r formatting times 2}
-King_200BR <- data("King_200BR.rds")
-King_200BR <- King_200BR %>% 
+King200Breast <- King200Breast %>% 
   mutate(Time_sec = sec_format(Time),
          Time_swim_2 = mmss_format(Time_sec))
-King_200BR
+King200Breast
 ```
 
 This is useful for comparing times, or plotting
-```{r formatted times plot}
-
-King_200BR %>% 
+```{r formatted times plot, fig.height = 5, fig.width = 7}
+King200Breast %>% 
   ggplot(aes(x = Date, y = Time_sec)) +
   geom_point() +
   scale_y_continuous(labels = scales::trans_format("identity", mmss_format)) +
