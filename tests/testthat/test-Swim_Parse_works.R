@@ -37,3 +37,13 @@ test_that("Swim_Parse works 3", {
   16235)
 
 })
+
+
+test_that("Swim_Parse works USMS", {
+  file <- system.file("extdata", "11102019roc.pdf", package = "SwimmeR")
+  expect_match(Swim_Parse(
+    Read_Results(file)
+  )[107, 6],
+  "51.90")
+
+})
