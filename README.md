@@ -1,9 +1,8 @@
 # 'SwimmeR'
-'SwimmeR' package
 
 'SwimmeR' is intended to assist those working with times from competitive pool swimming races, such as those conducted under the NHFS, NCAA, or FINA.
 
-#Usage
+# Usage
 
 Version 0.2.0.0 of `SwimmeR` has two major uses.
 
@@ -47,5 +46,5 @@ course_convert(time = Swim$time, course = Swim$course, course_to = Swim$course_t
 course_convert_DF(time = Swim$time, course = Swim$course, course_to = Swim$course_to, event = Swim$event)
 ```
 
-##Getting help
+## Getting help
 If you find bug, please provide a minimal reproducible example at [github][https://github.com/gpilgrim2670/SwimmeR]. For questions please contact the [creator][gpilgrim2670@gmail.com]
