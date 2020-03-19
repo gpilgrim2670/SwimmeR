@@ -20,7 +20,7 @@ test_that("Swim_Parse works 2", {
     typo =  c("\n", "Indiana  University", ", University of"),
 
     replacement = c("\n", "Indiana University", "")
-  )[164, 6],
+  )[188, 6],
   "2:01.78")
 
 })
@@ -46,4 +46,13 @@ test_that("Swim_Parse works USMS", {
   )[107, 6],
   "51.90")
 
+})
+
+
+test_that("Swim_Parse works USA", {
+  file <- system.file("extdata", "jets08082019_067546.pdf", package = "SwimmeR")
+  expect_equivalent(sum(Swim_Parse(
+    Read_Results(file)
+  )[1]),
+  3091)
 })
