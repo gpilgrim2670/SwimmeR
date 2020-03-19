@@ -4,8 +4,9 @@
 #'
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
-#' @import stringr
-#' @import purrr
+#' @importFrom stringr str_detect
+#' @importFrom stringr str_split_fixed
+#' @importFrom purrr map_dbl
 #'
 #' @param x A character vector of time(s) in swimming format (eg 1:35.93) to be converted to seconds (95.93)
 #' @return returns the value of the string \code{x} which represents a time in swimming format (mm:ss.hh) and converts it to seconds

@@ -4,7 +4,7 @@
 #'
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
-#' @import stringr
+#' @importFrom  stringr str_detect
 #' @importFrom rvest html_nodes
 #' @importFrom rvest html_text
 #' @import pdftools
@@ -24,10 +24,10 @@
 Read_Results <- function(file, node = NULL) {
   '%!in%' <- function(x,y)!('%in%'(x,y))
   ### PDF ###
-  if(str_detect(file, "\\.pdf$") == TRUE) {
+  if(stringr::str_detect(file, "\\.pdf$") == TRUE) {
   results <- pdf_text(file)
 
-  } else if (str_detect(file, "\\.htm") == TRUE) {
+  } else if (stringr::str_detect(file, "\\.htm") == TRUE) {
   ### HTML ###
     if(is.character(node) == FALSE) {
   stop(" Please supply a value for node")
