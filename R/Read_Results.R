@@ -7,7 +7,7 @@
 #' @importFrom  stringr str_detect
 #' @importFrom rvest html_nodes
 #' @importFrom rvest html_text
-#' @import pdftools
+#' @importFrom pdftools pdf_text
 #'
 #'
 #'
@@ -25,7 +25,7 @@ Read_Results <- function(file, node = NULL) {
   '%!in%' <- function(x,y)!('%in%'(x,y))
   ### PDF ###
   if(stringr::str_detect(file, "\\.pdf$") == TRUE) {
-  results <- pdf_text(file)
+  results <- pdftools::pdf_text(file)
 
   } else if (stringr::str_detect(file, "\\.htm") == TRUE) {
   ### HTML ###
@@ -33,8 +33,8 @@ Read_Results <- function(file, node = NULL) {
   stop(" Please supply a value for node")
     } else {
   webpage <- read_html(file)
-  html <- html_nodes(webpage, node)
-  results <- html_text(html)
+  html <- rvest::html_nodes(webpage, node)
+  results <- rvest::html_text(html)
 
     }
 

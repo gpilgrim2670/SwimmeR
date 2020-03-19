@@ -27,7 +27,7 @@
 #' @importFrom purrr map
 #' @importFrom rvest html_nodes
 #' @importFrom rvest html_text
-#' @import pdftools
+#' @importFrom pdftools pdf_text
 #' @importFrom stats setNames
 #'
 #'
@@ -42,7 +42,7 @@
 #'  typo = c("-1NORTH ROCKL"), replacement = c("1-NORTH ROCKL"))
 #'  }
 #' \dontrun{
-#' Swim_Parse(Read_Results("data/Texas-Florida-Indiana.pdf"),
+#' Swim_Parse(Read_Results("inst/extdata/Texas-Florida-Indiana.pdf"),
 #'  typo =  c("Indiana  University", ", University of"), replacement = c("Indiana University", ""))
 #'  }
 #' @seealso \code{Swim_Parse} must be run on the output of \code{\link{Read_Results}}
