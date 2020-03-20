@@ -1,0 +1,125 @@
+---
+title: "SwimmeR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{SwimmeR-Vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, message = FALSE}
+library(SwimmeR)
+library(rvest)
+library(dplyr)
+library(ggplot2)
+library(scales)
+```
+
+`SwimmeR` was developed to work with results from swimming competitions.  Results are often shared as webpages (.html) or PDF documents, which are nice to read, but make data difficult to access.
+
+`SwimmeR` solves this problem by importing & cleaning .html and .pdf files containing swimming results, and returns a tidy dataframe.
+
+Importing is performed by `Read_Results` which takes as an argument a file path as `file` and a `node` (for .html only).
+
+
+# Reading PDF Results
+`SwimmeR` includes Teaxs-Florida-Indiana.pdf, results from a tri-meet between the three schools.  It can be read in as such:
+
+```{r Read_Results, message = FALSE}
+file_path <- system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")
+
+file_read <- Read_Results(file = file_path)
+```
+
+```{r Read_Results output, message = FALSE}
+file_read[294:303]
+```
+
+Here we see a subsection of the meet - the top three finishers in the Women's 100 Yard Breaststroke featuring Olympic gold metalist Lilly King.
+
+The next step is to convert this data to a dataframe using `Swim_Parse`.  Because `Swim_Parse` works on text strings it is very sensitive to typos and/or nonstandard naming conventions.  "Texas-Florida-Indiana.pdf" has two examples of these potential problems.
+
+The first is that `Indiana University` is sometimes entered as `Indiana  University` (not in the data subsetted above), with two spaces between `Indiana` and `University`.  This is a problem because `Swim_Parse` will interpret two spaces as a column separator, and will not properly capture `Indiana  University` (two spaces) as a team name.
+
+The second issue is that `Texas` is styled as `Texas, University of` which will cause `Swim_Parse` to interpret it as `Lastname, Firstname`.
+
+Both of these issues can be fixed with the `typo` and `replacement` arguments to `Swim_Parse`.  Elements of `typo` will be replaced by the element of `replacement` with which they share an index, so all instacnes of the first element of `typo` will be replaced by the first element of `replacement` etc. etc.  Not specifying `typo` or `replacement` will not produce an error, but might negatively impact the results.  If your results look strange, or are missing values, look for typos related to those swims.
+
+There is a third arguement to `Swim_Parse` called `avoid` which will be addressed in the section on reading in html results below.
+
+```{r Swim_Parse, message = FALSE}
+df <-
+  Swim_Parse(
+    file = file_read,
+    typo = c("\n", "Indiana  University", ", University of"),
+    replacement = c("\n", "Indiana University", "")
+  )
+```
+
+Here are those same Women's 100 Breaststroke results, as a dataframe in tidy format:
+```{r Swim Parse output, message = FALSE}
+df[67:69,]
+```
+*Please note that `SwimmeR` does not capture split times.*
+
+# Reading HTML Results
+Reading html results is very similar to reading pdf results, but a value must be specified to `node`, containing which CSS node the `Read_Results` should look in for results.  Here results from the New York State 2003 Girls Championship meet will be read in, from the "pre" node.
+
+```{r Read_Results html, message = FALSE}
+url <- "http://www.nyhsswim.com/Results/Girls/2003/NYS/Single.htm"
+url_read <- Read_Results(file = url, node = "pre")
+```
+
+```{r Read_Results html output, message = FALSE}
+url_read[587:598]
+```
+
+Looking at the raw results above one will see that line 2 is a header and contains `NY State Rcd:`, showing the New York State record.  Lines of this type are a common feature in swimming results, but because they contain a recognizable swimming time, without being a result per say, they can cause problems for `Swim_Parse`.  Like typos these will not cause an error, but might produce nonsense rows in the resulting dataframe.  `Swim_Parse` deals with strings that should not be included in results with the `avoid` argument.  By default `avoid` contains a lot of common formulations of these header items under `avoid_default`.  You can create your own list of strings as pass it to `avoid`, or add to `avoid_default` via `avoid_new <- c(avoid_default, "your string here")`.  `Avoid` should also include `"r\\:"` if your results have reaction times (`avoid_default` already includes `"r\\:"`). 
+
+```{r Swim_Parse html, message = FALSE}
+df_1 <- Swim_Parse(file = url_read, avoid = c("NY State Rcd:"))
+```
+
+```{r Swim_Parse html output, message = FALSE}
+df_1[313:315,]
+```
+
+## Why Two Functions?
+It would be possible to combine `Read_Results` and `Swim_Parse` together into one function.  Doing so would make troubleshooting typos in the original source file more difficult, and typos can be a major issue when reading outside sources.  Having two functions means that if the output of `Swim_Parse` are not as expected the output of `Read_Results` can be inspected for issues.  Additionally `Read_Results` and `Swim_Parse` work well with `map` functions from `purrr`, so they can be used to read in data from a list of sources.  Separating the web or document scraping aspect from data cleaning is wise, both in terms of managing compuational resources and from a data science perspective.  One can certainly use `Swim_Parse(Read_Results(file))` and effectively combine the two functions.
+
+# Formatting Swimming Times
+
+Once results are captured in R as tidy dataframes the real fun can begin - but there's another problem.  Times in swimming are recorded as minutes:seconds.hundreths.  This is fine when a time is less than a minute, because `59.99` can be of class `numeric` in R, but times greater than or equal to a minute `1:00.00` are stuck as class `character`.  `SwimmeR` provides two functions, `sec_format` and `mmss_format` to convert between times as seconds (for doing math), and times as minutes:seconds.hundreths, for swimming-specific display.
+
+```{r formatting times}
+data(King200Breast)
+King200Breast
+```
+
+Included in `SwimmeR` is `King200Breast`, containing all Lilly King's 200 Breaststroke times for her NCAA career.  Times recorded as character values, in standard minutes:seconds.hundreths format.  We can use `sec_format` to format them as seconds, and `mmss_format` to go back to minutes:seconds.hundreths.  Both functions work well with the `tidyverse` packages.
+
+```{r formatting times 2}
+King200Breast <- King200Breast %>% 
+  mutate(Time_sec = sec_format(Time),
+         Time_swim_2 = mmss_format(Time_sec))
+
+King200Breast
+```
+
+This is useful for comparing times, or plotting
+```{r formatted times plot, fig.height = 5, fig.width = 7}
+King200Breast %>% 
+  ggplot(aes(x = Date, y = Time_sec)) +
+  geom_point() +
+  scale_y_continuous(labels = scales::trans_format("identity", mmss_format)) +
+  theme_bw() +
+  labs(y= "Time",
+       title = "Lilly King NCAA 200 Breaststroke")
+```

@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>SwimmeR</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">SwimmeR</h1>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(SwimmeR)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(rvest)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(dplyr)</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">library</span>(ggplot2)</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="kw">library</span>(scales)</span></code></pre></div>
+<p><code>SwimmeR</code> was developed to work with results from swimming competitions. Results are often shared as webpages (.html) or PDF documents, which are nice to read, but make data difficult to access.</p>
+<p><code>SwimmeR</code> solves this problem by importing &amp; cleaning .html and .pdf files containing swimming results, and returns a tidy dataframe.</p>
+<p>Importing is performed by <code>Read_Results</code> which takes as an argument a file path as <code>file</code> and a <code>node</code> (for .html only).</p>
+<div id="reading-pdf-results" class="section level1">
+<h1>Reading PDF Results</h1>
+<p><code>SwimmeR</code> includes Teaxs-Florida-Indiana.pdf, results from a tri-meet between the three schools. It can be read in as such:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>file_path &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;Texas-Florida-Indiana.pdf&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;SwimmeR&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2"></a></span>
+<span id="cb2-3"><a href="#cb2-3"></a>file_read &lt;-<span class="st"> </span><span class="kw">Read_Results</span>(<span class="dt">file =</span> file_path)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>file_read[<span class="dv">294</span><span class="op">:</span><span class="dv">303</span>]</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="co">#&gt;  [1] &quot;\nEvent 7 Women 100 Yard Breaststroke&quot;                                                                                                   </span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="co">#&gt;  [2] &quot;\n                         58.79 A&quot;                                                                                                      </span></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="co">#&gt;  [3] &quot;\n                       1:01.84 B&quot;                                                                                                      </span></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="co">#&gt;  [4] &quot;\n        Name                                  Age School                               Seed Time       Finals Time              Points&quot;</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="co">#&gt;  [5] &quot;\n    1 Lilly King                                21 Indiana University                         NT               59.46   B&quot;              </span></span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="co">#&gt;  [6] &quot;\n               r:+0.70 27.62         59.46 (31.84)&quot;                                                                                    </span></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="co">#&gt;  [7] &quot;\n    2 Olivia Anderson                           21 Texas, University of                       NT            1:01.88&quot;                   </span></span>
+<span id="cb3-9"><a href="#cb3-9"></a><span class="co">#&gt;  [8] &quot;\n               r:+0.74 29.13       1:01.88 (32.75)&quot;                                                                                    </span></span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="co">#&gt;  [9] &quot;\n    3 Noelle Peplowski                          18 Indiana University                         NT            1:02.02&quot;                   </span></span>
+<span id="cb3-11"><a href="#cb3-11"></a><span class="co">#&gt; [10] &quot;\n               r:+0.71 29.06       1:02.02 (32.96)&quot;</span></span></code></pre></div>
+<p>Here we see a subsection of the meet - the top three finishers in the Women’s 100 Yard Breaststroke featuring Olympic gold metalist Lilly King.</p>
+<p>The next step is to convert this data to a dataframe using <code>Swim_Parse</code>. Because <code>Swim_Parse</code> works on text strings it is very sensitive to typos and/or nonstandard naming conventions. “Texas-Florida-Indiana.pdf” has two examples of these potential problems.</p>
+<p>The first is that <code>Indiana University</code> is sometimes entered as <code>Indiana  University</code> (not in the data subsetted above), with two spaces between <code>Indiana</code> and <code>University</code>. This is a problem because <code>Swim_Parse</code> will interpret two spaces as a column separator, and will not properly capture <code>Indiana  University</code> (two spaces) as a team name.</p>
+<p>The second issue is that <code>Texas</code> is styled as <code>Texas, University of</code> which will cause <code>Swim_Parse</code> to interpret it as <code>Lastname, Firstname</code>.</p>
+<p>Both of these issues can be fixed with the <code>typo</code> and <code>replacement</code> arguments to <code>Swim_Parse</code>. Elements of <code>typo</code> will be replaced by the element of <code>replacement</code> with which they share an index, so all instacnes of the first element of <code>typo</code> will be replaced by the first element of <code>replacement</code> etc. etc. Not specifying <code>typo</code> or <code>replacement</code> will not produce an error, but might negatively impact the results. If your results look strange, or are missing values, look for typos related to those swims.</p>
+<p>There is a third arguement to <code>Swim_Parse</code> called <code>avoid</code> which will be addressed in the section on reading in html results below.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>df &lt;-</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="st">  </span><span class="kw">Swim_Parse</span>(</span>
+<span id="cb4-3"><a href="#cb4-3"></a>    <span class="dt">file =</span> file_read,</span>
+<span id="cb4-4"><a href="#cb4-4"></a>    <span class="dt">typo =</span> <span class="kw">c</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>, <span class="st">&quot;Indiana  University&quot;</span>, <span class="st">&quot;, University of&quot;</span>),</span>
+<span id="cb4-5"><a href="#cb4-5"></a>    <span class="dt">replacement =</span> <span class="kw">c</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>, <span class="st">&quot;Indiana University&quot;</span>, <span class="st">&quot;&quot;</span>)</span>
+<span id="cb4-6"><a href="#cb4-6"></a>  )</span></code></pre></div>
+<p>Here are those same Women’s 100 Breaststroke results, as a dataframe in tidy format:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>df[<span class="dv">67</span><span class="op">:</span><span class="dv">69</span>,]</span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="co">#&gt;                Name Place Grade             School Prelims_Time Finals_Time</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="co">#&gt; 67       Lilly King     1    21 Indiana University         &lt;NA&gt;       59.46</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="co">#&gt; 68  Olivia Anderson     2    21              Texas         &lt;NA&gt;     1:01.88</span></span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="co">#&gt; 69 Noelle Peplowski     3    18 Indiana University         &lt;NA&gt;     1:02.02</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a><span class="co">#&gt;    Points                       Event</span></span>
+<span id="cb5-7"><a href="#cb5-7"></a><span class="co">#&gt; 67   &lt;NA&gt; Women 100 Yard Breaststroke</span></span>
+<span id="cb5-8"><a href="#cb5-8"></a><span class="co">#&gt; 68   &lt;NA&gt; Women 100 Yard Breaststroke</span></span>
+<span id="cb5-9"><a href="#cb5-9"></a><span class="co">#&gt; 69   &lt;NA&gt; Women 100 Yard Breaststroke</span></span></code></pre></div>
+<p><em>Please note that <code>SwimmeR</code> does not capture split times.</em></p>
+</div>
+<div id="reading-html-results" class="section level1">
+<h1>Reading HTML Results</h1>
+<p>Reading html results is very similar to reading pdf results, but a value must be specified to <code>node</code>, containing which CSS node the <code>Read_Results</code> should look in for results. Here results from the New York State 2003 Girls Championship meet will be read in, from the “pre” node.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>url &lt;-<span class="st"> &quot;http://www.nyhsswim.com/Results/Girls/2003/NYS/Single.htm&quot;</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>url_read &lt;-<span class="st"> </span><span class="kw">Read_Results</span>(<span class="dt">file =</span> url, <span class="dt">node =</span> <span class="st">&quot;pre&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>url_read[<span class="dv">587</span><span class="op">:</span><span class="dv">598</span>]</span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="co">#&gt;  [1] &quot;\n===============================================================================&quot;</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="co">#&gt;  [2] &quot;\nNY State Rcd: S 54.35  1990      Richelle Depold, Scotia&quot;                       </span></span>
+<span id="cb7-4"><a href="#cb7-4"></a><span class="co">#&gt;  [3] &quot;\n    Name                    Year School               Prelims     Finals&quot;       </span></span>
+<span id="cb7-5"><a href="#cb7-5"></a><span class="co">#&gt;  [4] &quot;\n===============================================================================&quot;</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a><span class="co">#&gt;  [5] &quot;\nNYSPHSAA 2003 Federation Championship&quot;                                          </span></span>
+<span id="cb7-7"><a href="#cb7-7"></a><span class="co">#&gt;  [6] &quot;\nA - Final&quot;                                                                      </span></span>
+<span id="cb7-8"><a href="#cb7-8"></a><span class="co">#&gt;  [7] &quot;\n  1 Bridget O&#39;Connor          12 1-Scarsdale            56.16      55.42&quot;       </span></span>
+<span id="cb7-9"><a href="#cb7-9"></a><span class="co">#&gt;  [8] &quot;\n      26.12   29.30&quot;                                                            </span></span>
+<span id="cb7-10"><a href="#cb7-10"></a><span class="co">#&gt;  [9] &quot;\n  2 Lauren Bonfe              12 5-Alfred-Almond        56.37      56.93&quot;       </span></span>
+<span id="cb7-11"><a href="#cb7-11"></a><span class="co">#&gt; [10] &quot;\n      26.18   30.75&quot;                                                            </span></span>
+<span id="cb7-12"><a href="#cb7-12"></a><span class="co">#&gt; [11] &quot;\n  3 Christa Narus             11 11-Ward Melville       58.67      57.94&quot;       </span></span>
+<span id="cb7-13"><a href="#cb7-13"></a><span class="co">#&gt; [12] &quot;\n      27.19   30.75&quot;</span></span></code></pre></div>
+<p>Looking at the raw results above one will see that line 2 is a header and contains <code>NY State Rcd:</code>, showing the New York State record. Lines of this type are a common feature in swimming results, but because they contain a recognizable swimming time, without being a result per say, they can cause problems for <code>Swim_Parse</code>. Like typos these will not cause an error, but might produce nonsense rows in the resulting dataframe. <code>Swim_Parse</code> deals with strings that should not be included in results with the <code>avoid</code> argument. By default <code>avoid</code> contains a lot of common formulations of these header items under <code>avoid_default</code>. You can create your own list of strings as pass it to <code>avoid</code>, or add to <code>avoid_default</code> via <code>avoid_new &lt;- c(avoid_default, &quot;your string here&quot;)</code>. <code>Avoid</code> should also include <code>&quot;r\\:&quot;</code> if your results have reaction times (<code>avoid_default</code> already includes <code>&quot;r\\:&quot;</code>).</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>df_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">Swim_Parse</span>(<span class="dt">file =</span> url_read, <span class="dt">avoid =</span> <span class="kw">c</span>(<span class="st">&quot;NY State Rcd:&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>df_<span class="dv">1</span>[<span class="dv">313</span><span class="op">:</span><span class="dv">315</span>,]</span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="co">#&gt;                 Name Place Grade           School Prelims_Time Finals_Time</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="co">#&gt; 313 Bridget O&#39;Connor     1    12      1-Scarsdale        56.16       55.42</span></span>
+<span id="cb9-4"><a href="#cb9-4"></a><span class="co">#&gt; 314     Lauren Bonfe     2    12  5-Alfred-Almond        56.37       56.93</span></span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="co">#&gt; 315    Christa Narus     3    11 11-Ward Melville        58.67       57.94</span></span>
+<span id="cb9-6"><a href="#cb9-6"></a><span class="co">#&gt;     Points                    Event</span></span>
+<span id="cb9-7"><a href="#cb9-7"></a><span class="co">#&gt; 313   &lt;NA&gt; Girls 100 Yard Butterfly</span></span>
+<span id="cb9-8"><a href="#cb9-8"></a><span class="co">#&gt; 314   &lt;NA&gt; Girls 100 Yard Butterfly</span></span>
+<span id="cb9-9"><a href="#cb9-9"></a><span class="co">#&gt; 315   &lt;NA&gt; Girls 100 Yard Butterfly</span></span></code></pre></div>
+<div id="why-two-functions" class="section level2">
+<h2>Why Two Functions?</h2>
+<p>It would be possible to combine <code>Read_Results</code> and <code>Swim_Parse</code> together into one function. Doing so would make troubleshooting typos in the original source file more difficult, and typos can be a major issue when reading outside sources. Having two functions means that if the output of <code>Swim_Parse</code> are not as expected the output of <code>Read_Results</code> can be inspected for issues. Additionally <code>Read_Results</code> and <code>Swim_Parse</code> work well with <code>map</code> functions from <code>purrr</code>, so they can be used to read in data from a list of sources. Separating the web or document scraping aspect from data cleaning is wise, both in terms of managing compuational resources and from a data science perspective. One can certainly use <code>Swim_Parse(Read_Results(file))</code> and effectively combine the two functions.</p>
+</div>
+</div>
+<div id="formatting-swimming-times" class="section level1">
+<h1>Formatting Swimming Times</h1>
+<p>Once results are captured in R as tidy dataframes the real fun can begin - but there’s another problem. Times in swimming are recorded as minutes:seconds.hundreths. This is fine when a time is less than a minute, because <code>59.99</code> can be of class <code>numeric</code> in R, but times greater than or equal to a minute <code>1:00.00</code> are stuck as class <code>character</code>. <code>SwimmeR</code> provides two functions, <code>sec_format</code> and <code>mmss_format</code> to convert between times as seconds (for doing math), and times as minutes:seconds.hundreths, for swimming-specific display.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">data</span>(King200Breast)</span>
+<span id="cb10-2"><a href="#cb10-2"></a>King200Breast</span>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="co">#&gt; # A tibble: 50 x 4</span></span>
+<span id="cb10-4"><a href="#cb10-4"></a><span class="co">#&gt;    Event      Year      Time    Date      </span></span>
+<span id="cb10-5"><a href="#cb10-5"></a><span class="co">#&gt;    &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;   &lt;date&gt;    </span></span>
+<span id="cb10-6"><a href="#cb10-6"></a><span class="co">#&gt;  1 200 Breast Junior    2:02.60 2018-03-17</span></span>
+<span id="cb10-7"><a href="#cb10-7"></a><span class="co">#&gt;  2 200 Breast Senior    2:02.90 2019-03-23</span></span>
+<span id="cb10-8"><a href="#cb10-8"></a><span class="co">#&gt;  3 200 Breast Sophomore 2:03.18 2017-03-18</span></span>
+<span id="cb10-9"><a href="#cb10-9"></a><span class="co">#&gt;  4 200 Breast Freshman  2:03.59 2016-03-19</span></span>
+<span id="cb10-10"><a href="#cb10-10"></a><span class="co">#&gt;  5 200 Breast Senior    2:03.60 2018-11-17</span></span>
+<span id="cb10-11"><a href="#cb10-11"></a><span class="co">#&gt;  6 200 Breast Sophomore 2:04.03 2017-02-18</span></span>
+<span id="cb10-12"><a href="#cb10-12"></a><span class="co">#&gt;  7 200 Breast Junior    2:04.68 2018-02-17</span></span>
+<span id="cb10-13"><a href="#cb10-13"></a><span class="co">#&gt;  8 200 Breast Senior    2:05.14 2019-02-23</span></span>
+<span id="cb10-14"><a href="#cb10-14"></a><span class="co">#&gt;  9 200 Breast Junior    2:05.49 2018-03-17</span></span>
+<span id="cb10-15"><a href="#cb10-15"></a><span class="co">#&gt; 10 200 Breast Freshman  2:05.58 2016-02-20</span></span>
+<span id="cb10-16"><a href="#cb10-16"></a><span class="co">#&gt; # ... with 40 more rows</span></span></code></pre></div>
+<p>Included in <code>SwimmeR</code> is <code>King200Breast</code>, containing all Lilly King’s 200 Breaststroke times for her NCAA career. Times recorded as character values, in standard minutes:seconds.hundreths format. We can use <code>sec_format</code> to format them as seconds, and <code>mmss_format</code> to go back to minutes:seconds.hundreths. Both functions work well with the <code>tidyverse</code> packages.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>King200Breast &lt;-<span class="st"> </span>King200Breast <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Time_sec =</span> <span class="kw">sec_format</span>(Time),</span>
+<span id="cb11-3"><a href="#cb11-3"></a>         <span class="dt">Time_swim_2 =</span> <span class="kw">mmss_format</span>(Time_sec))</span>
+<span id="cb11-4"><a href="#cb11-4"></a></span>
+<span id="cb11-5"><a href="#cb11-5"></a>King200Breast</span>
+<span id="cb11-6"><a href="#cb11-6"></a><span class="co">#&gt; # A tibble: 50 x 6</span></span>
+<span id="cb11-7"><a href="#cb11-7"></a><span class="co">#&gt;    Event      Year      Time    Date       Time_sec Time_swim_2</span></span>
+<span id="cb11-8"><a href="#cb11-8"></a><span class="co">#&gt;    &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;   &lt;date&gt;        &lt;dbl&gt; &lt;chr&gt;      </span></span>
+<span id="cb11-9"><a href="#cb11-9"></a><span class="co">#&gt;  1 200 Breast Junior    2:02.60 2018-03-17     123. 2:02.60    </span></span>
+<span id="cb11-10"><a href="#cb11-10"></a><span class="co">#&gt;  2 200 Breast Senior    2:02.90 2019-03-23     123. 2:02.90    </span></span>
+<span id="cb11-11"><a href="#cb11-11"></a><span class="co">#&gt;  3 200 Breast Sophomore 2:03.18 2017-03-18     123. 2:03.18    </span></span>
+<span id="cb11-12"><a href="#cb11-12"></a><span class="co">#&gt;  4 200 Breast Freshman  2:03.59 2016-03-19     124. 2:03.59    </span></span>
+<span id="cb11-13"><a href="#cb11-13"></a><span class="co">#&gt;  5 200 Breast Senior    2:03.60 2018-11-17     124. 2:03.60    </span></span>
+<span id="cb11-14"><a href="#cb11-14"></a><span class="co">#&gt;  6 200 Breast Sophomore 2:04.03 2017-02-18     124. 2:04.03    </span></span>
+<span id="cb11-15"><a href="#cb11-15"></a><span class="co">#&gt;  7 200 Breast Junior    2:04.68 2018-02-17     125. 2:04.68    </span></span>
+<span id="cb11-16"><a href="#cb11-16"></a><span class="co">#&gt;  8 200 Breast Senior    2:05.14 2019-02-23     125. 2:05.14    </span></span>
+<span id="cb11-17"><a href="#cb11-17"></a><span class="co">#&gt;  9 200 Breast Junior    2:05.49 2018-03-17     125. 2:05.49    </span></span>
+<span id="cb11-18"><a href="#cb11-18"></a><span class="co">#&gt; 10 200 Breast Freshman  2:05.58 2016-02-20     126. 2:05.58    </span></span>
+<span id="cb11-19"><a href="#cb11-19"></a><span class="co">#&gt; # ... with 40 more rows</span></span></code></pre></div>
+<p>This is useful for comparing times, or plotting</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>King200Breast <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Date, <span class="dt">y =</span> Time_sec)) <span class="op">+</span></span>
+<span id="cb12-3"><a href="#cb12-3"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb12-4"><a href="#cb12-4"></a><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">labels =</span> scales<span class="op">::</span><span class="kw">trans_format</span>(<span class="st">&quot;identity&quot;</span>, mmss_format)) <span class="op">+</span></span>
+<span id="cb12-5"><a href="#cb12-5"></a><span class="st">  </span><span class="kw">theme_bw</span>() <span class="op">+</span></span>
+<span id="cb12-6"><a href="#cb12-6"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span> <span class="st">&quot;Time&quot;</span>,</span>
+<span id="cb12-7"><a href="#cb12-7"></a>       <span class="dt">title =</span> <span class="st">&quot;Lilly King NCAA 200 Breaststroke&quot;</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
