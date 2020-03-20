@@ -4,7 +4,7 @@
 #'
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
-#' @importFrom stringr str_detect
+#' @importFrom  stringr str_detect
 #' @importFrom rvest html_nodes
 #' @importFrom rvest html_text
 #' @importFrom pdftools pdf_text
