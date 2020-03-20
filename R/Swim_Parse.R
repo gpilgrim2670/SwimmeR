@@ -151,8 +151,6 @@ Swim_Parse <- function(file, avoid = avoid_default, typo = typo_default, replace
             any(stringr::str_detect(V3, "^SR$|^JR$|^SO$|^FR$|^[:digit:]{1,2}$")) == TRUE ~ V3
         ),
         Grade = trimws(Grade),
-        # V2 = trimws(stringr::str_replace(V2, Grade, "")),
-        # V3 = trimws(stringr::str_replace(V3, Grade, ""))
       ) %>%
       dplyr::mutate(
         School = dplyr::case_when(
@@ -320,7 +318,6 @@ Swim_Parse <- function(file, avoid = avoid_default, typo = typo_default, replace
         )) %>%
       na_if("") %>%
       mutate(
-        # V2 = trimws(str_replace(V2, Grade, "")),
         V3 = dplyr::case_when(is.na(Grade) == FALSE ~ trimws(stringr::str_replace(V3, Grade, "")),
                               TRUE ~ V3),
         Grade = trimws(Grade)
@@ -664,35 +661,13 @@ Swim_Parse <- function(file, avoid = avoid_default, typo = typo_default, replace
         School = replace(School, stringr::str_detect(School, "\\.\\d") == TRUE, NA),
         School = dplyr::case_when(
           is.na(School) == TRUE &
-            Grade %!in% c(
-              "FR",
-              "SO",
-              "JR",
-              "SR",
-              "7",
-              "8",
-              "05",
-              "06",
-              "07",
-              "08",
-              "09",
+            Grade %!in% c("FR", "SO", "JR", "SR", "7", "8", "05", "06", "07", "08", "09",
               as.character(seq(10, 25, 1))
             ) &
             stringr::str_detect(Grade, "\\'[[:alpha:]]\\'") == FALSE &
             stringr::str_detect(Grade, "\\.\\d") == FALSE ~ Grade,
           is.na(School) == FALSE |
-            Grade %in% c(
-              "FR",
-              "SO",
-              "JR",
-              "SR",
-              "7",
-              "8",
-              "05",
-              "06",
-              "07",
-              "08",
-              "09",
+            Grade %in% c("FR", "SO", "JR", "SR", "7", "8", "05", "06", "07", "08", "09",
               as.character(seq(10, 25, 1))
             ) |
             stringr::str_detect(Grade, "\\'[[:alpha:]]\\'") == TRUE |
@@ -772,7 +747,6 @@ Swim_Parse <- function(file, avoid = avoid_default, typo = typo_default, replace
       ) %>%
       dplyr::na_if("") %>%
       dplyr::mutate(
-        # V1 = NULL,
         V1 = dplyr::case_when(
           is.na(Place) == FALSE ~ stringr::str_replace(V1, Place, ""),
           TRUE ~ V1
@@ -950,17 +924,14 @@ Swim_Parse <- function(file, avoid = avoid_default, typo = typo_default, replace
         Prelims_Time = dplyr::case_when(
           is.na(Prelims_Time) == TRUE &
             stringr::str_detect(School, "\\.") == TRUE ~ stringr::str_extract(
-              School,
-              "[:digit:]*[:punct:]?[:digit:]*[:punct:]?[:digit:]*"
+              School, "[:digit:]*[:punct:]?[:digit:]*[:punct:]?[:digit:]*"
             ),
           is.na(Prelims_Time) == FALSE |
             stringr::str_detect(School, "\\.") == FALSE ~ Prelims_Time
         ),
         School = stringr::str_replace(School, "-[:alpha:]*\\d.*$", ""),
         School = stringr::str_replace(
-          School,
-          "[:digit:]*[:punct:]?[:digit:]*[:punct:]?[:digit:]*",
-          ""
+          School, "[:digit:]*[:punct:]?[:digit:]*[:punct:]?[:digit:]*", ""
         )
       ) %>%
       na_if("") %>%

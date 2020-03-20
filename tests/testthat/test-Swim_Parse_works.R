@@ -13,7 +13,6 @@ test_that("Swim_Parse works", {
 })
 
 test_that("Swim_Parse works 2", {
-  # file <- test_file("Texas-Florida-Indiana.pdf")
   file <- system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")
   expect_match(Swim_Parse(
     Read_Results(file),
@@ -27,8 +26,7 @@ test_that("Swim_Parse works 2", {
 
 test_that("Swim_Parse works 3", {
   expect_equivalent(sum(Swim_Parse(
-    Read_Results(
-      "http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm",
+    Read_Results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm",
       node = "pre"
     ),
     typo = c("-1NORTH ROCKL"),
