@@ -1,11 +1,22 @@
 
 
+file_1 <- system.file("extdata", "jets08082019_067546.pdf", package = "SwimmeR")
+file_2 <- system.file("extdata", "11102019roc.pdf", package = "SwimmeR")
+file_3 <- system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")
+url91 <- "http://www.section11swim.com/Results/GirlsHS/2016/League1/Single.htm" # numbers as grades still attached to schools - fixed
+url92 <- "http://www.section1swim.com/Results/BoysHS/2020/Sec1/Single.htm" # schools are NA - fixed
+url93 <- "http://www.section2swim.com/Results/BoysHS/2004/Sec2/A/Single.htm" # schools as SR
+url94 <- "http://www.section6swim.com/Results/GirlsHS/2012/NFL/Single.htm" # schools as SR
+url97 <- "http://www.section3swim.com/Results/BoysHS/2020/Sec3/BC/Single.htm" # events errors - fixed
+url98 <- "http://www.section5swim.com/Results/BoysHS/2013/HAC/Single.htm"
+url99 <- "http://www.section1swim.com/Results/BoysHS/2020/Sec1/Single.htm" # missing relay names
+url100 <- "http://www.section9swim.com/Results/GirlsHS/2000/Sec9/Single.htm" #quotes as school name
+url101 <- "http://www.section5swim.com/Results/GirlsHS/2000/Sec5/B/Single.htm"
 
-file <- Read_Results("inst/extdata/jets08082019_067546.pdf")
-file <- Read_Results("http://www.section2swim.com/Results/BoysHS/2004/Sec2/A/Single.htm", node = "pre")
-file <- Read_Results("http://www.section6swim.com/Results/GirlsHS/2012/NFL/Single.htm", node = "pre")
+file <- Swim_Parse(Read_Results(url101, node = "pre"))
 
-#delete this '%!in%' <- function(x,y)!('%in%'(x,y))
+
+'%!in%' <- function(x,y)!('%in%'(x,y))
 
 avoid_default <-
   c(
@@ -86,8 +97,8 @@ typo <-  c("\n", "Indiana  University", ", University of")
 
 replacement <- c("\n", "Indiana University", "")
 
-row_numbs <- seq(1, length(file), 1)
-as_lines_list_2 <- paste(file, row_numbs, sep = "  ")
+row_numbs <- seq(1, length(df_test$`http://www.section5swim.com/Results/GirlsHS/2000/Sec5/B/Single.htm`), 1)
+as_lines_list_2 <- paste(df_test$`http://www.section5swim.com/Results/GirlsHS/2000/Sec5/B/Single.htm`, row_numbs, sep = "  ")
 
 events <- as_lines_list_2 %>%
   .[purrr::map_lgl(
