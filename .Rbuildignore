@@ -4,9 +4,6 @@
 ^CRAN-RELEASE$
 ^LICENSE\.md$
 ^cran-comments\.md$
-<<<<<<< HEAD
 ^doc$
 ^Meta$
-^R$
-=======
->>>>>>> parent of 98df11c... Added testing for USA meet
+
