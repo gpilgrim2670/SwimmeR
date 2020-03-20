@@ -48,7 +48,7 @@ The next step is to convert this data to a dataframe using `Swim_Parse`.  Becaus
 
 The first is that `Indiana University` is sometimes entered as `Indiana  University`, with two spaces between `Indiana` and `University`.  This is a problem because `Swim_Parse` will interpret two spaces as a column separator, and will not properly capture `Indiana  University` (two spaces) as a team name.
 
-The second issue is that `Texas` is styled as `Texas, University of` which will cause `Swim_Parse` to interpret it as `Lastname, Firstname`.
+The second issue is that `Texas` and `Florida` are styled as `Texas, University of` and `Florida, University of` which will cause `Swim_Parse` to interpret them as `Lastname, Firstname`.
 
 Both of these issues can be fixed with the `typo` and `replacement` arguments to `Swim_Parse`.  Elements of `typo` will be replaced by the element of `replacement` with which they share an index, so all instacnes of the first element of `typo` will be replaced by the first element of `replacement` etc. etc.  Not specifying `typo` or `replacement` will not produce an error, but might negatively impact the results.  If your results look strange, or are missing values, look for typos related to those swims.
 
