@@ -20,7 +20,7 @@ test_that("Swim_Parse works 2", {
     typo =  c("\n", "Indiana  University", ", University of"),
 
     replacement = c("\n", "Indiana University", "")
-  )[164, 6],
+  )[188, 6],
   "2:01.78")
 
 })
@@ -47,7 +47,7 @@ test_that("Swim_Parse works USMS", {
   "51.90")
 
 })
-<<<<<<< HEAD
+
 
 
 test_that("Swim_Parse works USA", {
@@ -58,6 +58,3 @@ test_that("Swim_Parse works USA", {
   3091)
 })
 
-
-=======
->>>>>>> parent of 98df11c... Added testing for USA meet
