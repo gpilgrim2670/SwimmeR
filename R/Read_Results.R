@@ -32,7 +32,7 @@ Read_Results <- function(file, node = NULL) {
     if(is.character(node) == FALSE) {
   stop(" Please supply a value for node")
     } else {
-  webpage <- read_html(file)
+  webpage <- xml2::read_html(file)
   html <- rvest::html_nodes(webpage, node)
   results <- rvest::html_text(html)
 

@@ -2,11 +2,10 @@
 
 
 file <- Read_Results("inst/extdata/jets08082019_067546.pdf")
+file <- Read_Results("http://www.section2swim.com/Results/BoysHS/2004/Sec2/A/Single.htm", node = "pre")
+file <- Read_Results("http://www.section6swim.com/Results/GirlsHS/2012/NFL/Single.htm", node = "pre")
 
-
-
-'%!in%' <- function(x, y)
-  ! ('%in%'(x, y))
+#delete this '%!in%' <- function(x,y)!('%in%'(x,y))
 
 avoid_default <-
   c(
@@ -163,17 +162,17 @@ if (length(data_length_7) > 0) {
     ) %>%
     dplyr::mutate(
       Grade = dplyr::case_when(
-        stringr::str_detect(V2, "^SR$|^JR$|^SO$|^FR$|^10$|^11$|^12$") == TRUE ~ V2,
+        stringr::str_detect(V2, "^SR$|^JR$|^SO$|^FR$|^[:digit:]{1,2}$") == TRUE ~ V2,
         stringr::str_detect(V2, "^SR |^JR |^SO |^FR |^[:digit:]{1,2} ") == TRUE ~ stringr::str_extract(V2, "^SR |^JR |^SO |^FR |^10 |^11 |^[:digit:]{1,2} "),
         stringr::str_detect(V3, "^SR |^JR |^SO |^FR |^[:digit:]{1,2} ") == TRUE ~ stringr::str_extract(V3, "^SR |^JR |^SO |^FR |^10 |^11 |^[:digit:]{1,2} "),
         any(
-          stringr::str_detect(V2, "^SR$|^JR$|^SO$|^FR$|^10$|^11$|^12$")
+          stringr::str_detect(V2, "^SR$|^JR$|^SO$|^FR$|^[:digit:]{1,2}$")
         ) == FALSE &
-          any(stringr::str_detect(V3, "^SR$|^JR$|^SO$|^FR$")) == TRUE ~ V3
+          any(stringr::str_detect(V3, "^SR$|^JR$|^SO$|^FR$|^[:digit:]{1,2}$")) == TRUE ~ V3
       ),
       Grade = trimws(Grade),
-      V2 = trimws(stringr::str_replace(V2, Grade, "")),
-      V3 = trimws(stringr::str_replace(V3, Grade, ""))
+      # V2 = trimws(stringr::str_replace(V2, Grade, "")),
+      # V3 = trimws(stringr::str_replace(V3, Grade, ""))
     ) %>%
     dplyr::mutate(
       School = dplyr::case_when(
@@ -335,6 +334,8 @@ if (length(data_length_6) > 0) {
         stringr::str_detect(V3, "^SR |^JR |^SO |^FR |^[:digit:]{1,2} ") == TRUE ~ stringr::str_split_fixed(V3, " ", n = 2)[, 1],
         stringr::str_length(V2) <= 2 &
           stringr::str_detect(V2, "[[:alpha:]\\.]") == FALSE ~ V2,
+        stringr::str_length(V2) <= 2 &
+          stringr::str_detect(V2, "^SR|^JR|^SO|^FR") == TRUE ~ V2,
         TRUE ~ ""
       )) %>%
     na_if("") %>%
@@ -351,6 +352,8 @@ if (length(data_length_6) > 0) {
         any(stringr::str_detect(V3, "SEC")) == TRUE ~ stringr::str_replace(V1, Name, ""),
         is.na(Grade) &
           stringr::str_detect(V2, "\\.\\d\\d") == FALSE & stringr::str_detect(V2, Name) == FALSE & stringr::str_detect(V2, "[:lower:]{1,}") == TRUE ~ V2,
+        is.na(Grade) &
+          stringr::str_detect(V2, "\\.\\d\\d") == FALSE & stringr::str_detect(V2, Name) == FALSE & stringr::str_detect(V2, "[:alpha:]{2,}") == TRUE ~ V2,
         is.na(Grade) &
           stringr::str_detect(V2, "\\.\\d\\d") == FALSE & stringr::str_detect(V2, Name) == FALSE & stringr::str_detect(V2, "[:lower:]{1,}") == FALSE ~ "",
         is.na(Grade) == TRUE & stringr::str_detect(V2, Name) == TRUE & stringr::str_detect(V3, "[:lower:]{2,}") == TRUE  ~ V3,
@@ -449,6 +452,7 @@ if (length(data_length_6) > 0) {
     )) %>%
     dplyr::mutate(
       School = dplyr::case_when(
+        stringr::str_detect(School, "\\.\\d\\d") == TRUE ~ stringr::str_extract(School, "[:alpha:]*"),
         stringr::str_detect(School, "\\'[[:alpha:]]\\'") == TRUE &
           is.na(Name) == FALSE ~ Name,
         stringr::str_detect(School, "\\'[[:alpha:]]\\'") == FALSE ~ School,
@@ -737,6 +741,10 @@ if (length(data_length_5) > 0) {
           is.na(Name) == FALSE ~ Name,
         TRUE ~ School
       ),
+      School = dplyr::case_when(
+        stringr::str_detect(School, "\\d\\d\\.") == TRUE ~ stringr::str_extract(School, "[:alpha:]*"),
+        TRUE ~ School
+      ),
       Grade = replace(Grade, Grade == School, NA),
       Grade = replace(Grade, stringr::str_detect(Grade, "\\.\\d") == TRUE, NA),
       Name = stringr::str_replace(Name, "^-", ""),
@@ -842,9 +850,10 @@ if (length(data_length_4) > 0) {
           stringr::str_detect(V4, "\\.\\d\\d") == TRUE ~ V3,
         stringr::str_detect(V3, "\\.\\d\\d") == FALSE &
           stringr::str_detect(V4, "\\.\\d\\d") == TRUE ~ "",
-        TRUE ~ V2
+        TRUE ~ ""
       )
     ) %>%
+    na_if("") %>%
     dplyr::mutate(
       Finals_Time = dplyr::case_when(
         stringr::str_detect(V3, "\\.\\d\\d") == TRUE &
@@ -974,6 +983,7 @@ if (length(data_length_4) > 0) {
         ""
       )
     ) %>%
+    na_if("") %>%
     dplyr::mutate(
       Name = stringr::str_replace(Name, "^-", ""),
       Name = replace(Name, Name == School, NA)
