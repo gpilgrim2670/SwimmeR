@@ -1,14 +1,9 @@
----
-title: "Read Me"
-author: "Greg Pilgrim"
-date: "7 April 2020"
-output: 
-  html_document:
-    includes:
-      in_header: inst//logos//logo_file.html
----
 
 # 'SwimmeR'
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/SwimmeR?color=green)](https://cran.r-project.org/package=SwimmeR)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/SwimmeR?color=green)](https://cran.r-project.org/package=SwimmeR)
+[![](http://cranlogs.r-pkg.org/badges/SwimmeR?color=green)](https://cran.r-project.org/package=SwimmeR)
+[![](http://cranlogs.r-pkg.org/badges/last-week/SwimmeR?color=green)](https://cran.r-project.org/package=SwimmeR)
 
 'SwimmeR' is intended to assist those working with times from competitive pool swimming races, such as those conducted under the NHFS, NCAA, or FINA.  For more information please see `vignette("SwimmeR")`.
 
