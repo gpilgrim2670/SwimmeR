@@ -6,10 +6,6 @@
 [![](http://cranlogs.r-pkg.org/badges/SwimmeR?color=blue)](https://cran.r-project.org/package=SwimmeR)
 [![](http://cranlogs.r-pkg.org/badges/last-week/SwimmeR?color=blue)](https://cran.r-project.org/package=SwimmeR)
 
-  <!-- badges: start -->
-  [![Travis build status](https://travis-ci.org/gpilgrim2670/SwimmeR.svg?branch=master)](https://travis-ci.org/gpilgrim2670/SwimmeR)
-  <!-- badges: end -->
-
 'SwimmeR' is intended to assist those working with times from competitive pool swimming races, such as those conducted under the NHFS, NCAA, or FINA.  For more information please see `vignette("SwimmeR")`.
 
 # Usage
@@ -71,6 +67,6 @@ course_convert_DF(time = Swim$time, course = Swim$course, course_to = Swim$cours
 ```
 
 ## Getting help
-For more information please see `vignette("SwimmeR")`.  If you download from github don't forget to set `build_vignettes = TRUE`.
+For more information please see `vignette("SwimmeR-Vignette")`.  If you download from github don't forget to set `build_vignettes = TRUE`.
 
 If you find bug, please provide a minimal reproducible example at [github](https://github.com/gpilgrim2670/SwimmeR). For questions please contact the [creator](gpilgrim2670@gmail.com)
