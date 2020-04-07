@@ -1,4 +1,4 @@
-#' Results for Lilly King's 200 Breastrokes
+#' Results for Lilly King's 200 Breastsrokes
 #'
 #'Lilly King's 200 Breaststroke swims from her NCAA career
 #'

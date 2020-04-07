@@ -6,7 +6,7 @@
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
 #' @param x A number of seconds to be converted to swimming format
-#' @return the number of seconds \code{x} converted to convetional swimming format mm:ss.hh
+#' @return the number of seconds \code{x} converted to conventional swimming format mm:ss.hh
 #'
 #' @examples mmss_format(95.37)
 #' mmss_format(200.95)
