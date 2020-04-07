@@ -1,10 +1,10 @@
 
 # 'SwimmeR' <img src="inst/logos/hex_logo.png" width="131px" height="140px" align="right" style="padding-left:10px;background-color:white;" />
 
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/SwimmeR?color=lightblue)](https://cran.r-project.org/package=SwimmeR)
-[![](http://cranlogs.r-pkg.org/badges/grand-total/SwimmeR?color=lightblue)](https://cran.r-project.org/package=SwimmeR)
-[![](http://cranlogs.r-pkg.org/badges/SwimmeR?color=lightblue)](https://cran.r-project.org/package=SwimmeR)
-[![](http://cranlogs.r-pkg.org/badges/last-week/SwimmeR?color=lightblue)](https://cran.r-project.org/package=SwimmeR)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/SwimmeR?color=blue)](https://cran.r-project.org/package=SwimmeR)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/SwimmeR?color=blue)](https://cran.r-project.org/package=SwimmeR)
+[![](http://cranlogs.r-pkg.org/badges/SwimmeR?color=blue)](https://cran.r-project.org/package=SwimmeR)
+[![](http://cranlogs.r-pkg.org/badges/last-week/SwimmeR?color=blue)](https://cran.r-project.org/package=SwimmeR)
 
 'SwimmeR' is intended to assist those working with times from competitive pool swimming races, such as those conducted under the NHFS, NCAA, or FINA.  For more information please see `vignette("SwimmeR")`.
 
