@@ -1,6 +1,15 @@
 # Version 0.2.0.0
+Added functions to read, clean, and parse swimming data from html and pdf sources.  This is a large increase in the functionality of the package.
 
+## Test envirornments
+* local Windows 10 install, R 3.6.3
+* local OS X install, R 3.6.3
+* ubuntu 14.04 (on travis-ci), R 3.6.1
+* win-builder
 
+## R CMD check results
+
+0 errors | 0 warnings | 0 notes
 
 # Version 0.1.0.0
 ## Resubmission

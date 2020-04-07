@@ -9,3 +9,4 @@
 
 ^inst/logos$
 ^R/logo\.R$
+^\.travis\.yml$
