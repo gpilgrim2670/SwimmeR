@@ -168,6 +168,8 @@ Swim_Parse <- function(file, avoid = avoid_default, typo = typo_default, replace
           TRUE ~ V3
         )
       ) %>%
+      mutate(School = str_replace(School, Grade, ""),
+             School = trimws(School)) %>%
       dplyr::mutate(
         Prelims_Time = dplyr::case_when(
           any(stringr::str_detect(V3, "\\:\\d\\d")) == TRUE &
@@ -1092,7 +1094,8 @@ Swim_Parse <- function(file, avoid = avoid_default, typo = typo_default, replace
                        ),
                        Points = replace(Points, stringr::str_detect(Points, "[[:alpha:]]") == TRUE, NA),
                        Points = replace(Points, stringr::str_detect(Points, "[^[:digit:]|\\.]"), NA),
-                       Place = round(as.numeric(Place))
+                       Place = round(as.numeric(Place)),
+                       Event = as.character(Event)
                      ))
 
 

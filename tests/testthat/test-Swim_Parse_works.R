@@ -85,6 +85,8 @@ test_that("Swim_Parse works list", {
                url101)
 
   df_standard <- read.csv(system.file("extdata", "df_test.csv", package = "SwimmeR"), stringsAsFactors = FALSE, colClasses=c("character", "numeric", rep("character", 7)))
+  df_standard <- df_standard %>%
+    select(-column_label)
 
   Read_Map <- function(links) {
 
@@ -114,7 +116,8 @@ test_that("Swim_Parse works list", {
 
   df_test <- Read_Map(sources)
   df_test <- Parse_Map(df_test)
-  df_test <- dplyr::bind_rows(df_test, .id = "column_label")
+  df_test <- dplyr::bind_rows(df_test, .id = "column_label") %>%
+    select(-column_label)
   expect_equivalent(df_standard,
                     df_test)
 })

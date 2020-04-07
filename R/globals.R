@@ -17,6 +17,7 @@ utils::globalVariables(
     "Place",
     "Points",
     "Row_Numb",
+    "Event",
     "read_html"
   )
 )

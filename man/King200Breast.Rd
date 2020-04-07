@@ -4,7 +4,9 @@
 \name{King200Breast}
 \alias{King200Breast}
 \title{Results for Lilly King's 200 Breastrokes}
-\format{An object of class \code{"data.frame"}}
+\format{
+An object of class \code{"data.frame"}
+}
 \source{
 \href{https://www.usaswimming.org/utility/landing-pages/times/ncaa-division-i}{NCAA Times Database}
 }
