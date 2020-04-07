@@ -14,7 +14,7 @@
 
 # Usage
 
-Version 0.2.0.0 of `SwimmeR` has two major uses - importing results and formatting times
+Version 0.2.0 of `SwimmeR` has two major uses - importing results and formatting times
 
 ## Importing Results
 
