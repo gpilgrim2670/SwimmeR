@@ -1,6 +1,14 @@
-# 'SwimmeR'
+---
+title: "Read Me"
+author: "Greg Pilgrim"
+date: "7 April 2020"
+output: 
+  html_document:
+    includes:
+      in_header: inst//logos//logo_file.html
+---
 
-<img src="inst/logos/hex_logo.png" width="200", style="float: right;" />
+# 'SwimmeR'
 
 'SwimmeR' is intended to assist those working with times from competitive pool swimming races, such as those conducted under the NHFS, NCAA, or FINA.  For more information please see `vignette("SwimmeR")`.
 
