@@ -1,5 +1,6 @@
 # 'SwimmeR'
-<img src="inst/logos/hex_logo.png" width="200">
+
+<img src="inst/logos/hex_logo.png" width="200", style="float: right;" />
 
 'SwimmeR' is intended to assist those working with times from competitive pool swimming races, such as those conducted under the NHFS, NCAA, or FINA.  For more information please see `vignette("SwimmeR")`.
 
