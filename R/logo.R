@@ -10,12 +10,13 @@ s
 sticker("inst/extdata/logo.png", package = "hexSticker", p_size=20, s_x=1, s_y=.75, s_width=.6,
         filename = "inst/extdata/hex_logo.png")
 
-imgurl <- "inst/extdata/logo_2.png"
+imgurl <- "inst/extdata/logo_nobackground.png"
 s <- sticker(
   imgurl,
   package = "SwimmeR",
   p_size = 15,
   p_color = "black",
+  p_family = "gochi",
   s_x = 1,
   s_y = 0.75,
   s_width = 0.8,
@@ -24,3 +25,9 @@ s <- sticker(
   filename = "inst/extdata/hex_logo.png")
 
 plot(s)
+
+library(showtext)
+## Loading Google fonts (http://www.google.com/fonts)
+font_add_google("Gochi Hand", "gochi")
+## Automatically use showtext to render text for future devices
+showtext_auto()
