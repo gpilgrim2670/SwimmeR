@@ -1,5 +1,6 @@
 
-# 'SwimmeR'
+# 'SwimmeR' <img src="inst/logos/hex_logo.png" width="131px" height="140px" align="right" style="padding-left:10px;background-color:white;" />
+
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/SwimmeR?color=green)](https://cran.r-project.org/package=SwimmeR)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/SwimmeR?color=green)](https://cran.r-project.org/package=SwimmeR)
 [![](http://cranlogs.r-pkg.org/badges/SwimmeR?color=green)](https://cran.r-project.org/package=SwimmeR)
