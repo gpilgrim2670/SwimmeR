@@ -4,6 +4,7 @@ Added functions to read, clean, and parse swimming data from html and pdf source
 ## Test envirornments
 * local Windows 10 install, R 3.6.3
 * local OS X install, R 3.6.3
+* win_devel
 
 ## R CMD check results
 
