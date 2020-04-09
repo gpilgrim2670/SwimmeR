@@ -6,7 +6,6 @@
 ^cran-comments\.md$
 ^doc$
 ^Meta$
-^README\.md$
 ^inst/logos$
 ^R/logo\.R$
 ^\.travis\.yml$
