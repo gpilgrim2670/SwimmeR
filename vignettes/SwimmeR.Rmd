@@ -2,7 +2,7 @@
 title: "SwimmeR"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{SwimmeR-Vignette}
+  %\VignetteIndexEntry{SwimmeR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
