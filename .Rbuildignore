@@ -4,7 +4,7 @@
 ^CRAN-RELEASE$
 ^LICENSE\.md$
 ^cran-comments\.md$
-
+^doc$
 ^Meta$
 ^inst/logos$
 ^R/logo\.R$
