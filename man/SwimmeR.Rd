@@ -4,7 +4,7 @@
 \name{SwimmeR}
 \alias{SwimmeR}
 \alias{SwimmeR-package}
-\title{SwimmeR: A package for dealing with swimming times}
+\title{SwimmeR: A package for working with swimming times}
 \description{
 There are two goals primary functions 'SwimmeR' as presently constructed.  First, it reads in swimming results from html or pdf sources and returns tidy dataframes.  Second it converts swimming times (performances) between the computationally useful 
     format of seconds, reported to the 100ths place (eg 95.37) and the conventional reporting format (1:35.37) used in the swimming community.
