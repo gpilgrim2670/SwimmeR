@@ -20,12 +20,7 @@ file_read <- Read_Results(file = file_path)
 file_read[294:303]
 
 ## ----Swim_Parse, message = FALSE----------------------------------------------
-df <-
-  Swim_Parse(
-    file = file_read,
-    typo = c("\n", "Indiana  University", ", University of"),
-    replacement = c("\n", "Indiana University", "")
-  )
+df <- Swim_Parse(file = file_read, typo = c("\n", "Indiana  University", ", University of"), replacement = c("\n", "Indiana University", ""))
 
 ## ----Swim Parse output, message = FALSE---------------------------------------
 df[67:69,]
@@ -51,7 +46,6 @@ King200Breast
 King200Breast <- King200Breast %>% 
   mutate(Time_sec = sec_format(Time),
          Time_swim_2 = mmss_format(Time_sec))
-
 King200Breast
 
 ## ----formatted times plot, fig.height = 5, fig.width = 7----------------------
@@ -59,7 +53,7 @@ King200Breast %>%
   ggplot(aes(x = Date, y = Time_sec)) +
   geom_point() +
   scale_y_continuous(labels = scales::trans_format("identity", mmss_format)) +
-  theme_bw() +
+  theme_classic() +
   labs(y= "Time",
        title = "Lilly King NCAA 200 Breaststroke")
 
