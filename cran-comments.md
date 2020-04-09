@@ -1,4 +1,8 @@
+## Resubmission
+Removed email address from readme.md per instructions
+
 # Version 0.2.0
+
 Added functions to read, clean, and parse swimming data from html and pdf sources.  This is a large increase in the functionality of the package.
 
 ## Test envirornments
