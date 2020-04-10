@@ -6,7 +6,7 @@
 ^cran-comments\.md$
 ^doc$
 ^Meta$
-^inst/logos$
+^inst/logos/logo_nobackground\.png$
 ^R/logo\.R$
 ^\.travis\.yml$
 ^doc$
