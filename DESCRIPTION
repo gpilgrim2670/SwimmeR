@@ -5,7 +5,8 @@ Authors@R:
     person(given = "Greg",
            family = "Pilgrim",
            role = c("aut", "cre"),
-           email = "gpilgrim2670@gmail.com")
+           email = "gpilgrim2670@gmail.com",
+           comment = c(ORCID = "0000-0001-7831-442X"))
 Description: There are two goals primary functions 'SwimmeR' as presently constructed.  First, it reads in swimming results from html or pdf sources and returns tidy dataframes.  Second it converts swimming times (performances) between the computationally useful 
     format of seconds, reported to the 100ths place (eg 95.37) and the conventional reporting format (1:35.37) used in the swimming community.
     Additionally 'SwimmeR' converts times between the various pool sizes used in competitive swimming, namely 50m length (LCM), 25m length (SCM)
