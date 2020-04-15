@@ -10,10 +10,12 @@
 
 ### Latest Released Version from CRAN
 `install.packages("SwimmeR")`
+
 `library(SwimmeR)`
 
 ### Latest Development Version from Github
 `devtools::install_github("gpilgrim2670/SwimmeR", build_vignettes = TRUE)`
+
 `library(SwimmeR)`
 
 # Usage
