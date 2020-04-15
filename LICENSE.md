@@ -1,6 +1,6 @@
 # MIT License
 
-Copyright (c) 2019 Greg Pilgrim
+Copyright (c) 2020 Greg Pilgrim
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
