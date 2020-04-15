@@ -8,6 +8,15 @@
 
 'SwimmeR' is intended to assist those working with times from competitive pool swimming races, such as those conducted under the NHFS, NCAA, or FINA.  For more information please see `vignette("SwimmeR")`.
 
+## Availability
+### Latest Released Version from CRAN
+`install.packages("SwimmeR")`
+`library(SwimmeR)`
+
+### Latest Development Version from Github
+`devtools::install_github("gpilgrim2670/SwimmeR", build_vignettes = TRUE)`
+`library(SwimmeR)`
+
 # Usage
 
 Version 0.2.0 of `SwimmeR` has two major uses - importing results and formatting times.
