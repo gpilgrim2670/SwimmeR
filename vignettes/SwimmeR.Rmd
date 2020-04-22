@@ -2,7 +2,7 @@
 title: "SwimmeR"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{SwimmeR-Vignette}
+  %\VignetteIndexEntry{SwimmeR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -110,7 +110,7 @@ King200Breast %>%
   ggplot(aes(x = Date, y = Time_sec)) +
   geom_point() +
   scale_y_continuous(labels = scales::trans_format("identity", mmss_format)) +
-  theme_bw() +
+  theme_classic() +
   labs(y= "Time",
        title = "Lilly King NCAA 200 Breaststroke")
 ```

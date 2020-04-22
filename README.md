@@ -6,15 +6,29 @@
 [![](http://cranlogs.r-pkg.org/badges/SwimmeR?color=blue)](https://cran.r-project.org/package=SwimmeR)
 [![](http://cranlogs.r-pkg.org/badges/last-week/SwimmeR?color=blue)](https://cran.r-project.org/package=SwimmeR)
 
+<<<<<<< HEAD
   <!-- badges: start -->
   [![Travis build status](https://travis-ci.org/gpilgrim2670/SwimmeR.svg?branch=master)](https://travis-ci.org/gpilgrim2670/SwimmeR)
   <!-- badges: end -->
 
 `SwimmeR` is intended to assist those working with times from competitive pool swimming races, such as those conducted under the NHFS, NCAA, or FINA.  For more information please see `vignette("SwimmeR")`.
+=======
+'SwimmeR' is intended to assist those working with times from competitive pool swimming races, such as those conducted under the NHFS, NCAA, or FINA.  For more information please see `vignette("SwimmeR")`.
+>>>>>>> bc87057f76829ff94d9b9ac2ef0fde37626db2d2
+
+### Latest Released Version from CRAN
+`install.packages("SwimmeR")`
+
+`library(SwimmeR)`
+
+### Latest Development Version from Github
+`devtools::install_github("gpilgrim2670/SwimmeR", build_vignettes = TRUE)`
+
+`library(SwimmeR)`
 
 # Usage
 
-Version 0.2.0 of `SwimmeR` has two major uses - importing results and formatting times
+Version 0.2.0 of `SwimmeR` has two major uses - importing results and formatting times.
 
 ## Importing Results
 
@@ -22,7 +36,7 @@ Version 0.2.0 of `SwimmeR` has two major uses - importing results and formatting
 
 `Read_Result` has two arguments, `file`, which is the file path to read in, and `node`, required only for HTML files, this is a CSS node where the results reside
 
-`Swim_Parse` has four arguements. `file` is the output of `Read_Result` and is required.  `avoid` is a list of strings.  Rows of the read in file containing any of those strings will not be included.  `avoid` is optional.  Incorrectly specifying it may lead to nonsense rows in the final dataframe, but will not cause an error.  `typo` and `replacement` work together to fix typos, by replacing them with replacements.  Strings in `typo` will be replaced by strings in `replacement` in element index order - that is the first element of `typo` will be replaced everywhere it appears by the first element of `replacement`.  Typos can cause lost data and nonsense rows.  See `?Swim_Parse` or the package Vignette for more information.
+`Swim_Parse` has four arguements. `file` is the output of `Read_Result` and is required.  `avoid` is a list of strings.  Rows of the read in file containing any of those strings will not be included.  `avoid` is optional.  Incorrectly specifying it may lead to nonsense rows in the final dataframe, but will not cause an error.  `typo` and `replacement` work together to fix typos, by replacing them with replacements.  Strings in `typo` will be replaced by strings in `replacement` in element index order - that is the first element of `typo` will be replaced everywhere it appears by the first element of `replacement`.  Typos can cause lost data and nonsense rows.  See `?Swim_Parse` or the package vignette for more information.
 
 ```r
 Swim_Parse(
@@ -73,4 +87,4 @@ course_convert_DF(time = Swim$time, course = Swim$course, course_to = Swim$cours
 ## Getting help
 For more information please see `vignette("SwimmeR")`.  If you download from github don't forget to set `build_vignettes = TRUE`.
 
-If you find bug, please provide a minimal reproducible example at [github](https://github.com/gpilgrim2670/SwimmeR). For questions please contact the [creator](gpilgrim2670@gmail.com)
+If you find bug, please provide a minimal reproducible example at [github](https://github.com/gpilgrim2670/SwimmeR).
