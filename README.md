@@ -6,15 +6,7 @@
 [![](http://cranlogs.r-pkg.org/badges/SwimmeR?color=blue)](https://cran.r-project.org/package=SwimmeR)
 [![](http://cranlogs.r-pkg.org/badges/last-week/SwimmeR?color=blue)](https://cran.r-project.org/package=SwimmeR)
 
-<<<<<<< HEAD
-  <!-- badges: start -->
-  [![Travis build status](https://travis-ci.org/gpilgrim2670/SwimmeR.svg?branch=master)](https://travis-ci.org/gpilgrim2670/SwimmeR)
-  <!-- badges: end -->
-
 `SwimmeR` is intended to assist those working with times from competitive pool swimming races, such as those conducted under the NHFS, NCAA, or FINA.  For more information please see `vignette("SwimmeR")`.
-=======
-'SwimmeR' is intended to assist those working with times from competitive pool swimming races, such as those conducted under the NHFS, NCAA, or FINA.  For more information please see `vignette("SwimmeR")`.
->>>>>>> bc87057f76829ff94d9b9ac2ef0fde37626db2d2
 
 ### Latest Released Version from CRAN
 `install.packages("SwimmeR")`
