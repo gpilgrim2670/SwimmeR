@@ -10,7 +10,7 @@
   [![Travis build status](https://travis-ci.org/gpilgrim2670/SwimmeR.svg?branch=master)](https://travis-ci.org/gpilgrim2670/SwimmeR)
   <!-- badges: end -->
 
-'SwimmeR' is intended to assist those working with times from competitive pool swimming races, such as those conducted under the NHFS, NCAA, or FINA.  For more information please see `vignette("SwimmeR")`.
+`SwimmeR` is intended to assist those working with times from competitive pool swimming races, such as those conducted under the NHFS, NCAA, or FINA.  For more information please see `vignette("SwimmeR")`.
 
 # Usage
 
