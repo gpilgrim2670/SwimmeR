@@ -12,10 +12,10 @@ test_that("Swim_Parse works", {
 
 })
 
-test_that("Swim_Parse works 2", {
+test_that("swim_parse works 2", {
   # file <- test_file("Texas-Florida-Indiana.pdf")
   file <- system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")
-  expect_match(Swim_Parse(
+  expect_match(swim_parse(
     Read_Results(file),
     typo =  c("\n", "Indiana  University", ", University of"),
 

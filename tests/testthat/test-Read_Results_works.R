@@ -1,7 +1,6 @@
 library(rvest)
 library(pdftools)
 
-
 test_that("Read_Result PDF works", {
   file <- system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")
   expect_match(

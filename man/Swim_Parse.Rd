@@ -2,9 +2,17 @@
 % Please edit documentation in R/Swim_Parse.R
 \name{Swim_Parse}
 \alias{Swim_Parse}
+\alias{swim_parse}
 \title{Formats swimming and diving data read in with Read_Results into dataframe}
 \usage{
 Swim_Parse(
+  file,
+  avoid = avoid_default,
+  typo = typo_default,
+  replacement = replacement_default
+)
+
+swim_parse(
   file,
   avoid = avoid_default,
   typo = typo_default,

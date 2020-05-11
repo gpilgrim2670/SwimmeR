@@ -2,9 +2,12 @@
 % Please edit documentation in R/Read_Results.R
 \name{Read_Results}
 \alias{Read_Results}
+\alias{read_results}
 \title{Reads swimming and diving results into a list of strings in preparation for parsing with \code{Swim_Parse}}
 \usage{
 Read_Results(file, node = NULL)
+
+read_results(file, node = NULL)
 }
 \arguments{
 \item{file}{a .pdf or .html file (could be a url) where containing swimming results.  Must be formatted in a "normal" fashion - see vignette}

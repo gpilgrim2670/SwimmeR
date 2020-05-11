@@ -1,3 +1,0 @@
-add "not in" function
-lower case versions of Swim_Parse and Read_Results
-add mode function

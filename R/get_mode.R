@@ -10,7 +10,7 @@
 #'
 #' @examples a <- c("a", "a", "b", "c")
 #' get_mode(a)
-#' ab <- c("a", "a", "b", "b", "c") # returns "a", not "b", because although there are two of each "a" appears first
+#' ab <- c("a", "a", "b", "b", "c") # returns "a", not "b"
 #' get_mode(ab)
 #' a_na <- c("a", "a", NA, NA, "c")
 #' get_mode(a_na)

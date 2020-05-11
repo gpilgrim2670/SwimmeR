@@ -33,7 +33,6 @@
 #' @importFrom pdftools pdf_text
 #' @importFrom stats setNames
 #'
-#'
 #' @param file output from \code{Read_Results}
 #' @param avoid a list of strings.  Rows in \code{x} containing these strings will not be included. For example "Pool:", often used to label pool records, could be passed to \code{avoid}.  The default is \code{avoid_default}, which contains many strings similar to "Pool:", such as "STATE:" and "Qual:".  Users can supply their own lists to \code{avoid}.
 #' @param typo a list of strings that are typos in the original results.  \code{Swim_Parse} is particularly sensitive to accidental double spaces, so "Central  High School", with two spaces between "Central" and "High" is a problem, which can be fixed.  Pass "Central High School" to \code{typo}.  Unexpected commas as also an issue, for example "Texas, University of" should be fixed using \code{typo} and \code{replacement}
@@ -1101,3 +1100,6 @@ Swim_Parse <- function(file, avoid = avoid_default, typo = typo_default, replace
 
   return(data)
 }
+#' @rdname Swim_Parse
+#' @export
+swim_parse <- Swim_Parse

@@ -9,8 +9,6 @@
 #' @importFrom rvest html_text
 #' @importFrom pdftools pdf_text
 #'
-#'
-#'
 #' @param file a .pdf or .html file (could be a url) where containing swimming results.  Must be formatted in a "normal" fashion - see vignette
 #' @param node a CSS node where html results are stored.  Required for html results.
 #' @return returns a list of strings containing the information from \code{x}.  Should then be parsed with \code{Swim_Parse}
@@ -47,3 +45,8 @@ Read_Results <- function(file, node = NULL) {
 
   return(as_lines_list_2)
 }
+
+
+#' @rdname Read_Results
+#' @export
+read_results <- Read_Results
