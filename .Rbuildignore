@@ -4,6 +4,7 @@
 ^CRAN-RELEASE$
 ^LICENSE\.md$
 ^cran-comments\.md$
+^to_do\.txt$
 ^doc$
 ^Meta$
 ^inst/logos/logo_nobackground\.png$
