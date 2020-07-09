@@ -31,7 +31,7 @@
 #'              champion = champion)
 #'}
 #'
-#'@references based on code\{draw.bracket} from the seemingly now defunct \code{mRchmadness} package by Eli Shayer and Saber Powers and used per the terms of that package's GPL-2 license
+#'@references based on \code{draw.bracket} from the seemingly now defunct \code{mRchmadness} package by Eli Shayer and Saber Powers and used per the terms of that package's GPL-2 license
 
 draw_bracket <- function(teams,
                         title = "Championship Bracket",
