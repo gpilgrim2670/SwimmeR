@@ -1,3 +1,6 @@
+# SwimmeR 0.3.1
+*fixed issue with xml2 import that broke read_results for html files
+
 # SwimmeR 0.3.0
 * added `get_mode` function that returns the most frequently occurring element(s) of a list
 * added `draw_bracket` for creating single elimination brackets e.g. for tournaments and shoot-outs

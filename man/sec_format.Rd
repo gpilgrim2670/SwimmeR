@@ -7,13 +7,13 @@
 sec_format(x)
 }
 \arguments{
-\item{x}{A character vector of time(s) in swimming format (eg 1:35.93) to be converted to seconds (95.93)}
+\item{x}{A character vector of time(s) in swimming format (e.g. 1:35.93) to be converted to seconds (95.93)}
 }
 \value{
 returns the value of the string \code{x} which represents a time in swimming format (mm:ss.hh) and converts it to seconds
 }
 \description{
-Takes a character string (or list) representing time in swimming format (eg 1:35.37) and converts it to a numeric value (95.37) or a list of values representing seconds.
+Takes a character string (or list) representing time in swimming format (e.g. 1:35.37) and converts it to a numeric value (95.37) or a list of values representing seconds.
 }
 \examples{
 sec_format("1:35.93")

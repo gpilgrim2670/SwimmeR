@@ -3,7 +3,7 @@
 \docType{data}
 \name{King200Breast}
 \alias{King200Breast}
-\title{Results for Lilly King's 200 Breastsrokes}
+\title{Results for Lilly King's 200 Breaststrokes}
 \format{
 An object of class \code{"data.frame"}
 }

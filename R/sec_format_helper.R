@@ -8,7 +8,7 @@
 #' @importFrom stringr str_split_fixed
 #'
 #'
-#' @param x A character vector of time(s) in swimming format (eg 1:35.93) to be converted to seconds (95.93)
+#' @param x A character vector of time(s) in swimming format (e.g. 1:35.93) to be converted to seconds (95.93)
 
 
 sec_format_helper <- function(x) {

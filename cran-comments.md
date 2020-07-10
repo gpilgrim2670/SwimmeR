@@ -1,4 +1,19 @@
-# version 0.3.0
+# Version 0.3.1
+
+## Changes
+Terribly sorry about the short duration between submissions.  This is an update to fix a serious bug.
+Fixed bug that broke major function read_results for html files (about half of use cases)
+
+## Test envirornments
+* local Windows 10 install, R 4.0.1
+* local OS X install, R 4.0.0
+* win_devel
+
+## R CMD check results
+
+0 errors | 0 warnings | 0 notes
+
+# Version 0.3.0
 
 ## Changes
 Added functions to further aid in cleaning swimming data, plus functions to create tournament brackets.  Also made minor bug fixes.
