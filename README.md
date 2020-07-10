@@ -28,7 +28,7 @@ Version 0.3.0 of `SwimmeR` has two major uses - importing results and formatting
 
 `Read_Result` has two arguments, `file`, which is the file path to read in, and `node`, required only for HTML files, this is a CSS node where the results reside
 
-`Swim_Parse` has four arguements. `file` is the output of `Read_Result` and is required.  `avoid` is a list of strings.  Rows of the read in file containing any of those strings will not be included.  `avoid` is optional.  Incorrectly specifying it may lead to nonsense rows in the final dataframe, but will not cause an error.  `typo` and `replacement` work together to fix typos, by replacing them with replacements.  Strings in `typo` will be replaced by strings in `replacement` in element index order - that is the first element of `typo` will be replaced everywhere it appears by the first element of `replacement`.  Typos can cause lost data and nonsense rows.  See `?Swim_Parse` or the package vignette for more information.
+`Swim_Parse` has four arguments. `file` is the output of `Read_Result` and is required.  `avoid` is a list of strings.  Rows of the read in file containing any of those strings will not be included.  `avoid` is optional.  Incorrectly specifying it may lead to nonsense rows in the final dataframe, but will not cause an error.  `typo` and `replacement` work together to fix typos, by replacing them with replacements.  Strings in `typo` will be replaced by strings in `replacement` in element index order - that is the first element of `typo` will be replaced everywhere it appears by the first element of `replacement`.  Typos can cause lost data and nonsense rows.  See `?Swim_Parse` or the package vignette for more information.
 
 ```r
 Swim_Parse(
@@ -54,7 +54,7 @@ Swim_Parse(
 
 ## Formatting Times
 
-`SwimmeR` also converts times between the conventional swimming format of minutes:seconds.hundredths (1:35.37) and the computationally useful format of seconds, reported to the 100ths place (eg 95.37).  This is accomplished with `sec_format` and `mmss_format`, which are inverses of one another.  Both `sec_format` and `mmss_format` work well with `tidyverse` functions.
+`SwimmeR` also converts times between the conventional swimming format of minutes:seconds.hundredths (1:35.37) and the computationally useful format of seconds, reported to the 100ths place (e.g. 95.37).  This is accomplished with `sec_format` and `mmss_format`, which are inverses of one another.  Both `sec_format` and `mmss_format` work well with `tidyverse` functions.
 
 ```r
 times <- c("1:35.97", "57.34", "16:53.19", NA)
@@ -80,7 +80,7 @@ df %>%
 
 ### Drawing brackets
 
-Brackets for single elimination tournaments can be produced for any number of teams between 5 and 64.  Byes will automattically be included for higher seeds as required.
+Brackets for single elimination tournaments can be produced for any number of teams between 5 and 64.  Byes will automatically be included for higher seeds as required.
 
 ```r
 teams <- c("red", "orange", "yellow", "green", "blue", "indigo", "violet")
