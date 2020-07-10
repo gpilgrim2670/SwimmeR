@@ -11,6 +11,7 @@
 #'
 #' @param teams a list of teams, ordered by desired seed, to place in bracket.  Must be between 5 and 64 inclusive.  Teams must have unique names
 #' @param title bracket title
+#' @param text_size number passed to \code{cex} in plotting
 #' @param round_two a list of teams advancing to the second round (need not be in order)
 #' @param round_three a list of teams advancing to the third round (need not be in order)
 #' @param round_four a list of teams advancing to the forth round (need not be in order)
@@ -35,6 +36,7 @@
 
 draw_bracket <- function(teams,
                         title = "Championship Bracket",
+                        text_size = 0.7,
                         round_two = NULL,
                         round_three = NULL,
                         round_four = NULL,
@@ -43,6 +45,12 @@ draw_bracket <- function(teams,
                         champion = NULL) {
 
   # Sanitize inputs
+
+  # text_size as numeric
+  if(is.numeric(text_size) == FALSE){
+    stop("text_size must be numeric")
+  }
+
   # too many or too few teams
   if(length(teams) < 5) {
     stop("length(teams) must be greater than or equal to 5")
@@ -63,11 +71,16 @@ draw_bracket <- function(teams,
 
   # determine length of teams, number of seeds
   viable_numbers <- c(8, 16, 32, 64)
-  seed <- if (length(teams) %in% viable_numbers) {
-    seq(1:length(teams))
-  } else {
-    rep(1:viable_numbers[base::findInterval(length(teams), viable_numbers) + 1])
-  }
+
+  seed <- seq(1:min(viable_numbers[viable_numbers >= length(teams)]))
+
+
+  # seed <- if (length(teams) %in% viable_numbers) {
+  #   seq(1:length(teams))
+  # } else {
+  #   rep(1:viable_numbers[base::findInterval(length(teams), viable_numbers) + 1])
+  # }
+
   teams <- c(teams, rep("bye", length(seed) - length(teams)))
 
   # Errors in number of teams advancing
@@ -211,9 +224,9 @@ draw_bracket <- function(teams,
                      y[seq(2, length(y) - 3, 2)])
 
   # fill in initial seeding
-  graphics::text(x[1:(length(teams)/2)] - 0.46, y[1:(length(teams)/2)] + y_pad, teams[1:(length(teams)/2)], cex = 0.7,
+  graphics::text(x[1:(length(teams)/2)] - 0.46, y[1:(length(teams)/2)] + y_pad, teams[1:(length(teams)/2)], cex = text_size,
                  adj = 0)
-  graphics::text(x[(1 + length(teams)/2):length(teams)] - 0.15, y[(1 + length(teams)/2):length(teams)] + y_pad, teams[(1 + length(teams)/2):length(teams)], cex = 0.7,
+  graphics::text(x[(1 + length(teams)/2):length(teams)] - 0.15, y[(1 + length(teams)/2):length(teams)] + y_pad, teams[(1 + length(teams)/2):length(teams)], cex = text_size,
                  adj = 0)
 
   if (!is.null(round_two)) {
@@ -221,58 +234,58 @@ draw_bracket <- function(teams,
     graphics::text(x[(length(teams) + 1):(length(teams) + length(teams)/4)] - 0.3,
                    y[(length(teams) + 1):(length(teams) + length(teams)/4)] + y_pad,
                    teams[names(teams) %in% round_two][1:(length(round_two)/2)],
-                   cex = 0.7,
+                   cex = text_size,
                    adj = 0)
 
     graphics::text(x[(length(teams) + length(teams)/4 + 1):(length(teams) + length(teams)/2)] - 0.35,
                    y[(length(teams) + length(teams)/4 + 1):(length(teams) + length(teams)/2)] + y_pad,
                    teams[names(teams) %in% round_two][(1 + length(round_two)/2):length(round_two)],
-                   cex = 0.7,
+                   cex = text_size,
                    adj = 0)
   }
 
   if (!is.null(round_three) & length(teams) %in% c(8, 16, 32, 64)) {
     # fill in round three results
-    graphics::text(x[(length(teams) + length(teams)/2 + 1):(length(teams) + length(teams)/2 + length(teams)/8)] - 0.2,
-                   y[(length(teams) + length(teams)/2 + 1):(length(teams) + length(teams)/2 + length(teams)/8)] + y_pad,
+    graphics::text(x[(length(teams) + length(teams)/2 + 1):(length(teams) + (5/8)*length(teams))] - 0.2,
+                   y[(length(teams) + length(teams)/2 + 1):(length(teams) + (5/8)*length(teams))] + y_pad,
                    teams[names(teams) %in% round_three][1:(length(round_three)/2)],
-                   cex = 0.7,
+                   cex = text_size,
                    adj = 0)
 
-    graphics::text(x[(1 + length(teams) + length(teams)/2 + length(teams)/8):(length(teams) + length(teams)/2 + length(teams)/4)] - 0.3,
-                   y[(1 + length(teams) + length(teams)/2 + length(teams)/8):(length(teams) + length(teams)/2 + length(teams)/4)] + y_pad,
+    graphics::text(x[(1 + length(teams) +  (5/8)*length(teams)):(length(teams) + (3/4)*length(teams))] - 0.3,
+                   y[(1 + length(teams) +  (5/8)*length(teams)):(length(teams) + (3/4)*length(teams))] + y_pad,
                    teams[names(teams) %in% round_three][(1 + length(round_three)/2):length(round_three)],
-                   cex = 0.7,
+                   cex = text_size,
                    adj = 0)
   }
 
   if (!is.null(round_four) & length(teams) %in% c(16, 32, 64)) {
     # fill in round four results
-    graphics::text(x[(1 + length(teams) + length(teams)/2 + length(teams)/4):(length(teams) + length(teams)/2 + length(teams)/4 + length(teams)/16)] - 0.2,
-                   y[(1 + length(teams) + length(teams)/2 + length(teams)/4):(length(teams) + length(teams)/2 + length(teams)/4 + length(teams)/16)] + y_pad,
+    graphics::text(x[(1 + length(teams) + (3/4)*length(teams)):(length(teams) + (13/16)*length(teams))] - 0.2,
+                   y[(1 + length(teams) + (3/4)*length(teams)):(length(teams) + (13/16)*length(teams))] + y_pad,
                    teams[names(teams) %in% round_four][1:(length(round_four)/2)],
-                   cex = 0.7,
+                   cex = text_size,
                    adj = 0)
 
-    graphics::text(x[(1 + length(teams) + length(teams)/2 + length(teams)/4 + length(teams)/16):(length(teams) + length(teams)/2 + length(teams)/4 + length(teams)/8)] - 0.3,
-                   y[(1 + length(teams) + length(teams)/2 + length(teams)/4 + length(teams)/16):(length(teams) + length(teams)/2 + length(teams)/4 + length(teams)/8)] + y_pad,
+    graphics::text(x[(1 + length(teams) + (13/16)*length(teams)):(length(teams) + (7/8)*length(teams))] - 0.3,
+                   y[(1 + length(teams) + (13/16)*length(teams)):(length(teams) + (7/8)*length(teams))] + y_pad,
                    teams[names(teams) %in% round_four][(1 + length(round_four)/2):length(round_four)],
-                   cex = 0.7,
+                   cex = text_size,
                    adj = 0)
   }
 
   if (!is.null(round_five) & length(teams) %in% c(32, 64)) {
     # fill in round five results
-    graphics::text(x[(1 + length(teams) + length(teams)/2 + length(teams)/4 + length(teams)/8):(length(teams) + length(teams)/2 + length(teams)/4 + length(teams)/8 + length(teams)/32)] - 0.2,
-                   y[(1 + length(teams) + length(teams)/2 + length(teams)/4 + length(teams)/8):(length(teams) + length(teams)/2 + length(teams)/4 + length(teams)/8 + length(teams)/32)] + y_pad,
+    graphics::text(x[(1 + length(teams) + (7/8)*length(teams)):(length(teams) + (29/32)*length(teams))] - 0.2,
+                   y[(1 + length(teams) + (7/8)*length(teams)):(length(teams) + (29/32)*length(teams))] + y_pad,
                    teams[names(teams) %in% round_five][1:(length(round_five)/2)],
-                   cex = 0.7,
+                   cex = text_size,
                    adj = 0)
 
-    graphics::text(x[(1+ length(teams) + length(teams)/2 + length(teams)/4 + length(teams)/8 + length(teams)/32):(length(teams) + length(teams)/2 + length(teams)/4 + length(teams)/8 + length(teams)/16)] - 0.3,
-                   y[(1+ length(teams) + length(teams)/2 + length(teams)/4 + length(teams)/8 + length(teams)/32):(length(teams) + length(teams)/2 + length(teams)/4 + length(teams)/8 + length(teams)/16)] + y_pad,
+    graphics::text(x[(1+ length(teams) + (29/32)*length(teams)):(length(teams) + (15/16)*length(teams))] - 0.3,
+                   y[(1+ length(teams) + (29/32)*length(teams)):(length(teams) + (15/16)*length(teams))] + y_pad,
                    teams[names(teams) %in% round_five][(1 + length(round_five)/2):length(round_five)],
-                   cex = 0.7,
+                   cex = text_size,
                    adj = 0)
   }
 
@@ -281,13 +294,13 @@ draw_bracket <- function(teams,
     graphics::text(x[(2 * length(teams) - 3)] - 0.2,
                    y[(2 * length(teams) - 3)] + y_pad,
                    teams[names(teams) %in% round_six][1:(length(round_six)/2)],
-                   cex = 0.7,
+                   cex = text_size,
                    adj = 0)
 
     graphics::text(x[2 * length(teams) - 2] - 0.3,
                    y[2 * length(teams) - 2] + y_pad,
                    teams[names(teams) %in% round_six][(1 + length(round_six)/2):length(round_six)],
-                   cex = 0.7,
+                   cex = text_size,
                    adj = 0)
   }
 
@@ -296,7 +309,7 @@ draw_bracket <- function(teams,
     graphics::text(x[2 * length(teams) - 1] - 0.25,
                    y[2 * length(teams) - 1] + y_pad,
                    teams[names(teams) %in% champion][1],
-                   cex = 0.7,
+                   cex = text_size,
                    adj = 0)
   }
   graphics::title(as.character(title[1]))

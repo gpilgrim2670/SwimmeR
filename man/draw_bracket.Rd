@@ -7,6 +7,7 @@
 draw_bracket(
   teams,
   title = "Championship Bracket",
+  text_size = 0.7,
   round_two = NULL,
   round_three = NULL,
   round_four = NULL,
@@ -19,6 +20,8 @@ draw_bracket(
 \item{teams}{a list of teams, ordered by desired seed, to place in bracket.  Must be between 5 and 64 inclusive.  Teams must have unique names}
 
 \item{title}{bracket title}
+
+\item{text_size}{number passed to \code{cex} in plotting}
 
 \item{round_two}{a list of teams advancing to the second round (need not be in order)}
 
