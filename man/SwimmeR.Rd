@@ -6,7 +6,7 @@
 \alias{SwimmeR-package}
 \title{SwimmeR: A package for working with swimming times}
 \description{
-There are two goals for 'SwimmeR' as presently constructed.  The first is reading in swimming results from html or pdf sources and returning tidy dataframes.  The second is working with the resulting data.  To this end `SwimmeR` converts swimming times (performances) between the computationally useful 
+There are two goals for 'SwimmeR' as presently constructed.  The first is reading in swimming results from html or pdf sources and returning tidy dataframes.  The second is working with the resulting data.  To this end 'SwimmeR' converts swimming times (performances) between the computationally useful 
     format of seconds, reported to the 100ths place (eg 95.37), and the conventional reporting format (1:35.37) used in the swimming community, as well as providing tools for assigning team names etc.
     Additionally 'SwimmeR' has functions for drawing single-elimination brackets and also converts times between the various pool sizes used in competitive swimming, namely 50m length (LCM), 25m length (SCM)
     and 25y length (SCY).

@@ -15,17 +15,17 @@ read_results(file, node = NULL)
 \item{node}{a CSS node where html results are stored.  Required for html results.}
 }
 \value{
-returns a list of strings containing the information from \code{x}.  Should then be parsed with \code{Swim_Parse}
+returns a list of strings containing the information from \code{x}.  Should then be parsed with \code{swim_parse}
 }
 \description{
 Outputs list of strings to be processed by \code{Swim_Parse}
 }
 \examples{
-\dontrun{Read_Results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm", node = "pre")}
+\dontrun{read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm", node = "pre")}
 
 }
 \seealso{
-\code{Read_Results} is meant to be followed by \code{\link{Swim_Parse}}
+\code{read_results} is meant to be followed by \code{\link{swim_parse}}
 }
 \author{
 Greg Pilgrim \email{gpilgrim2670@gmail.com}

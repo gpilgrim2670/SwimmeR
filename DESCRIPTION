@@ -25,7 +25,8 @@ Imports:
     pdftools,
     ggplot2,
     scales,
-    magrittr
+    magrittr,
+    xml2
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.0
