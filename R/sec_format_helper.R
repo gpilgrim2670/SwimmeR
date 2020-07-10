@@ -12,8 +12,7 @@
 
 
 sec_format_helper <- function(x) {
-#   if(is.na(x) == TRUE) {return(x)
-# } else {
+
   x <- as.character(x)
   if(is.na(x) == TRUE) return(NA)
   if (stringr::str_detect(x, ":") == TRUE) {
@@ -25,5 +24,5 @@ sec_format_helper <- function(x) {
     as.numeric(x)
   }
   return(as.numeric(x))
-# }
+
 }

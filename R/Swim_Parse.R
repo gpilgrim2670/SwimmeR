@@ -54,8 +54,10 @@
 
 Swim_Parse <- function(file, avoid = avoid_default, typo = typo_default, replacement = replacement_default) {
 
+  # define "not in" function
   '%!in%' <- function(x,y)!('%in%'(x,y))
 
+  # strings that if a line begins with one of them the line is ignored
   avoid_default <- c("Record", "RECORD", "State", "STATE", "Public\\:", "NYSPHSAA", "NYSPHAA", "\\d\\:\\s",
                      "Finals", "Prelims", "Section\\:", "SECTION\\:", "Section [:alpha:]{1,2}\\:",
                      "SECTION [:alpha:]{1,2}\\:", "Sectional\\:", "Sectionals\\:", "Hosted", "Meet", "MEET", "Points", "Rec\\:",
@@ -68,13 +70,16 @@ Swim_Parse <- function(file, avoid = avoid_default, typo = typo_default, replace
 
   avoid_minimal <- c("r\\:")
 
+  # default typo and replacement strings
   typo_default <- c("typo")
 
   replacement_default <- c("typo")
 
+  # Adds in row number to the end of each row, used to mapping events later
   row_numbs <- seq(1, length(file), 1)
   as_lines_list_2 <- paste(file, row_numbs, sep = "  ")
 
+  # Pulls out event labels from text
   events <- as_lines_list_2 %>%
     .[purrr::map_lgl(., stringr::str_detect, "Event \\d{1,}|Women .* Yard|Women .* Meter|Girls .* Yard|Girls .* Meter|Men .* Yard|Men .* Meter|Boys .* Yard|Boys .* Meter|Mixed .* Yard|Mixed .* Meter")]
   events <- stringr::str_replace(events, ".*Event \\d{1,4} ", "")
@@ -92,6 +97,7 @@ Swim_Parse <- function(file, avoid = avoid_default, typo = typo_default, replace
   events <-
     unlist(purrr::map(events, stringr::str_split, "\\s{2,}"), recursive = FALSE)
 
+  # dataframe for events with names and row number ranges
   events <- as.data.frame(t(as.data.frame(events)),
                           row.names = FALSE,
                           stringsAsFactors = FALSE) %>%
@@ -103,6 +109,7 @@ Swim_Parse <- function(file, avoid = avoid_default, typo = typo_default, replace
       V2 = NULL
     )
 
+  # clean input data
   data_1 <- as_lines_list_2 %>%
     stringr::str_extract_all("\n\\s*\\d*\\s* [:alpha:].*|\n\\s*\\d* \\d*\\-[:alpha:].*") %>%
     .[purrr::map(., length)>0] %>%
@@ -114,15 +121,18 @@ Swim_Parse <- function(file, avoid = avoid_default, typo = typo_default, replace
     stringr::str_replace_all(stats::setNames(replacement, typo)) %>%
     trimws()
 
+  # splits data into variables by splitting at multiple (>= 2) spaces
   data_1 <-
     unlist(purrr::map(data_1, stringr::str_split, "\\s{2,}"), recursive = FALSE)
 
+  # breaks data into subsets based on how many variables it has
   data_length_3 <- data_1[purrr::map(data_1, length) == 3]
   data_length_4 <- data_1[purrr::map(data_1, length) == 4]
   data_length_5 <- data_1[purrr::map(data_1, length) == 5]
   data_length_6 <- data_1[purrr::map(data_1, length) == 6]
   data_length_7 <- data_1[purrr::map(data_1, length) == 7]
 
+  # seven variables
   if (length(data_length_7) > 0) {
     df_7 <- #url76, url14, url78
       as.data.frame(t(as.data.frame(data_length_7)),
@@ -294,6 +304,7 @@ Swim_Parse <- function(file, avoid = avoid_default, typo = typo_default, replace
     )
   }
 
+  # six variables
   if (length(data_length_6) > 0) {
     df_6 <-
       as.data.frame(t(as.data.frame(data_length_6)),
@@ -463,6 +474,7 @@ Swim_Parse <- function(file, avoid = avoid_default, typo = typo_default, replace
     )
   }
 
+  # five variables
   if (length(data_length_5) > 0) {
     df_5 <- as.data.frame(t(as.data.frame(data_length_5)),
                           row.names = FALSE,
@@ -755,6 +767,7 @@ Swim_Parse <- function(file, avoid = avoid_default, typo = typo_default, replace
     )
   }
 
+  # four variables
   if (length(data_length_4) > 0) {
     df_4 <-
       as.data.frame(t(as.data.frame(data_length_4)),
@@ -985,6 +998,7 @@ Swim_Parse <- function(file, avoid = avoid_default, typo = typo_default, replace
     )
   }
 
+  # three variables
   if (length(data_length_3) > 0) {
     df_3 <-
       as.data.frame(t(as.data.frame(data_length_3)),
@@ -1053,7 +1067,7 @@ Swim_Parse <- function(file, avoid = avoid_default, typo = typo_default, replace
     )
   }
 
-  ### Joining Up New ####
+  # Rejoin dataframes from each number of variables
   Min_Row_Numb <- min(events$Event_Row_Min)
 
   data <- dplyr::full_join(df_7, df_6) %>%
@@ -1075,6 +1089,7 @@ Swim_Parse <- function(file, avoid = avoid_default, typo = typo_default, replace
     ) %>%
     dplyr::filter(Row_Numb >= Min_Row_Numb)
 
+  # add in events based on row number ranges
   data  <-
     transform(data, Event = events$Event[findInterval(Row_Numb, events$Event_Row_Min)])
   data$Row_Numb <- NULL

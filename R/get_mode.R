@@ -28,9 +28,11 @@
 #' @export
 
 get_mode <- function(x, type = "first") {
+  # returns first element that appears most often (a tie breaking method)
   if(type == "first") {
     unique_x <- unique(x[!is.na(x)])
     unique_x[which.max(tabulate(match(x, unique_x)))]
+  # returns all elements that appear most often (doesn't break ties, just returns all tied elements)
   } else if (type == "all") {
     unique_x <- unique(x[!is.na(x)])
     tab <- tabulate(match(x, unique_x))

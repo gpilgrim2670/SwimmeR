@@ -40,6 +40,7 @@ Read_Results <- function(file, node = NULL) {
     stop("Please supply a valid .html or .pdf document")
   }
 
+  # extracts lines as list
   as_lines <- str_extract_all(results, "\n.*")
   as_lines_list_2 <- unlist(as_lines, recursive = FALSE)
 

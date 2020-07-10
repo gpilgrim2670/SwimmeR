@@ -23,11 +23,6 @@
 
 
 sec_format <- function(x) {
-  # if (any(is.na(x)) == TRUE) { return(x)
-  #   } else {
-  # x <- na.omit(x)
-  # if(sum(map_lgl(x, is.character)) != length(x)) stop("Enter swim formatted time as character string eg '1:35.97'")
   x <- map_dbl(x, sec_format_helper)
   return(x)
-    # }
 }
