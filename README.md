@@ -20,7 +20,7 @@
 
 # Usage
 
-Version 0.2.0 of `SwimmeR` has two major uses - importing results and formatting times.
+Version 0.3.0 of `SwimmeR` has two major uses - importing results and formatting times.
 
 ## Importing Results
 
@@ -64,6 +64,35 @@ times_mmss <- mmss_format(times_sec)
 times_mmss
 all.equal(times, times_mmss)
 ```
+
+## Regularizing team names
+
+Team names are often abbreviated.  Rather than specifying every abbreviation `SwimmeR` provides `get_mode` to make the task simpler.
+
+```
+Name <- c(rep("Lilly King", 5), rep("James Sullivan", 3))
+Team <- c(rep("IU", 2), "Indiana", "IUWSD", "Indiana University", rep("Monsters University", 2), "MU")
+df <- data.frame(Name, Team, stringsAsFactors = FALSE)
+df %>% 
+  group_by(Name) %>% 
+  mutate(Team = get_mode(Team))
+```
+
+### Drawing brackets
+
+Brackets for single elimination tournaments can be produced for any number of teams between 5 and 64.  Byes will automattically be included for higher seeds as required.
+
+```r
+teams <- c("red", "orange", "yellow", "green", "blue", "indigo", "violet")
+round_two <- c("red", "yellow", "blue", "indigo")
+round_three <- c("red", "blue")
+champion <- "red"
+draw_bracket(teams = teams,
+            round_two = round_two,
+            round_three = round_three,
+            champion = champion)
+```
+
 ### Course conversions
 
 Additionally 'SwimmeR' also converts between the various pool sizes used in competitive swimming, namely 50m length (LCM), 25m length (SCM) and 25y length (SCY).  This is accomplished with either `convert_courses` or `convert_courses_DF`, both of which have the same basic functionality.  The difference is the `convert_courses_DF` returns a dataframe including the input variables whereas `convet_courses` only returns the converted time(s).  Both functions will take inputs in either seconds or swimming format.
@@ -77,6 +106,7 @@ course_convert_DF(time = Swim$time, course = Swim$course, course_to = Swim$cours
 ```
 
 ## Getting help
+
 For more information please see `vignette("SwimmeR")`.  If you download from github don't forget to set `build_vignettes = TRUE`.
 
 If you find bug, please provide a minimal reproducible example at [github](https://github.com/gpilgrim2670/SwimmeR).
