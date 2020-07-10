@@ -136,7 +136,7 @@ df
 ```
 
 # Drawing brackets
-To aid in making single elimination brackets for tournaments and shoot-outs `SwimmeR` has `draw_bracket`. Any number of teams between 5 and 64 can be used, with byes automatically asigned to higher seeds.
+To aid in making single elimination brackets for tournaments and shoot-outs `SwimmeR` has `draw_bracket`. Any number of teams between 5 and 64 can be used, with byes automatically assigned to higher seeds.
 ```{r brackets 1}
 teams <- c("red", "orange", "yellow", "green", "blue", "indigo", "violet")
 draw_bracket(teams = teams)

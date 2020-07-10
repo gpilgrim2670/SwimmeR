@@ -1,8 +1,23 @@
-## Resubmission
-Removed email address from readme.md per instructions
+# version 0.3.0
+
+## Changes
+Added functions to further aid in cleaning swimming data, plus functions to create tournament brackets.  Also made minor bug fixes.
+
+## Test envirornments
+* local Windows 10 install, R 4.0.1
+* local OS X install, R 4.0.0
+* win_devel
+
+## R CMD check results
+
+0 errors | 0 warnings | 0 notes
 
 # Version 0.2.0
 
+## Resubmission
+Removed email address from readme.md per instructions
+
+## Changes
 Added functions to read, clean, and parse swimming data from html and pdf sources.  This is a large increase in the functionality of the package.
 
 ## Test envirornments
