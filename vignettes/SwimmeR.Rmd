@@ -22,7 +22,7 @@ library(ggplot2)
 library(scales)
 ```
 
-`SwimmeR` was developed to work with results from swimming competitions.  Results are often shared as webpages (.html) or PDF documents, which are nice to read, but make data difficult to access.
+`SwimmeR` was developed to work with results from swimming competitions.  Results are often shared as web pages (.html) or PDF documents, which are nice to read, but make data difficult to access.
 
 `SwimmeR` solves this problem by importing & cleaning .html and .pdf files containing swimming results, and returns a tidy dataframe.
 
@@ -126,7 +126,7 @@ df <- data.frame(Name, Team, stringsAsFactors = FALSE)
 df
 ```
 
-Lilly has 4 different teams, but all of them are actually the same.  Similarly Sully has two teams, but actually only one.  Using `get_mode` to return the most frequently occurring team for each swimmer is easier than manually specifying every swimmer's team.
+Lilly has 4 different teams, but all of them are actually the same.  Similarly Sulley has two teams, but actually only one.  Using `get_mode` to return the most frequently occurring team for each swimmer is easier than manually specifying every swimmer's team.
 
 ```{r get_mode}
 df <- df %>% 

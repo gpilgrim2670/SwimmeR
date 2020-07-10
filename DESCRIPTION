@@ -1,6 +1,6 @@
 Package: SwimmeR
 Title: Formatting and Conversions for Swimming Times
-Version: 0.2.0
+Version: 0.3.0
 Authors@R: 
     c(person(given = "Greg",
             family = "Pilgrim",
