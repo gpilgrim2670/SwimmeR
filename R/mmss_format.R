@@ -18,7 +18,6 @@
 #' @export
 
 mmss_format <- function(x) {
-  # if (na.rm) x <- na.omit(x)
   sec <- x%%60
   min <- x%/%60
   sec <- base::sprintf("%05.2f", sec)
