@@ -43,13 +43,13 @@ swim_parse(
 
 `SwimmeR` can only read files in single column format, not double.  `SwimmeR` also does not capture split times.
 
-### Will work
+### Will work - results in single column
 ![Will work](inst/extdata/HSEmpireMeet.png)
 
-### Will also work
+### Will also work - results in single column
 ![Will also work](inst/extdata/Texas-Florida-Indiana_image.png)
 
-### Will not work
+### Will not work - results in multiple columns
 ![Will not work](inst/extdata/DoubleColumnPDF.PNG)
 
 ## Formatting Times
