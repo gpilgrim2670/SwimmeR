@@ -20,31 +20,46 @@
 #' @export
 
 Read_Results <- function(file, node = NULL) {
-  '%!in%' <- function(x,y)!('%in%'(x,y))
-  ### PDF ###
-  if(stringr::str_detect(file, "\\.pdf$") == TRUE) {
-  results <- pdftools::pdf_text(file)
+  '%!in%' <- function(x, y)
+    ! ('%in%'(x, y))
+  if (stringr::str_detect(file, "\\.pdf$") == TRUE) {
+    ### PDF ###
+    results <- pdftools::pdf_text(file)
+    as_lines <- str_extract_all(results, "\n.*")
+    as_lines_list_2 <- unlist(as_lines, recursive = FALSE)
+
+    return(as_lines_list_2)
 
   } else if (stringr::str_detect(file, "\\.htm") == TRUE) {
-  ### HTML ###
-    if(is.character(node) == FALSE) {
-  stop(" Please supply a value for node")
+    ### HTML ###
+    if (is.character(node) == FALSE) {
+      stop(" Please supply a value for node")
     } else {
-  webpage <- xml2::read_html(file)
-  html <- rvest::html_nodes(webpage, node)
-  results <- rvest::html_text(html)
+      webpage <- xml2::read_html(file)
+      html <- rvest::html_nodes(webpage, node)
+      results <- rvest::html_text(html)
+      as_lines <- str_extract_all(results, "\n.*")
+      as_lines_list_2 <- unlist(as_lines, recursive = FALSE)
+
+      return(as_lines_list_2)
 
     }
-
+  } else if (stringr::str_detect(file, "\\.hy3") == TRUE) {
+    ### hy3 ###
+    results <- readr::read_delim(file, delim = "\\s\\2", col_names = FALSE)
+    as_lines_list_2 <- unlist(results, recursive = FALSE)
+    row_numbs <- seq(1, length(as_lines_list_2), 1)
+    as_lines_list_2 <- paste(as_lines_list_2, row_numbs, sep = "  ")
+    return(as_lines_list_2)
   } else {
     stop("Please supply a valid .html or .pdf document")
   }
 
   # extracts lines as list
-  as_lines <- str_extract_all(results, "\n.*")
-  as_lines_list_2 <- unlist(as_lines, recursive = FALSE)
-
-  return(as_lines_list_2)
+  # as_lines <- str_extract_all(results, "\n.*")
+  # as_lines_list_2 <- unlist(as_lines, recursive = FALSE)
+  #
+  # return(as_lines_list_2)
 }
 
 

@@ -18,6 +18,27 @@ utils::globalVariables(
     "Points",
     "Row_Numb",
     "Event",
-    "read_html"
+    "read_html",
+    ":=",
+    "ID",
+    "Course",
+    "Seed_Time",
+    "Row_Min",
+    "Row_Max",
+    "X2",
+    "X3",
+    "X8",
+    "X9",
+    "USA_ID",
+    "Birthdate",
+    "ID_Numb",
+    "Team",
+    "Relay_Rank",
+    "Row_Numb.x",
+    "Row_Numb.y",
+    "as_lines_list_2",
+    "First",
+    "Last",
+    "Last_Name"
   )
 )
