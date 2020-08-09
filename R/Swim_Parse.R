@@ -54,6 +54,7 @@ Swim_Parse <-
            avoid = avoid_default,
            typo = typo_default,
            replacement = replacement_default) {
+
     # define "not in" function
     '%!in%' <- function(x, y)
       ! ('%in%'(x, y))

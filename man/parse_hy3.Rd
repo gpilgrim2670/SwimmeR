@@ -26,14 +26,10 @@ returns a dataframe with columns \code{Name}, \code{Place}, \code{Grade}, \code{
 \description{
 Helper function used inside `swim_parse` for dealing with Hy-Tek .hy3 files.  Can have more columns than other `swim_parse` outputs, because .hy3 files can contain more data
 }
-\examples{
-\dontrun{
- }
-\dontrun{
- }
-}
 \seealso{
 \code{parse_hy3} must be run on the output of \code{\link{read_results}}
+
+\code{parse_hy3} runs inside of \code{\link{swim_parse}}
 }
 \author{
 Greg Pilgrim \email{gpilgrim2670@gmail.com}

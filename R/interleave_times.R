@@ -8,10 +8,6 @@
 #' @param type either "individual" or "relay"
 #' @return a modified version of `results` with values from `times` interleaved on the basis of row number
 #'
-#' @examples \dontrun{
-#'  }
-#' \dontrun{
-#'  }
 #' @seealso \code{interleave_times} is a helper function used in \code{\link{parse_hy3}}
 #'
 #'

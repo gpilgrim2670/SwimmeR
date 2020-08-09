@@ -19,12 +19,6 @@ a modified version of `results` with values from `times` interleaved on the basi
 \description{
 Interleaves times based on row number ranges.
 }
-\examples{
-\dontrun{
- }
-\dontrun{
- }
-}
 \seealso{
 \code{interleave_times} is a helper function used in \code{\link{parse_hy3}}
 }

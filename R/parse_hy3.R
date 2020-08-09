@@ -33,12 +33,8 @@
 #' @param replacement a list of fixes for the strings in \code{typo}.  Here one could pass "Central High School" (one space between "Central" and "High") and "Texas" to \code{replacement} fix the issues described in \code{typo}
 #' @return returns a dataframe with columns \code{Name}, \code{Place}, \code{Grade}, \code{School}, \code{Prelims_Time}, \code{Finals_Time}, & \code{Event}.  May also contain \code{Seed_Time}, \code{USA_ID}, and/or \code{Birthdate}.  Note all swims will have a \code{Finals_Time}, even if that time was actually swam in the prelims (i.e. a swimmer did not qualify for finals).  This is so that final results for an event can be generated from just one column.
 #'
-#' @examples \dontrun{
-#'  }
-#' \dontrun{
-#'  }
 #' @seealso \code{parse_hy3} must be run on the output of \code{\link{read_results}}
-#'
+#' @seealso \code{parse_hy3} runs inside of \code{\link{swim_parse}}
 
 parse_hy3 <- function(file, avoid = avoid_minimal, typo = typo_default, replacement = replacement_default) {
 

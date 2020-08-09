@@ -1,6 +1,6 @@
 #' Helper for reading prelims and finals times from Hy-Tek .hy3 files
 #'
-#' XXX
+#' Used to pull prelims and finals times from .hy3 files as part of parsing them.
 #'
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
@@ -14,13 +14,9 @@
 
 #' @param file an output of read_results, from an .hy3 file
 #' @param type type of times, either "prelims", "relay_prelims", "finals" or "relay_finals"
-#' @return
+#' @return a dataframe where column 1 is times and column 2 is row number
 #'
-#' @examples \dontrun{
-#'  }
-#' \dontrun{
-#'  }
-#' @seealso \code{parse_hy3} must be run on the output of \code{\link{read_results}}
+#' @seealso \code{hy3_times} is run inside of \code{\link{parse_hy3}}
 #'
 
 hy3_times <-
