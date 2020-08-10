@@ -1,6 +1,6 @@
-#' Reads swimming and diving results into a list of strings in preparation for parsing with \code{Swim_Parse}
+#' Reads swimming and diving results into a list of strings in preparation for parsing with \code{swim_parse}
 #'
-#' Outputs list of strings to be processed by \code{Swim_Parse}
+#' Outputs list of strings to be processed by \code{swim_parse}
 #'
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
@@ -11,7 +11,7 @@
 #'
 #' @param file a .pdf or .html file (could be a url) where containing swimming results.  Must be formatted in a "normal" fashion - see vignette
 #' @param node a CSS node where html results are stored.  Required for html results.
-#' @return returns a list of strings containing the information from \code{x}.  Should then be parsed with \code{swim_parse}
+#' @return returns a list of strings containing the information from \code{file}.  Should then be parsed with \code{swim_parse}
 #'
 #' @examples \dontrun{read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm", node = "pre")}
 #'

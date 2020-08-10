@@ -3,7 +3,7 @@
 \name{Read_Results}
 \alias{Read_Results}
 \alias{read_results}
-\title{Reads swimming and diving results into a list of strings in preparation for parsing with \code{Swim_Parse}}
+\title{Reads swimming and diving results into a list of strings in preparation for parsing with \code{swim_parse}}
 \usage{
 Read_Results(file, node = NULL)
 
@@ -15,10 +15,10 @@ read_results(file, node = NULL)
 \item{node}{a CSS node where html results are stored.  Required for html results.}
 }
 \value{
-returns a list of strings containing the information from \code{x}.  Should then be parsed with \code{swim_parse}
+returns a list of strings containing the information from \code{file}.  Should then be parsed with \code{swim_parse}
 }
 \description{
-Outputs list of strings to be processed by \code{Swim_Parse}
+Outputs list of strings to be processed by \code{swim_parse}
 }
 \examples{
 \dontrun{read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm", node = "pre")}

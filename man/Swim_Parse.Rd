@@ -3,7 +3,7 @@
 \name{Swim_Parse}
 \alias{Swim_Parse}
 \alias{swim_parse}
-\title{Formats swimming and diving data read in with Read_Results into dataframe}
+\title{Formats swimming and diving data read with \code{read_results} into a dataframe}
 \usage{
 Swim_Parse(
   file,
@@ -32,7 +32,7 @@ swim_parse(
 returns a dataframe with columns \code{Name}, \code{Place}, \code{Grade}, \code{School}, \code{Prelims_Time}, \code{Finals_Time}, \code{Points}, & \code{Event}.  Note all swims will have a \code{Finals_Time}, even if that time was actually swam in the prelims (i.e. a swimmer did not qualify for finals).  This is so that final results for an event can be generated from just one column.
 }
 \description{
-Takes the output of read_results and cleans it, yielding a dataframe of swimming results
+Takes the output of \code{read_results} and cleans it, yielding a dataframe of swimming (and diving) results
 }
 \examples{
 \dontrun{

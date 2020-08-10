@@ -1,6 +1,6 @@
-#' Formats swimming and diving data read in with Read_Results into dataframe
+#' Formats swimming and diving data read with \code{read_results} into a dataframe
 #'
-#' Takes the output of read_results and cleans it, yielding a dataframe of swimming results
+#' Takes the output of \code{read_results} and cleans it, yielding a dataframe of swimming (and diving) results
 #'
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
@@ -54,10 +54,6 @@ Swim_Parse <-
            avoid = avoid_default,
            typo = typo_default,
            replacement = replacement_default) {
-
-    # define "not in" function
-    '%!in%' <- function(x, y)
-      ! ('%in%'(x, y))
 
     # strings that if a line begins with one of them the line is ignored
     avoid_default <-
