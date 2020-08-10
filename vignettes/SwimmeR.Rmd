@@ -28,6 +28,7 @@ library(scales)
 
 Importing is performed by `read_results` which takes as an argument a file path as `file` and a `node` (for .html only).
 
+In addition to this vignette I do a lot of demos on how to use `SwimmeR` at my blog [Swimming + Data Science](https://pilgrim.netlify.app/).
 
 # Reading PDF Results
 `SwimmeR` includes Texas-Florida-Indiana.pdf, results from a tri-meet between the three schools.  It can be read in as such:
