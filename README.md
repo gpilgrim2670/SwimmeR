@@ -14,9 +14,11 @@
 `library(SwimmeR)`
 
 ### Latest Development Version from Github
+
 `devtools::install_github("gpilgrim2670/SwimmeR", build_vignettes = TRUE)`
 
-`library(SwimmeR)`
+The development versions of `read_results` and `swim_parse`can handle .hy3 Hy-Tek meet result files.  While functionality is there the exact outputs of `swim_parse` from .hy3 files may be adjusted prior to the next CRAN release.  From a user perspective .hy3 files are read the same way as .pdf files.
+
 
 # Usage
 
@@ -107,6 +109,8 @@ course_convert_DF(time = swim$time, course = swim$course, course_to = swim$cours
 
 ## Getting help
 
-For more information please see `vignette("SwimmeR")`.  If you download from github don't forget to set `build_vignettes = TRUE`.
+I do a lot of demos on how to use `SwimmeR` at my blog [Swimming + Data Science](https://pilgrim.netlify.app/).
+
+`SwimmeR` also has a vignette.  Call `vignette("SwimmeR")`.  If you download from github don't forget to set `build_vignettes = TRUE`.
 
 If you find bug, please provide a minimal reproducible example at [github](https://github.com/gpilgrim2670/SwimmeR).
