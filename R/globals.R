@@ -39,6 +39,8 @@ utils::globalVariables(
     "as_lines_list_2",
     "First",
     "Last",
-    "Last_Name"
+    "Last_Name",
+    "Finals_Time_sec",
+    "New_Place"
   )
 )
