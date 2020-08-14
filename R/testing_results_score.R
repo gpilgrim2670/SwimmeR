@@ -93,7 +93,7 @@ library(SwimmeR)
 # BigTenRaw <- read_results("C:/Users/gpilgrim/Documents/SwimmeR/inst/extdata/BigTen_WSWIM_2018.pdf")
 #
 # BigTen <- swim_parse(read_results("C:/Users/gpilgrim/Documents/SwimmeR/inst/extdata/BigTen_WSWIM_2018.pdf"),
-#                            typo = c("\\s\\d{1,2}\\s{2,}"),
+#                            typo = c("\\s\\d{1,2}\\s{2,}"), # not sure if needed
 #                            replacement = c(" "),
 #                      avoid = c("B1G", "Pool"))
 #
