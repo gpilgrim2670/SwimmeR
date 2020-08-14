@@ -13,6 +13,8 @@
 #' @importFrom dplyr inner_join
 #' @importFrom dplyr summarize
 #' @importFrom dplyr bind_rows
+#' @importFrom dplyr matches
+#' @importFrom dplyr everything
 #' @importFrom stringr str_detect
 #' @importFrom stringr str_to_lower
 #'
@@ -40,8 +42,9 @@ results_score <-
 
     max_place <- length(point_values)
 
+    # point_values = c(20, 17, 16, 15, 14, 13, 12, 11, 9, 7, 6, 5, 4, 3, 2, 1)
     # add 0 to list of point values
-    point_values <- sort(point_values)
+    point_values <- sort(point_values, decreasing = TRUE)
     point_values <- c(point_values, 0)
 
     # name point values for their respective places
@@ -51,12 +54,13 @@ results_score <-
         dplyr::filter(stringr::str_detect(
           stringr::str_to_lower(Event),
           paste(events, collapse = "|")
-        ) == TRUE)
+        ) == TRUE) %>%
+        select(dplyr::everything(), -dplyr::matches("Points"))
 
       # diving
       if (any(stringr::str_detect(stringr::str_to_lower(results$Event), "diving"))) {
         diving_results <- results %>%
-          dive_place()
+          dive_place(max_place = max_place)
 
       } else {
         diving_results  <- results[0, ]
@@ -67,7 +71,7 @@ results_score <-
         relay_results <- results %>%
           dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "relay") == TRUE) %>% # only want relays
           dplyr::group_by(Event, School) %>%
-          swim_place()
+          swim_place(max_place = max_place)
 
       } else {
         relay_results  <- results[0, ]
@@ -78,7 +82,7 @@ results_score <-
         ind_results <- results %>%
           dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "diving|relay") == FALSE) %>%
           dplyr::group_by(Event, Name) %>%
-          swim_place()
+          swim_place(max_place = max_place)
 
       } else {
         ind_results  <- results[0, ]
@@ -95,6 +99,9 @@ results_score <-
       return(results)
 
     } else if (meet_type == "prelims_finals") {
+      results <- results %>%
+        select(dplyr::everything(), -dplyr::matches("Points"))
+
       if (scoring_heats == 1) {
         results <- results %>%
           group_by(Event) %>%

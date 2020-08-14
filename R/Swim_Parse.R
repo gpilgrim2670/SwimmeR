@@ -60,8 +60,6 @@ Swim_Parse <-
       c(
         "Record",
         "RECORD",
-        "State",
-        "STATE",
         "Public\\:",
         "NYSPHSAA",
         "NYSPHAA",

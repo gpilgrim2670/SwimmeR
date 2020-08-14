@@ -16,6 +16,8 @@ results_score(
 \arguments{
 \item{results}{an output from \code{swim_parse}}
 
+\item{events}{list of events}
+
 \item{meet_type}{how to score based on \code{timed_finals}, where any place is possible, or \code{prelims_finals} where athletes are locked into heats for scoring purposes}
 
 \item{lanes}{number of lanes in to the pool, for purposes of heat}
