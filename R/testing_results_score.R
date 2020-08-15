@@ -1,4 +1,4 @@
-library(SwimmeR)
+# library(SwimmeR)
 
 ##### Timed Finals #####
 # base_6A <-
@@ -91,8 +91,9 @@ library(SwimmeR)
 
 #### Prelims_Finals ####
 # BigTenRaw <- read_results("C:/Users/gpilgrim/Documents/SwimmeR/inst/extdata/BigTen_WSWIM_2018.pdf")
+# BigTenRaw <- read_results("~/SwimmeR/inst/extdata/BigTen_WSWIM_2018.pdf")
 #
-# BigTen <- swim_parse(read_results("C:/Users/gpilgrim/Documents/SwimmeR/inst/extdata/BigTen_WSWIM_2018.pdf"),
+# BigTen <- swim_parse(BigTenRaw,
 #                            typo = c("\\s\\d{1,2}\\s{2,}"), # not sure if needed
 #                            replacement = c(" "),
 #                      avoid = c("B1G", "Pool"))
@@ -109,4 +110,4 @@ library(SwimmeR)
 #
 # df %>%
 #   group_by(School) %>%
-#   summarise(Score = sum(Points))
+  # summarise(Score = sum(Points))
