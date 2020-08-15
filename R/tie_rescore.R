@@ -25,7 +25,7 @@ tie_rescore <- function(df, point_values) {
     dplyr::mutate(New_Place = rank(Place, ties.method = "first"),
                   Points = point_values[New_Place]) %>%
     dplyr::group_by(Place, Event) %>%
-    dplyr::summarize(Points = mean(Points)) %>%
+    dplyr::summarize(Points = mean(Points, na.rm = TRUE)) %>%
     dplyr::inner_join(df) %>%
     dplyr::mutate(Points = dplyr::case_when(
       stringr::str_detect(stringr::str_to_lower(Event), "relay") == TRUE ~ Points * 2,

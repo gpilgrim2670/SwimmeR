@@ -94,20 +94,86 @@
 # BigTenRaw <- read_results("~/SwimmeR/inst/extdata/BigTen_WSWIM_2018.pdf")
 #
 # BigTen <- swim_parse(BigTenRaw,
-#                            typo = c("\\s\\d{1,2}\\s{2,}"), # not sure if needed
-#                            replacement = c(" "),
+#                            typo = c(
+#                              "^\\s{1,}\\*",
+#                             "^\\s{1,}(\\d{1,2})\\s{2,}", # not sure if needed
+#                             # "\\s{1}\\d{1,2}\\s{2,}",
+#                                     ",\\s{1,}University\\s{1,}of",
+#                                     "University\\s{1,}of\\s{1,}",
+#                                     # ",\\s{1,}Madi",
+#                                     "\\s{1,}University",
+#                             "SR\\s{2,}",
+#                             "JR\\s{2,}",
+#                             "SO\\s{2,}",
+#                             "FR\\s{2,}"),
+#                            replacement = c(
+#                              " ",
+#                              "  \\1 ",
+#                              # "  ",
+#                              "", "", "",
+#                              "SR ",
+#                              "JR ",
+#                              "SO ",
+#                              "FR "),
 #                      avoid = c("B1G", "Pool"))
 #
+# # unique(BigTen$School)
+#
 # BigTen <- BigTen %>%
-#   filter(str_detect(Event, "Time Trial") == FALSE)
+#   filter(str_detect(Event, "Time Trial") == FALSE,
+#          str_detect(Event, "Swim-off") == FALSE) %>%
+#   mutate(School = case_when(School == "Wisconsin, Madi" ~ "Wisconsin",
+#                             TRUE ~ School))
+#
+# # unique(BigTen_2$Event)
 #
 # df <- BigTen %>%
-#   results_score(events = unique(BigTen$Event),
+#   results_score(events = unique(BigTen_2$Event),
 #                 meet_type = "prelims_finals",
 #                 lanes = 8,
 #                 scoring_heats = 3,
 #                 point_values = c(32, 28, 27, 26, 25, 24, 23, 22, 20, 17, 16, 15, 14 ,13, 12, 11, 9, 7, 6, 5, 4, 3, 2, 1))
 #
+# df <- df[order(match(df$Event, BigTen_2$Event)), ]
+#
 # df %>%
 #   group_by(School) %>%
-  # summarise(Score = sum(Points))
+#   # filter(Event %in% unique(BigTen_2$Event)[1:7]) %>%
+#   summarise(Score = sum(Points, na.rm = TRUE)) %>%
+#   arrange(desc(Score)) %>%
+#   ungroup() %>%
+#   summarize(total = sum(Score)) # totals to 8596
+#
+# 1465 + 1152.5 + 1094.5 + 1049 + 755 + 693 + 528 + 418 + 386 + 358 + 338 + 187 + 172
+# # 8596 # actual score total
+#
+# BigTenRaw[1170]
+# BigTenRaw[884]
+#
+# unique(df$Event)
+
+#
+#
+# name <- c(rep(c("Jane", "Sarah", "Sally"), 2), "Prelim1", "Prelim2")
+# score <- c(seq(6,1, -1), 0.5, 0.25)
+# event <- "diving"
+#
+# df_test <- data.frame(name = name, score = score, event = event, stringsAsFactors = FALSE)
+#
+# df_test %>%
+#   group_by(name, event) %>%
+#   slice(1)
+# df_test %>%
+#   group_by(Name, Event)
+#
+# results_3 <- results %>%
+#   dplyr::group_by(Event) %>%
+#   dplyr::slice((1 + (lanes * 2)):max_place)
+
+
+# BigTen_2 %>%
+#   dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "relay") == FALSE) %>%
+#   # dplyr::group_by(Event, Name, School) %>%
+#   distinct(Event, Name, School, .keep_all = TRUE) %>%
+#   View()
+

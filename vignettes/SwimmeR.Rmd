@@ -56,7 +56,12 @@ Both of these issues can be fixed with the `typo` and `replacement` arguments to
 There is a third argument to `swim_parse` called `avoid` which will be addressed in the section on reading in html results below.
 
 ```{r swim_parse, message = FALSE}
-df <- swim_parse(file = file_read, typo = c("\n", "Indiana  University", ", University of"), replacement = c("\n", "Indiana University", ""))
+df <-
+  swim_parse(
+    file = file_read,
+    typo = c("Indiana  University", ", University of"),
+    replacement = c("Indiana University", "")
+  )
 ```
 
 Here are those same Women's 100 Breaststroke results, as a dataframe in tidy format:

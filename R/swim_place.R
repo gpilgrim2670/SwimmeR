@@ -18,6 +18,7 @@
 
 swim_place <- function(df, max_place) {
   df <- df %>%
+    dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "diving") == FALSE) %>%
     dplyr::slice(1) %>% # first instance of every swimmer or team (for relays)
     dplyr::ungroup() %>%
     dplyr::group_by(Event) %>%

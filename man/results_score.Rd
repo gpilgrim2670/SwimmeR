@@ -30,7 +30,7 @@ results_score(
 results with point values in a column called \code{Points}
 }
 \description{
-XXX
+Used to add a \code{Points} column with point values for each place.  Can either score "timed finals" type meets where any athlete can get any place, or "prelims-finals", type meets, where placing is restricted by prelim performance.
 }
 \examples{
 \dontrun{read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm", node = "pre")}

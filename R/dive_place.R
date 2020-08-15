@@ -5,6 +5,7 @@
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
 #' @importFrom stringr str_detect
+#' @importFrom stringr str_to_lower
 #' @importFrom dplyr slice
 #' @importFrom dplyr ungroup
 #' @importFrom dplyr group_by
@@ -21,12 +22,12 @@
 
 dive_place <- function(df, max_place) {
   df <- df %>%
-    dplyr::filter(stringr::str_detect(Event, "Diving")) %>%
-    dplyr::mutate(Finals_Time = as.numeric(Finals_Time)) %>%
+    dplyr::filter(stringr::str_detect(str_to_lower(Event), "diving") == TRUE) %>%
     dplyr::group_by(Event, Name) %>%
     dplyr::slice(1) %>% # first instance of every diver
     dplyr::ungroup() %>%
     dplyr::group_by(Event) %>%
+    dplyr::mutate(Finals_Time = as.numeric(Finals_Time)) %>%
     dplyr::mutate(
       Place = rank(desc(Finals_Time), ties.method = "min"),
       # again, highest score gets rank 1

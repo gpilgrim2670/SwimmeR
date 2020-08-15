@@ -20,7 +20,7 @@ test_that("swim_parse works 2", {
     typo =  c("\n", "Indiana  University", ", University of"),
 
     replacement = c("\n", "Indiana University", "")
-  )[188, 6],
+  )[190, 6],
   "2:01.78")
 
 })
@@ -84,9 +84,9 @@ test_that("Swim_Parse works list", {
                url100,
                url101)
 
-  df_standard <- read.csv(system.file("extdata", "df_test.csv", package = "SwimmeR"), stringsAsFactors = FALSE, colClasses=c("character", "numeric", rep("character", 7)))
+  df_standard <- read.csv(system.file("extdata", "df_standard.csv", package = "SwimmeR"), stringsAsFactors = FALSE, colClasses=c("character", "numeric", rep("character", 7)))
   df_standard <- df_standard %>%
-    select(-column_label)
+    select(-X)
 
   Read_Map <- function(links) {
 

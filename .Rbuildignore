@@ -11,3 +11,4 @@
 ^\.travis\.yml$
 09Mar2020-001.hy3
 28Feb2020-001.hy3
+^testing_results_score.R$
