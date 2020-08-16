@@ -44,7 +44,7 @@ parse_hy3 <- function(file, avoid = avoid_minimal, typo = typo_default, replacem
 
   replacement_default <- c("typo")
 
-  file <- as_lines_list_2 %>%
+   file <- file %>%
     .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid)))] %>%
     stringr::str_replace_all(stats::setNames(replacement, typo))
 # data beginning with E1M or E1F contains results from each swim (male and female respectively)
@@ -121,7 +121,7 @@ entry <- entry %>%
          Seed_Time = stringr::str_remove(Seed_Time, "[:alpha:]$")) %>%
   ungroup() %>%
   dplyr::mutate(Row_Min = as.numeric(Row_Numb),
-         Row_Max = dplyr::lead(Row_Min, 1L, default = length(as_lines_list_2) - 1),
+         Row_Max = dplyr::lead(Row_Min, 1L, default = length(file) - 1),
          Row_Min = Row_Min - 0.1) %>%
   dplyr::mutate(Finals_Time = NA,
          Prelims_Time = NA) %>%

@@ -28,10 +28,12 @@ test_that("prelims_finals works", {
   )
 
   BigTen <- BigTen %>%
-    filter(str_detect(Event, "Time Trial") == FALSE,
-           str_detect(Event, "Swim-off") == FALSE) %>%
-    mutate(School = case_when(School == "Wisconsin, Madi" ~ "Wisconsin",
-                              TRUE ~ School))
+    dplyr::filter(
+      stringr::str_detect(Event, "Time Trial") == FALSE,
+      stringr::str_detect(Event, "Swim-off") == FALSE
+    ) %>%
+    dplyr::mutate(School = dplyr::case_when(School == "Wisconsin, Madi" ~ "Wisconsin",
+                                            TRUE ~ School))
 
   # begin results_score portion
   df <- BigTen %>%
@@ -69,11 +71,11 @@ test_that("prelims_finals works", {
     )
 
   Total <- df %>%
-    group_by(School) %>%
-    summarise(Score = sum(Points, na.rm = TRUE)) %>%
-    arrange(desc(Score)) %>%
-    ungroup() %>%
-    summarize(total = sum(Score)) # should total to 8596
+    dplyr::group_by(School) %>%
+    dplyr::summarise(Score = sum(Points, na.rm = TRUE)) %>%
+    dplyr::arrange(dplyr::desc(Score)) %>%
+    dplyr::ungroup() %>%
+    dplyr::summarize(total = sum(Score)) # should total to 8596
 
 
   expect_equal(Total$total[1], 8596)

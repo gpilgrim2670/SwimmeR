@@ -46,20 +46,15 @@ Read_Results <- function(file, node = NULL) {
     }
   } else if (stringr::str_detect(file, "\\.hy3") == TRUE) {
     ### hy3 ###
+    ### add automatic unzipping?
     results <- readr::read_delim(file, delim = "\\s\\2", col_names = FALSE)
     as_lines_list_2 <- unlist(results, recursive = FALSE)
     row_numbs <- seq(1, length(as_lines_list_2), 1)
     as_lines_list_2 <- paste(as_lines_list_2, row_numbs, sep = "  ")
     return(as_lines_list_2)
   } else {
-    stop("Please supply a valid .html or .pdf document")
+    stop("Please supply a valid .html, .hy3 or .pdf document")
   }
-
-  # extracts lines as list
-  # as_lines <- str_extract_all(results, "\n.*")
-  # as_lines_list_2 <- unlist(as_lines, recursive = FALSE)
-  #
-  # return(as_lines_list_2)
 }
 
 

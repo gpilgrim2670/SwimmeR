@@ -28,8 +28,6 @@
 #'
 #' @return results with point values in a column called \code{Points}
 #'
-#' @examples \dontrun{read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm", node = "pre")}
-#'
 #' @export
 
 results_score <-
