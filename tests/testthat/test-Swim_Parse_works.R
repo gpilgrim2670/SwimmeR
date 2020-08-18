@@ -61,6 +61,7 @@ test_that("Swim_Parse works USA", {
 test_that("Swim_Parse works list", {
 
   #import standard
+
   df_standard <- read.csv(system.file("extdata", "df_standard.csv", package = "SwimmeR"), stringsAsFactors = FALSE, colClasses=c("character", "numeric", rep("character", 7), "numeric"))
   df_standard <- df_standard %>%
     select(-X)
@@ -117,7 +118,7 @@ test_that("Swim_Parse works list", {
   df_test <- Read_Map(sources)
   df_test <- Parse_Map(df_test)
   df_test <- dplyr::bind_rows(df_test, .id = "column_label") %>%
-    select(-column_label)
+    select(-column_label, -Exhibition)
 
   # compare standard to test
   expect_equivalent(df_standard,
