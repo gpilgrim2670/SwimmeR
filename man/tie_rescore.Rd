@@ -10,12 +10,14 @@ tie_rescore(df, point_values, lanes)
 \item{df}{a dataframe with results from \code{swim_parse}, with places from \code{swim_place} and/or \code{dive_place}}
 
 \item{point_values}{a named list of point values for each scoring place}
+
+\item{lanes}{number of scoring lanes in the pool}
 }
 \value{
 df modified so that places have been appended based on swimming time
 }
 \description{
-Places are awarded on the basis of time, with fastest (lowest) time winning.  Ties are placed as ties (both ahtletes get 2nd etc.)
+Recoring to average point values for ties.  Ties are placed as ties (both ahtletes get 2nd etc.)
 }
 \seealso{
 \code{tie_rescore} is a helper function used inside of \code{results_score}

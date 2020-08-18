@@ -41,6 +41,8 @@ utils::globalVariables(
     "Last",
     "Last_Name",
     "Finals_Time_sec",
-    "New_Place"
+    "New_Place",
+    "DQ",
+    "Heat"
   )
 )

@@ -1,6 +1,6 @@
 #' Rescore to account for ties
 #'
-#' Places are awarded on the basis of time, with fastest (lowest) time winning.  Ties are placed as ties (both ahtletes get 2nd etc.)
+#' Recoring to average point values for ties.  Ties are placed as ties (both ahtletes get 2nd etc.)
 #'
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
@@ -12,6 +12,7 @@
 #'
 #' @param df a dataframe with results from \code{swim_parse}, with places from \code{swim_place} and/or \code{dive_place}
 #' @param point_values a named list of point values for each scoring place
+#' @param lanes number of scoring lanes in the pool
 #' @return df modified so that places have been appended based on swimming time
 #'
 #' @seealso \code{tie_rescore} is a helper function used inside of \code{results_score}

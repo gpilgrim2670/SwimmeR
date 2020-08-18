@@ -34,7 +34,7 @@
 #' @param avoid a list of strings.  Rows in \code{x} containing these strings will not be included. For example "Pool:", often used to label pool records, could be passed to \code{avoid}.  The default is \code{avoid_default}, which contains many strings similar to "Pool:", such as "STATE:" and "Qual:".  Users can supply their own lists to \code{avoid}.
 #' @param typo a list of strings that are typos in the original results.  \code{swim_parse} is particularly sensitive to accidental double spaces, so "Central  High School", with two spaces between "Central" and "High" is a problem, which can be fixed.  Pass "Central High School" to \code{typo}.  Unexpected commas as also an issue, for example "Texas, University of" should be fixed using \code{typo} and \code{replacement}
 #' @param replacement a list of fixes for the strings in \code{typo}.  Here one could pass "Central High School" (one space between "Central" and "High") and "Texas" to \code{replacement} fix the issues described in \code{typo}
-#' @return returns a dataframe with columns \code{Name}, \code{Place}, \code{Grade}, \code{School}, \code{Prelims_Time}, \code{Finals_Time}, \code{Points}, & \code{Event}.  Note all swims will have a \code{Finals_Time}, even if that time was actually swam in the prelims (i.e. a swimmer did not qualify for finals).  This is so that final results for an event can be generated from just one column.
+#' @return returns a dataframe with columns \code{Name}, \code{Place}, \code{Grade}, \code{School}, \code{Prelims_Time}, \code{Finals_Time}, \code{Points}, \code{Event} & \code{DQ}.  Note all swims will have a \code{Finals_Time}, even if that time was actually swam in the prelims (i.e. a swimmer did not qualify for finals).  This is so that final results for an event can be generated from just one column.
 #'
 #' @examples \dontrun{
 #' swim_parse(read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm", node = "pre"),
@@ -135,26 +135,7 @@ Swim_Parse <-
 
     replacement_default <- c("typo")
 
-    # file = BigTenRaw
-    # typo = c(
-    #   "^\\s{1,}\\*",
-    #   "^\\s{1,}(\\d{1,2})\\s{2,}", # not sure if needed
-    #   ",\\s{1,}University\\s{1,}of",
-    #   "University\\s{1,}of\\s{1,}",
-    #   "\\s{1,}University",
-    #   "SR\\s{2,}",
-    #   "JR\\s{2,}",
-    #   "SO\\s{2,}",
-    #   "FR\\s{2,}"
-    # )
-    # replacement = c(" ",
-    #                 "  \\1 ",
-    #                 "", "", "",
-    #                 "SR ",
-    #                 "JR ",
-    #                 "SO ",
-    #                 "FR ")
-    # avoid = c("B1G", "Pool")
+    # as_lines_list_2 <- add_row_numbers(text = file)
 
     # parsing html and pdf files
     if (str_detect(file[1], "^A107") == FALSE) {

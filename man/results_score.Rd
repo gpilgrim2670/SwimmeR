@@ -32,6 +32,56 @@ results with point values in a column called \code{Points}
 \description{
 Used to add a \code{Points} column with point values for each place.  Can either score "timed finals" type meets where any athlete can get any place, or "prelims-finals", type meets, where placing is restricted by prelim performance.
 }
+\examples{
+\dontrun{
+file <-
+system.file("extdata", "BigTen_WSWIM_2018.pdf", package = "SwimmeR")
+BigTenRaw <- read_results(file)
+
+BigTen <- swim_parse(
+  BigTenRaw,
+  typo = c(
+    "^\\\\s{1,}\\\\*",
+    "^\\\\s{1,}(\\\\d{1,2})\\\\s{2,}",
+    ",\\\\s{1,}University\\\\s{1,}of",
+    "University\\\\s{1,}of\\\\s{1,}",
+    "\\\\s{1,}University",
+    "SR\\\\s{2,}",
+    "JR\\\\s{2,}",
+    "SO\\\\s{2,}",
+    "FR\\\\s{2,}"
+  ),
+  replacement = c(" ",
+                  "  \\\\1 ",
+                  "", "", "",
+                  "SR ",
+                  "JR ",
+                  "SO ",
+                  "FR "),
+  avoid = c("B1G", "Pool")
+)
+
+BigTen <- BigTen \%>\%
+  dplyr::filter(
+    stringr::str_detect(Event, "Time Trial") == FALSE,
+    stringr::str_detect(Event, "Swim-off") == FALSE
+  ) \%>\%
+  dplyr::mutate(School = dplyr::case_when(School == "Wisconsin, Madi" ~ "Wisconsin",
+                                          TRUE ~ School))
+
+# begin results_score portion
+df <- BigTen \%>\%
+  results_score(
+    events = unique(BigTen$Event),
+    meet_type = "prelims_finals",
+    lanes = 8,
+    scoring_heats = 3,
+    point_values = c(
+      32, 28, 27, 26, 25, 24, 23, 22, 20, 17, 16, 15, 14, 13, 12, 11, 9, 7, 6, 5, 4, 3, 2, 1)
+  )
+ }
+
+}
 \author{
 Greg Pilgrim \email{gpilgrim2670@gmail.com}
 }
