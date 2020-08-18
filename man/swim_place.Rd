@@ -15,7 +15,7 @@ swim_place(df, max_place)
 df modified so that places have been appended based on swimming time
 }
 \description{
-Places are awarded on the basis of time, with fastest (lowest) time winning.  Ties are placed as ties (both ahtletes get 2nd etc.)
+Places are awarded on the basis of time, with fastest (lowest) time winning.  Ties are placed as ties (both athletes get 2nd etc.)
 }
 \seealso{
 \code{swim_place} is a helper function used inside of \code{results_score}

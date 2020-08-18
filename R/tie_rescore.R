@@ -18,19 +18,23 @@
 #'
 #'
 #'
-tie_rescore <- function(df, point_values) {
+tie_rescore <- function(df, point_values, lanes) {
   results <- df %>%
     dplyr::ungroup() %>%
-    dplyr::group_by(Event) %>%
-    dplyr::mutate(New_Place = rank(Place, ties.method = "first"),
+    dplyr::group_by(Event, Heat) %>%
+    dplyr::mutate(New_Place = rank(Place, ties.method = "first") + ((Heat - 1)*lanes) - cumsum(DQ),
                   Points = point_values[New_Place]) %>%
     dplyr::group_by(Place, Event) %>%
     dplyr::summarize(Points = mean(Points, na.rm = TRUE)) %>%
     dplyr::inner_join(df) %>%
+    # dplyr::inner_join(ind_results_2 %>%
+    #                     select(-Points)) %>%
     dplyr::mutate(Points = dplyr::case_when(
       stringr::str_detect(stringr::str_to_lower(Event), "relay") == TRUE ~ Points * 2,
       TRUE ~ Points
     )) %>%
-    dplyr::ungroup()
+    ungroup() %>%
+    dplyr::mutate(Points = case_when(DQ == 1 ~ 0,
+                                     DQ == 0 ~ Points))
   return(results)
 }

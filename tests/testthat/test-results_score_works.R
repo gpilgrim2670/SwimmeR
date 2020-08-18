@@ -91,7 +91,8 @@ test_that("timed_finals works", {
     )
 
   results <- results %>%
-    select(-X)
+    select(-X) %>%
+    mutate(DQ = 0)
 
   Results_Final <-
     results_score(

@@ -127,6 +127,7 @@ Swim_Parse <-
         "^\\s*r\\:"
       )
 
+    # define avoid_minimal
     avoid_minimal <- c("^\\s{1,}r\\:")
 
     # default typo and replacement strings
@@ -134,59 +135,55 @@ Swim_Parse <-
 
     replacement_default <- c("typo")
 
+    # file = BigTenRaw
+    # typo = c(
+    #   "^\\s{1,}\\*",
+    #   "^\\s{1,}(\\d{1,2})\\s{2,}", # not sure if needed
+    #   ",\\s{1,}University\\s{1,}of",
+    #   "University\\s{1,}of\\s{1,}",
+    #   "\\s{1,}University",
+    #   "SR\\s{2,}",
+    #   "JR\\s{2,}",
+    #   "SO\\s{2,}",
+    #   "FR\\s{2,}"
+    # )
+    # replacement = c(" ",
+    #                 "  \\1 ",
+    #                 "", "", "",
+    #                 "SR ",
+    #                 "JR ",
+    #                 "SO ",
+    #                 "FR ")
+    # avoid = c("B1G", "Pool")
+
+    # parsing html and pdf files
     if (str_detect(file[1], "^A107") == FALSE) {
-      # Adds in row number to the end of each row, used to mapping events later
-      row_numbs <- seq(1, length(file), 1)
-      as_lines_list_2 <- paste(file, row_numbs, sep = "  ")
-      as_lines_list_2 <- stringr::str_replace_all(as_lines_list_2, "\\*(\\d{1,})", "\\1")
+
+      as_lines_list_2 <- add_row_numbers(text = file)
 
       # Pulls out event labels from text
-      events <- as_lines_list_2 %>%
-        .[purrr::map_lgl(
-          .,
-          stringr::str_detect,
-          "Event \\d{1,}|Women .* Yard|Women .* Meter|Girls .* Yard|Girls .* Meter|Men .* Yard|Men .* Meter|Boys .* Yard|Boys .* Meter|Mixed .* Yard|Mixed .* Meter"
-        )]
-      events <- stringr::str_replace(events, ".*Event \\d{1,4} ", "")
-      events <- stringr::str_replace(events, "Open  ", "") ## Addition
-      events <-
-        stringr::str_replace(events, "1 M  ", "1 M ") ## Addition
-      events <- stringr::str_replace(events, "([^1])0  ", "\\10 ")
-      events <- stringr::str_replace(events, " Class [:alpha:]", "")
-      events <- events %>% # Addition
-        .[purrr::map_lgl(., stringr::str_detect, "[[:alpha:]]")] %>%
-        stringr::str_replace_all("\\\n", "") %>%
-        stringr::str_replace_all("\\(", "") %>%
-        stringr::str_replace_all("\\)", "") %>%
-        trimws()
-
-      events <-
-        unlist(purrr::map(events, stringr::str_split, "\\s{2,}"),
-               recursive = FALSE)
-
-      # dataframe for events with names and row number ranges
-      events <- as.data.frame(t(as.data.frame(events)),
-                              row.names = FALSE,
-                              stringsAsFactors = FALSE) %>%
-        dplyr::mutate(
-          Event = stringr::str_extract(V1, "[[:graph:] ]*"),
-          Event_Row_Min = as.numeric(V2),
-          Event_Row_Max = dplyr::lead(Event_Row_Min, 1L, default = length(as_lines_list_2)) - 1,
-          V1 = NULL,
-          V2 = NULL
-        )
+      events <- event_parse(as_lines_list_2)
 
       # clean input data
       data_1 <- as_lines_list_2 %>%
-        # stringr::str_extract_all("\n\\s*\\*?\\d*\\s* [:alpha:].*|\n\\s*\\d* \\d*\\-[:alpha:].*") %>%
-        stringr::str_extract_all("\n\\s*\\d*\\s* [:alpha:].*|\n\\s*\\d* \\d*\\-[:alpha:].*") %>%
+        stringr::str_replace_all("\\*(\\d{1,})", replacement = "\\1") %>%  # removes * placed in front of place number in ties
+        stringr::str_extract_all("\n\\s*\\d*\\s* [:alpha:].*|\n\\s*\\d* \\d*\\-[:alpha:].*|\n\\s*--\\s* [:alpha:].*|\n\\s*\\d* \\d*\\-[:alpha:].*") %>%
         .[purrr::map(., length) > 0] %>%
         .[purrr::map(., stringr::str_length) > 50] %>%
-        .[purrr::map_lgl(., stringr::str_detect, "\\.\\d\\d")] %>%
-        .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]{2,}")] %>%
+        .[purrr::map_lgl(., stringr::str_detect, "\\.\\d\\d")] %>% # must have \\.\\d\\d because all swimming and diving times do
+        .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]{2,}")] %>% # must have at least two letters in a row
         .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid)))] %>%
         stringr::str_replace_all("\n", "") %>%
         stringr::str_replace_all(stats::setNames(replacement, typo)) %>%
+        stringr::str_replace_all("[:alpha:]+(\\d{1,2}\\:\\d{2}\\.\\d{2})", "\\1") %>%
+        stringr::str_replace_all("(\\d{1,2}\\:\\d{2}\\.\\d{2})[:alpha:]+", "\\1") %>%
+        stringr::str_replace_all("[:alpha:]+(\\d{2,3}\\.\\d{2})", "\\1") %>%
+        stringr::str_replace_all("(d{2,3}\\.\\d{2})[:alpha:]+", "\\1") %>%
+        stringr::str_replace_all(" [:punct:]+(\\d{1,2}\\:\\d{2}\\.\\d{2})", " \\1") %>%
+        stringr::str_replace_all("(\\d{1,2}\\:\\d{2}\\.\\d{2})[:punct:]+", " \\1") %>%
+        stringr::str_replace_all(" [:punct:]+(\\d{2,3}\\.\\d{2})", " \\1") %>%
+        stringr::str_replace_all("(\\d{2,3}\\.\\d{2})[:punct:]+", " \\1") %>%
+        stringr::str_replace_all("--", "10000") %>%
         trimws()
 
       # splits data into variables by splitting at multiple (>= 2) spaces
@@ -235,8 +232,6 @@ Swim_Parse <-
                 ) == TRUE ~ V3
             ),
             Grade = trimws(Grade),
-            # V2 = trimws(stringr::str_replace(V2, Grade, "")),
-            # V3 = trimws(stringr::str_replace(V3, Grade, ""))
           ) %>%
           dplyr::mutate(
             School = dplyr::case_when(
@@ -256,19 +251,19 @@ Swim_Parse <-
                  School = trimws(School)) %>%
           dplyr::mutate(
             Prelims_Time = dplyr::case_when(
-              any(stringr::str_detect(V3, "\\:\\d\\d")) == TRUE &
-                any(stringr::str_detect(V4, "\\:\\d\\d")) == TRUE ~ V3,
-              any(stringr::str_detect(V4, "\\:\\d\\d")) == TRUE &
-                any(stringr::str_detect(V5, "\\:\\d\\d")) == TRUE ~ V4,
+              any(stringr::str_detect(V3, "\\.\\d\\d")) == TRUE &
+                any(stringr::str_detect(V4, "\\.\\d\\d")) == TRUE ~ V3,
+              any(stringr::str_detect(V4, "\\.\\d\\d")) == TRUE &
+                any(stringr::str_detect(V5, "\\.\\d\\d")) == TRUE ~ V4,
               any(stringr::str_detect(V4, "SEC")) == TRUE ~ V5
             )
           ) %>%
           dplyr::mutate(
             Finals_Time = dplyr::case_when(
-              any(stringr::str_detect(V3, "\\:\\d\\d")) == TRUE &
-                any(stringr::str_detect(V4, "\\:\\d\\d")) == TRUE ~ V4,
-              any(stringr::str_detect(V4, "\\:\\d\\d")) == TRUE &
-                any(stringr::str_detect(V5, "\\:\\d\\d")) == TRUE ~ V5,
+              any(stringr::str_detect(V3, "\\.\\d\\d")) == TRUE &
+                any(stringr::str_detect(V4, "\\.\\d\\d")) == TRUE ~ V4,
+              any(stringr::str_detect(V4, "\\.\\d\\d")) == TRUE &
+                any(stringr::str_detect(V5, "\\.\\d\\d")) == TRUE ~ V5,
               any(stringr::str_detect(V4, "SEC")) == TRUE ~ V6
             )
           ) %>%
@@ -295,8 +290,8 @@ Swim_Parse <-
             Finals_Time = replace(Finals_Time, stringr::str_length(Finals_Time) < 3, NA),
             Finals_Time = stringr::str_replace(Finals_Time, "J", ""),
             Finals_Time = dplyr::case_when(
-              Place >= 1 &
-                is.na(Finals_Time) == TRUE ~ dplyr::coalesce(Finals_Time, Prelims_Time),
+              # Place >= 1 &
+              #   is.na(Finals_Time) == TRUE ~ dplyr::coalesce(Finals_Time, Prelims_Time),
               Place >= 1 &
                 is.na(Finals_Time) != TRUE ~ Finals_Time
             ),
@@ -339,11 +334,7 @@ Swim_Parse <-
               TRUE ~ Grade
             ),
             Name = replace(Name, Name == School, NA),
-            Finals_Time = stringr::str_replace(Finals_Time, "x", ""),
-            Finals_Time = stringr::str_replace(Finals_Time, "X", ""),
             Finals_Time = stringr::str_extract(Finals_Time, "[[:digit:][\\.\\:]]*"),
-            Prelims_Time = stringr::str_replace(Prelims_Time, "x", ""),
-            Prelims_Time = stringr::str_replace(Prelims_Time, "X", ""),
             Prelims_Time = stringr::str_extract(Prelims_Time, "[[:digit:][\\.\\:]]*")
           ) %>%
           dplyr::na_if("") %>%
@@ -451,6 +442,8 @@ Swim_Parse <-
           ) %>%
           dplyr::mutate(
             Prelims_Time = dplyr::case_when(
+              stringr::str_detect(V2, "\\.\\d\\d") == TRUE & # new 8/18
+                stringr::str_detect(V3, "\\.\\d\\d") == TRUE ~ V2,
               stringr::str_detect(V4, "\\.\\d\\d") == TRUE &
                 stringr::str_detect(V5, "\\.\\d\\d") == TRUE ~ V4,
               stringr::str_detect(V4, "\\.\\d\\d") == FALSE &
@@ -460,8 +453,8 @@ Swim_Parse <-
           ) %>%
           dplyr::mutate(
             Finals_Time = dplyr::case_when(
-              stringr::str_detect(V4, "\\.\\d\\d") == TRUE &
-                stringr::str_detect(V5, "\\.\\d\\d") == TRUE ~ V5,
+              stringr::str_detect(V2, "\\.\\d\\d") == TRUE & # new 8/18
+                stringr::str_detect(V3, "\\.\\d\\d") == TRUE ~ V3,
               stringr::str_detect(V4, "\\.\\d\\d") == FALSE &
                 stringr::str_detect(V5, "\\.\\d\\d") == TRUE ~ V5,
               TRUE ~ V4
@@ -524,12 +517,8 @@ Swim_Parse <-
               stringr::str_length(Grade) > 2 & is.na(Grade) == FALSE
             ), NA),
             Name = replace(Name, Name == School, NA),
-            Finals_Time = stringr::str_replace(Finals_Time, "x", ""),
-            Finals_Time = stringr::str_replace(Finals_Time, "X", ""),
             Finals_Time = stringr::str_extract(Finals_Time, "[[:digit:][\\.\\:]]*"),
-            Prelims_Time = stringr::str_replace(Prelims_Time, "x", ""),
-            Prelims_Time = stringr::str_replace(Prelims_Time, "X", ""),
-            Prelims_Time = stringr::str_extract(Prelims_Time, "[[:digit:][\\.\\:]]*")
+            Prelims_Time = stringr::str_extract(Prelims_Time, "[[:digit:][\\.\\:]]*"),
           ) %>%
           dplyr::na_if("") %>%
           dplyr::mutate(Prelims_Time = dplyr::case_when(
@@ -709,20 +698,13 @@ Swim_Parse <-
             Finals_Time = replace(Finals_Time, School == Finals_Time, NA),
             Finals_Time = replace(Finals_Time, stringr::str_length(Finals_Time) < 3, NA),
             Finals_Time = dplyr::case_when(
-              Place >= 1 &
-                is.na(Finals_Time) == TRUE ~ dplyr::coalesce(Finals_Time, Prelims_Time),
+              # Place >= 1 &
+              #   is.na(Finals_Time) == TRUE ~ dplyr::coalesce(Finals_Time, Prelims_Time),
               Place >= 1 &
                 is.na(Finals_Time) != TRUE ~ Finals_Time
             ),
-            Finals_Time = stringr::str_replace(Finals_Time, "x", ""),
-            Finals_Time = stringr::str_replace(Finals_Time, "X", ""),
             Finals_Time = stringr::str_extract(Finals_Time, "[[:digit:][\\.\\:]]*"),
-            Finals_Time = stringr::str_replace(Finals_Time, "x", ""),
-            Finals_Time = stringr::str_replace(Finals_Time, "X", ""),
-            Finals_Time = stringr::str_extract(Finals_Time, "[[:digit:][\\.\\:]]*"),
-            Prelims_Time = stringr::str_replace(Prelims_Time, "x", ""),
-            Prelims_Time = stringr::str_replace(Prelims_Time, "X", ""),
-            Prelims_Time = stringr::str_extract(Prelims_Time, "[[:digit:][\\.\\:]]*")
+            Prelims_Time = stringr::str_extract(Prelims_Time, "[[:digit:][\\.\\:]]*"),
           ) %>%
           dplyr::na_if("") %>%
           dplyr::mutate(Prelims_Time = dplyr::case_when(
@@ -757,11 +739,7 @@ Swim_Parse <-
               TRUE ~ Points
             ),
             Points_2 = NULL,
-            Finals_Time = stringr::str_replace(Finals_Time, "x", ""),
-            Finals_Time = stringr::str_replace(Finals_Time, "X", ""),
             Finals_Time = stringr::str_extract(Finals_Time, "[[:digit:][\\.\\:]]*"),
-            Prelims_Time = stringr::str_replace(Prelims_Time, "x", ""),
-            Prelims_Time = stringr::str_replace(Prelims_Time, "X", ""),
             Prelims_Time = stringr::str_extract(Prelims_Time, "[[:digit:][\\.\\:]]*"),
             Prelims_Time = replace(
               Prelims_Time,
@@ -977,8 +955,8 @@ Swim_Parse <-
           dplyr::mutate(
             Finals_Time = replace(Finals_Time, stringr::str_length(Finals_Time) < 3, NA),
             Finals_Time = dplyr::case_when(
-              Place >= 1 &
-                is.na(Finals_Time) == TRUE ~ dplyr::coalesce(Finals_Time, Prelims_Time),
+              # Place >= 1 &
+              #   is.na(Finals_Time) == TRUE ~ dplyr::coalesce(Finals_Time, Prelims_Time),
               Place >= 1 &
                 is.na(Finals_Time) != TRUE ~ Finals_Time
             )
@@ -1012,16 +990,10 @@ Swim_Parse <-
           dplyr::mutate(
             Grade = replace(Grade, is.na(Name) == TRUE &
                               is.na(School) == FALSE, NA),
-            Prelims_Time = stringr::str_replace(Prelims_Time, "x", ""),
-            Prelims_Time = stringr::str_replace(Prelims_Time, "X", ""),
-            Prelims_Time = stringr::str_extract(Prelims_Time, "[[:digit:][\\.\\d\\d\\:\\d\\d]]*")
+            Prelims_Time = stringr::str_extract(Prelims_Time, "[[:digit:][\\.\\:]]*")
           ) %>%
           dplyr::mutate(
-            Finals_Time = stringr::str_replace(Finals_Time, "x", ""),
-            Finals_Time = stringr::str_replace(Finals_Time, "X", "")
-          ) %>%
-          dplyr::mutate(
-            Finals_Time = stringr::str_extract(Finals_Time, "[[:digit:][\\.\\d\\d\\:\\d\\d]]*")
+            Finals_Time = stringr::str_extract(Finals_Time, "[[:digit:][\\.\\:]]*")
           ) %>%
           dplyr::na_if("") %>%
           dplyr::mutate(Prelims_Time = dplyr::case_when(
@@ -1123,8 +1095,8 @@ Swim_Parse <-
           dplyr::mutate(
             Finals_Time = replace(Finals_Time, stringr::str_length(Finals_Time) < 3, NA),
             Finals_Time = dplyr::case_when(
-              Place >= 1 &
-                is.na(Finals_Time) == TRUE ~ dplyr::coalesce(Finals_Time, Prelims_Time),
+              # Place >= 1 &
+              #   is.na(Finals_Time) == TRUE ~ dplyr::coalesce(Finals_Time, Prelims_Time),
               Place >= 1 &
                 is.na(Finals_Time) != TRUE ~ Finals_Time
             ),
@@ -1140,11 +1112,7 @@ Swim_Parse <-
             ),
             Grade = replace(Grade, is.na(Name) == TRUE &
                               is.na(School) == FALSE, NA),
-            Finals_Time = stringr::str_replace(Finals_Time, "x", ""),
-            Finals_Time = stringr::str_replace(Finals_Time, "X", ""),
             Finals_Time = stringr::str_extract(Finals_Time, "[[:digit:][\\.\\:]]*"),
-            Prelims_Time = stringr::str_replace(Prelims_Time, "x", ""),
-            Prelims_Time = stringr::str_replace(Prelims_Time, "X", ""),
             Prelims_Time = stringr::str_extract(Prelims_Time, "[[:digit:][\\.\\:]]*")
           ) %>%
           dplyr::na_if("") %>%
@@ -1193,6 +1161,8 @@ Swim_Parse <-
         transform(data, Event = events$Event[findInterval(Row_Numb, events$Event_Row_Min)])
       data$Row_Numb <- NULL
 
+      # cleaning up final results
+
       suppressWarnings(
         data <- data %>%
           dplyr::mutate(
@@ -1210,24 +1180,27 @@ Swim_Parse <-
               ),
               NA
             ),
-            Points = replace(
-              Points,
-              stringr::str_detect(Points, "[[:alpha:]]") == TRUE,
-              NA
-            ),
-            Points = replace(
-              Points,
-              stringr::str_detect(Points, "[^[:digit:]|\\.]"),
-              NA
-            ),
+            Points = replace(Points,
+                             stringr::str_detect(Points, "[[:alpha:]]") == TRUE,
+                             NA),
+            Points = replace(Points,
+                             stringr::str_detect(Points, "[^[:digit:]|\\.]"),
+                             NA),
             Place = round(as.numeric(Place)),
             Event = as.character(Event)
-          )
-      )
+          ) %>%
+          dplyr::mutate(DQ = dplyr::case_when(Place == 10000 ~ 1,
+                                TRUE ~ 0)
+                 ) %>%
+          na_if(10000) %>%
+          dplyr::mutate(Place = dplyr::case_when(is.na(Place) == TRUE ~ lag(Place) + 1,
+                                   TRUE ~ Place))
 
+      )
 
       return(data)
     } else if (str_detect(file[1], "^A107") == TRUE) {
+      # file <- add_row_numbers(text = file)
       data <- parse_hy3(file = file)
       return(data)
     }

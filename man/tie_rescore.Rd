@@ -4,7 +4,7 @@
 \alias{tie_rescore}
 \title{Rescore to account for ties}
 \usage{
-tie_rescore(df, point_values)
+tie_rescore(df, point_values, lanes)
 }
 \arguments{
 \item{df}{a dataframe with results from \code{swim_parse}, with places from \code{swim_place} and/or \code{dive_place}}
