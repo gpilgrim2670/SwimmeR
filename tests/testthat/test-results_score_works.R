@@ -69,7 +69,8 @@ test_that("timed_finals works", {
 
   results <- results %>%
     select(-X) %>%
-    mutate(DQ = 0)
+    mutate(DQ = 0,
+           Exhibition = 0)
 
   Results_Final <-
     results_score(

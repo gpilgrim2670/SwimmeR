@@ -1,6 +1,7 @@
 # SwimmeR dev version
 * important bug fixes in `swim_parse` regarding importing results that have a "J" next to them (a Hy-tek artifact)
 * `swim_parse` now includes DQ swims, and the output of `swim_parse` has a column called `DQ`.
+* `swim_parse` now notes exhibition swims, in the column `Exhbition`
 * `read_results` and `swim_parse` can now read .hy3 files.  This feature is not yet stable and will receive future updates
 * added the `!%in%` function (not in), which can be useful for cleaning results
 * added the `results_score` function, which will score the output of `swim_parse` based on user inputted parameters.

@@ -98,10 +98,21 @@ results_score <-
     # name point values for their respective places
     names(point_values) <- 1:length(point_values)
 
+    ex_results <- results %>%
+      dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event),
+                                        paste(events, collapse = "|")) == TRUE) %>%
+      dplyr::select(dplyr::everything(),-dplyr::matches("Points")) %>%
+      dplyr::filter(Exhibition == 1)
+
     results <- results %>%
       dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event),
                                         paste(events, collapse = "|")) == TRUE) %>%
-      dplyr::select(dplyr::everything(),-dplyr::matches("Points"))
+      dplyr::select(dplyr::everything(),-dplyr::matches("Points")) %>%
+      dplyr::filter(Exhibition == 0)
+
+
+
+
 
     ind_results <- results %>%
       dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "relay") == FALSE) %>%
@@ -154,7 +165,8 @@ results_score <-
       # rescoring to deal with ties
       results <- results %>%
         tie_rescore(point_values = point_values, lanes = lanes) %>%
-        select(-Heat)
+        select(-Heat) %>%
+        left_join(ex_results)
 
       return(results)
 ### prelims_finals ####
@@ -365,7 +377,8 @@ results_score <-
 
       results <- results %>%
         tie_rescore(point_values = point_values, lanes = lanes) %>%
-        select(-Heat)
+        select(-Heat) %>%
+        left_join(ex_results)
     }
 
   }

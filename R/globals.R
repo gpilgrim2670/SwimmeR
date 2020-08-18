@@ -43,6 +43,7 @@ utils::globalVariables(
     "Finals_Time_sec",
     "New_Place",
     "DQ",
-    "Heat"
+    "Heat",
+    "Exhibition"
   )
 )
