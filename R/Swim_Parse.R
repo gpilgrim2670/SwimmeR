@@ -1433,7 +1433,9 @@ Swim_Parse <-
             DQ == 0 &
               str_detect(Finals_Time, "\\.\\d\\d") == TRUE |
               DQ == 0 & str_detect(Prelims_Time, "\\.\\d\\d") == TRUE | DQ == 1
-          )
+          ) %>%
+          mutate(Exhibition = case_when(is.na(Exhibition) == TRUE ~ 0,
+                                        TRUE ~ Exhibition))
 
       )
 
