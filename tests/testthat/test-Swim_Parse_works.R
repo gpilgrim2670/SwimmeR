@@ -31,10 +31,10 @@ test_that("Swim_Parse works 3", {
       "http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm",
       node = "pre"
     ),
-    typo = c("-1NORTH ROCKL"),
-    replacement = c("1-NORTH ROCKL")
-  )[,2]),
-  16255)
+    typo = c("-1NORTH ROCKL", "\\s\\d{1,2}\\s{2,}"),
+    replacement = c("1-NORTH ROCKL", "  ")
+  )[,2], na.rm = TRUE),
+  16235)
 
 })
 
@@ -54,7 +54,7 @@ test_that("Swim_Parse works USA", {
   file <- system.file("extdata", "jets08082019_067546.pdf", package = "SwimmeR")
   expect_equivalent(sum(Swim_Parse(
     Read_Results(file)
-  )[1]),
+  )[1], na.rm = TRUE),
   3091)
 })
 
@@ -62,7 +62,7 @@ test_that("Swim_Parse works list", {
 
   #import standard
 
-  df_standard <- read.csv(system.file("extdata", "df_standard.csv", package = "SwimmeR"), stringsAsFactors = FALSE, colClasses=c("character", "numeric", rep("character", 7), "numeric"))
+  df_standard <- read.csv(system.file("extdata", "df_standard.csv", package = "SwimmeR"), stringsAsFactors = FALSE, colClasses=c("character", "numeric", rep("character", 6), "numeric", "numeric"))
   df_standard <- df_standard %>%
     select(-X)
 
@@ -118,7 +118,7 @@ test_that("Swim_Parse works list", {
   df_test <- Read_Map(sources)
   df_test <- Parse_Map(df_test)
   df_test <- dplyr::bind_rows(df_test, .id = "column_label") %>%
-    select(-column_label, -Exhibition)
+    select(-column_label)
 
   # compare standard to test
   expect_equivalent(df_standard,
