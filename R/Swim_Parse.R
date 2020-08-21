@@ -137,49 +137,6 @@ Swim_Parse <-
 
     replacement_default <- c("typo")
 
-    # IL_Boys_Link <- "https://www.ihsa.org/archive/swb/2019-20/StateResults.pdf"
-    # IL_Girls_Link <-
-    #   "https://www.ihsa.org/Portals/0/prelim%20results.pdf"
-    #
-    # file <-
-    #   map(c(IL_Girls_Link, IL_Boys_Link), read_results)
-    #
-    # file <- c(file[[1]], file[[2]])
-    #
-    # typo = c(
-    #   "\\s+(\\d{1,2})\\s{2,}",
-    #          "Sr ",
-    #          "Jr ",
-    #          "So ",
-    #          "Fr ",
-    #          "Waubonsie   Valley",
-    #          "\\s{1,}\\("
-    #          # "\\s*&\\s*"
-    #          )
-    # replacement = c(
-    #   "\\1 ",
-    #                 "SR ",
-    #                 "JR ",
-    #                 "SO ",
-    #                 "FR ",
-    #                 "Waubonsie Valley",
-    #                 " \\("
-    #                 # "  "
-    #                 )
-    # avoid = c("IHSA", "NFHS", "POOL", "NATIONAL")
-
-
-      # file <- Read_Results(
-      #   "http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm",
-      #   node = "pre"
-      # )
-      #
-      # typo = c("-1NORTH ROCKL", "\\s\\d{1,2}\\s{2,}")
-      # replacement = c("1-NORTH ROCKL", "  ")
-      # avoid = avoid_default
-
-
-
     as_lines_list_2 <- add_row_numbers(text = file)
 
     # parsing html and pdf files
