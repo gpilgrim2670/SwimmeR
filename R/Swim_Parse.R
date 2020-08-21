@@ -137,6 +137,49 @@ Swim_Parse <-
 
     replacement_default <- c("typo")
 
+    # IL_Boys_Link <- "https://www.ihsa.org/archive/swb/2019-20/StateResults.pdf"
+    # IL_Girls_Link <-
+    #   "https://www.ihsa.org/Portals/0/prelim%20results.pdf"
+    #
+    # file <-
+    #   map(c(IL_Girls_Link, IL_Boys_Link), read_results)
+    #
+    # file <- c(file[[1]], file[[2]])
+    #
+    # typo = c(
+    #   "\\s+(\\d{1,2})\\s{2,}",
+    #          "Sr ",
+    #          "Jr ",
+    #          "So ",
+    #          "Fr ",
+    #          "Waubonsie   Valley",
+    #          "\\s{1,}\\("
+    #          # "\\s*&\\s*"
+    #          )
+    # replacement = c(
+    #   "\\1 ",
+    #                 "SR ",
+    #                 "JR ",
+    #                 "SO ",
+    #                 "FR ",
+    #                 "Waubonsie Valley",
+    #                 " \\("
+    #                 # "  "
+    #                 )
+    # avoid = c("IHSA", "NFHS", "POOL", "NATIONAL")
+
+
+      # file <- Read_Results(
+      #   "http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm",
+      #   node = "pre"
+      # )
+      #
+      # typo = c("-1NORTH ROCKL", "\\s\\d{1,2}\\s{2,}")
+      # replacement = c("1-NORTH ROCKL", "  ")
+      # avoid = avoid_default
+
+
+
     as_lines_list_2 <- add_row_numbers(text = file)
 
     # parsing html and pdf files
@@ -161,7 +204,7 @@ Swim_Parse <-
           .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid)))] %>%
           stringr::str_replace_all("\n", "") %>%
           stringr::str_replace_all(stats::setNames(replacement, typo)) %>%
-          stringr::str_replace_all("\\s*[&%]\\s*", "  ") %>% # added 8/21 for dealing with "&" as a record designator
+          stringr::str_replace_all("\\s*[&%]\\s*", "  ") %>% # added 8/21 for removing "&" as record designator
           #removed J etc. from next to swim, but does not remove X or x (for exhibition tracking)
           stringr::str_replace_all("[A-WYZa-wyz]+(\\d{1,2}\\:\\d{2}\\.\\d{2})", "\\1") %>%
           stringr::str_replace_all("(\\d{1,2}\\:\\d{2}\\.\\d{2})[A-WYZa-wyz]+", "\\1") %>%
@@ -172,8 +215,8 @@ Swim_Parse <-
           stringr::str_replace_all(" [:punct:]+(\\d{2,3}\\.\\d{2})", " \\1") %>%
           stringr::str_replace_all("(\\d{2,3}\\.\\d{2})[:punct:]+", " \\1") %>%
           stringr::str_replace_all("--", "10000") %>%
-          stringr::str_replace_all("(\\.\\d{2})\\d+", "\\1 ") %>% # added 8/21 for Illinois to deal with points column merging with final times column
-          stringr::str_replace_all("\\d{1,2} (\\d{1,})$", "  \\1 ") %>% # added 8/21 for Illinois to deal with points column merging with final times column
+          stringr::str_replace_all("(\\.\\d{2})\\d+", "\\1 ") %>% # added 8/21 for illinois to deal with points column merging with final times column
+          stringr::str_replace_all("\\d{1,2} (\\d{1,})$", "  \\1 ") %>% # added 8/21 for illinois to deal with points column merging with final times column
           # stringr::str_replace_all("(\\d{1,2})- ", "\\1-") %>%
           trimws()
       )
