@@ -92,6 +92,8 @@ Swim_Parse <-
         "^\\s*AAC\\:",
         "^\\s*Con\\.\\:",
         "^\\s*Auto\\:",
+        "^\\s*Auto\\.\\:",
+        "^\\s*Cons\\.\\:",
         "^\\s*Eastern\\:",
         "^\\s*Class [[:alpha:]]\\:",
         "^\\s*CLASS [[:alpha:]]\\:",
@@ -135,17 +137,7 @@ Swim_Parse <-
 
     replacement_default <- c("typo")
 
-    # file <- "https://www.uiltexas.org/tournament-results/swimming-diving/2020/6a/200214F001.htm"
-    # file_2 <- "https://www.uiltexas.org/tournament-results/swimming-diving/2020/6a/200214F022.htm" #ind swimming with name and DQ
-    # #
-    # file <-  Read_Results(file, node = "pre")
-    # file_2 <- Read_Results(file_2, node = "pre")
-    # typo = c("\\s\\d{1,2}\\s{2,}")
-    # replacement = c(" ")
-    # avoid = c("State:", 'National:')
-    # file <- c(file, file_2)
-
-    # as_lines_list_2 <- add_row_numbers(text = file)
+    as_lines_list_2 <- add_row_numbers(text = file)
 
     # parsing html and pdf files
     if (str_detect(file[1], "^A107") == FALSE) {
@@ -169,6 +161,7 @@ Swim_Parse <-
           .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid)))] %>%
           stringr::str_replace_all("\n", "") %>%
           stringr::str_replace_all(stats::setNames(replacement, typo)) %>%
+          stringr::str_replace_all("\\s*[&%]\\s*", "  ") %>% # added 8/21 for dealing with "&" as a record designator
           #removed J etc. from next to swim, but does not remove X or x (for exhibition tracking)
           stringr::str_replace_all("[A-WYZa-wyz]+(\\d{1,2}\\:\\d{2}\\.\\d{2})", "\\1") %>%
           stringr::str_replace_all("(\\d{1,2}\\:\\d{2}\\.\\d{2})[A-WYZa-wyz]+", "\\1") %>%
@@ -179,6 +172,9 @@ Swim_Parse <-
           stringr::str_replace_all(" [:punct:]+(\\d{2,3}\\.\\d{2})", " \\1") %>%
           stringr::str_replace_all("(\\d{2,3}\\.\\d{2})[:punct:]+", " \\1") %>%
           stringr::str_replace_all("--", "10000") %>%
+          stringr::str_replace_all("(\\.\\d{2})\\d+", "\\1 ") %>% # added 8/21 for Illinois to deal with points column merging with final times column
+          stringr::str_replace_all("\\d{1,2} (\\d{1,})$", "  \\1 ") %>% # added 8/21 for Illinois to deal with points column merging with final times column
+          # stringr::str_replace_all("(\\d{1,2})- ", "\\1-") %>%
           trimws()
       )
 
