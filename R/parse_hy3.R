@@ -63,12 +63,12 @@ parse_hy3 <-
       .[purrr::map(., length) > 2]
 
     entry_rows <- entry %>%
-      map(tail, 1) %>%
+      purrr::map(tail, 1) %>%
       unlist()
 
     entry <- entry %>%
-      # map(tail, -1) %>%
-      map(head, 10)
+      # purrr::map(tail, -1) %>%
+      purrr::map(head, 10)
 
     entry <- data.frame(entry, stringsAsFactors = FALSE) %>%
       t()
@@ -82,7 +82,7 @@ parse_hy3 <-
     # entries are doubled in the case of prelims/finals
     # need to collect both prelim and final entry into one row
     entry <- entry %>%
-      group_by(ID, Event, Seed_Time) %>%
+      dplyr::group_by(ID, Event, Seed_Time) %>%
       dplyr::summarise(Row_Numb = min(as.numeric(Row_Numb))) %>%
       dplyr::arrange(Row_Numb) %>%
       dplyr::ungroup()
@@ -129,7 +129,7 @@ parse_hy3 <-
         ),
         Seed_Time = stringr::str_remove(Seed_Time, "[:alpha:]$")
       ) %>%
-      ungroup() %>%
+      dplyr::ungroup() %>%
       dplyr::mutate(
         Row_Min = as.numeric(Row_Numb),
         Row_Max = dplyr::lead(Row_Min, 1L, default = length(file) - 1),
@@ -138,40 +138,68 @@ parse_hy3 <-
       dplyr::mutate(Finals_Time = NA,
                     Prelims_Time = NA) %>%
       dplyr::select(-ID,-Course) %>%
-      arrange(Row_Min)
+      dplyr::arrange(Row_Min)
+
+    # Collect prelims and finals times as well as finals places
 
     finals <- hy3_times(file = file, type = "finals")
     prelims <- hy3_times(file = file, type = "prelims")
+    places <- hy3_places(file = file, type = "finals")
 
+    # add prelims and finals times as well as finals places to entry
     entry <-
-      interleave_times(results = entry,
-                       times = finals,
+      interleave_results(entries = entry,
+                       results = finals,
                        type = "individual")
     entry <-
-      interleave_times(results = entry,
-                       times = prelims,
+      interleave_results(entries = entry,
+                       results = prelims,
                        type = "individual")
 
-    entry <- entry %>%
+    entry <-
+      interleave_results(entries = entry,
+                         results = places,
+                         type = "individual")
+
+
+    suppressWarnings(entry <- entry %>%
+      dplyr::mutate(DQ = case_when(stringr::str_detect(Finals_Time, "Q") == TRUE ~ 1,
+                                   TRUE ~ 0)) %>%
       dplyr::mutate(
         Seed_Time = stringr::str_remove(Seed_Time, "[A-Z]{1,}"),
         Prelims_Time = stringr::str_remove(Prelims_Time, "[A-Z]{1,}"),
-        Finals_Time = stringr::str_remove(Finals_Time, "[A-Z]{1,}")
+        Finals_Time = stringr::str_remove(Finals_Time, "[A-Z]{1,}"),
       ) %>%
+      dplyr::na_if("0.00") %>%
+      dplyr::mutate(Seed_Time = dplyr::case_when(is.na(Seed_Time) ~ "00.00",
+                                          TRUE ~ Seed_Time),
+                    Prelims_Time = dplyr::case_when(is.na(Prelims_Time) ~ "00.00",
+                                             TRUE ~ Prelims_Time),
+                    Finals_Time = dplyr::case_when(is.na(Finals_Time) ~ "00.00",
+                                            TRUE ~ Finals_Time)) %>%
       dplyr::mutate(
         Seed_Time = dplyr::case_when(
           stringr::str_detect(Event, "Diving") == FALSE ~ mmss_format(as.numeric(Seed_Time)),
-          TRUE ~ Seed_Time
+          stringr::str_detect(Event, "Diving") == TRUE ~ Seed_Time,
+          TRUE ~ "00.00"
         ),
         Prelims_Time = dplyr::case_when(
           stringr::str_detect(Event, "Diving") == FALSE ~ mmss_format(as.numeric(Prelims_Time)),
-          TRUE ~ Prelims_Time
+          stringr::str_detect(Event, "Diving") == TRUE ~ Prelims_Time,
+          TRUE ~ "00.00"
         ),
         Finals_Time = dplyr::case_when(
           stringr::str_detect(Event, "Diving") == FALSE ~ mmss_format(as.numeric(Finals_Time)),
+          stringr::str_detect(Event, "Diving") == TRUE ~ Finals_Time,
           TRUE ~ Finals_Time
         )
-      )
+      ) %>%
+      dplyr::na_if("00.00") %>%
+      dplyr::mutate(Place = as.numeric(Finals_Place)) %>%
+      dplyr::select(-Finals_Place) %>%
+      dplyr::mutate(Place = dplyr::case_when(Place == 0 ~ 100000,
+                                      TRUE ~ Place)) %>%
+      dplyr::na_if(100000))
 
     # data beginning with D1M contains swimmer info (M for male, F for female)
     swimmer <- file %>%
@@ -186,13 +214,13 @@ parse_hy3 <-
 
 
     swimmer_rows <- swimmer %>%
-      map(tail, 1) %>%
+      purrr::map(tail, 1) %>%
       unlist()
 
     swimmer <- swimmer %>%
-      # map(tail, -1) %>%
-      map(unique) %>%
-      map(head, 7)
+      # purrr::map(tail, -1) %>%
+      purrr::map(unique) %>%
+      purrr::map(head, 7)
 
     swimmer <- data.frame(swimmer, stringsAsFactors = FALSE) %>%
       t()
@@ -246,15 +274,15 @@ parse_hy3 <-
 
     team <-
       unlist(purrr::map(team, stringr::str_split, "\\s{2,}"), recursive = FALSE) %>%
-      map(unique)
+      purrr::map(unique)
 
     team_rows <- team %>%
-      map(tail, 1) %>%
+      purrr::map(tail, 1) %>%
       unlist()
 
     team <- team %>%
-      map(head, 1) %>%
-      map(paste, collapse = " ")
+      purrr::map(head, 1) %>%
+      purrr::map(paste, collapse = " ")
 
     team <-
       data.frame(School = unlist(team), Row_Numb = as.numeric(team_rows)) %>%
@@ -275,16 +303,16 @@ parse_hy3 <-
     relay <-
       unlist(purrr::map(relay, stringr::str_split, "\\s{1,}"),
              recursive = FALSE) %>%
-      map(unique)
+      purrr::map(unique)
 
     relay_rows <- relay %>%
-      map(tail, 1) %>%
+      purrr::map(tail, 1) %>%
       unlist()
 
     relay <- relay %>%
-      # map(tail, -1) %>%
-      map(unique) %>%
-      map(head, 9)
+      # purrr::map(tail, -1) %>%
+      purrr::map(unique) %>%
+      purrr::map(head, 9)
 
     relay <- data.frame(relay, stringsAsFactors = FALSE) %>%
       t()
@@ -344,19 +372,30 @@ parse_hy3 <-
       dplyr::select(-Course,-Team,-Relay_Rank,-ID)
 
 
+    # Collect times from prelims and finals, plus palces from finals
     relay_finals <- hy3_times(file = file, type = "relay_finals")
     relay_prelims <- hy3_times(file = file, type = "relay_prelims")
+    relay_places <- hy3_places(file = file, type = "relay_finals")
 
+    # Add times and places into relay dataframe
     relay <-
-      interleave_times(results = relay,
-                       times = relay_finals,
+      interleave_results(entries = relay,
+                       results = relay_finals,
                        type = "relay")
     relay <-
-      interleave_times(results = relay,
-                       times = relay_prelims,
+      interleave_results(entries = relay,
+                       results = relay_prelims,
                        type = "relay")
 
-    relay <- relay %>%
+    relay <-
+      interleave_results(entries = relay,
+                         results = relay_places,
+                         type = "relay")
+
+   # Clean up relay dataframe
+    suppressWarnings(relay <- relay %>%
+      dplyr::mutate(DQ = case_when(stringr::str_detect(Finals_Time, "Q") == TRUE ~ 1,
+                                   TRUE ~ 0)) %>%
       dplyr::mutate(
         Seed_Time = stringr::str_remove(Seed_Time, "[A-Z]{1,}"),
         Prelims_Time = stringr::str_remove(Prelims_Time, "[A-Z]{1,}"),
@@ -366,7 +405,13 @@ parse_hy3 <-
         Seed_Time = mmss_format(as.numeric(Seed_Time)),
         Prelims_Time = mmss_format(as.numeric(Prelims_Time)),
         Finals_Time = mmss_format(as.numeric(Finals_Time))
-      )
+      ) %>%
+      dplyr::na_if("00.00") %>%
+      dplyr::mutate(Place = as.numeric(Finals_Place)) %>%
+      dplyr::select(-Finals_Place) %>%
+      dplyr::mutate(Place = dplyr::case_when(Place == 0 ~ 100000,
+                                             TRUE ~ Place)) %>%
+      dplyr::na_if(100000))
 
     #### Binding up data
     data <- dplyr::left_join(swimmer, entry, by = "ID_Numb") %>%
@@ -413,6 +458,7 @@ parse_hy3 <-
         )
       ) %>%
       dplyr::na_if("00.00")
+      # filter(is.na(Finals_Time) == FALSE | is.na(Prelims_Time) == FALSE)
 
 
     return(data)

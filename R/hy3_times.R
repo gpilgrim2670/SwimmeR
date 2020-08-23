@@ -23,9 +23,6 @@ hy3_times <-
   function(file,
            type = c("prelims", "relay_prelims", "finals", "relay_finals")) {
 
-    # file <- as_lines_list_2
-    # type = "finals"
-
     codes <- c("^E2P.*", "^F2P.*", "^E2F.*", "^F2F.*")
     time_types <-
       c("prelims", "relay_prelims", "finals", "relay_finals")
@@ -47,8 +44,8 @@ hy3_times <-
     times <- file %>%
       stringr::str_extract_all(code) %>%
       .[purrr::map(., length) > 0] %>%
-      str_replace_all("([:alpha:]{1,})\\s{1,}([:alpha:]{1,})", "\\1\\2") %>%
-      .[purrr::map(., str_length) > 1] %>%
+      stringr::str_replace_all("([:alpha:]{1,})\\s{1,}([:alpha:]{1,})", "\\1\\2") %>%
+      .[purrr::map(., stringr::str_length) > 1] %>%
       trimws()
 
     times <-
@@ -57,12 +54,12 @@ hy3_times <-
 
     times_rows <-
       times %>% # get row numbers, which are in the last column
-      map(tail, 1) %>%
+      purrr::map(tail, 1) %>%
       unlist()
 
     times <- times %>%
-      map(tail,-1) %>% # remove first column, which has hytek codes
-      map(head, 1) # only want new first column, which has times
+      purrr::map(tail,-1) %>% # remove first column, which has hytek codes
+      purrr::map(head, 1) # only want new first column, which has times
 
     if(length(times) == 0){ # if there are no times, like in meets that don't have prelims, this will make a dummy list
       times <- rep(NA, length(times_rows))
@@ -73,8 +70,10 @@ hy3_times <-
                  Row_Numb = as.numeric(times_rows),
                  stringsAsFactors = FALSE)
     colnames(times) <- c(name, "Row_Numb")
-    times <- times %>%
-    mutate((!! name) := str_remove((!!as.name(name)), "[:alpha:]$"))
+    # times <- times %>%
+    # dplyr::mutate(DQ = case_when(str_detect((!!as.name(name)), "Q") == TRUE ~ 1,
+    #                              TRUE ~ 0),
+      # (!! name) := stringr::str_remove((!!as.name(name)), "[:alpha:]$"))
 
     return(times)
   }
