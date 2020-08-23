@@ -5,7 +5,7 @@
 * `read_results` and `swim_parse` can now read .hy3 files.  This feature is not yet stable and will receive future updates
 * added the `!%in%` function (not in), which can be useful for cleaning results
 * added the `results_score` function, which will score the output of `swim_parse` based on user inputted parameters.
-*various bug fixes
+* various bug fixes
 
 # SwimmeR 0.3.1
 * fixed issue with xml2 import that broke read_results for .html files
