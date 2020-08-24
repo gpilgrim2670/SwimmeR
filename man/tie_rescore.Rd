@@ -17,7 +17,7 @@ tie_rescore(df, point_values, lanes)
 df modified so that places have been appended based on swimming time
 }
 \description{
-Recoring to average point values for ties.  Ties are placed as ties (both ahtletes get 2nd etc.)
+Rescoring to average point values for ties.  Ties are placed as ties (both athletes get 2nd etc.)
 }
 \seealso{
 \code{tie_rescore} is a helper function used inside of \code{results_score}

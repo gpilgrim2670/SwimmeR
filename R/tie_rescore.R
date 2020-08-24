@@ -1,6 +1,6 @@
 #' Rescore to account for ties
 #'
-#' Recoring to average point values for ties.  Ties are placed as ties (both ahtletes get 2nd etc.)
+#' Rescoring to average point values for ties.  Ties are placed as ties (both athletes get 2nd etc.)
 #'
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'

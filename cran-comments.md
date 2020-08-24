@@ -1,6 +1,6 @@
 # Version 0.4.0
 ## Changes
-Added functions to score swim meets, and also to read in a new type of data, .hy3 files.  Also a fair number of bug fixes
+Added functions to score swim meets, and also to read in a new type of data, .hy3 files.  Also a fair number of bug fixes.
 
 ## Test envirornments
 * local Windows 10 install, R 4.0.1

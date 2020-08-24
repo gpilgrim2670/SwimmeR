@@ -17,16 +17,14 @@
 
 `devtools::install_github("gpilgrim2670/SwimmeR", build_vignettes = TRUE)`
 
-The development versions of `read_results` and `swim_parse`can handle .hy3 Hy-Tek meet result files.  While functionality is there the exact outputs of `swim_parse` from .hy3 files may be adjusted prior to the next CRAN release.  From a user perspective .hy3 files are read the same way as .pdf files.
-
 
 # Usage
 
-Version 0.3.1 of `SwimmeR` has two major uses - importing results and formatting times.
+Version 0.4.0 of `SwimmeR` has two major uses - importing results and formatting times.
 
 ## Importing Results
 
-`SwimmeR` reads swimming results into R and outputs tidy dataframes of the results.  `SwimmeR` uses `read_results` to read in either a PDF or HTML file (like a url) and the `swim_parse` to convert the read file to a tidy dataframe.
+`SwimmeR` reads swimming results into R and outputs tidy dataframes of the results.  `SwimmeR` uses `read_results` to read in either a PDF or HTML file (like a url) and the `swim_parse` to convert the read file to a tidy dataframe.  Reading .hy3 files is also now possible.
 
 `read_results` has two arguments, `file`, which is the file path to read in, and `node`, required only for HTML files, this is a CSS node where the results reside
 
