@@ -1,4 +1,4 @@
-# SwimmeR dev version (0.4.0)
+# SwimmeR dev version (0.4.1)
 * important bug fixes in `swim_parse` regarding importing results that have a "J" next to them (a Hy-Tek artifact)
 * `swim_parse` now includes DQ swims, and the output of `swim_parse` has a column called `DQ`.
 * `swim_parse` now notes exhibition swims, in the column `Exhbition`

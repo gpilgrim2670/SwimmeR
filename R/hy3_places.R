@@ -23,11 +23,6 @@ hy3_places <-
   function(file,
            type = c("prelims", "relay_prelims", "finals", "relay_finals")) {
 
-    # results_type <- "finals"
-    #
-    # results_raw <- results
-    # file <- results_raw
-
     codes <- c("^E2P.*", "^F2P.*", "^E2F.*", "^F2F.*")
     result_types <-
       c("prelims", "relay_prelims", "finals", "relay_finals")
@@ -63,10 +58,10 @@ hy3_places <-
       unlist()
 
     places <- results %>%
-      purrr::map(tail,-6) %>% # remove first column, which has hytek codes
-      purrr::map(head, 1) # only want new first column, which has times
+      purrr::map(tail,-6) %>% # remove first column, which has hy-tek codes
+      purrr::map(head, 1) # only want new first column, which has places
 
-    if(length(places) == 0){ # if there are no times, like in meets that don't have prelims, this will make a dummy list
+    if(length(places) == 0){ # if there are no places, like in meets that don't have prelims, this will make a dummy list
       places <- rep(NA, length(places_rows))
     }
 

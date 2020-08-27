@@ -375,7 +375,7 @@ parse_hy3 <-
       dplyr::select(-Course,-Team,-Relay_Rank,-ID)
 
 
-    # Collect times from prelims and finals, plus palces from finals
+    # Collect times from prelims and finals, plus places from finals
     relay_finals <- hy3_times(file = file, type = "relay_finals")
     relay_prelims <- hy3_times(file = file, type = "relay_prelims")
     relay_places <- hy3_places(file = file, type = "relay_finals")

@@ -53,7 +53,7 @@ The second issue is that `Texas` and `Florida` are styled as `Texas, University 
 
 Both of these issues can be fixed with the `typo` and `replacement` arguments to `swim_parse`.  Elements of `typo` will be replaced by the element of `replacement` with which they share an index, so all instances of the first element of `typo` will be replaced by the first element of `replacement` etc. etc.  Not specifying `typo` or `replacement` will not produce an error, but might negatively impact the results.  If your results look strange, or are missing values, look for typos related to those swims.
 
-There is a third argument to `swim_parse` called `avoid` which will be addressed in the section on reading in html results below.
+There is a third argument to `swim_parse`, called `avoid`, which will be addressed in the section on reading in html results below.
 
 ```{r swim_parse, message = FALSE}
 df <-
@@ -66,7 +66,7 @@ df <-
 
 Here are those same Women's 100 Breaststroke results, as a dataframe in tidy format:
 ```{r Swim Parse output, message = FALSE}
-df[67:69,]
+df[100:102,]
 ```
 *Please note that `SwimmeR` does not capture split times.*
 
@@ -89,7 +89,7 @@ df_1 <- swim_parse(file = url_read, avoid = c("NY State Rcd:"))
 ```
 
 ```{r swim_parse html output, message = FALSE}
-df_1[313:315,]
+df_1[362:364,]
 ```
 
 # Formatting Swimming Times

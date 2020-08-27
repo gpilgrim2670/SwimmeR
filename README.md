@@ -20,7 +20,7 @@
 
 # Usage
 
-Version 0.4.0 of `SwimmeR` has two major uses - importing results and formatting times.
+Version 0.4.1 of `SwimmeR` has two major uses - importing results and formatting times.
 
 ## Importing Results
 
