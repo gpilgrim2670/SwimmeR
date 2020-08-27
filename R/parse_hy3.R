@@ -50,7 +50,10 @@ parse_hy3 <-
     file <- file %>%
       .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid)))] %>%
       stringr::str_replace_all(stats::setNames(replacement, typo))
+
+
     # data beginning with E1M or E1F contains results from each swim (male and female respectively)
+    # if(stringr::str_detect(file, "^E1M.*|^E1F.*") -- TRUE){
     entry <- file %>%
       stringr::str_extract_all("^E1M.*|^E1F.*") %>%
       .[purrr::map(., length) > 0] %>%
@@ -293,8 +296,9 @@ parse_hy3 <-
       )
 
 
+
     # data beginning with F1 contains relay info
-    # if(str_detect("^F1.*") == TRUE){
+    if(any(stringr::str_detect(file, "^F1.*")) == TRUE){
     relay <- file %>%
       stringr::str_extract_all("^F1.*") %>%
       .[purrr::map(., length) > 0] %>%
@@ -413,9 +417,18 @@ parse_hy3 <-
       dplyr::mutate(Place = dplyr::case_when(Place == 0 ~ 100000,
                                              TRUE ~ Place)) %>%
       dplyr::na_if(100000))
-    # } else {
-    #   ### empty relay df
-    # }
+    } else {
+      relay <- data.frame(
+        Name = character(),
+        Place = numeric(),
+        Grade = character(),
+        School = character(),
+        Prelims_Time = character(),
+        Finals_Time = character(),
+        Row_Numb = character(),
+        stringsAsFactors = FALSE
+      )
+    }
 
     #### Binding up data
     data <- dplyr::left_join(swimmer, entry, by = "ID_Numb") %>%
