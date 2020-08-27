@@ -295,8 +295,6 @@ parse_hy3 <-
         Row_Max = dplyr::lead(Row_Min, 1L, default = length(file)) - 1,
       )
 
-
-
     # data beginning with F1 contains relay info
     if(any(stringr::str_detect(file, "^F1.*")) == TRUE){
     relay <- file %>%

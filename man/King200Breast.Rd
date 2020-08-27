@@ -8,7 +8,7 @@
 An object of class \code{"data.frame"}
 }
 \source{
-\href{https://www.usaswimming.org/utility/landing-pages/times/ncaa-division-i}{NCAA Times Database}
+\href{https://www.usaswimming.org/times/ncaa/ncaa-division-i}{NCAA Times Database}
 }
 \usage{
 data(King200Breast)

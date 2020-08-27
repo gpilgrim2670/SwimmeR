@@ -1,4 +1,8 @@
 # Version 0.4.0
+
+## Resubmission
+Updated link in man/King200Breast.Rd
+
 ## Changes
 Added functions to score swim meets, and also to read in a new type of data, .hy3 files.  Also a fair number of bug fixes.
 
