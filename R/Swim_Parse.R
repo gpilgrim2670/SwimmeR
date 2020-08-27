@@ -149,9 +149,14 @@ Swim_Parse <-
       # clean input data
       suppressWarnings(
         data_1 <- as_lines_list_2 %>%
+          # stringr::str_replace_all(stats::setNames(replacement, typo)) %>% # moved to top 8/26
           stringr::str_replace_all("\\*(\\d{1,})", replacement = "\\1") %>%  # removes * placed in front of place number in ties
+          # stringr::str_extract_all(
+          #   "\n\\s*\\d*\\s* [:alpha:].*|\n\\s*\\d* \\d*\\-[:alpha:].*|\n\\s*--\\s* [:alpha:].*|\n\\s*\\d* \\d*\\-[:alpha:].*"
+          # ) %>%
+          # 8/26 not all DQ lines start with "--", some start with "---"
           stringr::str_extract_all(
-            "\n\\s*\\d*\\s* [:alpha:].*|\n\\s*\\d* \\d*\\-[:alpha:].*|\n\\s*--\\s* [:alpha:].*|\n\\s*\\d* \\d*\\-[:alpha:].*"
+            "\n\\s*\\d*\\s* [:alpha:].*|\n\\s*\\d* \\d*\\-[:alpha:].*|\n\\s*-{2,5}\\s* [:alpha:].*|\n\\s*\\d* \\d*\\-[:alpha:].*"
           ) %>%
           .[purrr::map(., length) > 0] %>%
           .[purrr::map(., stringr::str_length) > 50] %>%
@@ -160,7 +165,8 @@ Swim_Parse <-
           .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]{2,}")] %>% # must have at least two letters in a row
           .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid)))] %>%
           stringr::str_replace_all("\n", "") %>%
-          stringr::str_replace_all(stats::setNames(replacement, typo)) %>%
+          # stringr::str_replace_all("\n\\s*", "") %>% # 8/27
+          stringr::str_replace_all(stats::setNames(replacement, typo)) %>% # moved to top of pipeline 8/26
           stringr::str_replace_all("\\s*[&%]\\s*", "  ") %>% # added 8/21 for removing "&" as record designator
           #removed J etc. from next to swim, but does not remove X or x (for exhibition tracking)
           stringr::str_replace_all("[A-WYZa-wyz]+(\\d{1,2}\\:\\d{2}\\.\\d{2})", "\\1") %>%
@@ -171,7 +177,8 @@ Swim_Parse <-
           stringr::str_replace_all("(\\d{1,2}\\:\\d{2}\\.\\d{2})[:punct:]+", " \\1") %>%
           stringr::str_replace_all(" [:punct:]+(\\d{2,3}\\.\\d{2})", " \\1") %>%
           stringr::str_replace_all("(\\d{2,3}\\.\\d{2})[:punct:]+", " \\1") %>%
-          stringr::str_replace_all("--", "10000") %>%
+          # stringr::str_replace_all("--", "10000") %>%
+          stringr::str_replace_all("-{2,5}", "10000") %>% #8/26
           stringr::str_replace_all("(\\.\\d{2})\\d+", "\\1 ") %>% # added 8/21 for illinois to deal with points column merging with final times column
           stringr::str_replace_all("\\d{1,2} (\\d{1,})$", "  \\1 ") %>% # added 8/21 for illinois to deal with points column merging with final times column
           # stringr::str_replace_all("(\\d{1,2})- ", "\\1-") %>%
@@ -366,7 +373,8 @@ Swim_Parse <-
               School = stringr::str_replace(School, "^SR |^JR |^SO |^FR |^10 |^11 |^12 |^9 |^8 |^7 ", ""),
               Name = stringr::str_replace(Name, "^-", ""),
               Name = replace(Name, Name == School, NA)
-            )
+            ) %>%
+            dplyr::mutate(DQ = 0)
         )
 
       } else {
@@ -566,7 +574,8 @@ Swim_Parse <-
               ),
               Name = stringr::str_replace(Name, "^-", ""),
               Name = replace(Name, Name == School, NA)
-            )
+            ) %>%
+            dplyr::mutate(DQ = 0)
         )
 
       } else {
@@ -868,7 +877,8 @@ Swim_Parse <-
                 stringr::str_length(Grade) > 2 & is.na(Grade) == FALSE
               ), NA)
 
-            )
+            ) %>%
+            dplyr::mutate(DQ = 0)
         )
       } else {
         df_5 <- data.frame(
@@ -1110,7 +1120,8 @@ Swim_Parse <-
             dplyr::mutate(
               Name = stringr::str_replace(Name, "^-", ""),
               Name = replace(Name, Name == School, NA)
-            )
+            ) %>%
+            dplyr::mutate(DQ = 0)
         )
       } else {
         df_4 <- data.frame(
@@ -1193,7 +1204,8 @@ Swim_Parse <-
                 all(Prelims_Time == Finals_Time, na.rm = TRUE) ~ as.character(NA),
                 all(Prelims_Time == Finals_Time, na.rm = TRUE) == FALSE ~ Prelims_Time
               )
-            )
+            ) %>%
+            dplyr::mutate(DQ = 0)
         )
       } else {
         df_3 <- data.frame(
@@ -1292,7 +1304,8 @@ Swim_Parse <-
                           School,
                           Row_Numb = V4) %>%
             dplyr::na_if("") %>%
-            dplyr::na_if("''")
+            dplyr::na_if("''") %>%
+            dplyr::mutate(DQ = 1)
         )
 
       } else {
@@ -1328,7 +1341,8 @@ Swim_Parse <-
                           School,
                           Row_Numb = V3) %>%
             dplyr::na_if("") %>%
-            dplyr::na_if("''")
+            dplyr::na_if("''") %>%
+            dplyr::mutate(DQ = 1)
         )
 
       } else {
@@ -1360,8 +1374,8 @@ Swim_Parse <-
           dplyr::mutate(Row_Numb = as.numeric(Row_Numb)) %>%
           dplyr::arrange(Row_Numb) %>%
           ### moved up from below for DQ work 8/20
-          dplyr::mutate(DQ = dplyr::case_when(Place == 10000 ~ 1,
-                                              TRUE ~ 0)) %>%
+          dplyr::mutate(DQ = dplyr::case_when(Place == 10000 & Exhibition == 0 ~ 1, # added exhibition condition 8/27
+                                              TRUE ~ DQ)) %>%
           na_if(10000) %>%
           ####
           dplyr::mutate(
@@ -1372,6 +1386,8 @@ Swim_Parse <-
               dplyr::lag(Place) != Place ~ Place
             ),
             Place = as.character(Place),
+            # Place = case_when(Exhibition == 1 ~ "10000",
+            #                   TRUE ~ Place),
             Row_Numb = as.numeric(Row_Numb)
           ) %>%
           dplyr::filter(Row_Numb >= Min_Row_Numb)
@@ -1427,16 +1443,19 @@ Swim_Parse <-
           ### added 8/20 as part of DQ, to remove records and such but not DQ results
           filter(
             DQ == 0 &
-              str_detect(Finals_Time, "\\.\\d\\d") == TRUE |
-              DQ == 0 & str_detect(Prelims_Time, "\\.\\d\\d") == TRUE | DQ == 1
+              stringr::str_detect(Finals_Time, "\\.\\d\\d") == TRUE |
+              DQ == 0 & stringr::str_detect(Prelims_Time, "\\.\\d\\d") == TRUE | DQ == 1
           ) %>%
-          mutate(Exhibition = case_when(is.na(Exhibition) == TRUE ~ 0,
-                                        TRUE ~ Exhibition))
+          dplyr::mutate(Exhibition = dplyr::case_when(is.na(Exhibition) == TRUE ~ 0,
+                                        TRUE ~ Exhibition)) %>%
+          dplyr::mutate(Finals_Time = dplyr::case_when(DQ == 1 ~ "NA",
+                                         TRUE ~ Finals_Time)) %>%
+          dplyr::na_if("NA")
 
       )
 
       return(data)
-    } else if (str_detect(file[1], "^A107") == TRUE) {
+    } else if (stringr::str_detect(file[1], "^A107") == TRUE) {
       # file <- add_row_numbers(text = file)
       data <- parse_hy3(file = file)
       return(data)

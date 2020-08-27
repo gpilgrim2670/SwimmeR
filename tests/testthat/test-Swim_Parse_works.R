@@ -7,7 +7,7 @@ test_that("Swim_Parse works", {
     Read_Results(file),
     typo =  c("\n", "Indiana  University", ", University of"),
     replacement = c("\n", "Indiana University", "")
-  )[67, 1],
+  )[100, 1],
   "Lilly King")
 
 })
@@ -20,7 +20,7 @@ test_that("swim_parse works 2", {
     typo =  c("\n", "Indiana  University", ", University of"),
 
     replacement = c("\n", "Indiana University", "")
-  )[190, 6],
+  )[252, 6],
   "2:01.78")
 
 })
@@ -43,7 +43,7 @@ test_that("Swim_Parse works USMS", {
   file <- system.file("extdata", "11102019roc.pdf", package = "SwimmeR")
   expect_match(Swim_Parse(
     Read_Results(file)
-  )[107, 6],
+  )[109, 6],
   "51.90")
 
 })

@@ -294,6 +294,7 @@ parse_hy3 <-
 
 
     # data beginning with F1 contains relay info
+    # if(str_detect("^F1.*") == TRUE){
     relay <- file %>%
       stringr::str_extract_all("^F1.*") %>%
       .[purrr::map(., length) > 0] %>%
@@ -412,6 +413,9 @@ parse_hy3 <-
       dplyr::mutate(Place = dplyr::case_when(Place == 0 ~ 100000,
                                              TRUE ~ Place)) %>%
       dplyr::na_if(100000))
+    # } else {
+    #   ### empty relay df
+    # }
 
     #### Binding up data
     data <- dplyr::left_join(swimmer, entry, by = "ID_Numb") %>%
