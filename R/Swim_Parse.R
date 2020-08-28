@@ -1368,8 +1368,10 @@ Swim_Parse <-
           dplyr::full_join(df_5) %>%
           dplyr::full_join(df_4) %>%
           dplyr::full_join(df_3) %>%
-          dplyr::full_join(df_DQ_4) %>%
-          dplyr::full_join(df_DQ_3) %>%
+          #   dplyr::full_join(df_DQ_4) %>% # some duplicate DQ results 8/28
+          #   dplyr::full_join(df_DQ_3) %>%
+          dplyr::left_join(df_DQ_4) %>%
+          dplyr::left_join(df_DQ_3) %>%
           # dplyr::filter(stringr::str_detect(Finals_Time, "\\.") == TRUE) %>% # removed for DQ testing 8/20
           dplyr::mutate(Row_Numb = as.numeric(Row_Numb)) %>%
           dplyr::arrange(Row_Numb) %>%
