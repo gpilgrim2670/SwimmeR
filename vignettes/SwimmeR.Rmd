@@ -89,7 +89,7 @@ df_1 <- swim_parse(file = url_read, avoid = c("NY State Rcd:"))
 ```
 
 ```{r swim_parse html output, message = FALSE}
-df_1[362:364,]
+df_1[358:360,]
 ```
 
 # Formatting Swimming Times
