@@ -7,6 +7,7 @@
 ## Test envirornments
 * local Windows 10 install, R 4.0.2
 * local OS X install, R 4.0.0
+* win_devel
 * rhub Debian Linux, R-release, GCC
 
 # Version 0.4.1
