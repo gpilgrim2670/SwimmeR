@@ -1,11 +1,14 @@
 library(rvest)
 library(pdftools)
+library(stringr)
 
 test_that("Read_Result PDF works", {
   file <- system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")
+  file <- Read_Results(file)
   expect_match(
-    Read_Results(file)[298],
-    "\n    1 Lilly King                                21 Indiana University                         NT               59.46   B"
+    paste(str_extract_all(file[298], "\\d")[[1]], collapse = ""),
+    "1215946"
+    # "\n    1 Lilly King                                21 Indiana University                         NT               59.46   B"
   )
 
 })

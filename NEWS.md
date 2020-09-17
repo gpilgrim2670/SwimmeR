@@ -1,3 +1,6 @@
+# SwimmeR 0.4.2
+* CRAN housekeeping - addressed testing issue on Linux Debian
+
 # SwimmeR 0.4.1
 * fixed broken link for CRAN submission
 * minor bug fixes

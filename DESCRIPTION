@@ -1,6 +1,6 @@
 Package: SwimmeR
 Title: Data Import, Cleaning, and Conversions for Swimming Results
-Version: 0.4.1
+Version: 0.4.2
 Authors@R: 
     c(person(given = "Greg",
             family = "Pilgrim",
@@ -20,8 +20,6 @@ Imports:
     utils,
     rvest,
     pdftools,
-    ggplot2,
-    scales,
     magrittr,
     xml2,
     readr
@@ -31,5 +29,7 @@ RoxygenNote: 7.1.1
 Suggests: 
     testthat (>= 2.1.0),
     knitr,
+    ggplot2,
+    scales,
     rmarkdown
 VignetteBuilder: knitr

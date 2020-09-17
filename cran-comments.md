@@ -1,3 +1,14 @@
+# Version 0.4.2
+
+## Changes
+* Testing modified to address fault on Linux Debian systems
+* Package dependencies for vignette adjusted to address notes on Linux Debian/Fedora and Solaris
+
+## Test envirornments
+* local Windows 10 install, R 4.0.2
+* local OS X install, R 4.0.0
+* rhub Debian Linux, R-release, GCC
+
 # Version 0.4.1
 
 ## Resubmission
