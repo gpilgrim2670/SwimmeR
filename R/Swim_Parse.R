@@ -140,7 +140,7 @@ Swim_Parse <-
     as_lines_list_2 <- add_row_numbers(text = file)
 
     # parsing html and pdf files
-    if (str_detect(file[1], "^A107") == FALSE) {
+    if (stringr::str_detect(file[1], "^A107") == FALSE) {
       as_lines_list_2 <- add_row_numbers(text = file)
 
       # Pulls out event labels from text
