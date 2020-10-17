@@ -27,11 +27,6 @@ events <- text %>%
     stringr::str_detect,
     "Event \\d{1,}|Women .* Yard|Women .* Meter|Girls .* Yard|Girls .* Meter|Men .* Yard|Men .* Meter|Boys .* Yard|Boys .* Meter|Mixed .* Yard|Mixed .* Meter"
   )]
-  # .[purrr::map_lgl( # new 10/16
-  #   .,
-  #   stringr::str_detect,
-  #   "Event \\d{1,}|Women .* Yard|Women .* Meter|Women.*\\d{2,4}\\s*[:alpha:]+|Girls .* Yard|Girls .* Meter|Girl.*\\d{2,4}\\s*[:alpha:]+|Men .* Yard|Men .* Meter|Men.*\\d{2,4}\\s*[:alpha:]+|Boys .* Yard|Boys .* Meter|Boy.*\\d{2,4}\\s*[:alpha:]+|Mixed .* Yard|Mixed .* Meter|Mixed.*\\d{2,4}\\s*[:alpha:]+"
-  # )]
 events <- stringr::str_replace(events, ".*Event \\d{1,4} ", "")
 events <- stringr::str_replace(events, "Open  ", "") ## Addition
 events <-

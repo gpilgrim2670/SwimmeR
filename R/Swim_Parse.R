@@ -54,8 +54,8 @@ Swim_Parse <-
            avoid = avoid_default,
            typo = typo_default,
            replacement = replacement_default) {
-    # strings that if a line begins with one of them the line is ignored
 
+    #### strings that if a line begins with one of them the line is ignored ####
     avoid_default <-
       c(
         "Record",
@@ -129,24 +129,23 @@ Swim_Parse <-
         "^\\s*r\\:"
       )
 
-    # define avoid_minimal
+    #### define avoid_minimal ####
     avoid_minimal <- c("^\\s{1,}r\\:")
 
-    # default typo and replacement strings
+    #### default typo and replacement strings ####
     typo_default <- c("typo")
 
     replacement_default <- c("typo")
 
     as_lines_list_2 <- add_row_numbers(text = file)
 
-    # parsing html and pdf files
+    #### parsing html and pdf files ####
     if (stringr::str_detect(file[1], "^A107") == FALSE) {
-      as_lines_list_2 <- add_row_numbers(text = file)
 
-      # Pulls out event labels from text
+      #### Pulls out event labels from text ####
       events <- event_parse(as_lines_list_2)
 
-      # clean input data
+      #### clean input data ####
       suppressWarnings(
         data_1 <- as_lines_list_2 %>%
           # stringr::str_replace_all(stats::setNames(replacement, typo)) %>% # moved to top 8/26
@@ -185,12 +184,12 @@ Swim_Parse <-
           trimws()
       )
 
-      # splits data into variables by splitting at multiple (>= 2) spaces
+      #### splits data into variables by splitting at multiple (>= 2) spaces ####
       data_1 <-
         unlist(purrr::map(data_1, stringr::str_split, "\\s{2,}"),
                recursive = FALSE)
 
-      # breaks data into subsets based on how many variables it has
+      #### breaks data into subsets based on how many variables it has ####
       data_length_3 <- data_1[purrr::map(data_1, length) == 3]
       data_length_4 <- data_1[purrr::map(data_1, length) == 4]
       data_length_5 <- data_1[purrr::map(data_1, length) == 5]
@@ -202,7 +201,7 @@ Swim_Parse <-
       DQ_length_3 <- DQ[purrr::map(DQ, length) == 3]
       DQ_length_4 <- DQ[purrr::map(DQ, length) == 4]
 
-      # seven variables
+      #### seven variables ####
       if (length(data_length_7) > 0) {
         suppressWarnings(
           df_7 <- #url76, url14, url78
@@ -391,7 +390,7 @@ Swim_Parse <-
         )
       }
 
-      # six variables
+      #### six variables ####
       if (length(data_length_6) > 0) {
         suppressWarnings(
           df_6 <-
@@ -592,7 +591,7 @@ Swim_Parse <-
         )
       }
 
-      # five variables
+      #### five variables ####
       if (length(data_length_5) > 0) {
         suppressWarnings(
           df_5 <- as.data.frame(
@@ -894,7 +893,7 @@ Swim_Parse <-
         )
       }
 
-      # four variables
+      #### four variables ####
       if (length(data_length_4) > 0) {
         suppressWarnings(
           df_4 <-
@@ -1137,7 +1136,7 @@ Swim_Parse <-
         )
       }
 
-      # three variables
+      #### three variables ####
       if (length(data_length_3) > 0) {
         suppressWarnings(
           df_3 <-
@@ -1220,8 +1219,8 @@ Swim_Parse <-
           stringsAsFactors = FALSE
         )
       }
-      ### DQ data ###
 
+      #### DQ data ####
       if (length(DQ_length_4) > 0) {
         suppressWarnings(
           df_DQ_4 <-
@@ -1361,7 +1360,7 @@ Swim_Parse <-
       }
 
 
-      # Rejoin dataframes from each number of variables
+      #### Rejoin dataframes from each number of variables ####
       Min_Row_Numb <- min(events$Event_Row_Min)
       suppressWarnings(
         data <- dplyr::full_join(df_7, df_6) %>%
@@ -1395,12 +1394,12 @@ Swim_Parse <-
           dplyr::filter(Row_Numb >= Min_Row_Numb)
       )
 
-      # add in events based on row number ranges
+      #### add in events based on row number ranges ####
       data  <-
         transform(data, Event = events$Event[findInterval(Row_Numb, events$Event_Row_Min)])
       data$Row_Numb <- NULL
 
-      # cleaning up final results
+      #### cleaning up final results ####
 
       suppressWarnings(
         data <- data %>%
