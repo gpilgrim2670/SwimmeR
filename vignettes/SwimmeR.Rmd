@@ -97,7 +97,7 @@ df_1[358:360,]
 International Swimming League results are technically .pdf files, but they're formatted very differently, so they have their own special function, `swim_parse_ISL`.  Handling of ISL results is otherwise the same, with the file first going to `read_results` and then to `swim_parse_ISL`, returning a dataframe.
 
 ```{r swim_parse_ISL, message = FALSE}
-url <- "https://isl.global/wp-content/uploads/2019/11/isl_results_washington_college_park_day_1.pdf"
+url <- "https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/ISL_2019_CollegePark_Day_1.pdf"
 url_read <- read_results(url)
 df_ISL <- swim_parse_ISL(file = url_read)
 ```
@@ -105,15 +105,14 @@ df_ISL <- swim_parse_ISL(file = url_read)
 The `SwimmeR` package's favorite swimmer, Lilly King, is involved in the ISL.  Let's see what she got up to at this particular meet.
 
 ```{r swim_parse_ISL output, message = FALSE}
-df_ISL %>% 
-  dplyr::filter(Name == "KING Lilly")
+df_ISL[which(df$Name == "KING Lilly"),]
 ```
 
 Two first place finishes for Ms. King - very nice!  Otherwise all the normal information is here, place, time, team, event etc.  Beginning in the 2020 season ISL starts reporting points in their results, which `swim_parse_ISL` will also read.  At this moment `swim_parse_ISL` does not capture relay swimmers (only the overall relay team), although that function may be added to a future version.
 
 # Formatting Swimming Times
 
-Once results are captured in R as tidy dataframes the real fun can begin - but there's another problem.  Times in swimming are recorded as minutes:seconds.hundredth.  This is fine when a time is less than a minute, because `59.99` can be of class `numeric` in R, but times greater than or equal to a minute `1:00.00` are stuck as class `character`.  `SwimmeR` provides two functions, `sec_format` and `mmss_format` to convert between times as seconds (for doing math), and times as minutes:seconds.hundredth, for swimming-specific display.
+Once results are captured in R as tidy dataframes the real fun can begin - but there's another problem.  Times in swimming are recorded as minutes:seconds.hundredth.  This is fine when a time is less than a minute, because `59.99` can be of class `numeric` in R, but times greater than or equal to a minute `1:00.00` are stuck as class `character`.  `SwimmeR` provides two functions, `sec_format` and `mmss_format` to convert between times as seconds (for doing math), and times as minutes:seconds.hundredths, for swimming-specific display.
 
 ```{r formatting times}
 data(King200Breast)
