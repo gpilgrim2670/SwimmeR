@@ -38,7 +38,7 @@ swim_parse_ISL <-
 
     # file <- read_results("https://isl.global/wp-content/uploads/2019/11/isl_college_park_results_day_2.pdf")
 
-    # file <- read_results(md1)
+    # file <- read_results(match_1_2020)
 
     as_lines_list_2 <- add_row_numbers(text = file)
 
@@ -56,7 +56,8 @@ swim_parse_ISL <-
         stringr::str_remove_all("\n") %>%
         stringr::str_replace_all("(\\d|\\))\\s", "\\1   ") %>%
         stringr::str_replace_all("^\\s+(\\d)\\s{2,}\\d\\s{2,}(\\d)", "\\1    \\2") %>%
-        stringr::str_remove_all("\\+\\d{1}\\.\\d{2}") %>% # removes the +0.07 or whatever, distance behind leader column
+        stringr::str_remove_all("\\+\\d{1,2}\\.\\d{2}") %>% # removes the +0.07 or whatever, distance behind leader column
+        stringr::str_replace_all("\\s+Q\\s+", "   ") %>% # removes Q used to denote qualifying for skins rounds
         stringr::str_remove_all("\\=") %>% # removes the = used to denote ties
         stringr::str_remove_all("\\(\\d\\)") %>% # removes the split placing
         trimws()
@@ -245,7 +246,7 @@ swim_parse_ISL <-
     }
 
     if (length(data_DSQ_6) > 0) {
-        df_DSQ_5 <-
+        df_DSQ_6 <-
           as.data.frame(
             t(as.data.frame(data_DSQ_6)),
             row.names = FALSE,

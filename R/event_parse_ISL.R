@@ -34,7 +34,7 @@ event_parse_ISL <- function(text){
     stringr::str_replace_all("([:alpha:])\\s{2,}([:alpha:])", "\\1 \\2") %>% # collapse events ending with final or round together into one string, like for skins rounds
     stringr::str_remove_all("\\(") %>%
     stringr::str_remove_all("\\)") %>%
-    stringr::str_replace(".*(?=(Wom|Men|Boy|Girl))", "") %>% # new 10/16
+    stringr::str_replace(".*(?=(Wom|Men|Boy|Girl|Mixed))", "") %>% # new 10/16
     trimws()
 
   events <-
