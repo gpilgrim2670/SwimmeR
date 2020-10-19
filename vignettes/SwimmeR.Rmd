@@ -31,6 +31,7 @@ Importing is performed by `read_results` which takes as an argument a file path 
 In addition to this vignette I do a lot of demos on how to use `SwimmeR` at my blog [Swimming + Data Science](https://pilgrim.netlify.app/).
 
 # Reading PDF Results
+*ISL results are handled differently, see ISL section below*
 `SwimmeR` includes Texas-Florida-Indiana.pdf, results from a tri-meet between the three schools.  It can be read in as such:
 
 ```{r read_results, message = FALSE}
@@ -43,7 +44,7 @@ file_read <- read_results(file = file_path)
 file_read[294:303]
 ```
 
-Here we see a subsection of the meet - the top three finishers in the Women's 100 Yard Breaststroke featuring Olympic gold medalist Lilly King.
+Here we see a subsection of the meet - the top three finishers in the Women's 100 Yard Breaststroke featuring Olympic gold medalist, and the `SwimmeR` package's favorite swimmer, Lilly King.
 
 The next step is to convert this data to a dataframe using `swim_parse`.  Because `swim_parse` works on text strings it is very sensitive to typos and/or nonstandard naming conventions.  "Texas-Florida-Indiana.pdf" has two examples of these potential problems.
 
@@ -92,6 +93,24 @@ df_1 <- swim_parse(file = url_read, avoid = c("NY State Rcd:"))
 df_1[358:360,]
 ```
 
+# Reading ISL Results
+International Swimming League results are technically .pdf files, but they're formatted very differently, so they have their own special function, `swim_parse_ISL`.  Handling of ISL results is otherwise the same, with the file first going to `read_results` and then to `swim_parse_ISL`, returning a dataframe.
+
+```{r swim_parse_ISL, message = FALSE}
+url <- "https://isl.global/wp-content/uploads/2019/11/isl_results_washington_college_park_day_1.pdf"
+url_read <- read_results(url)
+df_ISL <- swim_parse_ISL(file = url_read)
+```
+
+The `SwimmeR` package's favorite swimmer, Lilly King, is involved in ISL.  Let's see what she got up to at this particular meet.
+
+```{r swim_parse html output, message = FALSE}
+df_ISL %>% 
+  filter(Name == "KING Lilly")
+```
+
+Two first place finishes for Ms. King - very nice!  Otherwise all the normal information is here, place, time, team, event etc.  Beginning in the 2020 season ISL starts reporting points in their results, which `swim_parse_ISL` will also read.  At this moment `swim_parse_ISL` does not capture relay swimmers (only the overall relay team), although that function may be added to a future version.
+
 # Formatting Swimming Times
 
 Once results are captured in R as tidy dataframes the real fun can begin - but there's another problem.  Times in swimming are recorded as minutes:seconds.hundredth.  This is fine when a time is less than a minute, because `59.99` can be of class `numeric` in R, but times greater than or equal to a minute `1:00.00` are stuck as class `character`.  `SwimmeR` provides two functions, `sec_format` and `mmss_format` to convert between times as seconds (for doing math), and times as minutes:seconds.hundredth, for swimming-specific display.
@@ -132,7 +151,7 @@ df <- data.frame(Name, Team, stringsAsFactors = FALSE)
 df
 ```
 
-Lilly has 4 different teams, but all of them are actually the same.  Similarly Sulley has two teams, but actually only one.  Using `get_mode` to return the most frequently occurring team for each swimmer is easier than manually specifying every swimmer's team.
+Lilly has 4 different teams, but all of them are actually the same team.  Similarly Sulley has two teams, but actually only one.  Using `get_mode` to return the most frequently occurring team for each swimmer is easier than manually specifying every swimmer's team.
 
 ```{r get_mode}
 df <- df %>% 

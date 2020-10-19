@@ -1,12 +1,13 @@
 #' Pulls out event labels from text
 #'
-#' Locates event labels in text of results output from \code{read_results} and their associated row numbers.  The resulting dataframe is joined back into results to include event names
+#' Locates event labels in text of 'ISL' results output from \code{read_results} and their associated row numbers.  The resulting dataframe is joined back into results to include event names
 #'
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr lead
 #' @importFrom stringr str_replace
+#' @importFrom stringr str_replace_all
 #' @importFrom stringr str_remove_all
 #' @importFrom stringr str_extract
 #' @importFrom stringr str_split
@@ -14,10 +15,10 @@
 #' @importFrom purrr map_lgl
 #' @importFrom purrr map
 #'
-#' @param text output from \code{read_results}
-#' @return returns a dataframe with event names and row numbers to eventually be recombined with swimming results inside \code{swim_parse}
+#' @param text output from \code{read_results} followed by \code{add_row_numbers}
+#' @return returns a dataframe with event names and row numbers to eventually be recombined with swimming results inside \code{swim_parse_ISL}
 
-#' @seealso \code{event_parse} is a helper function inside \code{\link{swim_parse}}
+#' @seealso \code{event_parse_ISL} is a helper function inside \code{\link{swim_parse_ISL}}
 
 event_parse_ISL <- function(text){
 

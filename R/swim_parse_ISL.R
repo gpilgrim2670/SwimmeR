@@ -1,4 +1,4 @@
-#' Formats swimming results from the International Swim Leage ('ISL') read with \code{read_results} into a dataframe
+#' Formats swimming results from the International Swim League ('ISL') read with \code{read_results} into a dataframe
 #'
 #' Takes the output of \code{read_results} and cleans it, yielding a dataframe of 'ISL' swimming results
 #'
@@ -22,7 +22,7 @@
 #' @importFrom purrr map
 #'
 #' @param file output from \code{read_results}
-#' @return returns a dataframe with columns \code{Place}, \code{Lane}, \code{Name}, \code{Team}, \code{Time}, \code{Points}, \code{Event} & \code{DQ}.
+#' @return returns a dataframe with columns \code{Place}, \code{Lane}, \code{Name}, \code{Team}, \code{Time}, \code{Points}, \code{Event} and \code{DQ}.
 #'
 #' @examples \dontrun{
 #' swim_parse_ISL(
@@ -34,18 +34,15 @@
 
 swim_parse_ISL <-
   function(file) {
-    #  file <- read_results("https://swimswam.com/wp-content/uploads/2020/10/ISL-Budapest-2020-Meet-1-Day-1-CAC-NYB-ENS-LAC.pdf")
 
-    # file <- read_results("https://isl.global/wp-content/uploads/2019/11/isl_college_park_results_day_2.pdf")
-
-    # file <- read_results(match_1_2020)
+    # file <- read_results("https://swimswam.com/wp-content/uploads/2020/10/ISL-Budapest-2020-Meet-1-Day-1-CAC-NYB-ENS-LAC.pdf")
 
     as_lines_list_2 <- add_row_numbers(text = file)
 
-    # Pulls out event labels from text
+    #### Pulls out event labels from text ####
     events <- event_parse_ISL(as_lines_list_2)
 
-    # clean input data
+    #### clean input data ####
     suppressWarnings(
       data_1 <- as_lines_list_2 %>%
         stringr::str_replace_all("\\*(\\d{1,})", replacement = "\\1") %>%  # removes * placed in front of place number in ties
@@ -123,7 +120,8 @@ swim_parse_ISL <-
 
       df_ind_swimmer <- dplyr::bind_cols(df_left, df_right) %>%
         # dplyr::filter(Time != "DSQ") %>%
-        dplyr::mutate(Time = dplyr::case_when(stringr::str_detect(Points, "\\d{2}\\.\\d{2}") == TRUE & stringr::str_detect(Time, "\\d{2}\\.\\d{2}", negate = TRUE) == TRUE ~ Points,
+        dplyr::mutate(Time = dplyr::case_when(stringr::str_detect(Points, "\\d{2}\\.\\d{2}") == TRUE ~ Points,
+                                                # & stringr::str_detect(Time, "\\d{2}\\.\\d{2}", negate = TRUE) == TRUE ~ Points,
                                        TRUE ~ Time),
                       Points = dplyr::case_when(Time == Points ~ "NA",
                                                 str_detect(Points, "\\d{2}\\.\\d{2}") == TRUE ~ "NA",

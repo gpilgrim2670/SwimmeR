@@ -1,3 +1,8 @@
+# SwimmeR 0.5.0
+* added `swim_parse_ISL` function, for reading in results from the International Swimming League
+* updated vignette
+* various documentation updates
+
 # SwimmeR 0.4.2
 * CRAN housekeeping - addressed testing issue on Linux Debian
 
