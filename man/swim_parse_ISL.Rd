@@ -3,7 +3,7 @@
 \name{swim_parse_ISL}
 \alias{swim_parse_ISL}
 \alias{Swim_Parse_ISL}
-\title{Formats swimming results from the International Swim Leage ('ISL') read with \code{read_results} into a dataframe}
+\title{Formats swimming results from the International Swim League ('ISL') read with \code{read_results} into a dataframe}
 \usage{
 swim_parse_ISL(file)
 
@@ -13,7 +13,7 @@ Swim_Parse_ISL(file)
 \item{file}{output from \code{read_results}}
 }
 \value{
-returns a dataframe with columns \code{Place}, \code{Lane}, \code{Name}, \code{Team}, \code{Time}, \code{Points}, \code{Event} & \code{DQ}.
+returns a dataframe with columns \code{Place}, \code{Lane}, \code{Name}, \code{Team}, \code{Time}, \code{Points}, \code{Event} and \code{DQ}.
 }
 \description{
 Takes the output of \code{read_results} and cleans it, yielding a dataframe of 'ISL' swimming results

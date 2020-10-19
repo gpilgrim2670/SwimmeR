@@ -7,7 +7,7 @@
 event_parse(text)
 }
 \arguments{
-\item{text}{output from \code{read_results}}
+\item{text}{output from \code{read_results} followed by \code{add_row_numbers}}
 }
 \value{
 returns a dataframe with event names and row numbers to eventually be recombined with swimming results inside \code{swim_parse}

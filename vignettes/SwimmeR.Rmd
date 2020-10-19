@@ -102,9 +102,9 @@ url_read <- read_results(url)
 df_ISL <- swim_parse_ISL(file = url_read)
 ```
 
-The `SwimmeR` package's favorite swimmer, Lilly King, is involved in ISL.  Let's see what she got up to at this particular meet.
+The `SwimmeR` package's favorite swimmer, Lilly King, is involved in the ISL.  Let's see what she got up to at this particular meet.
 
-```{r swim_parse html output, message = FALSE}
+```{r swim_parse_ISL output, message = FALSE}
 df_ISL %>% 
   filter(Name == "KING Lilly")
 ```
