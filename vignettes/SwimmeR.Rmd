@@ -106,7 +106,7 @@ The `SwimmeR` package's favorite swimmer, Lilly King, is involved in the ISL.  L
 
 ```{r swim_parse_ISL output, message = FALSE}
 df_ISL %>% 
-  filter(Name == "KING Lilly")
+  dplyr::filter(Name == "KING Lilly")
 ```
 
 Two first place finishes for Ms. King - very nice!  Otherwise all the normal information is here, place, time, team, event etc.  Beginning in the 2020 season ISL starts reporting points in their results, which `swim_parse_ISL` will also read.  At this moment `swim_parse_ISL` does not capture relay swimmers (only the overall relay team), although that function may be added to a future version.
@@ -124,7 +124,7 @@ Included in `SwimmeR` is `King200Breast`, containing all Lilly King's 200 Breast
 
 ```{r formatting times 2}
 King200Breast <- King200Breast %>% 
-  mutate(Time_sec = sec_format(Time),
+  dplyr::mutate(Time_sec = sec_format(Time),
          Time_swim_2 = mmss_format(Time_sec))
 King200Breast
 ```
@@ -155,8 +155,8 @@ Lilly has 4 different teams, but all of them are actually the same team.  Simila
 
 ```{r get_mode}
 df <- df %>% 
-  group_by(Name) %>% 
-  mutate(Team = get_mode(Team))
+  dplyr::group_by(Name) %>% 
+  dplyr::mutate(Team = get_mode(Team))
 df
 ```
 

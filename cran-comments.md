@@ -1,10 +1,23 @@
+# Version 0.5.0
+* added functions for dealing with International Swimming League (ISL) results
+* updates to vignettes and documentation
+
+## Test environments
+* local Windows 10 install, R 4.0.2
+* local OS X install, R 4.0.2
+* win_devel
+
+## R CMD check results
+
+0 errors | 0 warnings | 0 notes
+
 # Version 0.4.2
 
 ## Changes
 * Testing modified to address fault on Linux Debian systems
 * Package dependencies for vignette adjusted to address notes on Linux Debian/Fedora and Solaris
 
-## Test envirornments
+## Test environments
 * local Windows 10 install, R 4.0.2
 * local OS X install, R 4.0.0
 * win_devel
@@ -15,7 +28,7 @@
 ## Resubmission
 Updated link in man/King200Breast.Rd per instructions
 
-## Test envirornments
+## Test environments
 * local Windows 10 install, R 4.0.1
 * local OS X install, R 4.0.0
 * win_devel
@@ -25,7 +38,7 @@ Updated link in man/King200Breast.Rd per instructions
 ## Changes
 Added functions to score swim meets, and also to read in a new type of data, .hy3 files.  Also a fair number of bug fixes.
 
-## Test envirornments
+## Test environments
 * local Windows 10 install, R 4.0.1
 * local OS X install, R 4.0.0
 * win_devel
@@ -36,7 +49,7 @@ Added functions to score swim meets, and also to read in a new type of data, .hy
 Terribly sorry about the short duration between submissions.  This is an update to fix a serious bug.
 Fixed bug that broke major function read_results for html files (about half of use cases)
 
-## Test envirornments
+## Test environments
 * local Windows 10 install, R 4.0.1
 * local OS X install, R 4.0.0
 * win_devel
@@ -50,7 +63,7 @@ Fixed bug that broke major function read_results for html files (about half of u
 ## Changes
 Added functions to further aid in cleaning swimming data, plus functions to create tournament brackets.  Also made minor bug fixes.
 
-## Test envirornments
+## Test environments
 * local Windows 10 install, R 4.0.1
 * local OS X install, R 4.0.0
 * win_devel
@@ -67,7 +80,7 @@ Removed email address from readme.md per instructions
 ## Changes
 Added functions to read, clean, and parse swimming data from html and pdf sources.  This is a large increase in the functionality of the package.
 
-## Test envirornments
+## Test environments
 * local Windows 10 install, R 3.6.3
 * local OS X install, R 3.6.3
 * win_devel
