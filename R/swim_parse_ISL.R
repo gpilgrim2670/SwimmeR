@@ -35,7 +35,7 @@
 swim_parse_ISL <-
   function(file) {
 
-    # file <- read_results("https://swimswam.com/wp-content/uploads/2020/10/ISL-Budapest-2020-Meet-1-Day-1-CAC-NYB-ENS-LAC.pdf")
+    # file <- read_results( "https://cdn.swimswam.com/wp-content/uploads/2020/10/Results_Book_Full_M2-2.pdf")
 
     as_lines_list_2 <- add_row_numbers(text = file)
 
@@ -47,7 +47,7 @@ swim_parse_ISL <-
       data_1 <- as_lines_list_2 %>%
         stringr::str_replace_all("\\*(\\d{1,})", replacement = "\\1") %>%  # removes * placed in front of place number in ties
         .[purrr::map(., length) > 0] %>%
-        .[purrr::map_lgl(., stringr::str_detect, "\\.\\d\\d|DSQ")] %>% # must have \\.\\d\\d because all swimming and diving times do
+        .[purrr::map_lgl(., stringr::str_detect, "\\d\\d\\.\\d\\d|DSQ")] %>% # must have \\.\\d\\d because all swimming and diving times do
         .[purrr::map_lgl(., stringr::str_detect, "Reaction Time", negate = TRUE)] %>% # removes header row
         .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]{2,}")] %>% # must have at least two letters in a row
         stringr::str_remove_all("\n") %>%
@@ -317,10 +317,11 @@ swim_parse_ISL <-
           Lane = as.numeric(Lane),
           Place = round(as.numeric(Place)),
           Event = as.character(Event)
-        )
+        ) %>%
+        filter(stringr::str_detect(Event, "Club Standing") == FALSE)
+
 
     )
-
     return(data)
   }
 

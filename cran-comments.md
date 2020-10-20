@@ -1,3 +1,15 @@
+# Version 0.5.1
+* fixed breaking issue caused by change in International Swimming League result reporting format between version 0.5.0 and now.
+
+## Test environments
+* local Windows 10 install, R 4.0.2
+* local OS X install, R 4.0.2
+* win_devel
+
+## R CMD check results
+
+0 errors | 0 warnings | 0 notes
+
 # Version 0.5.0
 * added functions for dealing with International Swimming League (ISL) results
 * updates to vignettes and documentation

@@ -1,3 +1,6 @@
+# SwimmeR 0.5.1
+* fixed issue caused by a change in ISL results format
+
 # SwimmeR 0.5.0
 * added `swim_parse_ISL` function, for reading in results from the International Swimming League
 * updated vignette

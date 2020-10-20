@@ -159,7 +159,7 @@ Swim_Parse <-
           ) %>%
           .[purrr::map(., length) > 0] %>%
           .[purrr::map(., stringr::str_length) > 50] %>%
-          .[purrr::map_lgl(., stringr::str_detect, "\\.\\d\\d|DQ")] %>% # must have \\.\\d\\d because all swimming and diving times do
+          .[purrr::map_lgl(., stringr::str_detect, "\\d\\d\\.\\d\\d|DQ")] %>% # must have \\.\\d\\d because all swimming and diving times do
           # .[purrr::map_lgl(., stringr::str_detect, "\\.\\d\\d")] %>% # must have \\.\\d\\d because all swimming and diving times do
           .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]{2,}")] %>% # must have at least two letters in a row
           .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid)))] %>%
