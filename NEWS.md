@@ -1,3 +1,8 @@
+# SwimmeR 0.5.2
+* fixed issue regarding athletes with many names, or with punctuated names
+* fixed issue regarding the use of "*" in front of an athlete's name as a designator
+* updates to testing to reflect above
+
 # SwimmeR 0.5.1
 * fixed issue caused by a change in ISL results format
 

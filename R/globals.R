@@ -47,6 +47,9 @@ utils::globalVariables(
     "Heat",
     "Exhibition",
     "Time",
-    "Lane"
+    "Lane",
+    "Time_Score_String",
+    "Grade_String",
+    'Name_String'
   )
 )
