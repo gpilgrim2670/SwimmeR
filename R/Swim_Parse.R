@@ -230,12 +230,8 @@ Swim_Parse <-
     #### seven variables ####
     if (length(data_length_7) > 0) {
       suppressWarnings(
-        df_7 <- #url76, url14, url78
-          as.data.frame(
-            t(as.data.frame(data_length_7)),
-            row.names = FALSE,
-            stringsAsFactors = FALSE
-          ) %>%
+        df_7 <- data_length_7 %>%
+          list_transform() %>%
           dplyr::mutate(
             Place = dplyr::case_when(
               stringr::str_detect(V1, "^[:digit:]*$") == TRUE ~ V1,
@@ -419,12 +415,8 @@ Swim_Parse <-
     #### six variables ####
     if (length(data_length_6) > 0) {
       suppressWarnings(
-        df_6 <-
-          as.data.frame(
-            t(as.data.frame(data_length_6)),
-            row.names = FALSE,
-            stringsAsFactors = FALSE
-          ) %>%
+        df_6 <- data_length_6 %>%
+          list_transform() %>%
           dplyr::mutate(Place = stringr::str_split_fixed(V1, " ", n = 2)[, 1]) %>%
           dplyr::mutate(
             Name = dplyr::case_when(
@@ -452,13 +444,6 @@ Swim_Parse <-
             )
           ) %>%
           na_if("") %>%
-          # mutate(
-          #   V3 = dplyr::case_when(
-          #     is.na(Grade) == FALSE ~ trimws(stringr::str_replace(V3, Grade, "")),
-          #     TRUE ~ V3
-          #   ),
-          #   Grade = trimws(Grade)
-          # ) %>%
           dplyr::na_if("") %>%
           dplyr::mutate(
             School = dplyr::case_when(
@@ -628,11 +613,8 @@ Swim_Parse <-
     #### five variables ####
     if (length(data_length_5) > 0) {
       suppressWarnings(
-        df_5 <- as.data.frame(
-          t(as.data.frame(data_length_5)),
-          row.names = FALSE,
-          stringsAsFactors = FALSE
-        ) %>%
+        df_5 <- data_length_5 %>%
+          list_transform() %>%
           dplyr::mutate(Place = stringr::str_split_fixed(V1, " ", n = 2)[, 1]) %>%
           dplyr::mutate(
             Name = dplyr::case_when(
@@ -935,12 +917,8 @@ Swim_Parse <-
     #### four variables ####
     if (length(data_length_4) > 0) {
       suppressWarnings(
-        df_4 <-
-          as.data.frame(
-            t(as.data.frame(data_length_4)),
-            row.names = FALSE,
-            stringsAsFactors = FALSE
-          ) %>%
+        df_4 <- data_length_4 %>%
+        list_transform() %>%
           dplyr::mutate(Place = stringr::str_split_fixed(V1, " ", n = 2)[, 1]) %>%
           dplyr::mutate(
             Name = dplyr::case_when(
@@ -1178,12 +1156,8 @@ Swim_Parse <-
     #### three variables ####
     if (length(data_length_3) > 0) {
       suppressWarnings(
-        df_3 <-
-          as.data.frame(
-            t(as.data.frame(data_length_3)),
-            row.names = FALSE,
-            stringsAsFactors = FALSE
-          ) %>%
+        df_3 <- data_length_3 %>%
+          list_transform() %>%
           dplyr::mutate(
             Place = stringr::str_split_fixed(V1, " ", n = 2)[, 1],
             Name = stringr::str_split_fixed(V1, " ", n = 2)[, 2],
@@ -1262,12 +1236,8 @@ Swim_Parse <-
     #### DQ data ####
     if (length(DQ_length_4) > 0) {
       suppressWarnings(
-        df_DQ_4 <-
-          as.data.frame(
-            t(as.data.frame(DQ_length_4)),
-            row.names = FALSE,
-            stringsAsFactors = FALSE
-          ) %>%
+        df_DQ_4 <- DQ_length_4 %>%
+          list_transform() %>%
           dplyr::mutate(Place = stringr::str_split_fixed(V1, " ", n = 2)[, 1]) %>%
           dplyr::mutate(
             Name = dplyr::case_when(
@@ -1361,12 +1331,8 @@ Swim_Parse <-
     }
     if (length(DQ_length_3) > 0) {
       suppressWarnings(
-        df_DQ_3 <-
-          as.data.frame(
-            t(as.data.frame(DQ_length_3)),
-            row.names = FALSE,
-            stringsAsFactors = FALSE
-          ) %>%
+        df_DQ_3 <- DQ_length_3 %>%
+          list_transform() %>%
           dplyr::mutate(Place = stringr::str_split_fixed(V1, " ", n = 2)[, 1]) %>%
           dplyr::mutate(
             School = stringr::str_split_fixed(V1, " ", n = 2)[, 2],
@@ -1406,8 +1372,6 @@ Swim_Parse <-
         dplyr::full_join(df_5) %>%
         dplyr::full_join(df_4) %>%
         dplyr::full_join(df_3) %>%
-        #   dplyr::full_join(df_DQ_4) %>% # some duplicate DQ results 8/28
-        #   dplyr::full_join(df_DQ_3) %>%
         dplyr::left_join(df_DQ_4) %>%
         dplyr::left_join(df_DQ_3) %>%
         # dplyr::filter(stringr::str_detect(Finals_Time, "\\.") == TRUE) %>% # removed for DQ testing 8/20
@@ -1426,8 +1390,6 @@ Swim_Parse <-
             dplyr::lag(Place) != Place ~ Place
           ),
           Place = as.character(Place),
-          # Place = case_when(Exhibition == 1 ~ "10000",
-          #                   TRUE ~ Place),
           Row_Numb = as.numeric(Row_Numb)
         ) %>%
         dplyr::filter(Row_Numb >= Min_Row_Numb)
@@ -1471,11 +1433,6 @@ Swim_Parse <-
           Place = round(as.numeric(Place)),
           Event = as.character(Event)
         ) %>%
-        # moved up for DQ work 8/20
-        # dplyr::mutate(DQ = dplyr::case_when(Place == 10000 ~ 1,
-        #                       TRUE ~ 0)
-        #        ) %>%
-        # na_if(10000) %>%
         dplyr::mutate(
           Place = dplyr::case_when(is.na(Place) == TRUE &
                                      DQ == 0 ~ lag(Place) + 1,

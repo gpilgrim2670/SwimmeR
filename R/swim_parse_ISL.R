@@ -99,10 +99,8 @@ swim_parse_ISL <-
       left_side <- map(data_ind_swimmer, head, 4)
       right_side <- map(data_ind_swimmer, tail, 3)
 
-      df_left <-
-        as.data.frame(t(as.data.frame(left_side)),
-                      row.names = FALSE,
-                      stringsAsFactors = FALSE) %>%
+      df_left <- left_side %>%
+        list_transform() %>%
         dplyr::rename(
           "Place" = V1,
           "Lane" = V2,
@@ -110,22 +108,24 @@ swim_parse_ISL <-
           "Team" = V4
         )
 
-      df_right <-
-        as.data.frame(t(as.data.frame(right_side)),
-                      row.names = FALSE,
-                      stringsAsFactors = FALSE) %>%
+      df_right <- right_side %>%
+        list_transform() %>%
         dplyr::rename("Time" = V1,
                       "Points" = V2,
                       "Row_Numb" = V3)
 
       df_ind_swimmer <- dplyr::bind_cols(df_left, df_right) %>%
-        # dplyr::filter(Time != "DSQ") %>%
-        dplyr::mutate(Time = dplyr::case_when(stringr::str_detect(Points, "\\d{2}\\.\\d{2}") == TRUE ~ Points,
-                                                # & stringr::str_detect(Time, "\\d{2}\\.\\d{2}", negate = TRUE) == TRUE ~ Points,
-                                       TRUE ~ Time),
-                      Points = dplyr::case_when(Time == Points ~ "NA",
-                                                str_detect(Points, "\\d{2}\\.\\d{2}") == TRUE ~ "NA",
-                                         TRUE ~ Points)) %>%
+        dplyr::mutate(
+          Time = dplyr::case_when(
+            stringr::str_detect(Points, "\\d{2}\\.\\d{2}") == TRUE ~ Points,
+            TRUE ~ Time
+          ),
+          Points = dplyr::case_when(
+            Time == Points ~ "NA",
+            str_detect(Points, "\\d{2}\\.\\d{2}") == TRUE ~ "NA",
+            TRUE ~ Points
+          )
+        ) %>%
         na_if("NA")
 
     } else {
@@ -143,10 +143,8 @@ swim_parse_ISL <-
 
     #### relays df ####
     if (length(data_relay) > 0) {
-      df_relay <-
-        as.data.frame(t(as.data.frame(data_relay)),
-                      row.names = FALSE,
-                      stringsAsFactors = FALSE)
+      df_relay <- data_relay %>%
+        list_transform()
 
       if (ncol(df_relay) == 5) {
         df_relay <- df_relay %>%
@@ -183,18 +181,13 @@ swim_parse_ISL <-
     }
 
     #### DQ df ####
-
     data_DSQ_4 <- data_DSQ[purrr::map(data_DSQ, length) == 4]
     data_DSQ_5 <- data_DSQ[purrr::map(data_DSQ, length) == 5]
     data_DSQ_6 <- data_DSQ[purrr::map(data_DSQ, length) == 6]
 
     if (length(data_DSQ_4) > 0) {
-        df_DSQ_4 <-
-          as.data.frame(
-            t(as.data.frame(data_DSQ_4)),
-            row.names = FALSE,
-            stringsAsFactors = FALSE
-          ) %>%
+        df_DSQ_4 <- data_DSQ_4 %>%
+          list_transform() %>%
             dplyr::mutate(Points = NA) %>%
             dplyr::rename(
               "Lane" = V1,
@@ -216,12 +209,8 @@ swim_parse_ISL <-
     }
 
     if (length(data_DSQ_5) > 0) {
-      df_DSQ_5 <-
-        as.data.frame(
-          t(as.data.frame(data_DSQ_5)),
-          row.names = FALSE,
-          stringsAsFactors = FALSE
-        ) %>%
+      df_DSQ_5 <- data_DSQ_5 %>%
+        list_transform() %>%
         dplyr::mutate(Points = NA) %>%
         dplyr::rename(
           "Lane" = V1,
@@ -244,12 +233,8 @@ swim_parse_ISL <-
     }
 
     if (length(data_DSQ_6) > 0) {
-        df_DSQ_6 <-
-          as.data.frame(
-            t(as.data.frame(data_DSQ_6)),
-            row.names = FALSE,
-            stringsAsFactors = FALSE
-          ) %>%
+        df_DSQ_6 <- data_DSQ_6 %>%
+          list_transform() %>%
           dplyr::rename(
             "Lane" = V1,
             "Name" = V2,
@@ -299,7 +284,6 @@ swim_parse_ISL <-
     data$Row_Numb <- NULL
 
     #### cleaning up final results ####
-
     suppressWarnings(
       data <- data %>%
         ### deal with no-point swims  - covert to 0 point swims ###
@@ -319,8 +303,6 @@ swim_parse_ISL <-
           Event = as.character(Event)
         ) %>%
         filter(stringr::str_detect(Event, "Club Standing") == FALSE)
-
-
     )
     return(data)
   }

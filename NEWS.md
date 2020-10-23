@@ -1,9 +1,12 @@
-# SwimmeR 0.5.2
+# SwimmeR 0.5.3 - October 23 2020
+* added helper function list_transform to clean up `swim_parse` and other functions
+
+# SwimmeR 0.5.2 - October 21 2020
 * fixed issue regarding athletes with many names, or with punctuated names
 * fixed issue regarding the use of "*" in front of an athlete's name as a designator
 * updates to testing to reflect above
 
-# SwimmeR 0.5.1
+# SwimmeR 0.5.1 - October 20 2020
 * fixed issue caused by a change in ISL results format
 
 # SwimmeR 0.5.0

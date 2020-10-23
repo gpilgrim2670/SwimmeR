@@ -43,9 +43,8 @@ event_parse_ISL <- function(text){
            recursive = FALSE)
 
   # dataframe for events with names and row number ranges
-  events <- as.data.frame(t(as.data.frame(events)),
-                          row.names = FALSE,
-                          stringsAsFactors = FALSE) %>%
+  events <- events %>%
+    list_transform() %>%
     dplyr::mutate(
       Event = stringr::str_extract(V1, "[[:graph:] ]*"),
       Event_Row_Min = as.numeric(V2),

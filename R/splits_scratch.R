@@ -97,24 +97,14 @@
 #'   data_length_5 <- data_3[purrr::map(data_3, length) == 5]
 #'   data_length_6 <- data_3[purrr::map(data_3, length) == 6]
 #'
-#'   df_6 <- #url76, url14, url78
-#'     as.data.frame(t(as.data.frame(data_length_6)),
-#'                   row.names = FALSE,
-#'                   stringsAsFactors = FALSE)
+#'   df_6 <- data_length_6 %>%
+#'   list_transform()
 #'
 #'   df_5 <- # works!
-#'     as.data.frame(t(as.data.frame(data_length_5)),
-#'                   row.names = FALSE,
-#'                   stringsAsFactors = FALSE) %>%
+#'     data_length_5 %>%
+#'     list_transform() %>%
 #'     split_sort()
 #'
-#'
-#'   list_transform <- function(x){
-#'     df <- as.data.frame(t(as.data.frame(x)),
-#'                         row.names = FALSE,
-#'                         stringsAsFactors = FALSE)
-#'     return(df)
-#'   }
 #'
 #'
 #'   split_sort <- function(x) {

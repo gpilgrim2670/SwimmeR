@@ -1,7 +1,7 @@
-test_that("Swim_Parse works", {
+test_that("swim_parse works", {
   file <- system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")
-  expect_match(Swim_Parse(
-    Read_Results(file),
+  expect_match(swim_parse(
+    read_results(file),
     typo =  c("\n", "Indiana  University", ", University of"),
     replacement = c("\n", "Indiana University", "")
   )[100, 1],
@@ -10,10 +10,9 @@ test_that("Swim_Parse works", {
 })
 
 test_that("swim_parse works 2", {
-  # file <- test_file("Texas-Florida-Indiana.pdf")
   file <- system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")
   expect_match(swim_parse(
-    Read_Results(file),
+    read_results(file),
     typo =  c("\n", "Indiana  University", ", University of"),
 
     replacement = c("\n", "Indiana University", "")
@@ -22,9 +21,9 @@ test_that("swim_parse works 2", {
 
 })
 
-test_that("Swim_Parse works 3", {
-  expect_equivalent(sum(Swim_Parse(
-    Read_Results(
+test_that("swim_parse works 3", {
+  expect_equivalent(sum(swim_parse(
+    read_results(
       "http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm",
       node = "pre"
     ),
@@ -35,37 +34,31 @@ test_that("Swim_Parse works 3", {
 
 })
 
-
-test_that("Swim_Parse works USMS", {
+test_that("swim_parse works USMS", {
   file <- system.file("extdata", "11102019roc.pdf", package = "SwimmeR")
-  expect_match(Swim_Parse(
-    Read_Results(file)
+  expect_match(swim_parse(
+    read_results(file)
   )[109, 6],
   "51.90")
 
 })
 
-
-
-test_that("Swim_Parse works USA", {
+test_that("swim_parse works USA", {
   file <- system.file("extdata", "jets08082019_067546.pdf", package = "SwimmeR")
-  expect_equivalent(sum(Swim_Parse(
-    Read_Results(file)
+  expect_equivalent(sum(swim_parse(
+    read_results(file)
   )[1], na.rm = TRUE),
   3091)
 })
 
+test_that("swim_parse works list", {
 
-
-test_that("Swim_Parse works list", {
-
-  #import standard
-
+  # import standard
   df_standard <- read.csv(system.file("extdata", "df_standard.csv", package = "SwimmeR"), stringsAsFactors = FALSE, colClasses=c("character", "numeric", rep("character", 6), "numeric", "numeric"))
   df_standard <- df_standard %>%
     select(-X)
 
-  #import test files
+  # import test files
   file_1 <- system.file("extdata", "jets08082019_067546.pdf", package = "SwimmeR")
   file_2 <- system.file("extdata", "11102019roc.pdf", package = "SwimmeR")
   file_3 <- system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")
@@ -89,20 +82,22 @@ test_that("Swim_Parse works list", {
                url100,
                url101)
 
+  # helper function to apply read_results across list of links
   Read_Map <- function(links) {
 
     scrape_test_all <-
-      map(links, Read_Results, node = "pre")
+      map(links, read_results, node = "pre")
 
     names(scrape_test_all) <- links
     return(scrape_test_all)
 
   }
 
+  # helper function to apply swim_parse across all files
   Parse_Map <- function(links) {
 
     all_results <-
-      map(links, Swim_Parse, typo = c("\n", "Greece  Athena", "Newburgh Free  9", "FAYETTEVILLE MAN  ", "CICERO NORTH SYR  ", " - ", "Vineland  \\(Boy\\'s\\)",
+      map(links, swim_parse, typo = c("\n", "Greece  Athena", "Newburgh Free  9", "FAYETTEVILLE MAN  ", "CICERO NORTH SYR  ", " - ", "Vineland  \\(Boy\\'s\\)",
                                       "\\(Kp\\)", "\\(Mc\\)", "\\(P", "  Psal", " Brian\\t A", "Williamsville E ", " B-AAB", "Section  X I", "Mexico  -B",
                                       "Nottingham  -A", "Bronxville  High School", "A A", ",  CT", ",  MA", "-1NORTH ROCKL", "QUEENSBURY  HIGH", "Indiana  University", ", University of", "Sugrue_Neuendorf,"),
 
@@ -114,6 +109,7 @@ test_that("Swim_Parse works list", {
 
   }
 
+  # get test data to compare with standard
   df_test <- Read_Map(sources)
   df_test <- Parse_Map(df_test)
   df_test <- dplyr::bind_rows(df_test, .id = "column_label") %>%
