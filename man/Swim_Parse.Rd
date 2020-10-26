@@ -9,14 +9,16 @@ Swim_Parse(
   file,
   avoid = avoid_default,
   typo = typo_default,
-  replacement = replacement_default
+  replacement = replacement_default,
+  splits = FALSE
 )
 
 swim_parse(
   file,
   avoid = avoid_default,
   typo = typo_default,
-  replacement = replacement_default
+  replacement = replacement_default,
+  splits = FALSE
 )
 }
 \arguments{
@@ -27,6 +29,8 @@ swim_parse(
 \item{typo}{a list of strings that are typos in the original results.  \code{swim_parse} is particularly sensitive to accidental double spaces, so "Central  High School", with two spaces between "Central" and "High" is a problem, which can be fixed.  Pass "Central High School" to \code{typo}.  Unexpected commas as also an issue, for example "Texas, University of" should be fixed using \code{typo} and \code{replacement}}
 
 \item{replacement}{a list of fixes for the strings in \code{typo}.  Here one could pass "Central High School" (one space between "Central" and "High") and "Texas" to \code{replacement} fix the issues described in \code{typo}}
+
+\item{splits}{either \code{TRUE} or the default, \code{FALSE} - should \code{swim_parse} attempt to include splits}
 }
 \value{
 returns a dataframe with columns \code{Name}, \code{Place}, \code{Grade}, \code{School}, \code{Prelims_Time}, \code{Finals_Time}, \code{Points}, \code{Event} & \code{DQ}.  Note all swims will have a \code{Finals_Time}, even if that time was actually swam in the prelims (i.e. a swimmer did not qualify for finals).  This is so that final results for an event can be generated from just one column.

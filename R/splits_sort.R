@@ -1,6 +1,6 @@
 #' Sorts splits by performance row number
 #'
-#' Collects all splits associated with a paritcular performance (a swim) into a dataframe with the appropriate row number for that performance
+#' Collects all splits associated with a particular performance (a swim) into a dataframe with the appropriate row number for that performance
 #'
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
@@ -13,19 +13,20 @@
 #' @importFrom stats reshape
 #'
 #' @param x a list of splits
+#' @param min_row the lowest row number
 #' @return a dataframe with \code{Row_Numb} as the first column.  Other columns are splits, by distance
 #'
 #' @seealso \code{split_sort} is a helper function
 #'
 
-split_sort <- function(x) {
+splits_sort <- function(x, min_row = minimum_row) {
   x <- x %>%
     dplyr::mutate(Row_Numb = as.numeric(V1)) %>%
     dplyr::mutate(
       Row_Numb_2 = dplyr::case_when(
-        Row_Numb - dplyr::lag(Row_Numb, default = minimum_row) == 0 ~ "Different",
-        Row_Numb - dplyr::lag(Row_Numb, default = minimum_row) <= 1 ~ "Same",
-        Row_Numb - dplyr::lag(Row_Numb, default = minimum_row) > 1 ~ "Different",
+        Row_Numb - dplyr::lag(Row_Numb, default = min_row) == 0 ~ "Different",
+        Row_Numb - dplyr::lag(Row_Numb, default = min_row) <= 1 ~ "Same",
+        Row_Numb - dplyr::lag(Row_Numb, default = min_row) > 1 ~ "Different",
         TRUE ~ "Different"
       )
     ) %>%

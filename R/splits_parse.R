@@ -59,20 +59,24 @@ splits_parse <- function(text) {
     stringr::str_extract_all("\\d{1,}$")
 
   minimum_row <- min(as.numeric(row_numbs))
-  maximum_row = as.numeric(length(text))
+  maximum_row <- as.numeric(length(text))
 
   ### pull out rows containing splits, which will remove row numbers ###
-  data_1 <- text %>%
-    .[purrr::map_lgl(.,
-                     stringr::str_detect,
-                     "\\(\\d\\d\\.\\d\\d\\)")] %>%
-    stringr::str_extract_all("[\\(\\s)]\\d\\d\\.\\d\\d[\\)\\s]") %>%
-    stringr::str_remove_all('\\"') %>%
-    stringr::str_replace_all("\\(", " ") %>%
-    stringr::str_replace_all("\\)", " ") %>%
-    stringr::str_remove_all("c") %>%
-    stringr::str_remove_all(',') %>%
-    trimws()
+  suppressWarnings(
+    data_1 <- text %>%
+      .[purrr::map_lgl(.,
+                       stringr::str_detect,
+                       "\\(\\d\\d\\.\\d\\d\\)")] %>%
+      stringr::str_replace_all("\n", "") %>%
+      stringr::str_replace_all("r\\:\\+\\s?\\d\\.\\d\\d", "") %>%
+      stringr::str_extract_all("^\\s+\\d\\d\\.\\d\\d|\\(\\d\\d\\.\\d\\d\\)") %>%
+      stringr::str_remove_all('\\"') %>%
+      stringr::str_replace_all("\\(", " ") %>%
+      stringr::str_replace_all("\\)", " ") %>%
+      stringr::str_remove_all("c") %>%
+      stringr::str_remove_all(',') %>%
+      trimws()
+  )
 
 
   ### add row numbers back in since they were removed ###
@@ -93,7 +97,7 @@ splits_parse <- function(text) {
   if (length(data_length_8) > 0) {
     df_8 <- data_length_8 %>%
       list_transform() %>%
-      split_sort()
+      splits_sort(min_row = minimum_row)
   } else {
     df_8 <- data.frame(Row_Numb = character(),
                        stringsAsFactors = FALSE)
@@ -102,7 +106,7 @@ splits_parse <- function(text) {
   if (length(data_length_7) > 0) {
     df_7 <- data_length_7 %>%
       list_transform() %>%
-      split_sort()
+      splits_sort(min_row = minimum_row)
   } else {
     df_7 <- data.frame(Row_Numb = character(),
                        stringsAsFactors = FALSE)
@@ -111,7 +115,7 @@ splits_parse <- function(text) {
   if (length(data_length_6) > 0) {
     df_6 <- data_length_6 %>%
       list_transform() %>%
-      split_sort()
+      splits_sort(min_row = minimum_row)
   } else {
     df_6 <- data.frame(Row_Numb = character(),
                        stringsAsFactors = FALSE)
@@ -120,7 +124,7 @@ splits_parse <- function(text) {
   if (length(data_length_5) > 0) {
     df_5 <- data_length_5 %>%
       list_transform() %>%
-      split_sort()
+      splits_sort(min_row = minimum_row)
   } else {
     df_5 <- data.frame(Row_Numb = character(),
                        stringsAsFactors = FALSE)
@@ -129,7 +133,7 @@ splits_parse <- function(text) {
   if (length(data_length_4) > 0) {
     df_4 <- data_length_4 %>%
       list_transform() %>%
-      split_sort()
+      splits_sort(min_row = minimum_row)
   } else {
     df_4 <- data.frame(Row_Numb = character(),
                        stringsAsFactors = FALSE)
@@ -138,7 +142,7 @@ splits_parse <- function(text) {
   if (length(data_length_3) > 0) {
     df_3 <- data_length_3 %>%
       list_transform() %>%
-      split_sort()
+      splits_sort(min_row = minimum_row)
   } else {
     df_3 <- data.frame(Row_Numb = character(),
                        stringsAsFactors = FALSE)
@@ -148,7 +152,8 @@ splits_parse <- function(text) {
     dplyr::full_join(df_6) %>%
     dplyr::full_join(df_5) %>%
     dplyr::full_join(df_4) %>%
-    dplyr::full_join(df_3)
+    dplyr::full_join(df_3) %>%
+    dplyr::mutate(Row_Numb = as.numeric(Row_Numb))
 
   return(data)
 

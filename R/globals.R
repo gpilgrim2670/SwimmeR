@@ -52,6 +52,8 @@ utils::globalVariables(
     "Grade_String",
     "Name_String",
     "Row_Fill",
-    "Row_Numb_2"
+    "Row_Numb_2",
+    "minimum_row",
+    "maximum_row"
   )
 )
