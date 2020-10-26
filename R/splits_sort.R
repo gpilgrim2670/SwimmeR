@@ -10,6 +10,7 @@
 #' @importFrom dplyr na_if
 #' @importFrom dplyr select
 #' @importFrom dplyr n
+#' @importFrom dplyr arrange
 #' @importFrom stats reshape
 #'
 #' @param x a list of splits
@@ -22,7 +23,7 @@
 splits_sort <- function(x, min_row = minimum_row) {
   x <- x %>%
     dplyr::mutate(Row_Numb = as.numeric(V1)) %>%
-    arrange(Row_Numb) %>%
+    dplyr::arrange(Row_Numb) %>%
     dplyr::mutate(
       Row_Numb_2 = dplyr::case_when(
         Row_Numb - dplyr::lag(Row_Numb, default = min_row) == 0 ~ "Different",
