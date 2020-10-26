@@ -5,6 +5,7 @@
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
 #' @importFrom dplyr full_join
+#' @importFrom dplyr bind_rows
 #' @importFrom stringr str_replace_all
 #' @importFrom stringr str_remove_all
 #' @importFrom stringr str_extract_all
@@ -46,8 +47,9 @@
 #     "Aquatic Performance",
 #     "SwimDolphia Aquatic School"
 #   )
-#
-#
+# file <- read_results(
+#     "http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm",
+#     node = "pre")
 # text <- add_row_numbers(text = file)
 
 splits_parse <- function(text) {
@@ -87,17 +89,36 @@ splits_parse <- function(text) {
     unlist(purrr::map(data_1, stringr::str_split, "\\s{2,}"),
            recursive = FALSE)
 
+  data_length_2 <- data_1[purrr::map(data_1, length) == 2]
   data_length_3 <- data_1[purrr::map(data_1, length) == 3]
   data_length_4 <- data_1[purrr::map(data_1, length) == 4]
   data_length_5 <- data_1[purrr::map(data_1, length) == 5]
   data_length_6 <- data_1[purrr::map(data_1, length) == 6]
   data_length_7 <- data_1[purrr::map(data_1, length) == 7]
   data_length_8 <- data_1[purrr::map(data_1, length) == 8]
+  data_length_9 <- data_1[purrr::map(data_1, length) == 9]
+  data_length_10 <- data_1[purrr::map(data_1, length) == 10]
+
+
+  if (length(data_length_10) > 0) {
+    df_10 <- data_length_10 %>%
+      list_transform()
+  } else {
+    df_10 <- data.frame(Row_Numb = character(),
+                       stringsAsFactors = FALSE)
+  }
+
+  if (length(data_length_9) > 0) {
+    df_9 <- data_length_9 %>%
+      list_transform()
+  } else {
+    df_9 <- data.frame(Row_Numb = character(),
+                       stringsAsFactors = FALSE)
+  }
 
   if (length(data_length_8) > 0) {
     df_8 <- data_length_8 %>%
-      list_transform() %>%
-      splits_sort(min_row = minimum_row)
+      list_transform()
   } else {
     df_8 <- data.frame(Row_Numb = character(),
                        stringsAsFactors = FALSE)
@@ -105,8 +126,7 @@ splits_parse <- function(text) {
 
   if (length(data_length_7) > 0) {
     df_7 <- data_length_7 %>%
-      list_transform() %>%
-      splits_sort(min_row = minimum_row)
+      list_transform()
   } else {
     df_7 <- data.frame(Row_Numb = character(),
                        stringsAsFactors = FALSE)
@@ -114,8 +134,7 @@ splits_parse <- function(text) {
 
   if (length(data_length_6) > 0) {
     df_6 <- data_length_6 %>%
-      list_transform() %>%
-      splits_sort(min_row = minimum_row)
+      list_transform()
   } else {
     df_6 <- data.frame(Row_Numb = character(),
                        stringsAsFactors = FALSE)
@@ -123,8 +142,7 @@ splits_parse <- function(text) {
 
   if (length(data_length_5) > 0) {
     df_5 <- data_length_5 %>%
-      list_transform() %>%
-      splits_sort(min_row = minimum_row)
+      list_transform()
   } else {
     df_5 <- data.frame(Row_Numb = character(),
                        stringsAsFactors = FALSE)
@@ -132,8 +150,7 @@ splits_parse <- function(text) {
 
   if (length(data_length_4) > 0) {
     df_4 <- data_length_4 %>%
-      list_transform() %>%
-      splits_sort(min_row = minimum_row)
+      list_transform()
   } else {
     df_4 <- data.frame(Row_Numb = character(),
                        stringsAsFactors = FALSE)
@@ -141,19 +158,31 @@ splits_parse <- function(text) {
 
   if (length(data_length_3) > 0) {
     df_3 <- data_length_3 %>%
-      list_transform() %>%
-      splits_sort(min_row = minimum_row)
+      list_transform()
   } else {
     df_3 <- data.frame(Row_Numb = character(),
                        stringsAsFactors = FALSE)
   }
 
-  data <- dplyr::full_join(df_8, df_7) %>%
-    dplyr::full_join(df_6) %>%
-    dplyr::full_join(df_5) %>%
-    dplyr::full_join(df_4) %>%
-    dplyr::full_join(df_3) %>%
-    dplyr::mutate(Row_Numb = as.numeric(Row_Numb))
+  if (length(data_length_2) > 0) {
+    df_2 <- data_length_2 %>%
+      list_transform()
+  } else {
+    df_2 <- data.frame(Row_Numb = character(),
+                       stringsAsFactors = FALSE)
+  }
+
+  data <- dplyr::bind_rows(df_10, df_9, df_8, df_7, df_6, df_5, df_4, df_3, df_2) %>%
+    splits_sort(min_row = minimum_row) %>%
+    dplyr::mutate(Row_Numb = as.numeric(Row_Numb)-1)
+
+  # data <- dplyr::full_join(df_8, df_7) %>%
+  #   dplyr::full_join(df_6) %>%
+  #   dplyr::full_join(df_5) %>%
+  #   dplyr::full_join(df_4) %>%
+  #   dplyr::full_join(df_3) %>%
+  #   dplyr::full_join(df_2) %>%
+    # dplyr::mutate(Row_Numb = as.numeric(Row_Numb)-1)
 
   return(data)
 

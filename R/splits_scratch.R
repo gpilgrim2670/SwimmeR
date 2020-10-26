@@ -39,4 +39,13 @@
 #   replacement = c("\n", "Indiana University", ""),
 #   splits = TRUE
 # )
+# df <- swim_parse(
+#   read_results(
+#     "http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm",
+#     node = "pre"
+#   ),
+#   typo = c("-1NORTH ROCKL", "\\s\\d{1,2}\\s{2,}"),
+#   replacement = c("1-NORTH ROCKL", "  "),
+#   splits = TRUE
+# )
 

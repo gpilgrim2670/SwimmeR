@@ -22,6 +22,7 @@
 splits_sort <- function(x, min_row = minimum_row) {
   x <- x %>%
     dplyr::mutate(Row_Numb = as.numeric(V1)) %>%
+    arrange(Row_Numb) %>%
     dplyr::mutate(
       Row_Numb_2 = dplyr::case_when(
         Row_Numb - dplyr::lag(Row_Numb, default = min_row) == 0 ~ "Different",
@@ -31,7 +32,7 @@ splits_sort <- function(x, min_row = minimum_row) {
       )
     ) %>%
     dplyr::mutate(
-      Row_Fill = dplyr::case_when(Row_Numb_2 == "Different" ~ Row_Numb - 1,
+      Row_Fill = dplyr::case_when(Row_Numb_2 == "Different" ~ Row_Numb,
                            Row_Numb_2 == "Same" ~ 0),
       Row_Fill = as.character(Row_Fill)
     ) %>%

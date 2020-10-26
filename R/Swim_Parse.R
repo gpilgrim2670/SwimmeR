@@ -1458,6 +1458,9 @@ Swim_Parse <-
 
       data <- data %>%
         dplyr::left_join(splits_df, by = 'Row_Numb')
+
+      ### remove empty columns (all values are NA) ###
+      data <- Filter(function(x)!all(is.na(x)), data)
     }
 
     data$Row_Numb <- NULL
