@@ -30,7 +30,8 @@
 #' #' @seealso \code{splits_parse} runs inside \code{\link{swim_parse}} on the output of \code{\link{read_results}} with row numbers from \code{\link{add_row_numbers}}
 #' #'
 #'
-#' file <- read_results("~/SwimmeR/inst/extdata/s2-results.pdf")
+#' # file <- read_results("~/SwimmeR/inst/extdata/s2-results.pdf")
+#' file <- read_results("inst/extdata/s2-results.pdf")
 #' avoid <- c("MR:")
 #' typo <-
 #'   c(
@@ -105,10 +106,8 @@
 #'     list_transform() %>%
 #'     split_sort()
 #'
-#'
-#'
 #'   split_sort <- function(x) {
-#'     x_splits_1 <- x %>%
+#'     x <- x %>%
 #'       mutate(Row_Numb = as.numeric(V1)) %>%
 #'       mutate(
 #'         Row_Numb_2 = case_when(
@@ -124,27 +123,16 @@
 #'         Row_Fill = as.character(Row_Fill)
 #'       ) %>%
 #'       na_if(0) %>%
-#'       tidyr::fill(Row_Fill, .direction = "down") %>%
-#'       select(-V1,-Row_Numb,-Row_Numb_2) %>%
-#'       group_by(Row_Fill) %>%
-#'       mutate(row_index = dplyr::row_number(Row_Fill)) %>%
-#'       tidyr::pivot_wider(names_from = row_index, values_from = V1:V4)
+#'       mutate(Row_Fill = fill_down(Row_Fill)) %>%
 #'
+#'       select(-V1, -Row_Numb, -Row_Numb_2) %>%
+#'       mutate(row_index = 1:dplyr::n()) %>%
+#'       reshape(direction = "wide",
+#'               idvar = "Row_Fill",
+#'               timevar = "row_index") %>%
+#'       fill_left()
 #'
-#'     x_splits_final <-
-#'       as.data.frame(t(apply(x_splits_1, 1, function(x) {
-#'         return(c(x[!is.na(x)], x[is.na(x)]))
-#'       })))
-#'     colnames(x_splits_final) = colnames(x_splits_1)
+#'     names(x)[1] <- "Row_Numb"
 #'
-#'     return(x_splits_final)
-#'   }
-#'
-#'
-#'   df_final <- df %>%
-#'     mutate(
-#'       Event_Row_Min = as.numeric(V2),
-#'       Event_Row_Max = dplyr::lead(Event_Row_Min, 1L, default = length(text)) - 1,
-#'     )
-#'   return(df_final)
-#' }
+#'     return(x)
+#'  }

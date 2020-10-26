@@ -50,6 +50,8 @@ utils::globalVariables(
     "Lane",
     "Time_Score_String",
     "Grade_String",
-    'Name_String'
+    "Name_String",
+    "Row_Fill",
+    "Row_Numb_2"
   )
 )
