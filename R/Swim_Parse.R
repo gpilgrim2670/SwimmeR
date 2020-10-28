@@ -77,6 +77,26 @@ Swim_Parse <-
     # typo <- typo_default
     # replacement <- replacement_default
 
+    # file <- SEC_Results_2
+    # typo = c(
+    #   "A&M",
+    #   "FLOR",
+    #   "Celaya-Hernande",
+    #   # names which were cut off, and missing the last, first structure
+    #   "Hernandez-Tome",
+    #   "Garcia Varela,",
+    #   "Von Biberstein,"
+    # )
+    # replacement = c(
+    #   "AM",
+    #   "Florida",
+    #   "Celaya, Hernande",
+    #   # replacement names that artificially impose last, first structure.  Names can be fixed after parsing
+    #   "Hernandez, Tome",
+    #   "Garcia, Varela",
+    #   "Von, Biberstein")
+    # avoid <- avoid_default
+
     #### strings that if a line begins with one of them the line is ignored ####
     avoid_default <-
       c(
@@ -148,7 +168,10 @@ Swim_Parse <-
         "^\\s*Chs\\:",
         "^\\s*Large\\:",
         "^\\s*Small\\:",
-        "^\\s*r\\:"
+        "^\\s*r\\:",
+        "National\\:",
+        "Meet\\:",
+        "NCAA\\:"
       )
 
     #### define avoid_minimal ####
@@ -159,6 +182,7 @@ Swim_Parse <-
 
     replacement_default <- c("typo")
 
+    ### assign row numbers ###
     as_lines_list_2 <- add_row_numbers(text = file)
 
     ### parsing html and pdf files ####
@@ -649,12 +673,16 @@ Swim_Parse <-
               stringr::str_length(stringr::str_split_fixed(V3, " ", n = 2)[, 1]) <= 3 &
                 stringr::str_detect(V3, "SR|JR|SO|FR|^\\d{1,3} ") ~ stringr::str_split_fixed(V3, " ", n = 2)[, 1],
               TRUE ~ ""
-            ),
+            )) %>%
+          dplyr::na_if("") %>%
+          dplyr::mutate(
             Grade = trimws(Grade),
-            V3 = case_when(str_detect(V3, Grade) == TRUE & str_detect(V3, Time_Score_String) == FALSE ~ trimws(str_remove(V3, Grade)),
+            V3 = case_when(is.na(Grade) == FALSE & stringr::str_detect(V3, Grade) == TRUE & stringr::str_detect(V3, Time_Score_String) == FALSE & Grade != "" ~ stringr::str_replace(V3, Grade, ""),
                            TRUE ~ V3),
-            V2 = case_when(str_detect(V2, Grade) == TRUE & str_detect(V2, Time_Score_String) == FALSE ~ trimws(str_remove(V2, Grade)),
-                           TRUE ~ V2)
+            V2 = case_when(is.na(Grade) == FALSE & stringr::str_detect(V2, Grade) == TRUE & stringr::str_detect(V2, Time_Score_String) == FALSE & Grade != "" ~ stringr::str_replace(V2, Grade, ""),
+                           TRUE ~ V2),
+            V2 = trimws(V2),
+            V3 = trimws(V3)
           ) %>%
           dplyr::na_if("") %>%
           dplyr::mutate(
