@@ -426,13 +426,6 @@ Swim_Parse <-
 
     } else {
       df_7 <- data.frame(
-        Name = character(),
-        Place = character(),
-        Grade = character(),
-        School = character(),
-        Prelims_Time = character(),
-        Finals_Time = character(),
-        Points = character(),
         Row_Numb = character(),
         stringsAsFactors = FALSE
       )
@@ -624,13 +617,6 @@ Swim_Parse <-
 
     } else {
       df_6 <- data.frame(
-        Name = character(),
-        Place = character(),
-        Grade = character(),
-        School = character(),
-        Prelims_Time = character(),
-        Finals_Time = character(),
-        Points = character(),
         Row_Numb = character(),
         stringsAsFactors = FALSE
       )
@@ -932,13 +918,6 @@ Swim_Parse <-
       )
     } else {
       df_5 <- data.frame(
-        Name = character(),
-        Place = character(),
-        Grade = character(),
-        School = character(),
-        Prelims_Time = character(),
-        Finals_Time = character(),
-        Points = character(),
         Row_Numb = character(),
         stringsAsFactors = FALSE
       )
@@ -1171,13 +1150,6 @@ Swim_Parse <-
       )
     } else {
       df_4 <- data.frame(
-        Name = character(),
-        Place = character(),
-        Grade = character(),
-        School = character(),
-        Prelims_Time = character(),
-        Finals_Time = character(),
-        Points = character(),
         Row_Numb = character(),
         stringsAsFactors = FALSE
       )
@@ -1251,13 +1223,6 @@ Swim_Parse <-
       )
     } else {
       df_3 <- data.frame(
-        Name = character(),
-        Place = character(),
-        Grade = character(),
-        School = character(),
-        Prelims_Time = character(),
-        Finals_Time = character(),
-        Points = character(),
         Row_Numb = character(),
         stringsAsFactors = FALSE
       )
@@ -1348,13 +1313,6 @@ Swim_Parse <-
 
     } else {
       df_DQ_4 <- data.frame(
-        Name = character(),
-        Place = character(),
-        Grade = character(),
-        School = character(),
-        Prelims_Time = character(),
-        Finals_Time = character(),
-        Points = character(),
         Row_Numb = character(),
         stringsAsFactors = FALSE
       )
@@ -1381,13 +1339,6 @@ Swim_Parse <-
 
     } else {
       df_DQ_3 <- data.frame(
-        Name = character(),
-        Place = character(),
-        Grade = character(),
-        School = character(),
-        Prelims_Time = character(),
-        Finals_Time = character(),
-        Points = character(),
         Row_Numb = character(),
         stringsAsFactors = FALSE
       )
