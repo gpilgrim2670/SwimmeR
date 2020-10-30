@@ -212,8 +212,7 @@ Swim_Parse <-
         # .[purrr::map_lgl(., stringr::str_detect, "\\.\\d\\d")] %>% # must have \\.\\d\\d because all swimming and diving times do
         .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]{2,}")] %>% # must have at least two letters in a row
         .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid)))] %>%
-        stringr::str_replace_all("\n", "") %>%
-        # stringr::str_replace_all("\n\\s*", "") %>% # 8/27
+        stringr::str_remove_all("\n") %>%
         stringr::str_replace_all(stats::setNames(replacement, typo)) %>% # moved to top of pipeline 8/26
         stringr::str_replace_all("\\s*[&%]\\s*", "  ") %>% # added 8/21 for removing "&" and "%" as record designator
         # removed J etc. from next to swim, but does not remove X or x (for exhibition tracking)
@@ -228,11 +227,9 @@ Swim_Parse <-
         stringr::str_remove_all("\\s{2}J\\s{2}") %>%
         # remove q from next to time 10/21/2020
         stringr::str_remove_all(" q ") %>% # removes " q " sometimes used to designate a qualifying time
-        # stringr::str_replace_all("--", "10000") %>%
         stringr::str_replace_all("-{2,5}", "10000") %>% #8/26
         stringr::str_replace_all("(\\.\\d{2})\\d+", "\\1 ") %>% # added 8/21 for illinois to deal with points column merging with final times column
         stringr::str_replace_all("\\d{1,2} (\\d{1,})$", "  \\1 ") %>% # added 8/21 for illinois to deal with points column merging with final times column
-        # stringr::str_replace_all("(\\d{1,2})- ", "\\1-") %>%
         stringr::str_replace_all("\\*", "_") %>%
         trimws()
     )
@@ -248,6 +245,7 @@ Swim_Parse <-
     data_length_5 <- data_1[purrr::map(data_1, length) == 5]
     data_length_6 <- data_1[purrr::map(data_1, length) == 6]
     data_length_7 <- data_1[purrr::map(data_1, length) == 7]
+
     # treatment of DQs new 8/19
     suppressWarnings(DQ <-
                        data_1[stringr::str_detect(data_1, Time_Score_String, negate = TRUE) == TRUE])
@@ -304,7 +302,7 @@ Swim_Parse <-
             )
           ) %>%
           mutate(
-            School = str_replace(School, Grade, ""),
+            School = str_remove(School, Grade),
             School = trimws(School)
           ) %>%
           dplyr::mutate(
@@ -346,7 +344,7 @@ Swim_Parse <-
           dplyr::na_if("''") %>%
           dplyr::mutate(
             Finals_Time = replace(Finals_Time, stringr::str_length(Finals_Time) < 3, NA),
-            Finals_Time = stringr::str_replace(Finals_Time, "J", ""),
+            Finals_Time = stringr::str_remove(Finals_Time, "J"),
             Finals_Time = dplyr::case_when(
               Place >= 1 &
                 is.na(Finals_Time) == TRUE ~ dplyr::coalesce(Finals_Time, Prelims_Time),
@@ -413,8 +411,8 @@ Swim_Parse <-
                 is.na(Name) == FALSE ~ Name,
               stringr::str_detect(School, "^A$") == FALSE ~ School
             ),
-            School = stringr::str_replace(School, "^SR |^JR |^SO |^FR |^10 |^11 |^12 |^9 |^8 |^7 ", ""),
-            Name = stringr::str_replace(Name, "^-", ""),
+            School = stringr::str_remove(School, "^SR |^JR |^SO |^FR |^10 |^11 |^12 |^9 |^8 |^7 "),
+            Name = stringr::str_remove(Name, "^-"),
             Name = replace(Name, Name == School, NA)
           ) %>%
           dplyr::mutate(DQ = 0)
@@ -441,7 +439,7 @@ Swim_Parse <-
                 stringr::str_detect(V2, "[:digit:]") == FALSE ~ V2,
               TRUE ~ stringr::str_split_fixed(V1, " ", n = 2)[, 2]
             ),
-            V1 = stringr::str_replace(V1, Place, ""),
+            V1 = stringr::str_remove(V1, Place),
             V1 = trimws(V1)
           ) %>%
           dplyr::mutate(
@@ -464,7 +462,7 @@ Swim_Parse <-
             School = dplyr::case_when(
               V3 == Grade ~ V4,
               V2 == Grade ~ V3,
-              any(stringr::str_detect(V3, "SEC")) == TRUE ~ stringr::str_replace(V1, Name, ""),
+              any(stringr::str_detect(V3, "SEC")) == TRUE ~ stringr::str_remove(V1, Name),
               is.na(Grade) &
                 stringr::str_detect(V2, Time_Score_String) == FALSE &
                 stringr::str_detect(V2, Name) == FALSE &
@@ -590,13 +588,12 @@ Swim_Parse <-
               # stringr::str_detect(School, "^-[:upper:]$") == TRUE &
               #   is.na(Name) == FALSE ~ Name,
               TRUE ~ School),
-            School = stringr::str_replace(
+            School = stringr::str_remove(
               School,
-              "^[:digit:]{1,2}\\s",
-              ""
+              "^[:digit:]{1,2}\\s"
             )) %>%
             dplyr::mutate(
-            Name = stringr::str_replace(Name, "^-", ""),
+            Name = stringr::str_remove(Name, "^-"),
             Name = replace(Name, Name == School, NA)
           ) %>%
           dplyr::mutate(DQ = 0)
@@ -627,11 +624,11 @@ Swim_Parse <-
           dplyr::na_if("") %>%
           dplyr::mutate(
             V1 = dplyr::case_when(
-              is.na(Place) == FALSE ~ stringr::str_replace(V1, Place, ""),
+              is.na(Place) == FALSE ~ stringr::str_remove(V1, Place),
               TRUE ~ V1
             ),
             V1 = dplyr::case_when(
-              is.na(Name) == FALSE ~ stringr::str_replace(V1, Name, ""),
+              is.na(Name) == FALSE ~ stringr::str_remove(V1, Name),
               TRUE ~ V1
             ),
             V1 = trimws(V1),
@@ -650,9 +647,9 @@ Swim_Parse <-
           dplyr::na_if("") %>%
           dplyr::mutate(
             Grade = trimws(Grade),
-            V3 = case_when(is.na(Grade) == FALSE & stringr::str_detect(V3, Grade) == TRUE & stringr::str_detect(V3, Time_Score_String) == FALSE & Grade != "" ~ stringr::str_replace(V3, Grade, ""),
+            V3 = case_when(is.na(Grade) == FALSE & stringr::str_detect(V3, Grade) == TRUE & stringr::str_detect(V3, Time_Score_String) == FALSE & Grade != "" ~ stringr::str_remove(V3, Grade),
                            TRUE ~ V3),
-            V2 = case_when(is.na(Grade) == FALSE & stringr::str_detect(V2, Grade) == TRUE & stringr::str_detect(V2, Time_Score_String) == FALSE & Grade != "" ~ stringr::str_replace(V2, Grade, ""),
+            V2 = case_when(is.na(Grade) == FALSE & stringr::str_detect(V2, Grade) == TRUE & stringr::str_detect(V2, Time_Score_String) == FALSE & Grade != "" ~ stringr::str_remove(V2, Grade),
                            TRUE ~ V2),
             V2 = trimws(V2),
             V3 = trimws(V3)
@@ -679,12 +676,12 @@ Swim_Parse <-
               (V1 == Name |
                  is.na(Name)) &
                 V2 != Grade ~ stringr::str_split_fixed(V2, " ", n = 2)[, 2],
-              stringr::str_detect(V2, "\\:\\d\\d|^NT$|^NP$") == TRUE ~ V1,
+              stringr::str_detect(V2, paste0(Time_Score_String, "|^NT$|^NP$")) == TRUE ~ V1,
               TRUE ~ stringr::str_split_fixed(V2, " ", n = 2)[, 2]
             ),
             School = dplyr::case_when(
               stringr::str_detect(School, Grade) == TRUE &
-                is.na(School) == FALSE ~ stringr::str_replace(School, Grade, ""),
+                is.na(School) == FALSE ~ stringr::str_remove(School, Grade),
               TRUE ~ School
             ),
             School = trimws(School)
@@ -736,7 +733,7 @@ Swim_Parse <-
           dplyr::na_if("''") %>%
           dplyr::mutate(
             Finals_Time = dplyr::case_when(
-              sum(stringr::str_detect(Finals_Time, Time_Score_String)) >= 1 ~ stringr::str_replace(Finals_Time, "NT", ""),
+              sum(stringr::str_detect(Finals_Time, Time_Score_String)) >= 1 ~ stringr::str_remove(Finals_Time, "NT"),
               sum(stringr::str_detect(Finals_Time, Time_Score_String)) < 1 ~ Finals_Time,
               TRUE ~ Finals_Time
             )
@@ -876,7 +873,7 @@ Swim_Parse <-
             ),
             Grade = replace(Grade, Grade == School, NA),
             Grade = replace(Grade, stringr::str_detect(Grade, Time_Score_String) == TRUE, NA),
-            Name = stringr::str_replace(Name, "^-", ""),
+            Name = stringr::str_remove(Name, "^-"),
             Name = replace(Name, Name == School, NA),
             Grade = replace(Grade, is.na(Name) == TRUE &
                               is.na(School) == FALSE, NA),
@@ -917,11 +914,11 @@ Swim_Parse <-
           dplyr::na_if("") %>%
           dplyr::mutate(
             V1 = dplyr::case_when(
-              is.na(Place) == FALSE ~ stringr::str_replace(V1, Place, ""),
+              is.na(Place) == FALSE ~ stringr::str_remove(V1, Place),
               TRUE ~ V1
             ),
             V1 = dplyr::case_when(
-              is.na(Name) == FALSE ~ stringr::str_replace(V1, Name, ""),
+              is.na(Name) == FALSE ~ stringr::str_remove(V1, Name),
               TRUE ~ V1
             ),
             V1 = trimws(V1),
@@ -960,7 +957,7 @@ Swim_Parse <-
             ),
             School = dplyr::case_when(
               stringr::str_detect(School, Grade) == TRUE &
-                is.na(School) == FALSE ~ stringr::str_replace(School, Grade, ""),
+                is.na(School) == FALSE ~ stringr::str_remove(School, Grade),
               TRUE ~ School
             ),
             School = trimws(School)
@@ -1030,7 +1027,7 @@ Swim_Parse <-
           ) %>%
           dplyr::mutate(
             Grade = replace(Grade, Grade == School, NA),
-            Name = stringr::str_replace(Name, "^-", ""),
+            Name = stringr::str_remove(Name, "^-"),
             Name = replace(Name, Name == School, NA)
           ) %>%
           dplyr::mutate(
@@ -1091,7 +1088,7 @@ Swim_Parse <-
               stringr::str_detect(Name, "\\.d{1,3}") == TRUE ~ stringr::str_extract(Name, "\\d{1,3}"),
               stringr::str_detect(Name, "\\.d{1,3}") == FALSE ~ Grade
             ),
-            Name = stringr::str_replace(Name, "\\d{1,3}", ""),
+            Name = stringr::str_remove(Name, "\\d{1,3}"),
             Prelims_Time = dplyr::case_when(
               is.na(Prelims_Time) == TRUE &
                 stringr::str_detect(School, "\\.") == TRUE ~ stringr::str_extract(
@@ -1101,16 +1098,14 @@ Swim_Parse <-
               is.na(Prelims_Time) == FALSE |
                 stringr::str_detect(School, "\\.") == FALSE ~ Prelims_Time
             ),
-            School = stringr::str_replace(School, "-[:alpha:]*\\d.*$", ""),
-            School = stringr::str_replace(
+            School = stringr::str_remove(School, "-[:alpha:]*\\d.*$"),
+            School = stringr::str_remove(
               School,
-              "^[:digit:]{1,2}\\s",
-              ""
-            )
+              "^[:digit:]{1,2}\\s")
           ) %>%
           na_if("") %>%
           dplyr::mutate(
-            Name = stringr::str_replace(Name, "^-", ""),
+            Name = stringr::str_remove(Name, "^-"),
             Name = replace(Name, Name == School, NA)
           ) %>%
           dplyr::mutate(DQ = 0)
@@ -1158,7 +1153,7 @@ Swim_Parse <-
               stringr::str_length(School) < 1 | is.na(School) == TRUE ~ Name,
               stringr::str_length(School) >= 1 ~ School
             ),
-            Name = stringr::str_replace(Name, "^-", ""),
+            Name = stringr::str_remove(Name, "^-"),
             Name = replace(Name, Name == School, NA),
             Prelims_Time = dplyr::case_when(
               is.na(Name) == TRUE ~ Grade,
@@ -1213,11 +1208,11 @@ Swim_Parse <-
           dplyr::na_if("") %>%
           dplyr::mutate(
             V1 = dplyr::case_when(
-              is.na(Place) == FALSE ~ stringr::str_replace(V1, Place, ""),
+              is.na(Place) == FALSE ~ stringr::str_remove(V1, Place),
               TRUE ~ V1
             ),
             V1 = dplyr::case_when(
-              is.na(Name) == FALSE ~ stringr::str_replace(V1, Name, ""),
+              is.na(Name) == FALSE ~ stringr::str_remove(V1, Name),
               TRUE ~ V1
             ),
             V1 = trimws(V1),
@@ -1256,7 +1251,7 @@ Swim_Parse <-
             ),
             School = dplyr::case_when(
               stringr::str_detect(School, Grade) == TRUE &
-                is.na(School) == FALSE ~ stringr::str_replace(School, Grade, ""),
+                is.na(School) == FALSE ~ stringr::str_remove(School, Grade),
               TRUE ~ School
             ),
             School = trimws(School)
