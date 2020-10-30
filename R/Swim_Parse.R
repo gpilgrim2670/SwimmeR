@@ -331,25 +331,15 @@ Swim_Parse <-
                                       TRUE ~ Points)
           ) %>%
           dplyr::na_if("") %>%
-          # dplyr::select(
-          #   Name,
-          #   Place,
-          #   Grade,
-          #   School,
-          #   Prelims_Time,
-          #   Finals_Time,
-          #   Points,
-          #   Row_Numb = V7
-          # ) %>%
-          dplyr::mutate(
-            Row_Numb = V7,
-            V1 = NULL,
-            V2 = NULL,
-            V3 = NULL,
-            V4 = NULL,
-            V5 = NULL,
-            V6 = NULL,
-            V7 = NULL
+          dplyr::select(
+            Place,
+            Name,
+            Grade,
+            School,
+            Prelims_Time,
+            Finals_Time,
+            Points,
+            Row_Numb = V7
           ) %>%
           dplyr::na_if("") %>%
           dplyr::na_if("''") %>%
@@ -685,12 +675,12 @@ Swim_Parse <-
                 any(stringr::str_detect(V3, "^SEC \\d+$")) == TRUE ~ V1,
               (V2 != Grade |
                  is.na(Grade)) &
-                stringr::str_detect(V3, "\\.\\d\\d|^NT$|^NP$") &
+                stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$")) &
                 stringr::str_detect(V2, "'[:upper:]'|^[:upper:]$|^\\'\\'$") == FALSE &
                 stringr::str_detect(V2, Time_Score_String) == FALSE ~ V2,
               (V2 != Grade |
                  is.na(Grade)) &
-                stringr::str_detect(V3, "\\.\\d\\d|^NT$|^NP$") &
+                stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$")) &
                 stringr::str_detect(V2, "'[:upper:]'|^[:upper:]$|'[:upper:]'|^\\'\\'$") == TRUE &
                 (V1 != Name | is.na(Name)) ~ V1,
               (V1 == Name |
@@ -900,7 +890,8 @@ Swim_Parse <-
               TRUE ~ School
             ),
             Grade = replace(Grade, Grade == School, NA),
-            Grade = replace(Grade, stringr::str_detect(Grade, "\\.\\d") == TRUE, NA),
+            Grade = replace(Grade, stringr::str_detect(Grade, #"\\.\\d"
+                                                       Time_Score_String) == TRUE, NA),
             Name = stringr::str_replace(Name, "^-", ""),
             Name = replace(Name, Name == School, NA),
             Grade = replace(Grade, is.na(Name) == TRUE &
@@ -969,18 +960,18 @@ Swim_Parse <-
                 any(stringr::str_detect(V3, "^SEC \\d+$")) == TRUE ~ V1,
               (V2 != Grade |
                  is.na(Grade)) &
-                stringr::str_detect(V3, "\\.\\d\\d|^NT$|^NP$") &
+                stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$")) &
                 stringr::str_detect(V2, "'[:upper:]'|^[:upper:]$|^\\'\\'$") == FALSE &
                 stringr::str_detect(V2, Time_Score_String) == FALSE ~ V2,
               (V2 != Grade |
                  is.na(Grade)) &
-                stringr::str_detect(V3, "\\.\\d\\d|^NT$|^NP$") &
+                stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$")) &
                 stringr::str_detect(V2, "'[:upper:]'|^[:upper:]$|'[:upper:]'|^\\'\\'$") == TRUE &
                 (V1 != Name | is.na(Name)) ~ V1,
               (V1 == Name |
                  is.na(Name)) &
                 V2 != Grade ~ stringr::str_split_fixed(V2, " ", n = 2)[, 2],
-              stringr::str_detect(V2, "\\:\\d\\d|^NT$|^NP$") == TRUE ~ V1,
+              stringr::str_detect(V2, paste0(Time_Score_String, "|^NT$|^NP$")) == TRUE ~ V1,
               TRUE ~ stringr::str_split_fixed(V2, " ", n = 2)[, 2]
             ),
             School = dplyr::case_when(
@@ -1093,7 +1084,7 @@ Swim_Parse <-
             School = dplyr::case_when(
               is.na(Grade) == FALSE &
                 stringr::str_detect(Grade, "\\'[[:alpha:]]\\'") == FALSE &
-                stringr::str_detect(Grade, "\\.\\d") == FALSE &
+                stringr::str_detect(Grade, Time_Score_String) == FALSE &
                 stringr::str_detect(Grade, "\\d") == FALSE &
                 Grade %in% c("SR", "JR", "SO", "FR") == FALSE &
                 Grade != School ~ paste(Grade, School, sep = " "),
@@ -1270,18 +1261,18 @@ Swim_Parse <-
                 any(stringr::str_detect(V3, "^SEC \\d+$")) == TRUE ~ V1,
               (V2 != Grade |
                  is.na(Grade)) &
-                stringr::str_detect(V3, "\\.\\d\\d|^NT$|^NP$") &
+                stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$")) &
                 stringr::str_detect(V2, "'[:upper:]'|^[:upper:]$|^\\'\\'$") == FALSE &
                 stringr::str_detect(V2, Time_Score_String) == FALSE ~ V2,
               (V2 != Grade |
                  is.na(Grade)) &
-                stringr::str_detect(V3, "\\.\\d\\d|^NT$|^NP$") &
+                stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$")) &
                 stringr::str_detect(V2, "'[:upper:]'|^[:upper:]$|'[:upper:]'|^\\'\\'$") == TRUE &
                 (V1 != Name | is.na(Name)) ~ V1,
               (V1 == Name |
                  is.na(Name)) &
                 V2 != Grade ~ stringr::str_split_fixed(V2, " ", n = 2)[, 2],
-              stringr::str_detect(V2, "\\:\\d\\d|^NT$|^NP$") == TRUE ~ V1,
+              stringr::str_detect(V2, paste0(Time_Score_String, "|^NT$|^NP$")) == TRUE ~ V1,
               TRUE ~ stringr::str_split_fixed(V2, " ", n = 2)[, 2]
             ),
             School = dplyr::case_when(
