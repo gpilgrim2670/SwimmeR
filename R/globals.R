@@ -54,6 +54,7 @@ utils::globalVariables(
     "Row_Fill",
     "Row_Numb_2",
     "minimum_row",
-    "maximum_row"
+    "maximum_row",
+    "Colon_String"
   )
 )

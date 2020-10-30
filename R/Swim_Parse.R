@@ -239,6 +239,7 @@ Swim_Parse <-
     Name_String <- "_?[:alpha:]+'?[:alpha:]+\\s?[:alpha:]*\\s?[:alpha:]*,\\s?[:alpha:]*\\s?[:alpha:]*,? [:alpha:]+\\s?[:alpha:\\-\\']*\\s?[:alpha:\\-\\']*\\s?[:alpha:]*\\s?[:alpha:]*\\s?[:alpha:\\.]*"
     Time_Score_String <- "\\d\\d\\.\\d\\d"
     Grade_String <- "^SR$|^JR$|^SO$|^FR$|^[:digit:]{1,3}$"
+    Colon_String <- "\\:\\d\\d"
 
     #### breaks data into subsets based on how many variables it has ####
     data_length_3 <- data_1[purrr::map(data_1, length) == 3]
@@ -330,6 +331,16 @@ Swim_Parse <-
                                       TRUE ~ Points)
           ) %>%
           dplyr::na_if("") %>%
+          # dplyr::select(
+          #   Name,
+          #   Place,
+          #   Grade,
+          #   School,
+          #   Prelims_Time,
+          #   Finals_Time,
+          #   Points,
+          #   Row_Numb = V7
+          # ) %>%
           dplyr::mutate(
             Row_Numb = V7,
             V1 = NULL,
@@ -522,13 +533,6 @@ Swim_Parse <-
                                       TRUE ~ Points)
           ) %>%
           dplyr::na_if("") %>%
-          dplyr::mutate(
-            V1 = NULL,
-            V2 = NULL,
-            V3 = NULL,
-            V4 = NULL,
-            V5 = NULL,
-          ) %>%
           dplyr::select(
             Name,
             Place,
@@ -729,12 +733,6 @@ Swim_Parse <-
                                       TRUE ~ Points)
           ) %>%
           dplyr::na_if("") %>%
-          dplyr::mutate(
-            V1 = NULL,
-            V2 = NULL,
-            V3 = NULL,
-            V4 = NULL,
-          ) %>%
           dplyr::select(
             Name,
             Place,
@@ -801,19 +799,19 @@ Swim_Parse <-
           ) %>%
           dplyr::mutate(
             Points_2 = dplyr::case_when(
-              stringr::str_detect(Points, "\\:\\d\\d") == TRUE ~ "",
+              stringr::str_detect(Points, Colon_String) == TRUE ~ "",
               as.numeric(Points) > 20 &
                 stringr::str_detect(Points, Time_Score_String) == TRUE ~ "",
-              stringr::str_detect(Points, "\\:\\d\\d") == FALSE ~ Points
+              stringr::str_detect(Points, Colon_String) == FALSE ~ Points
             ),
             Prelims_Time = dplyr::case_when(
-              stringr::str_detect(Points, "\\:\\d\\d") == TRUE ~ Finals_Time,
+              stringr::str_detect(Points, Colon_String) == TRUE ~ Finals_Time,
               as.numeric(Points) > 20 &
                 stringr::str_detect(Points, Time_Score_String) == TRUE ~ Finals_Time,
               TRUE ~ Prelims_Time
             ),
             Finals_Time = dplyr::case_when(
-              stringr::str_detect(Points, "\\:\\d\\d") == TRUE ~ Points,
+              stringr::str_detect(Points, Colon_String) == TRUE ~ Points,
               as.numeric(Points) > 20 &
                 stringr::str_detect(Points, Time_Score_String) == TRUE ~ Points,
               TRUE ~ Finals_Time
@@ -1021,9 +1019,6 @@ Swim_Parse <-
                                       TRUE ~ Points)
           ) %>%
           dplyr::na_if("") %>%
-          dplyr::mutate(V1 = NULL,
-                        V2 = NULL,
-                        V3 = NULL) %>%
           dplyr::select(
             Name,
             Place,
@@ -1163,12 +1158,10 @@ Swim_Parse <-
           dplyr::mutate(
             Place = stringr::str_split_fixed(V1, " ", n = 2)[, 1],
             Name = stringr::str_split_fixed(V1, " ", n = 2)[, 2],
-            V1 = NULL,
             Grade = as.character(NA),
             School = as.character(NA),
             Finals_Time = V2,
             Prelims_Time = as.character(NA),
-            V2 = NULL,
           ) %>%
           dplyr::select(
             Name,
@@ -1229,6 +1222,7 @@ Swim_Parse <-
     }
 
     #### DQ data ####
+    #### DQ 4 ####
     if (length(DQ_length_4) > 0) {
       suppressWarnings(
         df_DQ_4 <- DQ_length_4 %>%
@@ -1298,9 +1292,6 @@ Swim_Parse <-
             School = trimws(School)
           ) %>%
           dplyr::na_if("") %>%
-          dplyr::mutate(V1 = NULL,
-                        V2 = NULL,
-                        V3 = NULL) %>%
           dplyr::select(Name,
                         Place,
                         Grade,
@@ -1317,6 +1308,8 @@ Swim_Parse <-
         stringsAsFactors = FALSE
       )
     }
+
+    #### DQ 3 ####
     if (length(DQ_length_3) > 0) {
       suppressWarnings(
         df_DQ_3 <- DQ_length_3 %>%
@@ -1327,8 +1320,6 @@ Swim_Parse <-
             School = trimws(School)
           ) %>%
           dplyr::na_if("") %>%
-          dplyr::mutate(V1 = NULL,
-                        V2 = NULL) %>%
           dplyr::select(Place,
                         School,
                         Row_Numb = V3) %>%
@@ -1336,15 +1327,12 @@ Swim_Parse <-
           dplyr::na_if("''") %>%
           dplyr::mutate(DQ = 1)
       )
-
     } else {
       df_DQ_3 <- data.frame(
         Row_Numb = character(),
         stringsAsFactors = FALSE
       )
-
     }
-
 
     #### Rejoin dataframes from each number of variables ####
     Min_Row_Numb <- min(events$Event_Row_Min)
