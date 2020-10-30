@@ -122,11 +122,13 @@ Swim_Parse <-
         "^\\s*Meet",
         "^\\s*MEET",
         "^\\s*Points",
-        "^\\s*Rec\\:",
-        "^\\s*REC\\:",
+        "^\\s*Rec\\.?\\:",
+        "^\\s*REC\\.?\\:",
+        "\\sRec\\.?\\:\\s",
         "^\\s*Rcd\\:",
         "^\\s*Cty\\:",
         "^\\s*League",
+        "^\\s*League Rec\\.?\\:",
         "^\\s*LEAGUE",
         "^\\s*IAC\\:",
         "^\\s*AA\\:",
@@ -142,8 +144,6 @@ Swim_Parse <-
         "^\\s*Class '[[:alpha:]]'\\:",
         "^\\s*Pool\\:",
         "^\\s*POOL\\:",
-        "^\\s*REC\\.\\:",
-        "^\\s*REC\\:",
         "^\\s*\\'A\\'\\:",
         "^\\s*Nassau\\:",
         "^\\s*CONS\\:",
@@ -194,7 +194,6 @@ Swim_Parse <-
 
     #### set up strings ####
     Name_String <- "_?[:alpha:]+'?[:alpha:]+\\s?[:alpha:]*\\s?[:alpha:]*,\\s?[:alpha:]*\\s?[:alpha:]*,? [:alpha:]+\\s?[:alpha:\\-\\']*\\s?[:alpha:\\-\\']*\\s?[:alpha:]*\\s?[:alpha:]*\\s?[:alpha:\\.]*"
-    # Time_Score_String <- "\\d\\d\\.\\d\\d"
     Time_Score_String <- "\\d{0,2}\\:?\\d{1,3}\\.\\d{2}"
     Grade_String <- "^SR$|^JR$|^SO$|^FR$|^[:digit:]{1,3}$"
     Colon_String <- "\\:\\d\\d"
@@ -279,8 +278,8 @@ Swim_Parse <-
           dplyr::mutate(
             Grade = dplyr::case_when(
               stringr::str_detect(V2, Grade_String) == TRUE ~ V2,
-              stringr::str_detect(V2, "^SR |^JR |^SO |^FR |^[:digit:]{1,2} ") == TRUE ~ stringr::str_extract(V2, "^SR |^JR |^SO |^FR |^10 |^11 |^[:digit:]{1,2} "),
-              stringr::str_detect(V3, "^SR |^JR |^SO |^FR |^[:digit:]{1,2} ") == TRUE ~ stringr::str_extract(V3, "^SR |^JR |^SO |^FR |^10 |^11 |^[:digit:]{1,2} "),
+              stringr::str_detect(V2, "^SR |^JR |^SO |^FR |^[:digit:]{1,3} ") == TRUE ~ stringr::str_extract(V2, "^SR |^JR |^SO |^FR |^10 |^11 |^[:digit:]{1,2} "),
+              stringr::str_detect(V3, "^SR |^JR |^SO |^FR |^[:digit:]{1,3} ") == TRUE ~ stringr::str_extract(V3, "^SR |^JR |^SO |^FR |^10 |^11 |^[:digit:]{1,2} "),
               any(
                 stringr::str_detect(V2, Grade_String)
               ) == FALSE &
@@ -394,12 +393,8 @@ Swim_Parse <-
               stringr::str_detect(Finals_Time, "x|X") == TRUE ~ 1,
               TRUE ~ 0
             ),
-            Finals_Time = stringr::str_remove_all(Finals_Time, "[:alpha:]"),
-            Prelims_Time = stringr::str_remove_all(Prelims_Time, "[:alpha:]"),
             ###
-            # Finals_Time = stringr::str_extract(Finals_Time, "[[:digit:][\\.\\:]]*"),
             Finals_Time = stringr::str_extract(Finals_Time, Time_Score_String),
-            # Prelims_Time = stringr::str_extract(Prelims_Time, "[[:digit:][\\.\\:]]*")
             Prelims_Time = stringr::str_extract(Prelims_Time, Time_Score_String)
           ) %>%
           dplyr::na_if("") %>%
@@ -573,11 +568,7 @@ Swim_Parse <-
               stringr::str_detect(Finals_Time, "x|X") == TRUE ~ 1,
               TRUE ~ 0
             ),
-            Finals_Time = stringr::str_remove_all(Finals_Time, "[:alpha:]"),
-            Prelims_Time = stringr::str_remove_all(Prelims_Time, "[:alpha:]"),
             ###
-            # Finals_Time = stringr::str_extract(Finals_Time, "[[:digit:][\\.\\:]]*"),
-            # Prelims_Time = stringr::str_extract(Prelims_Time, "[[:digit:][\\.\\:]]*"),
             Finals_Time = stringr::str_extract(Finals_Time, Time_Score_String),
             Prelims_Time = stringr::str_extract(Prelims_Time, Time_Score_String),
           ) %>%
@@ -776,8 +767,6 @@ Swim_Parse <-
               stringr::str_detect(Finals_Time, "x|X") == TRUE ~ 1,
               TRUE ~ 0
             ),
-            Finals_Time = stringr::str_remove_all(Finals_Time, "[:alpha:]"),
-            Prelims_Time = stringr::str_remove_all(Prelims_Time, "[:alpha:]"),
             ###
             Finals_Time = stringr::str_extract(Finals_Time, Time_Score_String),
             Prelims_Time = stringr::str_extract(Prelims_Time, Time_Score_String),
@@ -1182,8 +1171,6 @@ Swim_Parse <-
               stringr::str_detect(Finals_Time, "x|X") == TRUE ~ 1,
               TRUE ~ 0
             ),
-            Finals_Time = stringr::str_remove_all(Finals_Time, "[:alpha:]"),
-            Prelims_Time = stringr::str_remove_all(Prelims_Time, "[:alpha:]"),
             ###
             Finals_Time = stringr::str_extract(Finals_Time, Time_Score_String),
             Prelims_Time = stringr::str_extract(Prelims_Time, Time_Score_String)
@@ -1326,7 +1313,6 @@ Swim_Parse <-
         dplyr::full_join(df_3) %>%
         dplyr::left_join(df_DQ_4) %>%
         dplyr::left_join(df_DQ_3) %>%
-        # dplyr::filter(stringr::str_detect(Finals_Time, "\\.") == TRUE) %>% # removed for DQ testing 8/20
         dplyr::mutate(Row_Numb = as.numeric(Row_Numb)) %>%
         dplyr::arrange(Row_Numb) %>%
         ### moved up from below for DQ work 8/20
@@ -1350,7 +1336,6 @@ Swim_Parse <-
     #### add in events based on row number ranges ####
     data  <-
       transform(data, Event = events$Event[findInterval(Row_Numb, events$Event_Row_Min)])
-    # data$Row_Numb <- NULL
 
     #### cleaning up final results ####
 
