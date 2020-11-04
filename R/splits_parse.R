@@ -158,7 +158,7 @@ splits_parse <- function(text) {
   #### rename columns V1, V2 etc. by 50 ####
   old_names <- names(data)[grep("^V", names(data))]
   new_names <-
-    paste(seq(1, length(names(data)) - 1) * 50, "Split", sep = "_")
+    paste("Split", seq(1, length(names(data)) - 1) * 50, sep = "_")
 
   data <- data %>%
     dplyr::rename_at(dplyr::vars(old_names), ~ new_names) %>%

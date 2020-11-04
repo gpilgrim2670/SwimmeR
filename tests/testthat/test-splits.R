@@ -28,7 +28,7 @@ test_that("Singapore results", {
     splits = TRUE
   )
   df_splits_sum <-
-    sum(df[names(df) %in% names(df)[grep("^\\d", names(df))]], na.rm = TRUE)
+    sum(df[names(df) %in% names(df)[grep("^Split", names(df))]], na.rm = TRUE)
 
   expect_equivalent(df_splits_sum, 54448.73)
 
@@ -45,7 +45,7 @@ test_that("NYS results, multiple lines of splits with different lengths", {
   )
 
   df_splits_sum <-
-    sum(df[names(df) %in% names(df)[grep("^\\d", names(df))]], na.rm = TRUE)
+    sum(df[names(df) %in% names(df)[grep("^Split", names(df))]], na.rm = TRUE)
 
   expect_equivalent(df_splits_sum, 53290.22)
 
