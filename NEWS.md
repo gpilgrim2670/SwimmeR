@@ -1,3 +1,6 @@
+# Swimmer 0.5.4 - November 4 2020
+* added functionality to output splits to `swim_parse`, works but more testing needed
+
 # SwimmeR 0.5.3 - October 23 2020
 * added helper function list_transform to clean up `swim_parse` and other functions
 

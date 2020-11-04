@@ -18,7 +18,6 @@
 #' @return a dataframe with \code{Row_Numb} as the first column.  Other columns are splits, by distance
 #'
 #' @seealso \code{split_sort} is a helper function
-#'
 
 splits_sort <- function(x, min_row = minimum_row) {
   x <- x %>%

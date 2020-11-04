@@ -6,6 +6,9 @@
 #'
 #' @importFrom dplyr full_join
 #' @importFrom dplyr bind_rows
+#' @importFrom dplyr rename_at
+#' @importFrom dplyr mutate_at
+#' @importFrom dplyr vars
 #' @importFrom stringr str_replace_all
 #' @importFrom stringr str_remove_all
 #' @importFrom stringr str_extract_all
@@ -20,44 +23,16 @@
 #' @seealso \code{splits_parse} runs inside \code{\link{swim_parse}} on the output of \code{\link{read_results}} with row numbers from \code{\link{add_row_numbers}}
 #'
 
-# file <- read_results("~/SwimmeR/inst/extdata/s2-results.pdf")
-# file <- read_results("inst/extdata/s2-results.pdf")
-# avoid <- c("MR:")
-# typo <-
-#   c(
-#     "Swim\\s{2,}Club",
-#     "Performance\\s{2,}Swim",
-#     "Swimming\\s{2,}Club",
-#     "Stamford\\s{2,}American\\s{2,}Internationa",
-#     "Uwcsea\\s{2,}Phoenix-ZZ",
-#     "AquaTech\\s{2,}Swimming",
-#     "Chinese\\s{2,}Swimming",
-#     "Aquatic\\s{2,}Performance",
-#     "SwimDolphia\\s{2}Aquatic School"
-#   )
-# replacement <-
-#   c(
-#     "Swim Club",
-#     "Performance Swim",
-#     "Swimming Club",
-#     "Stamford American International",
-#     "Uwcsea Phoenix-ZZ",
-#     "AquaTech Swimming",
-#     "Chinese Swimming",
-#     "Aquatic Performance",
-#     "SwimDolphia Aquatic School"
-#   )
-# file <- read_results(
-#     "http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm",
-#     node = "pre")
-# text <- add_row_numbers(text = file)
-
 splits_parse <- function(text) {
   ### collect row numbers from rows containing splits ###
+
+  ### define strings ###
+  split_string <- "\\(\\d\\d\\.\\d\\d\\)"
+
   row_numbs <- text %>%
     .[purrr::map_lgl(.,
                      stringr::str_detect,
-                     "\\(\\d\\d\\.\\d\\d\\)")] %>%
+                     split_string)] %>%
     stringr::str_extract_all("\\d{1,}$")
 
   minimum_row <- min(as.numeric(row_numbs))
@@ -68,10 +43,10 @@ splits_parse <- function(text) {
     data_1 <- text %>%
       .[purrr::map_lgl(.,
                        stringr::str_detect,
-                       "\\(\\d\\d\\.\\d\\d\\)")] %>%
+                       split_string)] %>%
       stringr::str_replace_all("\n", "") %>%
       stringr::str_replace_all("r\\:\\+\\s?\\d\\.\\d\\d", "") %>%
-      stringr::str_extract_all("^\\s+\\d\\d\\.\\d\\d|\\(\\d\\d\\.\\d\\d\\)") %>%
+      stringr::str_extract_all(paste0("^\\s+\\d\\d\\.\\d\\d|", split_string)) %>%
       stringr::str_remove_all('\\"') %>%
       stringr::str_replace_all("\\(", " ") %>%
       stringr::str_replace_all("\\)", " ") %>%
@@ -81,10 +56,10 @@ splits_parse <- function(text) {
   )
 
 
-  ### add row numbers back in since they were removed ###
+  #### add row numbers back in since they were removed ####
   data_1 <- paste(row_numbs, data_1, sep = "   ")
 
-  ### break out by length
+  #### break out by length ####
   data_1 <-
     unlist(purrr::map(data_1, stringr::str_split, "\\s{2,}"),
            recursive = FALSE)
@@ -99,13 +74,13 @@ splits_parse <- function(text) {
   data_length_9 <- data_1[purrr::map(data_1, length) == 9]
   data_length_10 <- data_1[purrr::map(data_1, length) == 10]
 
-
+  #### transform all lists to dataframes ####
   if (length(data_length_10) > 0) {
     df_10 <- data_length_10 %>%
       list_transform()
   } else {
     df_10 <- data.frame(Row_Numb = character(),
-                       stringsAsFactors = FALSE)
+                        stringsAsFactors = FALSE)
   }
 
   if (length(data_length_9) > 0) {
@@ -172,17 +147,22 @@ splits_parse <- function(text) {
                        stringsAsFactors = FALSE)
   }
 
-  data <- dplyr::bind_rows(df_10, df_9, df_8, df_7, df_6, df_5, df_4, df_3, df_2) %>%
+  #### bind up results ####
+  # results are bound before going to splits_sort so that in cases where there are multiple rows with splits for the same race,
+  # like in longer events with many splits, those splits can be collected and treated together
+  data <-
+    dplyr::bind_rows(df_10, df_9, df_8, df_7, df_6, df_5, df_4, df_3, df_2) %>%
     splits_sort(min_row = minimum_row) %>%
-    dplyr::mutate(Row_Numb = as.numeric(Row_Numb)-1)
+    dplyr::mutate(Row_Numb = as.numeric(Row_Numb) - 1) # make row number of split match row number of performance
 
-  # data <- dplyr::full_join(df_8, df_7) %>%
-  #   dplyr::full_join(df_6) %>%
-  #   dplyr::full_join(df_5) %>%
-  #   dplyr::full_join(df_4) %>%
-  #   dplyr::full_join(df_3) %>%
-  #   dplyr::full_join(df_2) %>%
-    # dplyr::mutate(Row_Numb = as.numeric(Row_Numb)-1)
+  #### rename columns V1, V2 etc. by 50 ####
+  old_names <- names(data)[grep("^V", names(data))]
+  new_names <-
+    paste(seq(1, length(names(data)) - 1) * 50, "Split", sep = "_")
+
+  data <- data %>%
+    dplyr::rename_at(dplyr::vars(old_names), ~ new_names) %>%
+    dplyr::mutate_at(dplyr::vars(new_names), as.numeric)
 
   return(data)
 
