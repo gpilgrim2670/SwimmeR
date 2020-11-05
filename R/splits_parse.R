@@ -21,7 +21,6 @@
 #' @return returns a dataframe with split times and row numbers
 #'
 #' @seealso \code{splits_parse} runs inside \code{\link{swim_parse}} on the output of \code{\link{read_results}} with row numbers from \code{\link{add_row_numbers}}
-#'
 
 splits_parse <- function(text) {
 

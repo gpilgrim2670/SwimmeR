@@ -57,6 +57,7 @@ utils::globalVariables(
     "maximum_row",
     "Colon_String",
     "old_names",
-    "new_names"
+    "new_names",
+    "flag"
   )
 )
