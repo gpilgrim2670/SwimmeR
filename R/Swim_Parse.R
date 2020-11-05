@@ -59,6 +59,10 @@ Swim_Parse <-
            splits = FALSE,
            split_length = 50) {
 
+    if(is.logical(splits) == FALSE) {
+      stop("splits must be logical, either TRUE or FALSE")
+    }
+
     if(is.numeric(split_length) == FALSE) {
       stop("split_length must be numeric, usually 50 or 25")
     }
@@ -103,6 +107,11 @@ Swim_Parse <-
     #   "Garcia, Varela",
     #   "Von, Biberstein")
     # avoid <- avoid_default
+
+    # file <- read_results("https://www.swimming.org.sg/SSA/SWIMMING/Events/China-Life-48th-SNAG-Swimming-Championships/full-results.aspx")
+    # avoid <- c("SEA GAMES", "Meet Qualifying")
+    # typo <- typo_default
+    # replacement <- replacement_default
 
     #### strings that if a line begins with one of them the line is ignored ####
     avoid_default <-
@@ -220,6 +229,7 @@ Swim_Parse <-
         .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]{2,}")] %>% # must have at least two letters in a row
         .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid)))] %>%
         stringr::str_remove_all("\n") %>%
+        # trimws() %>%
         stringr::str_replace_all(stats::setNames(replacement, typo)) %>% # moved to top of pipeline 8/26
         stringr::str_replace_all("\\s*[&%]\\s*", "  ") %>% # added 8/21 for removing "&" and "%" as record designator
         # removed J etc. from next to swim, but does not remove X or x (for exhibition tracking)
@@ -511,7 +521,7 @@ Swim_Parse <-
             Finals_Time = dplyr::case_when(
               stringr::str_detect(V2, Time_Score_String) == TRUE & # new 8/18
                 stringr::str_detect(V3, Time_Score_String) == TRUE ~ V3,
-              stringr::str_detect(V4, Time_Score_String) == FALSE &
+              # stringr::str_detect(V4, Time_Score_String) == FALSE & # removed 11/5/20
                 stringr::str_detect(V5, Time_Score_String) == TRUE ~ V5,
               TRUE ~ V4
             )

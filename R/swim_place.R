@@ -24,15 +24,9 @@ swim_place <- function(df, max_place) {
     dplyr::ungroup() %>%
     dplyr::group_by(Event) %>%
     dplyr::mutate(Finals_Time_sec = SwimmeR::sec_format(Finals_Time)) %>% # time as seconds
-    dplyr::mutate(
-      # Place = as.numeric(Place),
-      # Place = case_when(
-      #   is.na(Place) == TRUE ~ as.numeric(rank(Finals_Time_sec, ties.method = "min") + lanes),
-      #   is.na(Place) == FALSE ~ Place
-      # ),
-      Place = rank(Finals_Time_sec, ties.method = "min")) %>%
+    dplyr::mutate(Place = rank(Finals_Time_sec, ties.method = "min")) %>% # places, low number wins
     dplyr::arrange(Place) %>%
-    mutate(Place = Place - cumsum(DQ)) %>% # places, low number wins
-    dplyr::filter(Place <= max_place)
+    mutate(Place = Place - cumsum(DQ)) %>% # take out DQs
+    dplyr::filter(Place <= max_place) # cannot place because of DQ in slot ahead
   return(df)
 }

@@ -22,7 +22,7 @@
 Read_Results <- function(file, node = "pre") {
   '%!in%' <- function(x, y)
     ! ('%in%'(x, y))
-  if (stringr::str_detect(file, "\\.pdf$|\\.pdf\\.aspx$") == TRUE) {
+  if (stringr::str_detect(file, "\\.pdf$|\\.pdf\\.aspx$|\\.aspx$") == TRUE) {
     ### PDF ###
     results <- pdftools::pdf_text(file)
     as_lines <- str_extract_all(results, "\n.*")

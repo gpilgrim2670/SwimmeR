@@ -88,3 +88,5 @@ test_that("timed_finals works", {
 
   expect_equal(Scores$Score[1], 2160.5)
 })
+
+# test_file("tests/testthat/test-results_score_works.R")
