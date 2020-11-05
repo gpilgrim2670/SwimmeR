@@ -58,6 +58,8 @@ utils::globalVariables(
     "Colon_String",
     "old_names",
     "new_names",
-    "flag"
+    "flag",
+    "split_length",
+    "split_len"
   )
 )

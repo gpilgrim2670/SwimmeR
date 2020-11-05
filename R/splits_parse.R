@@ -18,11 +18,12 @@
 #' @importFrom purrr map
 #'
 #' @param text output of \code{read_results} with tow numbers appended by \code{add_row_numbers}
+#' @param split_len length at which splits are measured
 #' @return returns a dataframe with split times and row numbers
 #'
 #' @seealso \code{splits_parse} runs inside \code{\link{swim_parse}} on the output of \code{\link{read_results}} with row numbers from \code{\link{add_row_numbers}}
 
-splits_parse <- function(text) {
+splits_parse <- function(text, split_len = split_length) {
   # text <- read_results("inst/extdata/jets08082019_067546.pdf")
   # text <- read_results("inst/extdata/11102019roc.pdf")
   # text <- read_results("inst/extdata/s2-results.pdf")
@@ -209,7 +210,8 @@ splits_parse <- function(text) {
     #### rename columns V1, V2 etc. by 50 ####
     old_names <- names(data)[grep("^V", names(data))]
     new_names <-
-      paste("Split", seq(1, length(names(data)) - 1) * 50, sep = "_")
+      # paste("Split", seq(1, length(names(data)) - 1) * 50, sep = "_")
+      paste("Split", seq(1, length(names(data)) - 1) * split_len, sep = "_")
 
     data <- data %>%
       dplyr::rename_at(dplyr::vars(old_names), ~ new_names)

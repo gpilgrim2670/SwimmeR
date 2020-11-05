@@ -35,6 +35,7 @@
 #' @param typo a list of strings that are typos in the original results.  \code{swim_parse} is particularly sensitive to accidental double spaces, so "Central  High School", with two spaces between "Central" and "High" is a problem, which can be fixed.  Pass "Central High School" to \code{typo}.  Unexpected commas as also an issue, for example "Texas, University of" should be fixed using \code{typo} and \code{replacement}
 #' @param replacement a list of fixes for the strings in \code{typo}.  Here one could pass "Central High School" (one space between "Central" and "High") and "Texas" to \code{replacement} fix the issues described in \code{typo}
 #' @param splits either \code{TRUE} or the default, \code{FALSE} - should \code{swim_parse} attempt to include splits
+#' @param split_length either \code{25} or the default, \code{50}, the length of pool at which splits are recorded
 #' @return returns a dataframe with columns \code{Name}, \code{Place}, \code{Grade}, \code{School}, \code{Prelims_Time}, \code{Finals_Time}, \code{Points}, \code{Event} & \code{DQ}.  Note all swims will have a \code{Finals_Time}, even if that time was actually swam in the prelims (i.e. a swimmer did not qualify for finals).  This is so that final results for an event can be generated from just one column.
 #'
 #' @examples \dontrun{
@@ -55,7 +56,13 @@ Swim_Parse <-
            avoid = avoid_default,
            typo = typo_default,
            replacement = replacement_default,
-           splits = FALSE) {
+           splits = FALSE,
+           split_length = 50) {
+
+    if(is.numeric(split_length) == FALSE) {
+      stop("split_length must be numeric, usually 50 or 25")
+    }
+
 
     # file <- read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm", node = "pre")
     # typo <- c("-1NORTH ROCKL")
@@ -1384,7 +1391,7 @@ Swim_Parse <-
 
     )
     if(splits == TRUE){
-      splits_df <- splits_parse(as_lines_list_2)
+      splits_df <- splits_parse(as_lines_list_2, split_len = split_length)
 
       data <- data %>%
         dplyr::left_join(splits_df, by = 'Row_Numb')

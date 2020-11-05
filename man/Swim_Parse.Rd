@@ -10,7 +10,8 @@ Swim_Parse(
   avoid = avoid_default,
   typo = typo_default,
   replacement = replacement_default,
-  splits = FALSE
+  splits = FALSE,
+  split_length = 50
 )
 
 swim_parse(
@@ -18,7 +19,8 @@ swim_parse(
   avoid = avoid_default,
   typo = typo_default,
   replacement = replacement_default,
-  splits = FALSE
+  splits = FALSE,
+  split_length = 50
 )
 }
 \arguments{
@@ -31,6 +33,8 @@ swim_parse(
 \item{replacement}{a list of fixes for the strings in \code{typo}.  Here one could pass "Central High School" (one space between "Central" and "High") and "Texas" to \code{replacement} fix the issues described in \code{typo}}
 
 \item{splits}{either \code{TRUE} or the default, \code{FALSE} - should \code{swim_parse} attempt to include splits}
+
+\item{split_length}{either \code{25} or the default, \code{50}, the length of pool at which splits are recorded}
 }
 \value{
 returns a dataframe with columns \code{Name}, \code{Place}, \code{Grade}, \code{School}, \code{Prelims_Time}, \code{Finals_Time}, \code{Points}, \code{Event} & \code{DQ}.  Note all swims will have a \code{Finals_Time}, even if that time was actually swam in the prelims (i.e. a swimmer did not qualify for finals).  This is so that final results for an event can be generated from just one column.
