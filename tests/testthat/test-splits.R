@@ -31,6 +31,7 @@ test_that("Singapore results", {
     sum(df[names(df) %in% names(df)[grep("^Split", names(df))]], na.rm = TRUE)
 
   expect_equivalent(df_splits_sum, 54448.73)
+  # expect_equivalent(df_splits_sum, 54493.48)
 
 })
 

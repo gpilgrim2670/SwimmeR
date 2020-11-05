@@ -24,26 +24,53 @@
 #'
 
 splits_parse <- function(text) {
+
+  # text <- read_results("inst/extdata/jets08082019_067546.pdf")
+  # text <- read_results("inst/extdata/s2-results.pdf")
+  # text <- add_row_numbers(text)
+
   ### collect row numbers from rows containing splits ###
 
   ### define strings ###
+  # split_string <- "\\(\\d\\d\\.\\d\\d\\)|\\s\\d\\d\\.\\d\\d\\s"
   split_string <- "\\(\\d\\d\\.\\d\\d\\)"
 
   row_numbs <- text %>%
     .[purrr::map_lgl(.,
                      stringr::str_detect,
                      split_string)] %>%
+    # .[purrr::map_lgl(.,
+    #                  stringr::str_detect,
+    #                  "[:alpha:]", negate = TRUE)] %>%
     stringr::str_extract_all("\\d{1,}$")
+  flag <- FALSE
+
+  if(length(row_numbs) == 0){
+    split_string <- "\\(\\d\\d\\.\\d\\d\\)|\\s\\d\\d\\.\\d\\d\\s"
+    row_numbs <- text %>%
+      .[purrr::map_lgl(.,
+                       stringr::str_detect,
+                       split_string)] %>%
+      .[purrr::map_lgl(.,
+                       stringr::str_detect,
+                       "[:alpha:]", negate = TRUE)] %>%
+      stringr::str_extract_all("\\d{1,}$")
+    flag <- TRUE
+  }
 
   minimum_row <- min(as.numeric(row_numbs))
   maximum_row <- as.numeric(length(text))
 
   ### pull out rows containing splits, which will remove row numbers ###
+  if(flag == TRUE){
   suppressWarnings(
     data_1 <- text %>%
       .[purrr::map_lgl(.,
                        stringr::str_detect,
                        split_string)] %>%
+      .[purrr::map_lgl(.,
+                       stringr::str_detect,
+                       "[:alpha:]", negate = TRUE)] %>%
       stringr::str_replace_all("\n", "") %>%
       stringr::str_replace_all("r\\:\\+\\s?\\d\\.\\d\\d", "") %>%
       stringr::str_extract_all(paste0("^\\s+\\d\\d\\.\\d\\d|", split_string)) %>%
@@ -52,8 +79,23 @@ splits_parse <- function(text) {
       stringr::str_replace_all("\\)", " ") %>%
       stringr::str_remove_all("c") %>%
       stringr::str_remove_all(',') %>%
-      trimws()
-  )
+      trimws())
+    } else{
+    suppressWarnings(
+      data_1 <- text %>%
+        .[purrr::map_lgl(.,
+                         stringr::str_detect,
+                         split_string)] %>%
+        stringr::str_replace_all("\n", "") %>%
+        stringr::str_replace_all("r\\:\\+\\s?\\d\\.\\d\\d", "") %>%
+        stringr::str_extract_all(paste0("^\\s+\\d\\d\\.\\d\\d|", split_string)) %>%
+        stringr::str_remove_all('\\"') %>%
+        stringr::str_replace_all("\\(", " ") %>%
+        stringr::str_replace_all("\\)", " ") %>%
+        stringr::str_remove_all("c") %>%
+        stringr::str_remove_all(',') %>%
+        trimws())
+  }
 
 
   #### add row numbers back in since they were removed ####
