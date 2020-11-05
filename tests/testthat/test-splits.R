@@ -1,4 +1,4 @@
-test_that("Singapore results", {
+test_that("Singapore results, splits in parenthesis", {
   file <- system.file("extdata", "s2-results.pdf", package = "SwimmeR")
   df <- swim_parse(
     read_results(file),
@@ -27,16 +27,26 @@ test_that("Singapore results", {
     ),
     splits = TRUE
   )
-  df_splits_sum <-
-    sum(df[names(df) %in% names(df)[grep("^Split", names(df))]], na.rm = TRUE)
+  df <- df %>%
+    dplyr::mutate(F_sec = sec_format(Finals_Time)) %>% # finals time in seconds
+    dplyr::mutate(dplyr::across(dplyr::starts_with("Split"), ~sec_format(.x))) %>% # all splits in seconds to account for splits over 59.99
+    dplyr::mutate(total = dplyr::select(., Split_50:length(df)) %>% rowSums(na.rm = TRUE)) %>% # total up splits
+    dplyr::mutate(not_matching = case_when(round(F_sec - total, 2) == 0 ~ FALSE, # does total match finals time?
+                                    round(F_sec - total, 2) != 0 ~ TRUE))
 
-  expect_equivalent(df_splits_sum, 54448.73)
-  # expect_equivalent(df_splits_sum, 54493.48)
+  match_sum <- sum(df$not_matching, na.rm = TRUE)
+
+  expect_equivalent(match_sum, 0)
+
+  # df_splits_sum <-
+  #   sum(df[names(df) %in% names(df)[grep("^Split", names(df))]], na.rm = TRUE)
+
+  # expect_equivalent(df_splits_sum, 54448.73)
 
 })
 
 
-test_that("NYS results, multiple lines of splits with different lengths", {
+test_that("NYS results, multiple lines of splits with different lengths, has parenthesis", {
   file <- "http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm"
   df <- swim_parse(
     read_results(file, node = "pre"),
@@ -45,9 +55,44 @@ test_that("NYS results, multiple lines of splits with different lengths", {
     splits = TRUE
   )
 
-  df_splits_sum <-
-    sum(df[names(df) %in% names(df)[grep("^Split", names(df))]], na.rm = TRUE)
+  df <- df %>%
+    filter(DQ != 1,
+           stringr::str_detect(Event, "Diving") == FALSE, # diving does not have splits
+           stringr::str_detect(Event, "Relay") == FALSE, # relays do not have splits
+           stringr::str_detect(Event, "\\s50\\s") == FALSE) %>% # 50s do not have splits
+    dplyr::mutate(F_sec = sec_format(Finals_Time)) %>% # finals time in seconds
+    dplyr::mutate(dplyr::across(dplyr::starts_with("Split"), ~ sec_format(.x))) %>% # all splits in seconds to account for splits over 59.99
+    dplyr::mutate(total = dplyr::select(., Split_50:length(df)) %>% rowSums(na.rm = TRUE)) %>% # total up splits
+    dplyr::mutate(not_matching = dplyr::case_when(round(F_sec - total, 2) == 0 ~ FALSE, # does total match finals time?
+                                    round(F_sec - total, 2) != 0 ~ TRUE))
 
-  expect_equivalent(df_splits_sum, 53290.22)
+  match_sum <- sum(df$not_matching, na.rm = TRUE) # should be three.  Three swimmers in the 200 IM did not record splits
+
+  expect_equivalent(match_sum, 3)
 
 })
+
+test_that("USA results, splits don't have parenthesis, some splits longer than 59.99", {
+  file <- system.file("extdata", "jets08082019_067546.pdf", package = "SwimmeR")
+  df <- swim_parse(
+    read_results(file, node = "pre"),
+    splits = TRUE
+  )
+
+  df <- df %>%
+    filter(DQ != 1,
+           stringr::str_detect(Event, "Relay") == FALSE, # relays do not have splits
+           stringr::str_detect(Event, "\\s50\\s") == FALSE) %>% # 50s do not have splits
+    dplyr::mutate(F_sec = sec_format(Finals_Time)) %>% # finals time in seconds
+    dplyr::mutate(dplyr::across(dplyr::starts_with("Split"), ~ sec_format(.x))) %>% # all splits in seconds to account for splits over 59.99
+    dplyr::mutate(total = dplyr::select(., Split_50:length(df)) %>% rowSums(na.rm = TRUE)) %>% # total up splits
+    dplyr::mutate(not_matching = dplyr::case_when(round(F_sec - total, 2) == 0 ~ FALSE, # does total match finals time?
+                                                  round(F_sec - total, 2) != 0 ~ TRUE))
+
+  match_sum <- sum(df$not_matching, na.rm = TRUE) # should be 10 because 10 swimmers finished legally but did not record splits
+
+  expect_equivalent(match_sum, 10)
+
+})
+
+# test_file("tests/testthat/test-splits.R")

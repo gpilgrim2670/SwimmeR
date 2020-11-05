@@ -56,7 +56,7 @@ test_that("swim_parse works list", {
   # import standard
   df_standard <- read.csv(system.file("extdata", "df_standard.csv", package = "SwimmeR"), stringsAsFactors = FALSE, colClasses=c("character", "numeric", rep("character", 6), "numeric", "numeric"))
   df_standard <- df_standard %>%
-    select(-X)
+    dplyr::select(-X)
 
   # import test files
   file_1 <- system.file("extdata", "jets08082019_067546.pdf", package = "SwimmeR")
@@ -86,7 +86,7 @@ test_that("swim_parse works list", {
   Read_Map <- function(links) {
 
     scrape_test_all <-
-      map(links, read_results, node = "pre")
+      purrr::map(links, read_results, node = "pre")
 
     names(scrape_test_all) <- links
     return(scrape_test_all)
@@ -97,7 +97,7 @@ test_that("swim_parse works list", {
   Parse_Map <- function(links) {
 
     all_results <-
-      map(links, swim_parse, typo = c("\n", "Greece  Athena", "Newburgh Free  9", "FAYETTEVILLE MAN  ", "CICERO NORTH SYR  ", " - ", "Vineland  \\(Boy\\'s\\)",
+      purrr::map(links, swim_parse, typo = c("\n", "Greece  Athena", "Newburgh Free  9", "FAYETTEVILLE MAN  ", "CICERO NORTH SYR  ", " - ", "Vineland  \\(Boy\\'s\\)",
                                       "\\(Kp\\)", "\\(Mc\\)", "\\(P", "  Psal", " Brian\\t A", "Williamsville E ", " B-AAB", "Section  X I", "Mexico  -B",
                                       "Nottingham  -A", "Bronxville  High School", "A A", ",  CT", ",  MA", "-1NORTH ROCKL", "QUEENSBURY  HIGH", "Indiana  University", ", University of", "Sugrue_Neuendorf,"),
 
@@ -113,7 +113,7 @@ test_that("swim_parse works list", {
   df_test <- Read_Map(sources)
   df_test <- Parse_Map(df_test)
   df_test <- dplyr::bind_rows(df_test, .id = "column_label") %>%
-    select(-column_label)
+    dplyr::select(-column_label)
 
   # compare standard to test
   expect_equivalent(df_standard,
