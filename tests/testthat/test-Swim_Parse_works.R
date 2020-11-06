@@ -4,7 +4,7 @@ test_that("swim_parse works", {
     read_results(file),
     typo =  c("\n", "Indiana  University", ", University of"),
     replacement = c("\n", "Indiana University", "")
-  )[100, 1],
+  )[100, 2],
   "Lilly King")
 
 })
@@ -29,7 +29,7 @@ test_that("swim_parse works 3", {
     ),
     typo = c("-1NORTH ROCKL", "\\s\\d{1,2}\\s{2,}"),
     replacement = c("1-NORTH ROCKL", "  ")
-  )[,2], na.rm = TRUE),
+  )[,1], na.rm = TRUE),
   16235)
 
 })

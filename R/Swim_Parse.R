@@ -18,6 +18,7 @@
 #' @importFrom dplyr full_join
 #' @importFrom dplyr n_distinct
 #' @importFrom dplyr bind_rows
+#' @importFrom dplyr everything
 #' @importFrom stringr str_replace
 #' @importFrom stringr str_replace_all
 #' @importFrom stringr str_extract
@@ -517,6 +518,7 @@ Swim_Parse <-
               TRUE ~ stringr::str_split_fixed(V2, " ", n = 2)[, 2]
             )
           ) %>%
+          ### df_6 cannot have NT as time string since there are some schools called NT ###
           dplyr::mutate(
             Prelims_Time = dplyr::case_when(
               stringr::str_detect(V2, paste0(Time_Score_String, "|^NP$|^DQ$")) == TRUE & # new 8/18
@@ -1262,18 +1264,19 @@ Swim_Parse <-
                 any(stringr::str_detect(V3, "^SEC \\d+$")) == TRUE ~ V1,
               (V2 != Grade |
                  is.na(Grade)) &
-                stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$")) &
+                stringr::str_detect(V3, paste0(Time_Score_String, "|^DQ$|^NT$|^NP$")) &
                 stringr::str_detect(V2, "'[:upper:]'|^[:upper:]$|^\\'\\'$") == FALSE &
                 stringr::str_detect(V2, Time_Score_String) == FALSE ~ V2,
+              (is.na(V1) == TRUE & stringr::str_detect(V3, paste0(Time_Score_String, "|^DQ$|^NT$|^NP$")) == TRUE & stringr::str_detect(V2, "\\d") == FALSE) ~ V2,
               (V2 != Grade |
                  is.na(Grade)) &
-                stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$")) &
+                stringr::str_detect(V3, paste0(Time_Score_String, "^DQ$|^NT$|^NP$")) &
                 stringr::str_detect(V2, "'[:upper:]'|^[:upper:]$|'[:upper:]'|^\\'\\'$") == TRUE &
                 (V1 != Name | is.na(Name)) ~ V1,
               (V1 == Name |
                  is.na(Name)) &
                 V2 != Grade ~ stringr::str_split_fixed(V2, " ", n = 2)[, 2],
-              stringr::str_detect(V2, paste0(Time_Score_String, "|^NT$|^NP$")) == TRUE ~ V1,
+              stringr::str_detect(V2, paste0(Time_Score_String, "^DQ$|^NT$|^NP$")) == TRUE ~ V1,
               TRUE ~ stringr::str_split_fixed(V2, " ", n = 2)[, 2]
             ),
             School = dplyr::case_when(
@@ -1329,10 +1332,16 @@ Swim_Parse <-
     #### Rejoin dataframes from each number of variables ####
     Min_Row_Numb <- min(events$Event_Row_Min)
     suppressWarnings(
-      data <- dplyr::full_join(df_7, df_6) %>%
-        dplyr::full_join(df_5) %>%
-        dplyr::full_join(df_4) %>%
-        dplyr::full_join(df_3) %>%
+      # data <- dplyr::full_join(df_7, df_6) %>%
+      #   dplyr::full_join(df_5) %>%
+      #   dplyr::full_join(df_4) %>%
+      #   dplyr::full_join(df_3) %>%
+      #   dplyr::left_join(df_DQ_4) %>%
+      #   dplyr::left_join(df_DQ_3) %>%
+      data <- dplyr::bind_rows(df_7, df_6) %>%
+        dplyr::bind_rows(df_5) %>%
+        dplyr::bind_rows(df_4) %>%
+        dplyr::bind_rows(df_3) %>%
         dplyr::left_join(df_DQ_4) %>%
         dplyr::left_join(df_DQ_3) %>%
         dplyr::mutate(Row_Numb = as.numeric(Row_Numb)) %>%
@@ -1364,7 +1373,7 @@ Swim_Parse <-
     suppressWarnings(
       data <- data %>%
         dplyr::mutate(
-          Name = str_replace(Name, "_", "\\*"),
+          Name = stringr::str_replace(Name, "_", "\\*"),
           Prelims_Time = replace(
             Prelims_Time,
             stringr::str_detect(Prelims_Time, "\\.") == FALSE,
@@ -1372,8 +1381,7 @@ Swim_Parse <-
           ),
           Prelims_Time = replace(
             Prelims_Time,
-            (
-              stringr::str_detect(Prelims_Time, "\\.") == TRUE &
+            (stringr::str_detect(Prelims_Time, "\\.") == TRUE &
                 stringr::str_detect(Prelims_Time, "\\:") == FALSE &
                 as.numeric(Prelims_Time) < 15
             ),
@@ -1398,7 +1406,7 @@ Swim_Parse <-
                                    TRUE ~ Place)
         ) %>%
         ### added 8/20 as part of DQ, to remove records and such but not DQ results
-        filter(
+        dplyr::filter(
           DQ == 0 &
             stringr::str_detect(Finals_Time, Time_Score_String) == TRUE |
             DQ == 0 & stringr::str_detect(Prelims_Time, Time_Score_String) == TRUE | DQ == 1
@@ -1418,6 +1426,12 @@ Swim_Parse <-
 
       ### remove empty columns (all values are NA) ###
       data <- Filter(function(x)!all(is.na(x)), data)
+    }
+
+    #### if there is a Place column it should be first ####
+    if("Place" %in% names(data)){
+      data <- data %>%
+      dplyr::select(Place, dplyr::everything())
     }
 
     data$Row_Numb <- NULL
