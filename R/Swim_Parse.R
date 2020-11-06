@@ -717,11 +717,11 @@ Swim_Parse <-
           ) %>%
           dplyr::mutate(
             Prelims_Time = dplyr::case_when(
-              stringr::str_detect(V2, paste0(Time_Score_String, "|^NP$|^DQ$")) == TRUE &
-                stringr::str_detect(V3, paste0(Time_Score_String, "|^NP$|^DQ$")) == TRUE ~ V2,
-              stringr::str_detect(V3, paste0(Time_Score_String, "|^NP$|^DQ$")) == TRUE &
-                stringr::str_detect(V4, paste0(Time_Score_String, "|^NP$|^DQ$")) == TRUE ~ V3,
-              stringr::str_detect(V3, paste0(Time_Score_String, "|^NP$|^DQ$")) == FALSE &
+              stringr::str_detect(V2, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE &
+                stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE ~ V2,
+              stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE &
+                stringr::str_detect(V4, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE ~ V3,
+              stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == FALSE &
                 stringr::str_detect(V4, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE ~ "",
               TRUE ~ V2
             )
