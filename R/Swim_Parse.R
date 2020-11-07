@@ -1398,10 +1398,14 @@ Swim_Parse <-
     #### Rejoin dataframes from each number of variables ####
     Min_Row_Numb <- min(events$Event_Row_Min)
     suppressWarnings(
-      data <- dplyr::full_join(df_7, df_6) %>%
-        dplyr::full_join(df_5) %>%
-        dplyr::full_join(df_4) %>%
-        dplyr::full_join(df_3) %>%
+      # data <- dplyr::full_join(df_7, df_6) %>%
+      #   dplyr::full_join(df_5) %>%
+      #   dplyr::full_join(df_4) %>%
+      #   dplyr::full_join(df_3) %>%
+      data <- dplyr::bind_rows(df_7, df_6) %>%
+        dplyr::bind_rows(df_5) %>%
+        dplyr::bind_rows(df_4) %>%
+        dplyr::bind_rows(df_3) %>%
         dplyr::left_join(df_DQ_4) %>%
         dplyr::left_join(df_DQ_3) %>%
         # dplyr::filter(stringr::str_detect(Finals_Time, "\\.") == TRUE) %>% # removed for DQ testing 8/20
@@ -1485,6 +1489,8 @@ Swim_Parse <-
       splits_df <- splits_parse(as_lines_list_2)
 
       data <- data %>%
+        dplyr::mutate(Row_Numb = dplyr::case_when(stringr::str_detect(Event, "Relay") ~ Row_Numb + 1,
+                                                  TRUE ~ Row_Numb)) %>%
         dplyr::left_join(splits_df, by = 'Row_Numb')
 
       ### remove empty columns (all values are NA) ###

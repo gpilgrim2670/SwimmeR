@@ -130,12 +130,6 @@ swim_parse_ISL <-
 
     } else {
       df_ind_swimmer <- data.frame(
-        Place = character(),
-        Lane = character(),
-        Name = character(),
-        Team = character(),
-        Time = character(),
-        Points = character(),
         Row_Numb = character(),
         stringsAsFactors = FALSE
       )
@@ -170,11 +164,6 @@ swim_parse_ISL <-
 
     } else {
       df_relay <- data.frame(
-        Place = character(),
-        Lane = character(),
-        Team = character(),
-        Time = character(),
-        Points = character(),
         Row_Numb = character(),
         stringsAsFactors = FALSE
       )
@@ -198,11 +187,6 @@ swim_parse_ISL <-
 
     } else {
       df_DSQ_4 <- data.frame(
-        Lane = character(),
-        Name = character(),
-        Team = character(),
-        Time = character(),
-        Points = character(),
         Row_Numb = character(),
         stringsAsFactors = FALSE
       )
@@ -222,11 +206,6 @@ swim_parse_ISL <-
 
     } else {
       df_DSQ_5 <- data.frame(
-        Lane = character(),
-        Name = character(),
-        Team = character(),
-        Time = character(),
-        Points = character(),
         Row_Numb = character(),
         stringsAsFactors = FALSE
       )
@@ -246,11 +225,6 @@ swim_parse_ISL <-
 
     } else {
       df_DSQ_6 <- data.frame(
-        Lane = character(),
-        Name = character(),
-        Team = character(),
-        Time = character(),
-        Points = character(),
         Row_Numb = character(),
         stringsAsFactors = FALSE
       )
