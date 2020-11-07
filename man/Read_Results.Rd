@@ -5,14 +5,14 @@
 \alias{read_results}
 \title{Reads swimming and diving results into a list of strings in preparation for parsing with \code{swim_parse}}
 \usage{
-Read_Results(file, node = NULL)
+Read_Results(file, node = "pre")
 
-read_results(file, node = NULL)
+read_results(file, node = "pre")
 }
 \arguments{
 \item{file}{a .pdf or .html file (could be a url) where containing swimming results.  Must be formatted in a "normal" fashion - see vignette}
 
-\item{node}{a CSS node where html results are stored.  Required for html results.}
+\item{node}{a CSS node where html results are stored.  Required for html results.  Default is "pre", which nearly always works.}
 }
 \value{
 returns a list of strings containing the information from \code{file}.  Should then be parsed with \code{swim_parse}

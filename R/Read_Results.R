@@ -10,7 +10,7 @@
 #' @importFrom pdftools pdf_text
 #'
 #' @param file a .pdf or .html file (could be a url) where containing swimming results.  Must be formatted in a "normal" fashion - see vignette
-#' @param node a CSS node where html results are stored.  Required for html results.
+#' @param node a CSS node where html results are stored.  Required for html results.  Default is "pre", which nearly always works.
 #' @return returns a list of strings containing the information from \code{file}.  Should then be parsed with \code{swim_parse}
 #'
 #' @examples \dontrun{read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm", node = "pre")}
@@ -19,10 +19,10 @@
 #'
 #' @export
 
-Read_Results <- function(file, node = NULL) {
+Read_Results <- function(file, node = "pre") {
   '%!in%' <- function(x, y)
     ! ('%in%'(x, y))
-  if (stringr::str_detect(file, "\\.pdf$") == TRUE) {
+  if (stringr::str_detect(file, "\\.pdf$|\\.pdf\\.aspx$|\\.aspx$") == TRUE) {
     ### PDF ###
     results <- pdftools::pdf_text(file)
     as_lines <- str_extract_all(results, "\n.*")

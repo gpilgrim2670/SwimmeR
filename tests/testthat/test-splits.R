@@ -58,7 +58,7 @@ test_that("NYS results, multiple lines of splits with different lengths, has par
   df <- df %>%
     filter(DQ != 1,
            stringr::str_detect(Event, "Diving") == FALSE, # diving does not have splits
-           # stringr::str_detect(Event, "Relay") == FALSE, # relays do not have splits
+           # stringr::str_detect(Event, "Relay") == FALSE, # relays now do have splits
            stringr::str_detect(Event, "\\s50\\s") == FALSE) %>% # 50s do not have splits
     dplyr::mutate(F_sec = sec_format(Finals_Time)) %>% # finals time in seconds
     dplyr::mutate(dplyr::across(dplyr::starts_with("Split"), ~ sec_format(.x))) %>% # all splits in seconds to account for splits over 59.99

@@ -85,7 +85,6 @@ results_score <-
            lanes = c(4, 6, 8, 10),
            scoring_heats = c(1, 2, 3),
            point_values) {
-
     events <- stringr::str_to_lower(events)
 
     max_place <- length(point_values)
@@ -101,18 +100,14 @@ results_score <-
     ex_results <- results %>%
       dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event),
                                         paste(events, collapse = "|")) == TRUE) %>%
-      dplyr::select(dplyr::everything(),-dplyr::matches("Points")) %>%
+      dplyr::select(dplyr::everything(), -dplyr::matches("Points")) %>%
       dplyr::filter(Exhibition == 1)
 
     results <- results %>%
       dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event),
                                         paste(events, collapse = "|")) == TRUE) %>%
-      dplyr::select(dplyr::everything(),-dplyr::matches("Points")) %>%
+      dplyr::select(dplyr::everything(), -dplyr::matches("Points")) %>%
       dplyr::filter(Exhibition == 0)
-
-
-
-
 
     ind_results <- results %>%
       dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "relay") == FALSE) %>%
@@ -125,14 +120,13 @@ results_score <-
     results <- dplyr::bind_rows(ind_results, relay_results)
 
     if (meet_type == "timed_finals") {
-
       # diving
       if (any(stringr::str_detect(stringr::str_to_lower(results$Event), "diving"))) {
         diving_results <- results %>%
           dive_place(max_place = max_place)
 
       } else {
-        diving_results  <- results[0, ]
+        diving_results  <- results[0,]
       }
 
       # relays
@@ -143,7 +137,7 @@ results_score <-
           swim_place(max_place = max_place)
 
       } else {
-        relay_results  <- results[0, ]
+        relay_results  <- results[0,]
       }
 
       # individual swimming results
@@ -154,7 +148,7 @@ results_score <-
           swim_place(max_place = max_place)
 
       } else {
-        ind_results  <- results[0, ]
+        ind_results  <- results[0,]
       }
 
       # collecting all results
@@ -169,9 +163,9 @@ results_score <-
         left_join(ex_results)
 
       return(results)
-### prelims_finals ####
+      ### prelims_finals ####
     } else if (meet_type == "prelims_finals") {
-### one heat ###
+      ### one heat ###
       if (scoring_heats == 1) {
         results <- results %>%
           dplyr::group_by(Event) %>%
@@ -185,7 +179,7 @@ results_score <-
             dplyr::mutate(Heat = 1)
 
         } else {
-          ind_results  <- results[0, ]
+          ind_results  <- results[0,]
         }
 
         if (any(stringr::str_detect(stringr::str_to_lower(results$Event), "relay"))) {
@@ -196,7 +190,7 @@ results_score <-
             dplyr::mutate(Heat = 1)
 
         } else {
-          relay_results  <- results[0, ]
+          relay_results  <- results[0,]
         }
 
         if (any(stringr::str_detect(stringr::str_to_lower(results$Event), "diving"))) {
@@ -205,9 +199,9 @@ results_score <-
             dplyr::mutate(Heat = 1)
 
         } else {
-          diving_results  <- results[0, ]
+          diving_results  <- results[0,]
         }
-### two heats ###
+        ### two heats ###
       } else if (scoring_heats == 2) {
         results_1 <- results %>%
           dplyr::group_by(Event) %>%
@@ -237,7 +231,7 @@ results_score <-
             dplyr::bind_rows(ind_results_1, ind_results_2)
 
         } else {
-          ind_results  <- results[0, ]
+          ind_results  <- results[0,]
         }
 
         if (any(stringr::str_detect(stringr::str_to_lower(results$Event), "relay"))) {
@@ -258,7 +252,7 @@ results_score <-
             dplyr::bind_rows(relay_results_1, relay_results_2)
 
         } else {
-          relay_results  <- results[0, ]
+          relay_results  <- results[0,]
         }
 
         if (any(stringr::str_detect(stringr::str_to_lower(results$Event), "diving"))) {
@@ -275,9 +269,9 @@ results_score <-
             dplyr::bind_rows(diving_results_1, diving_results_2)
 
         } else {
-          diving_results  <- results[0, ]
+          diving_results  <- results[0,]
         }
-### three heats ####
+        ### three heats ####
       } else if (scoring_heats == 3) {
         results_1 <- results %>%
           dplyr::group_by(Event) %>%
@@ -316,7 +310,7 @@ results_score <-
             dplyr::bind_rows(ind_results_1, ind_results_2, ind_results_3)
 
         } else {
-          ind_results  <- results[0, ]
+          ind_results  <- results[0,]
         }
 
         if (any(stringr::str_detect(stringr::str_to_lower(results$Event), "diving"))) {
@@ -336,39 +330,38 @@ results_score <-
 
           diving_results <-
             dplyr::bind_rows(diving_results_1, diving_results_2,
-                             diving_results_3
-                             )
+                             diving_results_3)
 
         } else {
-          diving_results  <- results[0, ]
+          diving_results  <- results[0,]
         }
 
         if (any(stringr::str_detect(stringr::str_to_lower(results$Event), "relay"))) {
           relay_results_1 <- results_1 %>%
             dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "relay") == TRUE) %>% # only want relays
             dplyr::group_by(Event, School) %>%
-            swim_place(max_place = max_place)%>%
+            swim_place(max_place = max_place) %>%
             dplyr::mutate(Heat = 1)
 
           relay_results_2 <- results_2 %>%
             dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "relay") == TRUE) %>% # only want relays
             dplyr::group_by(Event, School) %>%
             swim_place(max_place = max_place) %>%
-            dplyr::mutate(Place = Place + lanes)%>%
+            dplyr::mutate(Place = Place + lanes) %>%
             dplyr::mutate(Heat = 2)
 
           relay_results_3 <- results_3 %>%
             dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "relay") == TRUE) %>% # only want relays
             dplyr::group_by(Event, School) %>%
             swim_place(max_place = max_place) %>%
-            dplyr::mutate(Place = Place + (2 * lanes))%>%
+            dplyr::mutate(Place = Place + (2 * lanes)) %>%
             dplyr::mutate(Heat = 3)
 
           relay_results <-
             dplyr::bind_rows(relay_results_1, relay_results_2, relay_results_3)
 
         } else {
-          relay_results  <- results[0, ]
+          relay_results  <- results[0,]
         }
 
       }

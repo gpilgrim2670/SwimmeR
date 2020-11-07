@@ -55,6 +55,11 @@ utils::globalVariables(
     "Row_Numb_2",
     "minimum_row",
     "maximum_row",
-    "Colon_String"
+    "Colon_String",
+    "old_names",
+    "new_names",
+    "flag",
+    "split_length",
+    "split_len"
   )
 )

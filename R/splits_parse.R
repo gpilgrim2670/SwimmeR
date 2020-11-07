@@ -6,6 +6,9 @@
 #'
 #' @importFrom dplyr full_join
 #' @importFrom dplyr bind_rows
+#' @importFrom dplyr rename_at
+#' @importFrom dplyr mutate_at
+#' @importFrom dplyr vars
 #' @importFrom stringr str_replace_all
 #' @importFrom stringr str_remove_all
 #' @importFrom stringr str_extract_all
@@ -15,175 +18,208 @@
 #' @importFrom purrr map
 #'
 #' @param text output of \code{read_results} with tow numbers appended by \code{add_row_numbers}
+#' @param split_len length at which splits are measured
 #' @return returns a dataframe with split times and row numbers
 #'
 #' @seealso \code{splits_parse} runs inside \code{\link{swim_parse}} on the output of \code{\link{read_results}} with row numbers from \code{\link{add_row_numbers}}
-#'
 
-# file <- read_results("~/SwimmeR/inst/extdata/s2-results.pdf")
-# file <- read_results("inst/extdata/s2-results.pdf")
-# avoid <- c("MR:")
-# typo <-
-#   c(
-#     "Swim\\s{2,}Club",
-#     "Performance\\s{2,}Swim",
-#     "Swimming\\s{2,}Club",
-#     "Stamford\\s{2,}American\\s{2,}Internationa",
-#     "Uwcsea\\s{2,}Phoenix-ZZ",
-#     "AquaTech\\s{2,}Swimming",
-#     "Chinese\\s{2,}Swimming",
-#     "Aquatic\\s{2,}Performance",
-#     "SwimDolphia\\s{2}Aquatic School"
-#   )
-# replacement <-
-#   c(
-#     "Swim Club",
-#     "Performance Swim",
-#     "Swimming Club",
-#     "Stamford American International",
-#     "Uwcsea Phoenix-ZZ",
-#     "AquaTech Swimming",
-#     "Chinese Swimming",
-#     "Aquatic Performance",
-#     "SwimDolphia Aquatic School"
-#   )
-# file <- read_results(
-#     "http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm",
-#     node = "pre")
-# text <- add_row_numbers(text = file)
+splits_parse <- function(text, split_len = split_length) {
+  # text <- read_results("inst/extdata/jets08082019_067546.pdf")
+  # text <- read_results("inst/extdata/11102019roc.pdf")
+  # text <- read_results("inst/extdata/s2-results.pdf")
+  # text <- read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm")
+  # text <- add_row_numbers(text)
 
-splits_parse <- function(text) {
   ### collect row numbers from rows containing splits ###
+
+  ### define strings ###
+  # split_string <- "\\(\\d\\d\\.\\d\\d\\)|\\s\\d\\d\\.\\d\\d\\s"
+  split_string <- "\\(\\d?\\:?\\d\\d\\.\\d\\d\\)"
+
   row_numbs <- text %>%
     .[purrr::map_lgl(.,
                      stringr::str_detect,
-                     "\\(\\d\\d\\.\\d\\d\\)")] %>%
+                     split_string)] %>%
     stringr::str_extract_all("\\d{1,}$")
+  flag <- FALSE
 
-  minimum_row <- min(as.numeric(row_numbs))
-  maximum_row <- as.numeric(length(text))
-
-  ### pull out rows containing splits, which will remove row numbers ###
-  suppressWarnings(
-    data_1 <- text %>%
+  if (length(row_numbs) == 0) { # looks for splits that don't have parenthesis around them but will also capture rows with normal times
+    split_string <-
+      "\\(\\d?\\:?\\d\\d\\.\\d\\d\\)|\\s\\d?\\:?\\d\\d\\.\\d\\d\\s"
+    row_numbs <- text %>%
       .[purrr::map_lgl(.,
                        stringr::str_detect,
-                       "\\(\\d\\d\\.\\d\\d\\)")] %>%
-      stringr::str_replace_all("\n", "") %>%
-      stringr::str_replace_all("r\\:\\+\\s?\\d\\.\\d\\d", "") %>%
-      stringr::str_extract_all("^\\s+\\d\\d\\.\\d\\d|\\(\\d\\d\\.\\d\\d\\)") %>%
-      stringr::str_remove_all('\\"') %>%
-      stringr::str_replace_all("\\(", " ") %>%
-      stringr::str_replace_all("\\)", " ") %>%
-      stringr::str_remove_all("c") %>%
-      stringr::str_remove_all(',') %>%
-      trimws()
-  )
-
-
-  ### add row numbers back in since they were removed ###
-  data_1 <- paste(row_numbs, data_1, sep = "   ")
-
-  ### break out by length
-  data_1 <-
-    unlist(purrr::map(data_1, stringr::str_split, "\\s{2,}"),
-           recursive = FALSE)
-
-  data_length_2 <- data_1[purrr::map(data_1, length) == 2]
-  data_length_3 <- data_1[purrr::map(data_1, length) == 3]
-  data_length_4 <- data_1[purrr::map(data_1, length) == 4]
-  data_length_5 <- data_1[purrr::map(data_1, length) == 5]
-  data_length_6 <- data_1[purrr::map(data_1, length) == 6]
-  data_length_7 <- data_1[purrr::map(data_1, length) == 7]
-  data_length_8 <- data_1[purrr::map(data_1, length) == 8]
-  data_length_9 <- data_1[purrr::map(data_1, length) == 9]
-  data_length_10 <- data_1[purrr::map(data_1, length) == 10]
-
-
-  if (length(data_length_10) > 0) {
-    df_10 <- data_length_10 %>%
-      list_transform()
-  } else {
-    df_10 <- data.frame(Row_Numb = character(),
-                       stringsAsFactors = FALSE)
+                       split_string)] %>%
+      .[purrr::map_lgl(., # remove rows with letters, which should take care of removing normal (non-split) times
+                       stringr::str_detect,
+                       "[:alpha:]", negate = TRUE)] %>%
+      stringr::str_extract_all("\\d{1,}$")
+    flag <- TRUE # sets flag to warn for possible rows with letters in them for next step
   }
 
-  if (length(data_length_9) > 0) {
-    df_9 <- data_length_9 %>%
-      list_transform()
-  } else {
-    df_9 <- data.frame(Row_Numb = character(),
-                       stringsAsFactors = FALSE)
+  #### if there are still no valid splits return blank dataframe ####
+  if (length(row_numbs) > 0) {
+    minimum_row <- min(as.numeric(row_numbs))
+    maximum_row <- as.numeric(length(text))
+
+    #### help out a little, in case there are splits that only have one space between them ####
+    text <- stringr::str_replace_all(text, "(\\d) (\\d)", "\\1  \\2")
+
+    #### pull out rows containing splits, which will remove row numbers ####
+    if (flag == TRUE) { # if there's a risk of rows with letters
+      suppressWarnings(
+        data_1 <- text %>%
+          .[purrr::map_lgl(.,
+                           stringr::str_detect,
+                           split_string)] %>%
+          .[purrr::map_lgl(., # removes rows with letters
+                           stringr::str_detect,
+                           "[:alpha:]", negate = TRUE)] %>%
+          stringr::str_replace_all("\n", "") %>%
+          stringr::str_replace_all("r\\:\\+\\s?\\d\\.\\d\\d", "") %>%
+          stringr::str_extract_all(paste0(
+            "^\\s+\\d\\d\\.\\d\\d|", split_string
+          )) %>%
+          stringr::str_remove_all('\\"') %>%
+          stringr::str_replace_all("\\(", " ") %>%
+          stringr::str_replace_all("\\)", " ") %>%
+          stringr::str_remove_all("c") %>%
+          stringr::str_remove_all(',') %>%
+          trimws()
+      )
+    } else{
+      suppressWarnings(
+        data_1 <- text %>%
+          .[purrr::map_lgl(.,
+                           stringr::str_detect,
+                           split_string)] %>%
+          stringr::str_replace_all("\n", "") %>%
+          stringr::str_replace_all("r\\:\\+\\s?\\d\\.\\d\\d", "") %>%
+          stringr::str_extract_all(paste0(
+            "^\\s+\\d\\d\\.\\d\\d|", split_string
+          )) %>%
+          stringr::str_remove_all('\\"') %>%
+          stringr::str_replace_all("\\(", " ") %>%
+          stringr::str_replace_all("\\)", " ") %>%
+          stringr::str_remove_all("c") %>%
+          stringr::str_remove_all(',') %>%
+          trimws()
+      )
+    }
+
+
+    #### add row numbers back in since they were removed ####
+    data_1 <- paste(row_numbs, data_1, sep = "   ")
+
+    #### break out by length ####
+    data_1 <-
+      unlist(purrr::map(data_1, stringr::str_split, "\\s{2,}"),
+             recursive = FALSE)
+
+    data_length_2 <- data_1[purrr::map(data_1, length) == 2]
+    data_length_3 <- data_1[purrr::map(data_1, length) == 3]
+    data_length_4 <- data_1[purrr::map(data_1, length) == 4]
+    data_length_5 <- data_1[purrr::map(data_1, length) == 5]
+    data_length_6 <- data_1[purrr::map(data_1, length) == 6]
+    data_length_7 <- data_1[purrr::map(data_1, length) == 7]
+    data_length_8 <- data_1[purrr::map(data_1, length) == 8]
+    data_length_9 <- data_1[purrr::map(data_1, length) == 9]
+    data_length_10 <- data_1[purrr::map(data_1, length) == 10]
+
+    #### transform all lists to dataframes ####
+    if (length(data_length_10) > 0) {
+      df_10 <- data_length_10 %>%
+        list_transform()
+    } else {
+      df_10 <- data.frame(Row_Numb = character(),
+                          stringsAsFactors = FALSE)
+    }
+
+    if (length(data_length_9) > 0) {
+      df_9 <- data_length_9 %>%
+        list_transform()
+    } else {
+      df_9 <- data.frame(Row_Numb = character(),
+                         stringsAsFactors = FALSE)
+    }
+
+    if (length(data_length_8) > 0) {
+      df_8 <- data_length_8 %>%
+        list_transform()
+    } else {
+      df_8 <- data.frame(Row_Numb = character(),
+                         stringsAsFactors = FALSE)
+    }
+
+    if (length(data_length_7) > 0) {
+      df_7 <- data_length_7 %>%
+        list_transform()
+    } else {
+      df_7 <- data.frame(Row_Numb = character(),
+                         stringsAsFactors = FALSE)
+    }
+
+    if (length(data_length_6) > 0) {
+      df_6 <- data_length_6 %>%
+        list_transform()
+    } else {
+      df_6 <- data.frame(Row_Numb = character(),
+                         stringsAsFactors = FALSE)
+    }
+
+    if (length(data_length_5) > 0) {
+      df_5 <- data_length_5 %>%
+        list_transform()
+    } else {
+      df_5 <- data.frame(Row_Numb = character(),
+                         stringsAsFactors = FALSE)
+    }
+
+    if (length(data_length_4) > 0) {
+      df_4 <- data_length_4 %>%
+        list_transform()
+    } else {
+      df_4 <- data.frame(Row_Numb = character(),
+                         stringsAsFactors = FALSE)
+    }
+
+    if (length(data_length_3) > 0) {
+      df_3 <- data_length_3 %>%
+        list_transform()
+    } else {
+      df_3 <- data.frame(Row_Numb = character(),
+                         stringsAsFactors = FALSE)
+    }
+
+    if (length(data_length_2) > 0) {
+      df_2 <- data_length_2 %>%
+        list_transform()
+    } else {
+      df_2 <- data.frame(Row_Numb = character(),
+                         stringsAsFactors = FALSE)
+    }
+
+    #### bind up results ####
+    # results are bound before going to splits_sort so that in cases where there are multiple rows with splits for the same race,
+    # like in longer events with many splits, those splits can be collected and treated together
+    data <-
+      dplyr::bind_rows(df_10, df_9, df_8, df_7, df_6, df_5, df_4, df_3, df_2) %>%
+      splits_sort(min_row = minimum_row) %>%
+      dplyr::mutate(Row_Numb = as.numeric(Row_Numb) - 1) # make row number of split match row number of performance
+
+    #### rename columns V1, V2 etc. by 50 ####
+    old_names <- names(data)[grep("^V", names(data))]
+    new_names <-
+      # paste("Split", seq(1, length(names(data)) - 1) * 50, sep = "_")
+      paste("Split", seq(1, length(names(data)) - 1) * split_len, sep = "_")
+
+    data <- data %>%
+      dplyr::rename_at(dplyr::vars(old_names), ~ new_names)
+    # dplyr::mutate_at(dplyr::vars(new_names), as.numeric) # does not work if some splits are greater than 59.99
+
+  } else { # if there are no rows with valid splits return blank dataframe
+    data <- data.frame(Row_Numb = as.numeric())
   }
-
-  if (length(data_length_8) > 0) {
-    df_8 <- data_length_8 %>%
-      list_transform()
-  } else {
-    df_8 <- data.frame(Row_Numb = character(),
-                       stringsAsFactors = FALSE)
-  }
-
-  if (length(data_length_7) > 0) {
-    df_7 <- data_length_7 %>%
-      list_transform()
-  } else {
-    df_7 <- data.frame(Row_Numb = character(),
-                       stringsAsFactors = FALSE)
-  }
-
-  if (length(data_length_6) > 0) {
-    df_6 <- data_length_6 %>%
-      list_transform()
-  } else {
-    df_6 <- data.frame(Row_Numb = character(),
-                       stringsAsFactors = FALSE)
-  }
-
-  if (length(data_length_5) > 0) {
-    df_5 <- data_length_5 %>%
-      list_transform()
-  } else {
-    df_5 <- data.frame(Row_Numb = character(),
-                       stringsAsFactors = FALSE)
-  }
-
-  if (length(data_length_4) > 0) {
-    df_4 <- data_length_4 %>%
-      list_transform()
-  } else {
-    df_4 <- data.frame(Row_Numb = character(),
-                       stringsAsFactors = FALSE)
-  }
-
-  if (length(data_length_3) > 0) {
-    df_3 <- data_length_3 %>%
-      list_transform()
-  } else {
-    df_3 <- data.frame(Row_Numb = character(),
-                       stringsAsFactors = FALSE)
-  }
-
-  if (length(data_length_2) > 0) {
-    df_2 <- data_length_2 %>%
-      list_transform()
-  } else {
-    df_2 <- data.frame(Row_Numb = character(),
-                       stringsAsFactors = FALSE)
-  }
-
-  data <- dplyr::bind_rows(df_10, df_9, df_8, df_7, df_6, df_5, df_4, df_3, df_2) %>%
-    splits_sort(min_row = minimum_row) %>%
-    dplyr::mutate(Row_Numb = as.numeric(Row_Numb)-1)
-
-  # data <- dplyr::full_join(df_8, df_7) %>%
-  #   dplyr::full_join(df_6) %>%
-  #   dplyr::full_join(df_5) %>%
-  #   dplyr::full_join(df_4) %>%
-  #   dplyr::full_join(df_3) %>%
-  #   dplyr::full_join(df_2) %>%
-    # dplyr::mutate(Row_Numb = as.numeric(Row_Numb)-1)
-
   return(data)
 
 }
