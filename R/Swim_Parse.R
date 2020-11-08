@@ -19,6 +19,9 @@
 #' @importFrom dplyr n_distinct
 #' @importFrom dplyr bind_rows
 #' @importFrom dplyr everything
+#' @importFrom dplyr group_by
+#' @importFrom dplyr ungroup
+#' @importFrom dplyr pull
 #' @importFrom stringr str_replace
 #' @importFrom stringr str_replace_all
 #' @importFrom stringr str_extract
@@ -146,11 +149,13 @@ Swim_Parse <-
         "^\\s*Meet",
         "^\\s*MEET",
         "^\\s*Points",
-        "^\\s*Rec\\:",
-        "^\\s*REC\\:",
+        "^\\s*Rec\\.?\\:",
+        "^\\s*REC\\.?\\:",
+        "\\sRec\\.?\\:\\s",
         "^\\s*Rcd\\:",
         "^\\s*Cty\\:",
         "^\\s*League",
+        "^\\s*League Rec\\.?\\:",
         "^\\s*LEAGUE",
         "^\\s*IAC\\:",
         "^\\s*AA\\:",
@@ -166,7 +171,6 @@ Swim_Parse <-
         "^\\s*Class '[[:alpha:]]'\\:",
         "^\\s*Pool\\:",
         "^\\s*POOL\\:",
-        "^\\s*REC\\.\\:",
         "^\\s*\\'A\\'\\:",
         "^\\s*Nassau\\:",
         "^\\s*CONS\\:",
@@ -212,1373 +216,1244 @@ Swim_Parse <-
     #### parsing html and pdf files ####
     if (stringr::str_detect(file[1], "^A107") == FALSE) {
 
-    #### Pulls out event labels from text ####
-    events <- event_parse(as_lines_list_2)
+      #### Pulls out event labels from text ####
+      events <- event_parse(as_lines_list_2)
 
-<<<<<<< HEAD
-=======
-    #### set up strings ####
-    # Name_String <- "_?[:alpha:]+'?[:alpha:]+\\s?[:alpha:]*\\s?[:alpha:]*,\\s?[:alpha:]*\\s?[:alpha:]*,? [:alpha:]+\\s?[:alpha:\\-\\']*\\s?[:alpha:\\-\\']*\\s?[:alpha:]*\\s?[:alpha:]*\\s?[:alpha:\\.]*"
-    Name_String <- "_?[:alpha:]+'?[:alpha:]+\\s?[:alpha:]*\\s?[:alpha:]*,\\s?[:alpha:]*\\s?[:alpha:]*,? [:alpha:]+\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\']*\\s?[:alpha:]*\\s?[:alpha:]*\\s?[:alpha:\\.]*"
-    Time_Score_String <- "\\d{0,2}\\:?\\d{1,3}\\.\\d{2}"
-    Grade_String <- "^SR$|^JR$|^SO$|^FR$|^[:digit:]{1,3}$"
-    Colon_String <- "\\:\\d\\d"
+      #### set up strings ####
+      # Name_String <- "_?[:alpha:]+'?[:alpha:]+\\s?[:alpha:]*\\s?[:alpha:]*,\\s?[:alpha:]*\\s?[:alpha:]*,? [:alpha:]+\\s?[:alpha:\\-\\']*\\s?[:alpha:\\-\\']*\\s?[:alpha:]*\\s?[:alpha:]*\\s?[:alpha:\\.]*"
+      Name_String <- "_?[:alpha:]+'?[:alpha:]+\\s?[:alpha:]*\\s?[:alpha:]*,\\s?[:alpha:]*\\s?[:alpha:]*,? [:alpha:]+\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\']*\\s?[:alpha:]*\\s?[:alpha:]*\\s?[:alpha:\\.]*"
+      Time_Score_String <- "\\d{0,2}\\:?\\d{1,3}\\.\\d{2}"
+      Grade_String <- "^SR$|^JR$|^SO$|^FR$|^[:digit:]{1,3}$"
+      Colon_String <- "\\:\\d\\d"
 
->>>>>>> 9dff023e03be55f1eac9557724556031a44f1cf5
-    #### clean input data ####
-    suppressWarnings(
-      data_1 <- as_lines_list_2 %>%
-        # stringr::str_replace_all(stats::setNames(replacement, typo)) %>% # moved to top 8/26
-        stringr::str_replace_all("\\*(\\d{1,})", replacement = "\\1") %>%  # removes * placed in front of place number in ties
-        stringr::str_extract_all(
-          "\n\\s*\\d*\\s* \\*?[:alpha:].*|\n\\s*\\d* \\d*\\-[:alpha:].*|\n\\s*-{2,5}\\s* [:alpha:].*|\n\\s*\\d* \\d*\\-[:alpha:].*"
-        ) %>%
-        .[purrr::map(., length) > 0] %>%
-        .[purrr::map(., stringr::str_length) > 50] %>%
-        .[purrr::map_lgl(., stringr::str_detect, "\\d\\d\\.\\d\\d|DQ")] %>% # must have \\.\\d\\d because all swimming and diving times do
-        # .[purrr::map_lgl(., stringr::str_detect, "\\.\\d\\d")] %>% # must have \\.\\d\\d because all swimming and diving times do
-        .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]{2,}")] %>% # must have at least two letters in a row
-        .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid)))] %>%
-<<<<<<< HEAD
-        stringr::str_replace_all("\n", "") %>%
-        # stringr::str_replace_all("\n\\s*", "") %>% # 8/27
-        stringr::str_replace_all(stats::setNames(replacement, typo)) %>% # moved to top of pipeline 8/26
-        stringr::str_replace_all("\\s*[&%]\\s*", "  ") %>% # added 8/21 for removing "&" as record designator
-=======
-        stringr::str_remove_all("\n") %>%
-        # trimws() %>%
-        stringr::str_replace_all(stats::setNames(replacement, typo)) %>% # moved to top of pipeline 8/26
-        stringr::str_replace_all("\\s*[&%]\\s*", " ") %>% # added 8/21 for removing "&" and "%" as record designator
->>>>>>> 9dff023e03be55f1eac9557724556031a44f1cf5
-        # removed J etc. from next to swim, but does not remove X or x (for exhibition tracking)
-        stringr::str_replace_all("[A-WYZa-wyz]+(\\d{1,2}\\:\\d{2}\\.\\d{2})", "\\1") %>%
-        stringr::str_replace_all("(\\d{1,2}\\:\\d{2}\\.\\d{2})[A-WYZa-wyz]+", "\\1") %>%
-        stringr::str_replace_all("[A-WYZa-wyz]+(\\d{2,3}\\.\\d{2})", "\\1") %>%
-        stringr::str_replace_all("(d{2,3}\\.\\d{2})[A-WYZa-wyz]+", "\\1") %>%
-        stringr::str_replace_all(" [:punct:]+(\\d{1,2}\\:\\d{2}\\.\\d{2})", " \\1") %>%
-        stringr::str_replace_all("(\\d{1,2}\\:\\d{2}\\.\\d{2})[:punct:]+", " \\1") %>%
-        stringr::str_replace_all(" [:punct:]+(\\d{2,3}\\.\\d{2})", " \\1") %>%
-        stringr::str_replace_all("(\\d{2,3}\\.\\d{2})[:punct:]+", " \\1") %>%
-        stringr::str_remove_all("\\s{2}J\\s{2}") %>%
-        # remove 'A', 'B' etc. relay designators - should this go in typo instead?
-        stringr::str_replace_all("  \\'[A-Z]\\'  ", "  ") %>%
-        stringr::str_replace_all("\\'\\'", "  ") %>%
-        # remove q from next to time 10/21/2020
-        stringr::str_remove_all(" q ") %>%
-        # stringr::str_replace_all("--", "10000") %>%
-        stringr::str_replace_all("-{2,5}", "10000") %>% #8/26
-        stringr::str_replace_all("(\\.\\d{2})\\d+", "\\1 ") %>% # added 8/21 for illinois to deal with points column merging with final times column
-        stringr::str_replace_all("\\d{1,2} (\\d{1,})$", "  \\1 ") %>% # added 8/21 for illinois to deal with points column merging with final times column
-        # stringr::str_replace_all("(\\d{1,2})- ", "\\1-") %>%
-        stringr::str_replace_all("\\*", "_") %>%
-        trimws()
-    )
-
-    #### splits data into variables by splitting at multiple (>= 2) spaces ####
-    data_1 <-
-      unlist(purrr::map(data_1, stringr::str_split, "\\s{2,}"),
-             recursive = FALSE)
-
-    #### set up strings ####
-    Name_String <- "_?[:alpha:]+'?[:alpha:]+\\s?[:alpha:]*\\s?[:alpha:]*,\\s?[:alpha:]*\\s?[:alpha:]*,? [:alpha:]+\\s?[:alpha:\\-\\']*\\s?[:alpha:\\-\\']*\\s?[:alpha:]*\\s?[:alpha:]*\\s?[:alpha:\\.]*"
-    Time_Score_String <- "\\d\\d\\.\\d\\d"
-    Grade_String <- "^SR$|^JR$|^SO$|^FR$|^[:digit:]{1,3}$"
-
-    #### breaks data into subsets based on how many variables it has ####
-    data_length_3 <- data_1[purrr::map(data_1, length) == 3]
-    data_length_4 <- data_1[purrr::map(data_1, length) == 4]
-    data_length_5 <- data_1[purrr::map(data_1, length) == 5]
-    data_length_6 <- data_1[purrr::map(data_1, length) == 6]
-    data_length_7 <- data_1[purrr::map(data_1, length) == 7]
-    # treatment of DQs new 8/19
-    suppressWarnings(DQ <-
-                       data_1[stringr::str_detect(data_1, Time_Score_String, negate = TRUE) == TRUE])
-    DQ_length_3 <- DQ[purrr::map(DQ, length) == 3]
-    DQ_length_4 <- DQ[purrr::map(DQ, length) == 4]
-
-
-    #### seven variables ####
-    if (length(data_length_7) > 0) {
+      #### clean input data ####
       suppressWarnings(
-        df_7 <- data_length_7 %>%
-          list_transform() %>%
-          dplyr::mutate(
-            Place = dplyr::case_when(
-              stringr::str_detect(V1, "^[:digit:]*$") == TRUE ~ V1,
-              TRUE ~ stringr::str_split_fixed(V1, " ", n = 2)[, 1]
-            )
+        data_1 <- as_lines_list_2 %>%
+          # stringr::str_replace_all(stats::setNames(replacement, typo)) %>% # moved to top 8/26
+          stringr::str_replace_all("\\*(\\d{1,})", replacement = "\\1") %>%  # removes * placed in front of place number in ties
+          stringr::str_extract_all(
+            "\n\\s*\\d*\\s* \\*?[:alpha:].*|\n\\s*\\d* \\d*\\-[:alpha:].*|\n\\s*-{2,5}\\s* [:alpha:].*|\n\\s*\\d* \\d*\\-[:alpha:].*"
           ) %>%
-          dplyr::mutate(
-            Name = dplyr::case_when(
-              stringr::str_detect(V1, ",") == TRUE ~ stringr::str_split_fixed(V1, " ", n = 2)[, 2],
-              stringr::str_detect(V1, "[:alpha:] [:alpha:]") == TRUE &
-                stringr::str_detect(V2, "^\\'[:upper:]\\'$") == FALSE ~ stringr::str_split_fixed(V1, " ", n = 2)[, 2],
-              stringr::str_detect(V1, ",") == FALSE &
-                stringr::str_detect(V2, ",") == TRUE ~ V2
-            )
-          ) %>%
-          dplyr::mutate(
-            Grade = dplyr::case_when(
-              stringr::str_detect(V2, Grade_String) == TRUE ~ V2,
-              stringr::str_detect(V2, "^SR |^JR |^SO |^FR |^[:digit:]{1,2} ") == TRUE ~ stringr::str_extract(V2, "^SR |^JR |^SO |^FR |^10 |^11 |^[:digit:]{1,2} "),
-              stringr::str_detect(V3, "^SR |^JR |^SO |^FR |^[:digit:]{1,2} ") == TRUE ~ stringr::str_extract(V3, "^SR |^JR |^SO |^FR |^10 |^11 |^[:digit:]{1,2} "),
-              any(
-                stringr::str_detect(V2, Grade_String)
-              ) == FALSE &
-                any(
-                  stringr::str_detect(V3, Grade_String)
-                ) == TRUE ~ V3
-            ),
-            Grade = trimws(Grade),
-          ) %>%
-          dplyr::mutate(
-            School = dplyr::case_when(
-              stringr::str_detect(V1, Name) &
-                stringr::str_detect(V2, Grade) &
-                stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == FALSE ~ V3,
-              stringr::str_detect(V1, ",") == FALSE &
-                stringr::str_detect(V1, "^[:digit:]*$") == FALSE &
-                stringr::str_detect(V1, "[:alpha:] [:alpha:]") == FALSE ~ stringr::str_split_fixed(V1, " ", n = 2)[, 2],
-              stringr::str_detect(V2, "^\\'[:upper:]\\'$") == TRUE ~ stringr::str_split_fixed(V1, " ", n = 2)[, 2],
-              stringr::str_detect(V2, "^\\'[:upper:]\\'$") == FALSE &
-                stringr::str_detect(V1, "^[:digit:]*$") == FALSE ~ stringr::str_split_fixed(V2, " ", n = 2)[, 2],
-              TRUE ~ V3
-            )
-          ) %>%
-          mutate(
-            School = str_replace(School, Grade, ""),
-            School = trimws(School)
-          ) %>%
-          dplyr::mutate(
-            Prelims_Time = dplyr::case_when(
-              any(stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$"))) == TRUE &
-                any(stringr::str_detect(V4, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$"))) == TRUE ~ V3,
-              any(stringr::str_detect(V4, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$"))) == TRUE &
-                any(stringr::str_detect(V5, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$"))) == TRUE ~ V4,
-              any(stringr::str_detect(V4, "SEC")) == TRUE ~ V5
-            )
-          ) %>%
-          dplyr::mutate(
-            Finals_Time = dplyr::case_when(
-              any(stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$"))) == TRUE &
-                any(stringr::str_detect(V4, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$"))) == TRUE ~ V4,
-              any(stringr::str_detect(V4, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$"))) == TRUE &
-                any(stringr::str_detect(V5, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$"))) == TRUE ~ V5,
-              any(stringr::str_detect(V4, "SEC")) == TRUE ~ V6
-            )
-          ) %>%
-          dplyr::mutate(
-            Points = dplyr::case_when(Finals_Time != V6 ~ V6,
-                                      Finals_Time == V6 ~ ""),
-            Points = dplyr::case_when(is.numeric(Points) == FALSE ~ "",
-                                      TRUE ~ Points)
-          ) %>%
-          dplyr::na_if("") %>%
-          dplyr::mutate(
-            Row_Numb = V7,
-            V1 = NULL,
-            V2 = NULL,
-            V3 = NULL,
-            V4 = NULL,
-            V5 = NULL,
-            V6 = NULL,
-            V7 = NULL
-          ) %>%
-          dplyr::na_if("") %>%
-          dplyr::na_if("''") %>%
-          dplyr::mutate(
-            Finals_Time = replace(Finals_Time, stringr::str_length(Finals_Time) < 3, NA),
-            Finals_Time = stringr::str_replace(Finals_Time, "J", ""),
-            Finals_Time = dplyr::case_when(
-              Place >= 1 &
-                is.na(Finals_Time) == TRUE ~ dplyr::coalesce(Finals_Time, Prelims_Time),
-              Place >= 1 &
-                is.na(Finals_Time) != TRUE ~ Finals_Time
-            ),
-            School = dplyr::case_when(
-              is.na(School) == TRUE &
-                stringr::str_detect(Grade, "[[:alpha:]]") == TRUE ~ Grade,
-              is.na(School) == FALSE &
-                stringr::str_detect(Grade, "[[:alpha:]]") == FALSE ~ School,
-              is.na(School) == FALSE ~ School
-            ),
-            School = dplyr::case_when(
-              stringr::str_length(School) < 1 | is.na(School) == TRUE ~ Name,
-              stringr::str_length(School) >= 1 ~ School
-            ),
-            School = dplyr::case_when(
-              stringr::str_detect(School, "\\'[[:upper:]]\\'") == TRUE &
-                is.na(Name) == FALSE ~ Name,
-              stringr::str_detect(School, "^[:upper:]$") == TRUE &
-                is.na(Name) == FALSE ~ Name,
-              stringr::str_detect(School, "^-[:upper:]$") == TRUE &
-                is.na(Name) == FALSE ~ Name,
-              TRUE ~ School
-            ),
-            Grade = replace(Grade, Grade == School, NA),
-            School = dplyr::case_when(
-              stringr::str_length(Grade) > 2 &
-                is.na(Grade) == FALSE &
-                stringr::str_detect(Grade, "\\'[[:alpha:]]\\'") == FALSE &
-                stringr::str_detect(Grade, "\\.\\d") == FALSE ~ paste(Grade, School, sep = " "),
-              stringr::str_length(Grade) <= 2 |
-                is.na(Grade) == TRUE |
-                stringr::str_detect(Grade, "\\'[[:alpha:]]\\'") == TRUE |
-                stringr::str_detect(Grade, "\\.\\d") == TRUE ~ School
-            ),
-            Grade = replace(Grade, (
-              stringr::str_length(Grade) > 2 & is.na(Grade) == FALSE
-            ), NA),
-            Grade = dplyr::case_when(
-              stringr::str_detect(Grade, "^-[:upper:]$") == TRUE ~ "",
-              TRUE ~ Grade
-            ),
-            Name = replace(Name, Name == School, NA),
-            ### dealing with exhibition times 8/18/2020
-            Exhibition = dplyr::case_when(
-              stringr::str_detect(Finals_Time, "x|X") == TRUE ~ 1,
-              TRUE ~ 0
-            ),
-            Finals_Time = stringr::str_remove_all(Finals_Time, "[:alpha:]"),
-            Prelims_Time = stringr::str_remove_all(Prelims_Time, "[:alpha:]"),
-            ###
-            Finals_Time = stringr::str_extract(Finals_Time, "[[:digit:][\\.\\:]]*"),
-            Prelims_Time = stringr::str_extract(Prelims_Time, "[[:digit:][\\.\\:]]*")
-          ) %>%
-          dplyr::na_if("") %>%
-          dplyr::mutate(
-            Prelims_Time = dplyr::case_when(
-              all(Prelims_Time == Finals_Time, na.rm = TRUE) ~ as.character(NA),
-              all(Prelims_Time == Finals_Time, na.rm = TRUE) == FALSE ~ Prelims_Time
-            )
-          ) %>%
-          dplyr::mutate(
-            School = dplyr::case_when(
-              stringr::str_detect(School, "\\'[[:alpha:]]\\'") == TRUE &
-                is.na(Name) == FALSE ~ Name,
-              stringr::str_detect(School, "\\'[[:alpha:]]\\'") == FALSE ~ School,
-              stringr::str_detect(School, "^A$") == TRUE &
-                is.na(Name) == FALSE ~ Name,
-              stringr::str_detect(School, "^A$") == FALSE ~ School
-            ),
-            School = stringr::str_replace(School, "^SR |^JR |^SO |^FR |^10 |^11 |^12 |^9 |^8 |^7 ", ""),
-            Name = stringr::str_replace(Name, "^-", ""),
-            Name = replace(Name, Name == School, NA)
-          ) %>%
-          dplyr::mutate(DQ = 0)
+          .[purrr::map(., length) > 0] %>%
+          .[purrr::map(., stringr::str_length) > 50] %>%
+          .[purrr::map_lgl(., stringr::str_detect, paste0(Time_Score_String,"|DQ"))] %>% # must have \\.\\d\\d because all swimming and diving times do
+          # .[purrr::map_lgl(., stringr::str_detect, "\\.\\d\\d")] %>% # must have \\.\\d\\d because all swimming and diving times do
+          .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]{2,}")] %>% # must have at least two letters in a row
+          .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid)))] %>%
+          stringr::str_remove_all("\n") %>%
+          # trimws() %>%
+          stringr::str_replace_all(stats::setNames(replacement, typo)) %>% # moved to top of pipeline 8/26
+          stringr::str_replace_all("\\s*[&%]\\s*", " ") %>% # added 8/21 for removing "&" and "%" as record designator
+          # removed J etc. from next to swim, but does not remove X or x (for exhibition tracking)
+          stringr::str_replace_all("[A-WYZa-wyz]+(\\d{1,2}\\:\\d{2}\\.\\d{2})", "\\1") %>%
+          stringr::str_replace_all("(\\d{1,2}\\:\\d{2}\\.\\d{2})[A-WYZa-wyz]+", "\\1") %>%
+          stringr::str_replace_all("[A-WYZa-wyz]+(\\d{2,3}\\.\\d{2})", "\\1") %>%
+          stringr::str_replace_all("(d{2,3}\\.\\d{2})[A-WYZa-wyz]+", "\\1") %>%
+          stringr::str_replace_all(" [:punct:]+(\\d{1,2}\\:\\d{2}\\.\\d{2})", " \\1") %>%
+          stringr::str_replace_all("(\\d{1,2}\\:\\d{2}\\.\\d{2})[:punct:]+", " \\1") %>%
+          stringr::str_replace_all(" [:punct:]+(\\d{2,3}\\.\\d{2})", " \\1") %>%
+          stringr::str_replace_all("(\\d{2,3}\\.\\d{2})[:punct:]+", " \\1") %>%
+          stringr::str_remove_all("\\s{2}J\\s{2}") %>%
+          # remove 'A', 'B' etc. relay designators - should this go in typo instead?
+          stringr::str_replace_all("  \\'[A-Z]\\'  ", "  ") %>%
+          stringr::str_replace_all("\\'\\'", "  ") %>%
+          # remove q from next to time 10/21/2020
+          stringr::str_remove_all(" q ") %>% # removes " q " sometimes used to designate a qualifying time
+          stringr::str_replace_all("-{2,5}", "10000") %>% #8/26
+          stringr::str_replace_all("(\\.\\d{2})\\d+", "\\1 ") %>% # added 8/21 for illinois to deal with points column merging with final times column
+          stringr::str_replace_all("\\d{1,2} (\\d{1,})$", "  \\1 ") %>% # added 8/21 for illinois to deal with points column merging with final times column
+          stringr::str_replace_all("\\*", "_") %>%
+          trimws()
       )
 
-    } else {
-      df_7 <- data.frame(
-        # Name = character(),
-        # Place = character(),
-        # Grade = character(),
-        # School = character(),
-        # Prelims_Time = character(),
-        # Finals_Time = character(),
-        # Points = character(),
-        Row_Numb = character(),
-        stringsAsFactors = FALSE
-      )
-    }
+      #### splits data into variables by splitting at multiple (>= 2) spaces ####
+      data_1 <-
+        unlist(purrr::map(data_1, stringr::str_split, "\\s{2,}"),
+               recursive = FALSE)
 
-    #### six variables ####
-    if (length(data_length_6) > 0) {
-      suppressWarnings(
-        df_6 <- data_length_6 %>%
-          list_transform() %>%
-          dplyr::mutate(Place = stringr::str_split_fixed(V1, " ", n = 2)[, 1]) %>%
-          dplyr::mutate(
-            Name = dplyr::case_when(
-              stringr::str_detect(V1, ",") == TRUE ~ stringr::str_extract(V1, Name_String),
-              stringr::str_detect(V2, ",") == TRUE ~ stringr::str_extract(V2, Name_String),
-              V1 == Place &
-                stringr::str_detect(V2, "[:digit:]") == FALSE ~ V2,
-              TRUE ~ stringr::str_split_fixed(V1, " ", n = 2)[, 2]
-            ),
-            V1 = stringr::str_replace(V1, Place, ""),
-            V1 = trimws(V1)
-          ) %>%
-          dplyr::mutate(
-            Grade = dplyr::case_when(
-              stringr::str_length(stringr::str_split_fixed(V2, " ", n = 2)[, 1]) <= 2 &
-                stringr::str_detect(V2, "^SR |^JR |^SO |^FR |^[:digit:]{1,3} ") == TRUE ~ stringr::str_split_fixed(V2, " ", n = 2)[, 1],
-              stringr::str_detect(V3, "^SR |^JR |^SO |^FR |^[:digit:]{1,3} ") == TRUE ~ stringr::str_split_fixed(V3, " ", n = 2)[, 1],
-              stringr::str_length(V2) <= 2 &
-                stringr::str_detect(V2, "[[:alpha:]\\.]") == FALSE ~ V2,
-              stringr::str_length(V2) <= 2 &
-                stringr::str_detect(V2, Grade_String) == TRUE ~ V2,
-              stringr::str_length(V3) <= 2 &
-                stringr::str_detect(V3, Grade_String) == TRUE ~ V3,
-              TRUE ~ ""
-            )
-          ) %>%
-          na_if("") %>%
-          dplyr::na_if("") %>%
-          dplyr::mutate(
-            School = dplyr::case_when(
-              V3 == Grade ~ V4,
-              V2 == Grade ~ V3,
-              any(stringr::str_detect(V3, "SEC")) == TRUE ~ stringr::str_replace(V1, Name, ""),
-              is.na(Grade) &
-                stringr::str_detect(V2, Time_Score_String) == FALSE &
-                stringr::str_detect(V2, Name) == FALSE &
-                stringr::str_detect(V2, "[:lower:]{1,}") == TRUE ~ V2,
-              is.na(Grade) &
-                stringr::str_detect(V2, Time_Score_String) == FALSE &
-                stringr::str_detect(V2, Name) == FALSE &
-                stringr::str_detect(V2, "[:alpha:]{2,}") == TRUE ~ V2,
-              is.na(Grade) &
-                stringr::str_detect(V2, Time_Score_String) == FALSE &
-                stringr::str_detect(V2, Name) == FALSE &
-                stringr::str_detect(V2, "[:lower:]{1,}") == FALSE ~ "",
-              is.na(Grade) == TRUE &
-                stringr::str_detect(V2, Name) == TRUE &
-                stringr::str_detect(V3, "[:lower:]{2,}") == TRUE  ~ V3,
-              is.na(Grade) == FALSE &
-                stringr::str_detect(V2, Name) == TRUE &
-                stringr::str_detect(V3, "[:lower:]{1,}") == TRUE ~ V3,
-              is.na(Grade) == TRUE &
-                stringr::str_detect(V2, Name) == TRUE &
-                stringr::str_detect(V3, "[:lower:]{1,}") == FALSE ~ V2,
-              is.na(Grade) == TRUE &
-                stringr::str_detect(V2, Name) == TRUE ~ V3,
-              TRUE ~ stringr::str_split_fixed(V2, " ", n = 2)[, 2]
-            )
-          ) %>%
-          ### df_6 cannot have NT as time string since there are some schools called NT ###
-          dplyr::mutate(
-            Prelims_Time = dplyr::case_when(
-              stringr::str_detect(V2, paste0(Time_Score_String, "|^NP$|^DQ$")) == TRUE & # new 8/18
-                stringr::str_detect(V3, paste0(Time_Score_String, "|^NP$|^DQ$")) == TRUE ~ V2,
-              stringr::str_detect(V4, paste0(Time_Score_String, "|^NP$|^DQ$")) == TRUE &
-                stringr::str_detect(V5, paste0(Time_Score_String, "|^NP$|^DQ$")) == TRUE ~ V4,
-              stringr::str_detect(V4, paste0(Time_Score_String, "|^NP$|^DQ$")) == FALSE &
-                stringr::str_detect(V5, paste0(Time_Score_String, "|^NP$|^DQ$")) == TRUE ~ "",
-              TRUE ~ V3
-            )
-          ) %>%
-          dplyr::mutate(
-            Finals_Time = dplyr::case_when(
-              stringr::str_detect(V2, paste0(Time_Score_String, "|^NP$|^DQ$")) == TRUE & # new 8/18
-                stringr::str_detect(V3, paste0(Time_Score_String, "|^NP$|^DQ$")) == TRUE ~ V3,
-                stringr::str_detect(V5, paste0(Time_Score_String, "|^NP$|^DQ$")) == TRUE ~ V5,
-              TRUE ~ V4
-            )
-          ) %>%
-          dplyr::mutate(
-            Points = dplyr::case_when(Finals_Time == V5 ~ "",
-                                      TRUE ~ V5),
-            Points = dplyr::case_when(is.numeric(Points) == FALSE ~ "",
-                                      TRUE ~ Points)
-          ) %>%
-          dplyr::na_if("") %>%
-          dplyr::mutate(
-            V1 = NULL,
-            V2 = NULL,
-            V3 = NULL,
-            V4 = NULL,
-            V5 = NULL,
-          ) %>%
-          dplyr::select(
-            Name,
-            Place,
-            Grade,
-            School,
-            Prelims_Time,
-            Finals_Time,
-            Points,
-            Row_Numb = V6
-          ) %>%
-          dplyr::na_if("") %>%
-          dplyr::na_if("''") %>%
-          dplyr::mutate(
-            Finals_Time = replace(Finals_Time, stringr::str_length(Finals_Time) < 3, NA),
-            Finals_Time = dplyr::case_when(
-              Place >= 1 &
-                is.na(Finals_Time) == TRUE ~ dplyr::coalesce(Finals_Time, Prelims_Time),
-              Place >= 1 &
-                is.na(Finals_Time) != TRUE ~ Finals_Time
-            ),
-            School = dplyr::case_when(
-              is.na(School) == TRUE &
-                stringr::str_detect(Grade, "[[:alpha:]]") == TRUE ~ Grade,
-              is.na(School) == FALSE &
-                stringr::str_detect(Grade, "[[:alpha:]]") == FALSE ~ School,
-              is.na(School) == FALSE ~ School
-            ),
-            School = dplyr::case_when(
-              stringr::str_length(School) < 1 | is.na(School) == TRUE ~ Name,
-              stringr::str_length(School) >= 1 ~ School
-            ),
-            Grade = replace(Grade, Grade == School, NA),
-            School = dplyr::case_when(
-              is.na(Grade) == FALSE &
-                stringr::str_detect(Grade, "\\'[[:alpha:]]\\'") == FALSE &
-                stringr::str_detect(Grade, Time_Score_String) == FALSE &
-                stringr::str_detect(Grade, "\\d") == FALSE &
-                Grade %in% c("SR", "JR", "SO", "FR") == FALSE &
-                Grade != School ~ paste(Grade, School, sep = " "),
-              TRUE ~ School
-            ),
-            Grade = replace(Grade, (
-              stringr::str_length(Grade) > 2 & is.na(Grade) == FALSE
-            ), NA),
-            Name = replace(Name, Name == School, NA),
-            ### dealing with exhibition times 8/18/2020
-            Exhibition = dplyr::case_when(
-              stringr::str_detect(Finals_Time, "x|X") == TRUE ~ 1,
-              TRUE ~ 0
-            ),
-            Finals_Time = stringr::str_remove_all(Finals_Time, "[:alpha:]"),
-            Prelims_Time = stringr::str_remove_all(Prelims_Time, "[:alpha:]"),
-            ###
-            Finals_Time = stringr::str_extract(Finals_Time, "[[:digit:][\\.\\:]]*"),
-            Prelims_Time = stringr::str_extract(Prelims_Time, "[[:digit:][\\.\\:]]*"),
-          ) %>%
-          dplyr::na_if("") %>%
-          dplyr::mutate(
-            Prelims_Time = dplyr::case_when(
-              all(Prelims_Time == Finals_Time, na.rm = TRUE) ~ as.character(NA),
-              all(Prelims_Time == Finals_Time, na.rm = TRUE) == FALSE ~ Prelims_Time
-            )
-          ) %>%
-          dplyr::mutate(
-            School = dplyr::case_when(
-              stringr::str_detect(School, Time_Score_String) == TRUE ~ stringr::str_extract(School, "[:alpha:]*"),
-              stringr::str_detect(School, "\\'[[:alpha:]]\\'") == TRUE &
-                is.na(Name) == FALSE ~ Name,
-              stringr::str_detect(School, "\\'[[:alpha:]]\\'") == FALSE ~ School,
-              stringr::str_detect(School, "^[:upper:]$") == TRUE &
-                is.na(Name) == FALSE ~ Name,
-              stringr::str_detect(School, "^-[:upper:]$") == TRUE &
-                is.na(Name) == FALSE ~ Name,
-              TRUE ~ School),
-            School = stringr::str_replace(
-              School,
-              "^[:digit:]{1,2}\\s",
-              ""
-            )) %>%
+      #### breaks data into subsets based on how many variables it has ####
+      data_length_3 <- data_1[purrr::map(data_1, length) == 3]
+      data_length_4 <- data_1[purrr::map(data_1, length) == 4]
+      data_length_5 <- data_1[purrr::map(data_1, length) == 5]
+      data_length_6 <- data_1[purrr::map(data_1, length) == 6]
+      data_length_7 <- data_1[purrr::map(data_1, length) == 7]
+
+      # treatment of DQs new 8/19
+      suppressWarnings(DQ <-
+                         data_1[stringr::str_detect(data_1, Time_Score_String, negate = TRUE) == TRUE])
+      DQ_length_3 <- DQ[purrr::map(DQ, length) == 3]
+      DQ_length_4 <- DQ[purrr::map(DQ, length) == 4]
+
+
+      #### seven variables ####
+      if (length(data_length_7) > 0) {
+        suppressWarnings(
+          df_7 <- data_length_7 %>%
+            list_transform() %>%
             dplyr::mutate(
-            Name = stringr::str_replace(Name, "^-", ""),
-            Name = replace(Name, Name == School, NA)
-          ) %>%
-          dplyr::mutate(DQ = 0)
-      )
-
-    } else {
-      df_6 <- data.frame(
-        # Name = character(),
-        # Place = character(),
-        # Grade = character(),
-        # School = character(),
-        # Prelims_Time = character(),
-        # Finals_Time = character(),
-        # Points = character(),
-        Row_Numb = character(),
-        stringsAsFactors = FALSE
-      )
-    }
-
-    #### five variables ####
-    if (length(data_length_5) > 0) {
-      suppressWarnings(
-        df_5 <- data_length_5 %>%
-          list_transform() %>%
-          dplyr::mutate(Place = stringr::str_split_fixed(V1, " ", n = 2)[, 1]) %>%
-          dplyr::mutate(
-            Name = dplyr::case_when(
-              stringr::str_detect(V1, ",") == TRUE ~ stringr::str_extract(V1, Name_String),
-              stringr::str_detect(V2, ",") == TRUE ~ stringr::str_extract(V2, Name_String),
-              stringr::str_detect(V1, ",") == FALSE &
-                stringr::str_detect(V2, Time_Score_String) == TRUE ~ "",
-              TRUE ~ stringr::str_split_fixed(V1, " ", n = 2)[, 2]
-            )
-          ) %>%
-          dplyr::na_if("") %>%
-          dplyr::mutate(
-            V1 = dplyr::case_when(
-              is.na(Place) == FALSE ~ stringr::str_replace(V1, Place, ""),
-              TRUE ~ V1
-            ),
-            V1 = dplyr::case_when(
-              is.na(Name) == FALSE ~ stringr::str_replace(V1, Name, ""),
-              TRUE ~ V1
-            ),
-            V1 = trimws(V1),
-            Name = trimws(Name)
-          ) %>%
-          dplyr::mutate(
-            Grade = dplyr::case_when(
-              stringr::str_length(V2) <= 3 &
-                stringr::str_detect(V2, "^SR|^JR|^SO|^FR|^\\d{1,3}$") == TRUE ~ V2,
-              stringr::str_length(stringr::str_split_fixed(V2, " ", n = 2)[, 1]) <= 3 &
-                stringr::str_detect(V2, "SR|JR|SO|FR|^\\d{1,3} ") ~ stringr::str_split_fixed(V2, " ", n = 2)[, 1],
-              stringr::str_length(stringr::str_split_fixed(V3, " ", n = 2)[, 1]) <= 3 &
-                stringr::str_detect(V3, "SR|JR|SO|FR|^\\d{1,3} ") ~ stringr::str_split_fixed(V3, " ", n = 2)[, 1],
-              TRUE ~ ""
-            )) %>%
-          dplyr::na_if("") %>%
-          dplyr::mutate(
-            Grade = trimws(Grade),
-<<<<<<< HEAD
-            V3 = case_when(is.na(Grade) == FALSE & stringr::str_detect(V3, Grade) == TRUE & stringr::str_detect(V3, Time_Score_String) == FALSE & Grade != "" ~ stringr::str_replace(V3, Grade, ""),
-                           TRUE ~ V3),
-            V2 = case_when(is.na(Grade) == FALSE & stringr::str_detect(V2, Grade) == TRUE & stringr::str_detect(V2, Time_Score_String) == FALSE & Grade != "" ~ stringr::str_replace(V2, Grade, ""),
-=======
-            V3 = case_when(is.na(Grade) == FALSE & stringr::str_detect(V3, Grade) == TRUE & stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == FALSE & Grade != "" ~ stringr::str_remove(V3, Grade),
-                           TRUE ~ V3),
-            V2 = case_when(is.na(Grade) == FALSE & stringr::str_detect(V2, Grade) == TRUE & stringr::str_detect(V2, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == FALSE & Grade != "" ~ stringr::str_remove(V2, Grade),
->>>>>>> 9dff023e03be55f1eac9557724556031a44f1cf5
-                           TRUE ~ V2),
-            V2 = trimws(V2),
-            V3 = trimws(V3)
-          ) %>%
-          dplyr::na_if("") %>%
-          dplyr::mutate(
-            School = dplyr::case_when(
-              V2 == Name & str_detect(V4, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE ~ V3,
-              is.na(V2) & is.na(Name) == FALSE & str_detect(V4, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE ~ V3,
-              V2 == Grade &
-                any(stringr::str_detect(V3, "^SEC \\d+$")) == FALSE ~ V3,
-              V2 == Grade &
-                any(stringr::str_detect(V3, "^SEC \\d+$")) == TRUE ~ V1,
-              (V2 != Grade |
-                 is.na(Grade)) &
-<<<<<<< HEAD
-                stringr::str_detect(V3, "\\.\\d\\d|^NT$|^NP$") &
-=======
-                stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) &
->>>>>>> 9dff023e03be55f1eac9557724556031a44f1cf5
-                stringr::str_detect(V2, "'[:upper:]'|^[:upper:]$|^\\'\\'$") == FALSE &
-                stringr::str_detect(V2, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == FALSE ~ V2,
-              (V2 != Grade |
-                 is.na(Grade)) &
-<<<<<<< HEAD
-                stringr::str_detect(V3, "\\.\\d\\d|^NT$|^NP$") &
-=======
-                stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) &
->>>>>>> 9dff023e03be55f1eac9557724556031a44f1cf5
-                stringr::str_detect(V2, "'[:upper:]'|^[:upper:]$|'[:upper:]'|^\\'\\'$") == TRUE &
-                (V1 != Name | is.na(Name)) ~ V1,
-              (V1 == Name |
-                 is.na(Name)) &
-                V2 != Grade ~ stringr::str_split_fixed(V2, " ", n = 2)[, 2],
-<<<<<<< HEAD
-              stringr::str_detect(V2, "\\:\\d\\d|^NT$|^NP$") == TRUE ~ V1,
-=======
-              stringr::str_detect(V2, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE ~ V1,
->>>>>>> 9dff023e03be55f1eac9557724556031a44f1cf5
-              TRUE ~ stringr::str_split_fixed(V2, " ", n = 2)[, 2]
-            ),
-            School = dplyr::case_when(
-              stringr::str_detect(School, Grade) == TRUE &
-                is.na(School) == FALSE ~ stringr::str_replace(School, Grade, ""),
-              TRUE ~ School
-            ),
-            School = trimws(School)
-          ) %>%
-          dplyr::mutate(
-            Prelims_Time = dplyr::case_when(
-              stringr::str_detect(V2, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE &
-                stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE ~ V2,
-              stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE &
-                stringr::str_detect(V4, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE ~ V3,
-              stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == FALSE &
-                stringr::str_detect(V4, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE ~ "",
-              TRUE ~ V2
-            )
-          ) %>%
-          dplyr::mutate(
-            Finals_Time = dplyr::case_when(
-              stringr::str_detect(V4, paste0(Time_Score_String, "|^DQ$")) == TRUE ~ V4,
-              TRUE ~ V3
-            )
-          ) %>%
-          dplyr::mutate(
-            Points = dplyr::case_when(Finals_Time == V3 ~ V4,
-                                      Finals_Time == V4 ~ "",
-                                      TRUE ~ ""),
-            Points = dplyr::case_when(is.numeric(Points) == FALSE ~ "",
-                                      TRUE ~ Points),
-            Points = dplyr::case_when(is.numeric(Points) == FALSE ~ "",
-                                      TRUE ~ Points)
-          ) %>%
-          dplyr::na_if("") %>%
-          dplyr::mutate(
-            V1 = NULL,
-            V2 = NULL,
-            V3 = NULL,
-            V4 = NULL,
-          ) %>%
-          dplyr::select(
-            Name,
-            Place,
-            Grade,
-            School,
-            Prelims_Time,
-            Finals_Time,
-            Points,
-            Row_Numb = V5
-          ) %>%
-          dplyr::na_if("") %>%
-          dplyr::na_if("''") %>%
-          dplyr::mutate(
-            Finals_Time = replace(Finals_Time, dplyr::n_distinct(Finals_Time) <= 2, ""),
-            Prelims_Time = replace(Prelims_Time, dplyr::n_distinct(Prelims_Time) <= 2, "")
-          ) %>%
-          dplyr::na_if("") %>%
-          dplyr::na_if("''") %>%
-          dplyr::mutate(
-            Finals_Time = dplyr::case_when(
-              sum(stringr::str_detect(Finals_Time, Time_Score_String)) >= 1 ~ stringr::str_replace(Finals_Time, "NT", ""),
-              sum(stringr::str_detect(Finals_Time, Time_Score_String)) < 1 ~ Finals_Time,
-              TRUE ~ Finals_Time
-            )
-          ) %>%
-          dplyr::na_if("") %>%
-          dplyr::mutate(
-            School = dplyr::case_when(
-              is.na(School) == TRUE &
-                stringr::str_detect(Finals_Time, Time_Score_String) == FALSE ~ Finals_Time,
-              is.na(School) == FALSE |
-                stringr::str_detect(Finals_Time, Time_Score_String) == TRUE ~ School
-            ),
-            Finals_Time = replace(
+              Place = dplyr::case_when(
+                stringr::str_detect(V1, "^[:digit:]*$") == TRUE ~ V1,
+                TRUE ~ stringr::str_split_fixed(V1, " ", n = 2)[, 1]
+              )
+            ) %>%
+            dplyr::mutate(
+              Name = dplyr::case_when(
+                stringr::str_detect(V1, ",") == TRUE ~ stringr::str_split_fixed(V1, " ", n = 2)[, 2],
+                stringr::str_detect(V1, "[:alpha:] [:alpha:]") == TRUE &
+                  stringr::str_detect(V2, "^\\'[:upper:]\\'$") == FALSE ~ stringr::str_split_fixed(V1, " ", n = 2)[, 2],
+                stringr::str_detect(V1, ",") == FALSE &
+                  stringr::str_detect(V2, ",") == TRUE ~ V2
+              )
+            ) %>%
+            dplyr::mutate(
+              Grade = dplyr::case_when(
+                stringr::str_detect(V2, Grade_String) == TRUE ~ V2,
+                stringr::str_detect(V2, "^SR |^JR |^SO |^FR |^[:digit:]{1,3} ") == TRUE ~ stringr::str_extract(V2, "^SR |^JR |^SO |^FR |^10 |^11 |^[:digit:]{1,2} "),
+                stringr::str_detect(V3, "^SR |^JR |^SO |^FR |^[:digit:]{1,3} ") == TRUE ~ stringr::str_extract(V3, "^SR |^JR |^SO |^FR |^10 |^11 |^[:digit:]{1,2} "),
+                any(
+                  stringr::str_detect(V2, Grade_String)
+                ) == FALSE &
+                  any(
+                    stringr::str_detect(V3, Grade_String)
+                  ) == TRUE ~ V3
+              ),
+              Grade = trimws(Grade),
+            ) %>%
+            dplyr::mutate(
+              School = dplyr::case_when(
+                stringr::str_detect(V1, Name) &
+                  stringr::str_detect(V2, Grade) &
+                  stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == FALSE ~ V3,
+                stringr::str_detect(V1, ",") == FALSE &
+                  stringr::str_detect(V1, "^[:digit:]*$") == FALSE &
+                  stringr::str_detect(V1, "[:alpha:] [:alpha:]") == FALSE ~ stringr::str_split_fixed(V1, " ", n = 2)[, 2],
+                stringr::str_detect(V2, "^\\'[:upper:]\\'$") == TRUE ~ stringr::str_split_fixed(V1, " ", n = 2)[, 2],
+                stringr::str_detect(V2, "^\\'[:upper:]\\'$") == FALSE &
+                  stringr::str_detect(V1, "^[:digit:]*$") == FALSE ~ stringr::str_split_fixed(V2, " ", n = 2)[, 2],
+                TRUE ~ V3
+              )
+            ) %>%
+            mutate(
+              School = str_remove(School, Grade),
+              School = trimws(School)
+            ) %>%
+            dplyr::mutate(
+              Prelims_Time = dplyr::case_when(
+                any(stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$"))) == TRUE &
+                  any(stringr::str_detect(V4, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$"))) == TRUE ~ V3,
+                any(stringr::str_detect(V4, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$"))) == TRUE &
+                  any(stringr::str_detect(V5, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$"))) == TRUE ~ V4,
+                any(stringr::str_detect(V4, "SEC")) == TRUE ~ V5
+              )
+            ) %>%
+            dplyr::mutate(
+              Finals_Time = dplyr::case_when(
+                any(stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$"))) == TRUE &
+                  any(stringr::str_detect(V4, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$"))) == TRUE ~ V4,
+                any(stringr::str_detect(V4, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$"))) == TRUE &
+                  any(stringr::str_detect(V5, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$"))) == TRUE ~ V5,
+                any(stringr::str_detect(V4, "SEC")) == TRUE ~ V6
+              )
+            ) %>%
+            dplyr::mutate(
+              Points = dplyr::case_when(Finals_Time != V6 ~ V6,
+                                        Finals_Time == V6 ~ ""),
+              Points = dplyr::case_when(is.numeric(Points) == FALSE ~ "",
+                                        TRUE ~ Points)
+            ) %>%
+            dplyr::na_if("") %>%
+            dplyr::select(
+              Place,
+              Name,
+              Grade,
+              School,
+              Prelims_Time,
               Finals_Time,
-              stringr::str_detect(Finals_Time, "^NT$") == TRUE,
-              NA
-            ),
-            Finals_Time = replace(Finals_Time, School == Finals_Time, NA),
-            Finals_Time = replace(Finals_Time, stringr::str_length(Finals_Time) < 3, NA),
-            Finals_Time = dplyr::case_when(
-              Place >= 1 &
-                is.na(Finals_Time) == TRUE ~ dplyr::coalesce(Finals_Time, Prelims_Time),
-              Place >= 1 &
-                is.na(Finals_Time) != TRUE ~ Finals_Time
-            ),
-            ### dealing with exhibition times 8/18/2020
-            Exhibition = dplyr::case_when(
-              stringr::str_detect(Finals_Time, "x|X") == TRUE ~ 1,
-              TRUE ~ 0
-            ),
-            Finals_Time = stringr::str_remove_all(Finals_Time, "[:alpha:]"),
-            Prelims_Time = stringr::str_remove_all(Prelims_Time, "[:alpha:]"),
-            ###
-<<<<<<< HEAD
-            Finals_Time = stringr::str_extract(Finals_Time, "[[:digit:][\\.\\:]]*"),
-            Prelims_Time = stringr::str_extract(Prelims_Time, "[[:digit:][\\.\\:]]*"),
-=======
-            Finals_Time = stringr::str_extract(Finals_Time, Time_Score_String),
-            Prelims_Time = stringr::str_extract(Prelims_Time, Time_Score_String), # added 11/6
->>>>>>> 9dff023e03be55f1eac9557724556031a44f1cf5
-          ) %>%
-          dplyr::na_if("") %>%
+              Points,
+              Row_Numb = V7
+            ) %>%
+            dplyr::na_if("") %>%
+            dplyr::na_if("''") %>%
+            dplyr::mutate(
+              Finals_Time = replace(Finals_Time, stringr::str_length(Finals_Time) < 3, NA),
+              Finals_Time = stringr::str_remove(Finals_Time, "J"),
+              Finals_Time = dplyr::case_when(
+                Place >= 1 &
+                  is.na(Finals_Time) == TRUE ~ dplyr::coalesce(Finals_Time, Prelims_Time),
+                Place >= 1 &
+                  is.na(Finals_Time) != TRUE ~ Finals_Time
+              ),
+              School = dplyr::case_when(
+                is.na(School) == TRUE &
+                  stringr::str_detect(Grade, "[[:alpha:]]") == TRUE ~ Grade,
+                is.na(School) == FALSE &
+                  stringr::str_detect(Grade, "[[:alpha:]]") == FALSE ~ School,
+                is.na(School) == FALSE ~ School
+              ),
+              School = dplyr::case_when(
+                stringr::str_length(School) < 1 | is.na(School) == TRUE ~ Name,
+                stringr::str_length(School) >= 1 ~ School
+              ),
+              School = dplyr::case_when(
+                stringr::str_detect(School, "\\'[[:upper:]]\\'|^\\-?[:upper:]$") == TRUE &
+                  is.na(Name) == FALSE ~ Name,
+                TRUE ~ School
+              ),
+              Grade = replace(Grade, Grade == School, NA),
+              School = dplyr::case_when(
+                stringr::str_length(Grade) > 2 &
+                  is.na(Grade) == FALSE &
+                  stringr::str_detect(Grade, "\\'[[:alpha:]]\\'") == FALSE &
+                  stringr::str_detect(Grade, "\\.\\d") == FALSE ~ paste(Grade, School, sep = " "),
+                stringr::str_length(Grade) <= 2 |
+                  is.na(Grade) == TRUE |
+                  stringr::str_detect(Grade, "\\'[[:alpha:]]\\'") == TRUE |
+                  stringr::str_detect(Grade, "\\.\\d") == TRUE ~ School
+              ),
+              Grade = replace(Grade, (
+                stringr::str_length(Grade) > 2 & is.na(Grade) == FALSE
+              ), NA),
+              Grade = dplyr::case_when(
+                stringr::str_detect(Grade, "^\\-?[:upper:]$") == TRUE ~ "",
+                TRUE ~ Grade
+              ),
+              Name = replace(Name, Name == School, NA),
+              ### dealing with exhibition times 8/18/2020
+              Exhibition = dplyr::case_when(
+                stringr::str_detect(Finals_Time, "x|X") == TRUE ~ 1,
+                TRUE ~ 0
+              ),
+              ###
+              Finals_Time = stringr::str_extract(Finals_Time, Time_Score_String),
+              Prelims_Time = stringr::str_extract(Prelims_Time, Time_Score_String)
+            ) %>%
+            dplyr::na_if("") %>%
+            dplyr::mutate(
+              Prelims_Time = dplyr::case_when(
+                all(Prelims_Time == Finals_Time, na.rm = TRUE) ~ as.character(NA),
+                all(Prelims_Time == Finals_Time, na.rm = TRUE) == FALSE ~ Prelims_Time
+              )
+            ) %>%
+            dplyr::mutate(
+              School = dplyr::case_when(
+                stringr::str_detect(School, "\\'[[:alpha:]]\\'") == TRUE &
+                  is.na(Name) == FALSE ~ Name,
+                stringr::str_detect(School, "\\'[[:alpha:]]\\'") == FALSE ~ School,
+                stringr::str_detect(School, "^A$") == TRUE &
+                  is.na(Name) == FALSE ~ Name,
+                stringr::str_detect(School, "^A$") == FALSE ~ School
+              ),
+              School = stringr::str_remove(School, "^SR |^JR |^SO |^FR |^10 |^11 |^12 |^9 |^8 |^7 "),
+              Name = stringr::str_remove(Name, "^-"),
+              Name = replace(Name, Name == School, NA)
+            ) %>%
+            dplyr::mutate(DQ = 0)
+        )
+
+      } else {
+        df_7 <- data.frame(
+          Row_Numb = character(),
+          stringsAsFactors = FALSE
+        )
+      }
+
+      #### six variables ####
+      if (length(data_length_6) > 0) {
+        suppressWarnings(
+          df_6 <- data_length_6 %>%
+            list_transform() %>%
+            dplyr::mutate(Place = stringr::str_split_fixed(V1, " ", n = 2)[, 1]) %>%
+            dplyr::mutate(
+              Name = dplyr::case_when(
+                stringr::str_detect(V1, ",") == TRUE ~ stringr::str_extract(V1, Name_String),
+                stringr::str_detect(V2, ",") == TRUE ~ stringr::str_extract(V2, Name_String),
+                V1 == Place &
+                  stringr::str_detect(V2, "[:digit:]") == FALSE ~ V2,
+                TRUE ~ stringr::str_split_fixed(V1, " ", n = 2)[, 2]
+              ),
+              V1 = stringr::str_remove(V1, Place),
+              V1 = trimws(V1)
+            ) %>%
+            dplyr::mutate(
+              Grade = dplyr::case_when(
+                stringr::str_length(stringr::str_split_fixed(V2, " ", n = 2)[, 1]) <= 2 &
+                  stringr::str_detect(V2, "^SR |^JR |^SO |^FR |^[:digit:]{1,3} ") == TRUE ~ stringr::str_split_fixed(V2, " ", n = 2)[, 1],
+                stringr::str_detect(V3, "^SR |^JR |^SO |^FR |^[:digit:]{1,3} ") == TRUE ~ stringr::str_split_fixed(V3, " ", n = 2)[, 1],
+                stringr::str_length(V2) <= 2 &
+                  stringr::str_detect(V2, "[[:alpha:]\\.]") == FALSE ~ V2,
+                stringr::str_length(V2) <= 2 &
+                  stringr::str_detect(V2, Grade_String) == TRUE ~ V2,
+                stringr::str_length(V3) <= 2 &
+                  stringr::str_detect(V3, Grade_String) == TRUE ~ V3,
+                TRUE ~ ""
+              )
+            ) %>%
+            na_if("") %>%
+            dplyr::na_if("") %>%
+            dplyr::mutate(
+              School = dplyr::case_when(
+                V3 == Grade ~ V4,
+                V2 == Grade ~ V3,
+                any(stringr::str_detect(V3, "SEC")) == TRUE ~ stringr::str_remove(V1, Name),
+                is.na(Grade) &
+                  stringr::str_detect(V2, Time_Score_String) == FALSE &
+                  stringr::str_detect(V2, Name) == FALSE &
+                  stringr::str_detect(V2, "[:lower:]{1,}") == TRUE ~ V2,
+                is.na(Grade) &
+                  stringr::str_detect(V2, Time_Score_String) == FALSE &
+                  stringr::str_detect(V2, Name) == FALSE &
+                  stringr::str_detect(V2, "[:alpha:]{2,}") == TRUE ~ V2,
+                is.na(Grade) &
+                  stringr::str_detect(V2, Time_Score_String) == FALSE &
+                  stringr::str_detect(V2, Name) == FALSE &
+                  stringr::str_detect(V2, "[:lower:]{1,}") == FALSE ~ "",
+                is.na(Grade) == TRUE &
+                  stringr::str_detect(V2, Name) == TRUE &
+                  stringr::str_detect(V3, "[:lower:]{2,}") == TRUE  ~ V3,
+                is.na(Grade) == FALSE &
+                  stringr::str_detect(V2, Name) == TRUE &
+                  stringr::str_detect(V3, "[:lower:]{1,}") == TRUE ~ V3,
+                is.na(Grade) == TRUE &
+                  stringr::str_detect(V2, Name) == TRUE &
+                  stringr::str_detect(V3, "[:lower:]{1,}") == FALSE ~ V2,
+                is.na(Grade) == TRUE &
+                  stringr::str_detect(V2, Name) == TRUE ~ V3,
+                TRUE ~ stringr::str_split_fixed(V2, " ", n = 2)[, 2]
+              )
+            ) %>%
+            ### df_6 cannot have NT as time string since there are some schools called NT ###
+            dplyr::mutate(
+              Prelims_Time = dplyr::case_when(
+                stringr::str_detect(V2, paste0(Time_Score_String, "|^NP$|^DQ$")) == TRUE & # new 8/18
+                  stringr::str_detect(V3, paste0(Time_Score_String, "|^NP$|^DQ$")) == TRUE ~ V2,
+                stringr::str_detect(V4, paste0(Time_Score_String, "|^NP$|^DQ$")) == TRUE &
+                  stringr::str_detect(V5, paste0(Time_Score_String, "|^NP$|^DQ$")) == TRUE ~ V4,
+                stringr::str_detect(V4, paste0(Time_Score_String, "|^NP$|^DQ$")) == FALSE &
+                  stringr::str_detect(V5, paste0(Time_Score_String, "|^NP$|^DQ$")) == TRUE ~ "",
+                TRUE ~ V3
+              )
+            ) %>%
+            dplyr::mutate(
+              Finals_Time = dplyr::case_when(
+                stringr::str_detect(V2, paste0(Time_Score_String, "|^NP$|^DQ$")) == TRUE & # new 8/18
+                  stringr::str_detect(V3, paste0(Time_Score_String, "|^NP$|^DQ$")) == TRUE ~ V3,
+                stringr::str_detect(V5, paste0(Time_Score_String, "|^NP$|^DQ$")) == TRUE ~ V5,
+                TRUE ~ V4
+              )
+            ) %>%
+            dplyr::mutate(
+              Points = dplyr::case_when(Finals_Time == V5 ~ "",
+                                        TRUE ~ V5),
+              Points = dplyr::case_when(is.numeric(Points) == FALSE ~ "",
+                                        TRUE ~ Points)
+            ) %>%
+            dplyr::na_if("") %>%
+            dplyr::select(
+              Name,
+              Place,
+              Grade,
+              School,
+              Prelims_Time,
+              Finals_Time,
+              Points,
+              Row_Numb = V6
+            ) %>%
+            dplyr::na_if("") %>%
+            dplyr::na_if("''") %>%
+            dplyr::mutate(
+              Finals_Time = replace(Finals_Time, stringr::str_length(Finals_Time) < 3, NA),
+              Finals_Time = dplyr::case_when(
+                Place >= 1 &
+                  is.na(Finals_Time) == TRUE ~ dplyr::coalesce(Finals_Time, Prelims_Time),
+                Place >= 1 &
+                  is.na(Finals_Time) != TRUE ~ Finals_Time
+              ),
+              School = dplyr::case_when(
+                is.na(School) == TRUE &
+                  stringr::str_detect(Grade, "[[:alpha:]]") == TRUE ~ Grade,
+                is.na(School) == FALSE &
+                  stringr::str_detect(Grade, "[[:alpha:]]") == FALSE ~ School,
+                is.na(School) == FALSE ~ School
+              ),
+              School = dplyr::case_when(
+                stringr::str_length(School) < 1 | is.na(School) == TRUE ~ Name,
+                stringr::str_length(School) >= 1 ~ School
+              ),
+              Grade = replace(Grade, Grade == School, NA),
+              School = dplyr::case_when(
+                is.na(Grade) == FALSE &
+                  stringr::str_detect(Grade, "\\'[[:alpha:]]\\'") == FALSE &
+                  stringr::str_detect(Grade, Time_Score_String) == FALSE &
+                  stringr::str_detect(Grade, "\\d") == FALSE &
+                  Grade %in% c("SR", "JR", "SO", "FR") == FALSE &
+                  Grade != School ~ paste(Grade, School, sep = " "),
+                TRUE ~ School
+              ),
+              Grade = replace(Grade, (
+                stringr::str_length(Grade) > 2 & is.na(Grade) == FALSE
+              ), NA),
+              Name = replace(Name, Name == School, NA),
+              ### dealing with exhibition times 8/18/2020
+              Exhibition = dplyr::case_when(
+                stringr::str_detect(Finals_Time, "x|X") == TRUE ~ 1,
+                TRUE ~ 0
+              ),
+              ###
+              Finals_Time = stringr::str_extract(Finals_Time, Time_Score_String),
+              Prelims_Time = stringr::str_extract(Prelims_Time, Time_Score_String),
+            ) %>%
+            dplyr::na_if("") %>%
+            dplyr::mutate(
+              Prelims_Time = dplyr::case_when(
+                all(Prelims_Time == Finals_Time, na.rm = TRUE) ~ as.character(NA),
+                all(Prelims_Time == Finals_Time, na.rm = TRUE) == FALSE ~ Prelims_Time
+              )
+            ) %>%
+            dplyr::mutate(
+              School = dplyr::case_when(
+                stringr::str_detect(School, Time_Score_String) == TRUE ~ stringr::str_extract(School, "[:alpha:]*"),
+                stringr::str_detect(School, "\\'[[:alpha:]]\\'") == TRUE &
+                  is.na(Name) == FALSE ~ Name,
+                stringr::str_detect(School, "\\'[[:alpha:]]\\'") == FALSE ~ School,
+                stringr::str_detect(School, "^\\-?[:upper:]$") == TRUE &
+                  is.na(Name) == FALSE ~ Name,
+                # stringr::str_detect(School, "^-[:upper:]$") == TRUE &
+                #   is.na(Name) == FALSE ~ Name,
+                TRUE ~ School),
+              School = stringr::str_remove(
+                School,
+                "^[:digit:]{1,2}\\s"
+              )) %>%
+            dplyr::mutate(
+              Name = stringr::str_remove(Name, "^-"),
+              Name = replace(Name, Name == School, NA)
+            ) %>%
+            dplyr::mutate(DQ = 0)
+        )
+
+      } else {
+        df_6 <- data.frame(
+          Row_Numb = character(),
+          stringsAsFactors = FALSE
+        )
+      }
+
+      #### five variables ####
+      if (length(data_length_5) > 0) {
+        suppressWarnings(
+          df_5 <- data_length_5 %>%
+            list_transform() %>%
+            dplyr::mutate(Place = stringr::str_split_fixed(V1, " ", n = 2)[, 1]) %>%
+            dplyr::mutate(
+              Name = dplyr::case_when(
+                stringr::str_detect(V1, ",") == TRUE ~ stringr::str_extract(V1, Name_String),
+                stringr::str_detect(V2, ",") == TRUE ~ stringr::str_extract(V2, Name_String),
+                stringr::str_detect(V1, ",") == FALSE &
+                  stringr::str_detect(V2, Time_Score_String) == TRUE ~ "",
+                TRUE ~ stringr::str_split_fixed(V1, " ", n = 2)[, 2]
+              )
+            ) %>%
+            dplyr::na_if("") %>%
+            dplyr::mutate(
+              V1 = dplyr::case_when(
+                is.na(Place) == FALSE ~ stringr::str_remove(V1, Place),
+                TRUE ~ V1
+              ),
+              V1 = dplyr::case_when(
+                is.na(Name) == FALSE ~ stringr::str_remove(V1, Name),
+                TRUE ~ V1
+              ),
+              V1 = trimws(V1),
+              Name = trimws(Name)
+            ) %>%
+            dplyr::mutate(
+              Grade = dplyr::case_when(
+                stringr::str_length(V2) <= 3 &
+                  stringr::str_detect(V2, "^SR|^JR|^SO|^FR|^\\d{1,3}$") == TRUE ~ V2,
+                stringr::str_length(stringr::str_split_fixed(V2, " ", n = 2)[, 1]) <= 3 &
+                  stringr::str_detect(V2, "SR|JR|SO|FR|^\\d{1,3} ") ~ stringr::str_split_fixed(V2, " ", n = 2)[, 1],
+                stringr::str_length(stringr::str_split_fixed(V3, " ", n = 2)[, 1]) <= 3 &
+                  stringr::str_detect(V3, "SR|JR|SO|FR|^\\d{1,3} ") ~ stringr::str_split_fixed(V3, " ", n = 2)[, 1],
+                TRUE ~ ""
+              )) %>%
+            dplyr::na_if("") %>%
+            dplyr::mutate(
+              Grade = trimws(Grade),
+              V3 = case_when(is.na(Grade) == FALSE & stringr::str_detect(V3, Grade) == TRUE & stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == FALSE & Grade != "" ~ stringr::str_remove(V3, Grade),
+                             TRUE ~ V3),
+              V2 = case_when(is.na(Grade) == FALSE & stringr::str_detect(V2, Grade) == TRUE & stringr::str_detect(V2, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == FALSE & Grade != "" ~ stringr::str_remove(V2, Grade),
+                             TRUE ~ V2),
+              V2 = trimws(V2),
+              V3 = trimws(V3)
+            ) %>%
+            dplyr::na_if("") %>%
+            dplyr::mutate(
+              School = dplyr::case_when(
+                V2 == Name & str_detect(V4, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE ~ V3,
+                is.na(V2) & is.na(Name) == FALSE & str_detect(V4, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE ~ V3,
+                V2 == Grade &
+                  any(stringr::str_detect(V3, "^SEC \\d+$")) == FALSE ~ V3,
+                V2 == Grade &
+                  any(stringr::str_detect(V3, "^SEC \\d+$")) == TRUE ~ V1,
+                (V2 != Grade |
+                   is.na(Grade)) &
+                  stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) &
+                  stringr::str_detect(V2, "'[:upper:]'|^[:upper:]$|^\\'\\'$") == FALSE &
+                  stringr::str_detect(V2, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == FALSE ~ V2,
+                (V2 != Grade |
+                   is.na(Grade)) &
+                  stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) &
+                  stringr::str_detect(V2, "'[:upper:]'|^[:upper:]$|'[:upper:]'|^\\'\\'$") == TRUE &
+                  (V1 != Name | is.na(Name)) ~ V1,
+                (V1 == Name |
+                   is.na(Name)) &
+                  V2 != Grade ~ stringr::str_split_fixed(V2, " ", n = 2)[, 2],
+                stringr::str_detect(V2, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE ~ V1,
+                TRUE ~ stringr::str_split_fixed(V2, " ", n = 2)[, 2]
+              ),
+              School = dplyr::case_when(
+                stringr::str_detect(School, Grade) == TRUE &
+                  is.na(School) == FALSE ~ stringr::str_remove(School, Grade),
+                TRUE ~ School
+              ),
+              School = trimws(School)
+            ) %>%
+            dplyr::mutate(
+              Prelims_Time = dplyr::case_when(
+                stringr::str_detect(V2, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE &
+                  stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE ~ V2,
+                stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE &
+                  stringr::str_detect(V4, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE ~ V3,
+                stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == FALSE &
+                  stringr::str_detect(V4, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE ~ "",
+                TRUE ~ V2
+              )
+            ) %>%
+            dplyr::mutate(
+              Finals_Time = dplyr::case_when(
+                stringr::str_detect(V4, paste0(Time_Score_String, "|^DQ$")) == TRUE ~ V4,
+                TRUE ~ V3
+              )
+            ) %>%
+            dplyr::mutate(
+              Points = dplyr::case_when(Finals_Time == V3 ~ V4,
+                                        Finals_Time == V4 ~ "",
+                                        TRUE ~ ""),
+              Points = dplyr::case_when(is.numeric(Points) == FALSE ~ "",
+                                        TRUE ~ Points),
+              Points = dplyr::case_when(is.numeric(Points) == FALSE ~ "",
+                                        TRUE ~ Points)
+            ) %>%
+            dplyr::na_if("") %>%
+            dplyr::select(
+              Name,
+              Place,
+              Grade,
+              School,
+              Prelims_Time,
+              Finals_Time,
+              Points,
+              Row_Numb = V5
+            ) %>%
+            dplyr::na_if("") %>%
+            dplyr::na_if("''") %>%
+            dplyr::mutate(
+              Finals_Time = replace(Finals_Time, dplyr::n_distinct(Finals_Time) <= 2, ""),
+              Prelims_Time = replace(Prelims_Time, dplyr::n_distinct(Prelims_Time) <= 2, "")
+            ) %>%
+            dplyr::na_if("") %>%
+            dplyr::na_if("''") %>%
+            dplyr::mutate(
+              Finals_Time = dplyr::case_when(
+                sum(stringr::str_detect(Finals_Time, Time_Score_String)) >= 1 ~ stringr::str_remove(Finals_Time, "NT"),
+                sum(stringr::str_detect(Finals_Time, Time_Score_String)) < 1 ~ Finals_Time,
+                TRUE ~ Finals_Time
+              )
+            ) %>%
+            dplyr::na_if("") %>%
+            dplyr::mutate(
+              School = dplyr::case_when(
+                is.na(School) == TRUE &
+                  stringr::str_detect(Finals_Time, Time_Score_String) == FALSE ~ Finals_Time,
+                is.na(School) == FALSE |
+                  stringr::str_detect(Finals_Time, Time_Score_String) == TRUE ~ School
+              ),
+              Finals_Time = replace(
+                Finals_Time,
+                stringr::str_detect(Finals_Time, "^NT$") == TRUE,
+                NA
+              ),
+              Finals_Time = replace(Finals_Time, School == Finals_Time, NA),
+              Finals_Time = replace(Finals_Time, stringr::str_length(Finals_Time) < 3, NA),
+              Finals_Time = dplyr::case_when(
+                Place >= 1 &
+                  is.na(Finals_Time) == TRUE ~ dplyr::coalesce(Finals_Time, Prelims_Time),
+                Place >= 1 &
+                  is.na(Finals_Time) != TRUE ~ Finals_Time
+              ),
+              ### dealing with exhibition times 8/18/2020
+              Exhibition = dplyr::case_when(
+                stringr::str_detect(Finals_Time, "x|X") == TRUE ~ 1,
+                TRUE ~ 0
+              ),
+              ###
+              Finals_Time = stringr::str_extract(Finals_Time, Time_Score_String),
+              Prelims_Time = stringr::str_extract(Prelims_Time, Time_Score_String), # added 11/6
+            ) %>%
+            dplyr::na_if("") %>%
+            dplyr::mutate(
+              Prelims_Time = dplyr::case_when(
+                all(Prelims_Time == Finals_Time, na.rm = TRUE) ~ as.character(NA),
+                all(Prelims_Time == Finals_Time, na.rm = TRUE) == FALSE ~ Prelims_Time
+              )
+            ) %>%
+            dplyr::mutate(
+              Points_2 = dplyr::case_when(
+                stringr::str_detect(Points, Colon_String) == TRUE ~ "",
+                as.numeric(Points) > 20 &
+                  stringr::str_detect(Points, Time_Score_String) == TRUE ~ "",
+                stringr::str_detect(Points, Colon_String) == FALSE ~ Points
+              ),
+              Prelims_Time = dplyr::case_when(
+                stringr::str_detect(Points, Colon_String) == TRUE ~ Finals_Time,
+                as.numeric(Points) > 20 &
+                  stringr::str_detect(Points, Time_Score_String) == TRUE ~ Finals_Time,
+                TRUE ~ Prelims_Time
+              ),
+              Finals_Time = dplyr::case_when(
+                stringr::str_detect(Points, Colon_String) == TRUE ~ Points,
+                as.numeric(Points) > 20 &
+                  stringr::str_detect(Points, Time_Score_String) == TRUE ~ Points,
+                TRUE ~ Finals_Time
+              )
+            ) %>%
+            dplyr::na_if("") %>%
+            dplyr::mutate(
+              Points = dplyr::case_when(
+                is.na(Points_2) == FALSE ~ Points_2,
+                Points == Finals_Time ~ "",
+                TRUE ~ Points
+              ),
+              Points_2 = NULL,
+              Finals_Time = stringr::str_extract(Finals_Time, Time_Score_String),
+              Prelims_Time = stringr::str_extract(Prelims_Time, Time_Score_String),
+              Prelims_Time = replace(
+                Prelims_Time,
+                stringr::str_detect(Prelims_Time, Time_Score_String) == FALSE,
+                NA
+              )
+            ) %>%
+            dplyr::na_if("") %>%
+            dplyr::mutate(
+              School = replace(School, stringr::str_detect(School, "\\.\\d") == TRUE, NA),
+              School = dplyr::case_when(
+                is.na(School) == TRUE &
+                  Grade %!in% c(
+                    "FR",
+                    "SO",
+                    "JR",
+                    "SR",
+                    "7",
+                    "8",
+                    "05",
+                    "06",
+                    "07",
+                    "08",
+                    "09",
+                    as.character(seq(10, 25, 1))
+                  ) &
+                  stringr::str_detect(Grade, "\\'[[:alpha:]]\\'") == FALSE &
+                  stringr::str_detect(Grade, "\\.\\d") == FALSE ~ Grade,
+                is.na(School) == FALSE |
+                  Grade %in% c(
+                    "FR",
+                    "SO",
+                    "JR",
+                    "SR",
+                    "7",
+                    "8",
+                    "05",
+                    "06",
+                    "07",
+                    "08",
+                    "09",
+                    as.character(seq(10, 25, 1))
+                  ) |
+                  stringr::str_detect(Grade, "\\'[[:alpha:]]\\'") == TRUE |
+                  stringr::str_detect(Grade, "\\.\\d") == FALSE ~ School,
+                is.na(School) == FALSE ~ School
+              ),
+              School = dplyr::case_when(
+                stringr::str_length(School) < 1 | is.na(School) == TRUE ~ Name,
+                stringr::str_length(School) >= 1 ~ School
+              ),
+              School = dplyr::case_when(
+                is.na(Grade) == FALSE &
+                  stringr::str_detect(Grade, "\\'[[:alpha:]]\\'|\\.?\\d") == FALSE &
+                  Grade %in% c("SR", "JR", "SO", "FR") == FALSE &
+                  Grade != School ~ paste(Grade, School, sep = " "),
+                TRUE ~ School
+              ),
+              School = dplyr::case_when(
+                stringr::str_detect(School, "\\'[[:upper:]]\\'|^\\-?[:upper:]$") == TRUE &
+                  is.na(Name) == FALSE ~ Name,
+                TRUE ~ School
+              ),
+              School = dplyr::case_when(
+                stringr::str_detect(School, Time_Score_String) == TRUE ~ stringr::str_extract(School, "[:alpha:]*"),
+                TRUE ~ School
+              ),
+              Grade = replace(Grade, Grade == School, NA),
+              Grade = replace(Grade, stringr::str_detect(Grade, Time_Score_String) == TRUE, NA),
+              Name = stringr::str_remove(Name, "^-"),
+              Name = replace(Name, Name == School, NA),
+              Grade = replace(Grade, is.na(Name) == TRUE &
+                                is.na(School) == FALSE, NA),
+
+              Grade = replace(Grade, Grade == School, NA),
+              Grade = replace(Grade, (
+                stringr::str_length(Grade) > 2 & is.na(Grade) == FALSE
+              ), NA)
+
+            ) %>%
+            dplyr::mutate(DQ = 0)
+        )
+      } else {
+        df_5 <- data.frame(
+          Row_Numb = character(),
+          stringsAsFactors = FALSE
+        )
+      }
+
+      #### four variables ####
+      if (length(data_length_4) > 0) {
+        suppressWarnings(
+          df_4 <- data_length_4 %>%
+            list_transform() %>%
+            dplyr::mutate(Place = stringr::str_split_fixed(V1, " ", n = 2)[, 1]) %>%
+            dplyr::mutate(
+              Name = dplyr::case_when(
+                any(stringr::str_detect(V1, ",")) == TRUE &
+                  stringr::str_detect(V1, ",") == TRUE ~ stringr::str_extract(V1, Name_String),
+                any(stringr::str_detect(V1, ",")) == TRUE &
+                  stringr::str_detect(V1, ",") == FALSE ~ "",
+                stringr::str_detect(V2, ",") == TRUE ~ stringr::str_extract(V2, Name_String),
+                stringr::str_detect(V1, ",") == FALSE &
+                  stringr::str_detect(V2, Time_Score_String) == TRUE ~ "",
+                TRUE ~ stringr::str_split_fixed(V1, " ", n = 2)[, 2]
+              )
+            ) %>%
+            dplyr::na_if("") %>%
+            dplyr::mutate(
+              V1 = dplyr::case_when(
+                is.na(Place) == FALSE ~ stringr::str_remove(V1, Place),
+                TRUE ~ V1
+              ),
+              V1 = dplyr::case_when(
+                is.na(Name) == FALSE ~ stringr::str_remove(V1, Name),
+                TRUE ~ V1
+              ),
+              V1 = trimws(V1),
+              Name = trimws(Name)
+            ) %>%
+            dplyr::mutate(
+              Grade = dplyr::case_when(
+                stringr::str_length(stringr::str_split_fixed(V2, " ", n = 2)[, 1]) <= 2 &
+                  stringr::str_detect(V2, "SR|JR|SO|FR|12|11|10|9|8|7|^\\d\\d ") ~ stringr::str_split_fixed(V2, " ", n = 2)[, 1],
+                TRUE ~ ""
+              ),
+              Grade = trimws(Grade)
+            ) %>%
+            dplyr::na_if("") %>%
+            dplyr::mutate(
+              School = dplyr::case_when(
+                V2 == Grade &
+                  any(stringr::str_detect(V3, "^SEC \\d+$")) == FALSE ~ V3,
+                V2 == Grade &
+                  any(stringr::str_detect(V3, "^SEC \\d+$")) == TRUE ~ V1,
+                (V2 != Grade |
+                   is.na(Grade)) &
+                  stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$")) &
+                  stringr::str_detect(V2, "'[:upper:]'|^[:upper:]$|^\\'\\'$") == FALSE &
+                  stringr::str_detect(V2, Time_Score_String) == FALSE ~ V2,
+                (V2 != Grade |
+                   is.na(Grade)) &
+                  stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$")) &
+                  stringr::str_detect(V2, "'[:upper:]'|^[:upper:]$|'[:upper:]'|^\\'\\'$") == TRUE &
+                  (V1 != Name | is.na(Name)) ~ V1,
+                (V1 == Name |
+                   is.na(Name)) &
+                  V2 != Grade ~ stringr::str_split_fixed(V2, " ", n = 2)[, 2],
+                stringr::str_detect(V2, paste0(Time_Score_String, "|^NT$|^NP$")) == TRUE ~ V1,
+                TRUE ~ stringr::str_split_fixed(V2, " ", n = 2)[, 2]
+              ),
+              School = dplyr::case_when(
+                stringr::str_detect(School, Grade) == TRUE &
+                  is.na(School) == FALSE ~ stringr::str_remove(School, Grade),
+                TRUE ~ School
+              ),
+              School = trimws(School)
+            ) %>%
+            dplyr::mutate(
+              Prelims_Time = dplyr::case_when(
+                stringr::str_detect(V2, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE &
+                  stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE ~ V2,
+                stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE &
+                  stringr::str_detect(V4, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE ~ V3,
+                stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == FALSE &
+                  stringr::str_detect(V4, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE ~ "",
+                TRUE ~ ""
+              )
+            ) %>%
+            na_if("") %>%
+            dplyr::mutate(
+              Finals_Time = dplyr::case_when(
+                stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE &
+                  stringr::str_detect(V4, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE ~ V4,
+                stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == FALSE &
+                  stringr::str_detect(V4, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE ~ V4,
+                TRUE ~ V3
+              )
+            ) %>%
+            dplyr::mutate(
+              Points = dplyr::case_when(Finals_Time == V3 ~ V4,
+                                        Finals_Time == V4 ~ "",
+                                        TRUE ~ ""),
+              Points = dplyr::case_when(is.numeric(Points) == FALSE ~ "",
+                                        TRUE ~ Points)
+            ) %>%
+            dplyr::na_if("") %>%
+            dplyr::select(
+              Name,
+              Place,
+              Grade,
+              School,
+              Prelims_Time,
+              Finals_Time,
+              Row_Numb = V4
+            ) %>%
+            dplyr::na_if("") %>%
+            dplyr::na_if("''") %>%
+            dplyr::mutate(
+              Finals_Time = replace(Finals_Time, stringr::str_length(Finals_Time) < 3, NA),
+              Finals_Time = dplyr::case_when(
+                Place >= 1 &
+                  is.na(Finals_Time) == TRUE ~ dplyr::coalesce(Finals_Time, Prelims_Time),
+                Place >= 1 &
+                  is.na(Finals_Time) != TRUE ~ Finals_Time
+              )
+            ) %>%
+            dplyr::mutate(
+              School = dplyr::case_when(
+                is.na(School) == TRUE &
+                  stringr::str_detect(Grade, "[[:alpha:]]") == TRUE &
+                  stringr::str_length(Grade) > 1 ~ Grade,
+                is.na(School) == FALSE &
+                  stringr::str_detect(Grade, "[[:alpha:]]") == FALSE ~ School,
+                is.na(School) == FALSE ~ School
+              ),
+              School = dplyr::case_when(
+                stringr::str_length(School) < 1 | is.na(School) == TRUE ~ Name,
+                stringr::str_length(School) >= 1 ~ School
+              )
+            ) %>%
+            dplyr::mutate(
+              Grade = replace(Grade, Grade == School, NA),
+              Name = stringr::str_remove(Name, "^-"),
+              Name = replace(Name, Name == School, NA)
+            ) %>%
+            dplyr::mutate(
+              Prelims_Time = dplyr::case_when(
+                is.na(Name) == TRUE &
+                  stringr::str_detect(Grade, Time_Score_String) == TRUE ~ Grade,
+                TRUE ~ Prelims_Time
+              )
+            ) %>%
+            dplyr::mutate(
+              Grade = replace(Grade, is.na(Name) == TRUE &
+                                is.na(School) == FALSE, NA),
+              ### dealing with exhibition times 8/18/2020
+              Exhibition = dplyr::case_when(
+                stringr::str_detect(Finals_Time, "x|X") == TRUE ~ 1,
+                TRUE ~ 0
+              ),
+              Prelims_Time = stringr::str_extract(Prelims_Time, Time_Score_String)
+            ) %>%
+            dplyr::mutate(
+              Finals_Time = stringr::str_extract(Finals_Time, Time_Score_String)
+            ) %>%
+            dplyr::na_if("") %>%
+            dplyr::mutate(
+              Prelims_Time = dplyr::case_when(
+                all(Prelims_Time == Finals_Time, na.rm = TRUE) ~ as.character(NA),
+                all(Prelims_Time == Finals_Time, na.rm = TRUE) == FALSE ~ Prelims_Time
+              )
+            ) %>%
+            dplyr::mutate(
+              Grade = replace(Grade, Grade == School, NA),
+              School = dplyr::case_when(
+                is.na(Grade) == FALSE &
+                  stringr::str_detect(Grade, "\\'[[:alpha:]]\\'") == FALSE &
+                  stringr::str_detect(Grade, Time_Score_String) == FALSE &
+                  stringr::str_detect(Grade, "\\d") == FALSE &
+                  Grade %in% c("SR", "JR", "SO", "FR") == FALSE &
+                  Grade != School ~ paste(Grade, School, sep = " "),
+                TRUE ~ School
+              ),
+              School = dplyr::case_when(
+                stringr::str_detect(School, "\\'[[:upper:]]\\'") == TRUE &
+                  is.na(Name) == FALSE ~ Name,
+                stringr::str_detect(School, "^[:upper:]$") == TRUE &
+                  is.na(Name) == FALSE ~ Name,
+                stringr::str_detect(School, "^[:upper:]$") == FALSE |
+                  is.na(Name) == TRUE ~ School
+              ),
+              Grade = replace(
+                Grade,
+                (
+                  stringr::str_detect(Grade, "\\d") == FALSE &
+                    Grade %in% c("SR", "JR", "SO", "FR") == FALSE
+                ),
+                NA
+              ),
+              Grade = dplyr::case_when(
+                stringr::str_detect(Name, "\\.d{1,3}") == TRUE ~ stringr::str_extract(Name, "\\d{1,3}"),
+                stringr::str_detect(Name, "\\.d{1,3}") == FALSE ~ Grade
+              ),
+              Name = stringr::str_remove(Name, "\\d{1,3}"),
+              Prelims_Time = dplyr::case_when(
+                is.na(Prelims_Time) == TRUE &
+                  stringr::str_detect(School, "\\.") == TRUE ~ stringr::str_extract(
+                    School,
+                    "[:digit:]*[:punct:]?[:digit:]*[:punct:]?[:digit:]*"
+                  ),
+                is.na(Prelims_Time) == FALSE |
+                  stringr::str_detect(School, "\\.") == FALSE ~ Prelims_Time
+              ),
+              School = stringr::str_remove(School, "-[:alpha:]*\\d.*$"),
+              School = stringr::str_remove(
+                School,
+                "^[:digit:]{1,2}\\s")
+            ) %>%
+            na_if("") %>%
+            dplyr::mutate(
+              Name = stringr::str_remove(Name, "^-"),
+              Name = replace(Name, Name == School, NA)
+            ) %>%
+            dplyr::mutate(DQ = 0)
+        )
+      } else {
+        df_4 <- data.frame(
+          Row_Numb = character(),
+          stringsAsFactors = FALSE
+        )
+      }
+
+      #### three variables ####
+      if (length(data_length_3) > 0) {
+        suppressWarnings(
+          df_3 <- data_length_3 %>%
+            list_transform() %>%
+            dplyr::mutate(
+              Place = stringr::str_split_fixed(V1, " ", n = 2)[, 1],
+              Name = stringr::str_split_fixed(V1, " ", n = 2)[, 2],
+              Grade = as.character(NA),
+              School = as.character(NA),
+              Finals_Time = V2,
+              Prelims_Time = as.character(NA),
+            ) %>%
+            dplyr::select(
+              Name,
+              Place,
+              Grade,
+              School,
+              Prelims_Time,
+              Finals_Time,
+              Row_Numb = V3
+            ) %>%
+            dplyr::na_if("") %>%
+            dplyr::na_if("''") %>%
+            dplyr::mutate(
+              Finals_Time = replace(Finals_Time, stringr::str_length(Finals_Time) < 3, NA),
+              Finals_Time = dplyr::case_when(
+                Place >= 1 &
+                  is.na(Finals_Time) == TRUE ~ dplyr::coalesce(Finals_Time, Prelims_Time),
+                Place >= 1 &
+                  is.na(Finals_Time) != TRUE ~ Finals_Time
+              ),
+              School = dplyr::case_when(
+                stringr::str_length(School) < 1 | is.na(School) == TRUE ~ Name,
+                stringr::str_length(School) >= 1 ~ School
+              ),
+              Name = stringr::str_remove(Name, "^-"),
+              Name = replace(Name, Name == School, NA),
+              Prelims_Time = dplyr::case_when(
+                is.na(Name) == TRUE ~ Grade,
+                is.na(Name) == FALSE ~ Prelims_Time
+              ),
+              Grade = replace(Grade, is.na(Name) == TRUE &
+                                is.na(School) == FALSE, NA),
+              ### dealing with exhibition times 8/18/2020
+              Exhibition = dplyr::case_when(
+                stringr::str_detect(Finals_Time, "x|X") == TRUE ~ 1,
+                TRUE ~ 0
+              ),
+              ###
+              Finals_Time = stringr::str_extract(Finals_Time, Time_Score_String),
+              Prelims_Time = stringr::str_extract(Prelims_Time, Time_Score_String)
+            ) %>%
+            dplyr::na_if("") %>%
+            dplyr::mutate(
+              Prelims_Time = dplyr::case_when(
+                all(Prelims_Time == Finals_Time, na.rm = TRUE) ~ as.character(NA),
+                all(Prelims_Time == Finals_Time, na.rm = TRUE) == FALSE ~ Prelims_Time
+              )
+            ) %>%
+            dplyr::mutate(DQ = 0)
+        )
+      } else {
+        df_3 <- data.frame(
+          Row_Numb = character(),
+          stringsAsFactors = FALSE
+        )
+      }
+
+      #### DQ data ####
+      #### DQ 4 ####
+      if (length(DQ_length_4) > 0) {
+        suppressWarnings(
+          df_DQ_4 <- DQ_length_4 %>%
+            list_transform() %>%
+            dplyr::mutate(Place = stringr::str_split_fixed(V1, " ", n = 2)[, 1]) %>%
+            dplyr::mutate(
+              Name = dplyr::case_when(
+                any(stringr::str_detect(V1, ",")) == TRUE &
+                  stringr::str_detect(V1, ",") == TRUE ~ stringr::str_extract(V1, "_?[:alpha:]+'?[:alpha:]+, [:alpha:]+\\s?[:alpha:]?\\s?[:alpha:]?\\s?[:alpha:]?\\s?[:alpha:]?\\s?[:alpha:]?"),
+                any(stringr::str_detect(V1, ",")) == TRUE &
+                  stringr::str_detect(V1, ",") == FALSE ~ "",
+                stringr::str_detect(V2, ",") == TRUE ~ stringr::str_extract(V2, "_?[:alpha:]+'?[:alpha:]+, [:alpha:]+\\s?[:alpha:]?\\s?[:alpha:]?\\s?[:alpha:]?\\s?[:alpha:]?\\s?[:alpha:]?"),
+                stringr::str_detect(V1, ",") == FALSE &
+                  stringr::str_detect(V2, Time_Score_String) == TRUE ~ "",
+                TRUE ~ stringr::str_split_fixed(V1, " ", n = 2)[, 2]
+              )
+            ) %>%
+            dplyr::na_if("") %>%
+            dplyr::mutate(
+              V1 = dplyr::case_when(
+                is.na(Place) == FALSE ~ stringr::str_remove(V1, Place),
+                TRUE ~ V1
+              ),
+              V1 = dplyr::case_when(
+                is.na(Name) == FALSE ~ stringr::str_remove(V1, Name),
+                TRUE ~ V1
+              ),
+              V1 = trimws(V1),
+              Name = trimws(Name)
+            ) %>%
+            dplyr::mutate(
+              Grade = dplyr::case_when(
+                stringr::str_length(stringr::str_split_fixed(V2, " ", n = 2)[, 1]) <= 3 &
+                  stringr::str_detect(V2, "SR|JR|SO|FR|12|11|10|9|8|7|^\\d{1,3} ") ~ stringr::str_split_fixed(V2, " ", n = 2)[, 1],
+                TRUE ~ ""
+              ),
+              Grade = trimws(Grade)
+            ) %>%
+            dplyr::na_if("") %>%
+            dplyr::mutate(
+              School = dplyr::case_when(
+                V2 == Grade &
+                  any(stringr::str_detect(V3, "^SEC \\d+$")) == FALSE ~ V3,
+                V2 == Grade &
+                  any(stringr::str_detect(V3, "^SEC \\d+$")) == TRUE ~ V1,
+                (V2 != Grade |
+                   is.na(Grade)) &
+                  stringr::str_detect(V3, paste0(Time_Score_String, "|^DQ$|^NT$|^NP$")) &
+                  stringr::str_detect(V2, "'[:upper:]'|^[:upper:]$|^\\'\\'$") == FALSE &
+                  stringr::str_detect(V2, Time_Score_String) == FALSE ~ V2,
+                (is.na(V1) == TRUE & stringr::str_detect(V3, paste0(Time_Score_String, "|^DQ$|^NT$|^NP$")) == TRUE & stringr::str_detect(V2, "\\d") == FALSE) ~ V2,
+                (V2 != Grade |
+                   is.na(Grade)) &
+                  stringr::str_detect(V3, paste0(Time_Score_String, "^DQ$|^NT$|^NP$")) &
+                  stringr::str_detect(V2, "'[:upper:]'|^[:upper:]$|'[:upper:]'|^\\'\\'$") == TRUE &
+                  (V1 != Name | is.na(Name)) ~ V1,
+                (V1 == Name |
+                   is.na(Name)) &
+                  V2 != Grade ~ stringr::str_split_fixed(V2, " ", n = 2)[, 2],
+                stringr::str_detect(V2, paste0(Time_Score_String, "^DQ$|^NT$|^NP$")) == TRUE ~ V1,
+                TRUE ~ stringr::str_split_fixed(V2, " ", n = 2)[, 2]
+              ),
+              School = dplyr::case_when(
+                stringr::str_detect(School, Grade) == TRUE &
+                  is.na(School) == FALSE ~ stringr::str_remove(School, Grade),
+                TRUE ~ School
+              ),
+              School = trimws(School)
+            ) %>%
+            dplyr::na_if("") %>%
+            dplyr::select(Name,
+                          Place,
+                          Grade,
+                          School,
+                          Row_Numb = V4) %>%
+            dplyr::na_if("") %>%
+            dplyr::na_if("''") %>%
+            dplyr::mutate(DQ = 1)
+        )
+
+      } else {
+        df_DQ_4 <- data.frame(
+          Row_Numb = character(),
+          stringsAsFactors = FALSE
+        )
+      }
+
+      #### DQ 3 ####
+      if (length(DQ_length_3) > 0) {
+        suppressWarnings(
+          df_DQ_3 <- DQ_length_3 %>%
+            list_transform() %>%
+            dplyr::mutate(Place = stringr::str_split_fixed(V1, " ", n = 2)[, 1]) %>%
+            dplyr::mutate(
+              School = stringr::str_split_fixed(V1, " ", n = 2)[, 2],
+              School = trimws(School)
+            ) %>%
+            dplyr::na_if("") %>%
+            dplyr::select(Place,
+                          School,
+                          Row_Numb = V3) %>%
+            dplyr::na_if("") %>%
+            dplyr::na_if("''") %>%
+            dplyr::mutate(DQ = 1)
+        )
+      } else {
+        df_DQ_3 <- data.frame(
+          Row_Numb = character(),
+          stringsAsFactors = FALSE
+        )
+      }
+
+      #### Rejoin dataframes from each number of variables ####
+      Min_Row_Numb <- min(events$Event_Row_Min)
+      suppressWarnings(
+        # data <- dplyr::full_join(df_7, df_6) %>%
+        #   dplyr::full_join(df_5) %>%
+        #   dplyr::full_join(df_4) %>%
+        #   dplyr::full_join(df_3) %>%
+        #   dplyr::left_join(df_DQ_4) %>%
+        #   dplyr::left_join(df_DQ_3) %>%
+        data <- dplyr::bind_rows(df_7, df_6) %>%
+          dplyr::bind_rows(df_5) %>%
+          dplyr::bind_rows(df_4) %>%
+          dplyr::bind_rows(df_3) %>%
+          dplyr::left_join(df_DQ_4) %>%
+          dplyr::left_join(df_DQ_3) %>%
+          dplyr::mutate(Row_Numb = as.numeric(Row_Numb)) %>%
+          dplyr::arrange(Row_Numb) %>%
+          ### moved up from below for DQ work 8/20
+          dplyr::mutate(DQ = dplyr::case_when(Place == 10000 & Exhibition == 0 ~ 1, # added exhibition condition 8/27
+                                              TRUE ~ DQ)) %>%
+          na_if(10000) %>%
+          ####
           dplyr::mutate(
-            Prelims_Time = dplyr::case_when(
-              all(Prelims_Time == Finals_Time, na.rm = TRUE) ~ as.character(NA),
-              all(Prelims_Time == Finals_Time, na.rm = TRUE) == FALSE ~ Prelims_Time
-            )
+            Place = as.numeric(Place),
+            Place = dplyr::case_when(
+              is.na(dplyr::lag(Place)) == TRUE ~ Place,
+              dplyr::lag(Place) == Place ~ Place + 0.1,
+              dplyr::lag(Place) != Place ~ Place
+            ),
+            Place = as.character(Place),
+            Row_Numb = as.numeric(Row_Numb)
           ) %>%
+          dplyr::filter(Row_Numb >= Min_Row_Numb)
+      )
+
+      #### add in events based on row number ranges ####
+      data  <-
+        transform(data, Event = events$Event[findInterval(Row_Numb, events$Event_Row_Min)])
+
+      #### cleaning up final results ####
+
+      suppressWarnings(
+        data <- data %>%
           dplyr::mutate(
-            Points_2 = dplyr::case_when(
-              stringr::str_detect(Points, "\\:\\d\\d") == TRUE ~ "",
-              as.numeric(Points) > 20 &
-                stringr::str_detect(Points, Time_Score_String) == TRUE ~ "",
-              stringr::str_detect(Points, "\\:\\d\\d") == FALSE ~ Points
-            ),
-            Prelims_Time = dplyr::case_when(
-              stringr::str_detect(Points, "\\:\\d\\d") == TRUE ~ Finals_Time,
-              as.numeric(Points) > 20 &
-                stringr::str_detect(Points, Time_Score_String) == TRUE ~ Finals_Time,
-              TRUE ~ Prelims_Time
-            ),
-            Finals_Time = dplyr::case_when(
-              stringr::str_detect(Points, "\\:\\d\\d") == TRUE ~ Points,
-              as.numeric(Points) > 20 &
-                stringr::str_detect(Points, Time_Score_String) == TRUE ~ Points,
-              TRUE ~ Finals_Time
-            )
-          ) %>%
-          dplyr::na_if("") %>%
-          dplyr::mutate(
-            Points = dplyr::case_when(
-              is.na(Points_2) == FALSE ~ Points_2,
-              Points == Finals_Time ~ "",
-              TRUE ~ Points
-            ),
-            Points_2 = NULL,
-            Finals_Time = stringr::str_extract(Finals_Time, "[[:digit:][\\.\\:]]*"),
-            Prelims_Time = stringr::str_extract(Prelims_Time, "[[:digit:][\\.\\:]]*"),
+            Name = stringr::str_replace(Name, "_", "\\*"),
             Prelims_Time = replace(
               Prelims_Time,
               stringr::str_detect(Prelims_Time, "\\.") == FALSE,
               NA
-            )
-          ) %>%
-          dplyr::na_if("") %>%
-          dplyr::mutate(
-            School = replace(School, stringr::str_detect(School, "\\.\\d") == TRUE, NA),
-            School = dplyr::case_when(
-              is.na(School) == TRUE &
-                Grade %!in% c(
-                  "FR",
-                  "SO",
-                  "JR",
-                  "SR",
-                  "7",
-                  "8",
-                  "05",
-                  "06",
-                  "07",
-                  "08",
-                  "09",
-                  as.character(seq(10, 25, 1))
-                ) &
-                stringr::str_detect(Grade, "\\'[[:alpha:]]\\'") == FALSE &
-                stringr::str_detect(Grade, "\\.\\d") == FALSE ~ Grade,
-              is.na(School) == FALSE |
-                Grade %in% c(
-                  "FR",
-                  "SO",
-                  "JR",
-                  "SR",
-                  "7",
-                  "8",
-                  "05",
-                  "06",
-                  "07",
-                  "08",
-                  "09",
-                  as.character(seq(10, 25, 1))
-                ) |
-                stringr::str_detect(Grade, "\\'[[:alpha:]]\\'") == TRUE |
-                stringr::str_detect(Grade, "\\.\\d") == FALSE ~ School,
-              is.na(School) == FALSE ~ School
             ),
-            School = dplyr::case_when(
-              stringr::str_length(School) < 1 | is.na(School) == TRUE ~ Name,
-              stringr::str_length(School) >= 1 ~ School
-            ),
-            School = dplyr::case_when(
-              is.na(Grade) == FALSE &
-                stringr::str_detect(Grade, "\\'[[:alpha:]]\\'") == FALSE &
-                stringr::str_detect(Grade, "\\.\\d") == FALSE &
-                stringr::str_detect(Grade, "\\d") == FALSE &
-                Grade %in% c("SR", "JR", "SO", "FR") == FALSE &
-                Grade != School ~ paste(Grade, School, sep = " "),
-              TRUE ~ School
-            ),
-            School = dplyr::case_when(
-              stringr::str_detect(School, "\\'[[:upper:]]\\'") == TRUE &
-                is.na(Name) == FALSE ~ Name,
-              stringr::str_detect(School, "^[:upper:]$") == TRUE &
-                is.na(Name) == FALSE ~ Name,
-              stringr::str_detect(School, "^-[:upper:]$") == TRUE &
-                is.na(Name) == FALSE ~ Name,
-              TRUE ~ School
-            ),
-            School = dplyr::case_when(
-              stringr::str_detect(School, "\\d\\d\\.") == TRUE ~ stringr::str_extract(School, "[:alpha:]*"),
-              TRUE ~ School
-            ),
-            Grade = replace(Grade, Grade == School, NA),
-            Grade = replace(Grade, stringr::str_detect(Grade, "\\.\\d") == TRUE, NA),
-            Name = stringr::str_replace(Name, "^-", ""),
-            Name = replace(Name, Name == School, NA),
-            Grade = replace(Grade, is.na(Name) == TRUE &
-                              is.na(School) == FALSE, NA),
-
-            Grade = replace(Grade, Grade == School, NA),
-            Grade = replace(Grade, (
-              stringr::str_length(Grade) > 2 & is.na(Grade) == FALSE
-            ), NA)
-
-          ) %>%
-          dplyr::mutate(DQ = 0)
-      )
-    } else {
-      df_5 <- data.frame(
-        # Name = character(),
-        # Place = character(),
-        # Grade = character(),
-        # School = character(),
-        # Prelims_Time = character(),
-        # Finals_Time = character(),
-        # Points = character(),
-        Row_Numb = character(),
-        stringsAsFactors = FALSE
-      )
-    }
-
-    #### four variables ####
-    if (length(data_length_4) > 0) {
-      suppressWarnings(
-        df_4 <- data_length_4 %>%
-        list_transform() %>%
-          dplyr::mutate(Place = stringr::str_split_fixed(V1, " ", n = 2)[, 1]) %>%
-          dplyr::mutate(
-            Name = dplyr::case_when(
-              any(stringr::str_detect(V1, ",")) == TRUE &
-                stringr::str_detect(V1, ",") == TRUE ~ stringr::str_extract(V1, Name_String),
-              any(stringr::str_detect(V1, ",")) == TRUE &
-                stringr::str_detect(V1, ",") == FALSE ~ "",
-              stringr::str_detect(V2, ",") == TRUE ~ stringr::str_extract(V2, Name_String),
-              stringr::str_detect(V1, ",") == FALSE &
-                stringr::str_detect(V2, Time_Score_String) == TRUE ~ "",
-              TRUE ~ stringr::str_split_fixed(V1, " ", n = 2)[, 2]
-            )
-          ) %>%
-          dplyr::na_if("") %>%
-          dplyr::mutate(
-            V1 = dplyr::case_when(
-              is.na(Place) == FALSE ~ stringr::str_replace(V1, Place, ""),
-              TRUE ~ V1
-            ),
-            V1 = dplyr::case_when(
-              is.na(Name) == FALSE ~ stringr::str_replace(V1, Name, ""),
-              TRUE ~ V1
-            ),
-            V1 = trimws(V1),
-            Name = trimws(Name)
-          ) %>%
-          dplyr::mutate(
-            Grade = dplyr::case_when(
-              stringr::str_length(stringr::str_split_fixed(V2, " ", n = 2)[, 1]) <= 2 &
-                stringr::str_detect(V2, "SR|JR|SO|FR|12|11|10|9|8|7|^\\d\\d ") ~ stringr::str_split_fixed(V2, " ", n = 2)[, 1],
-              TRUE ~ ""
-            ),
-            Grade = trimws(Grade)
-          ) %>%
-          dplyr::na_if("") %>%
-          dplyr::mutate(
-            School = dplyr::case_when(
-              V2 == Grade &
-                any(stringr::str_detect(V3, "^SEC \\d+$")) == FALSE ~ V3,
-              V2 == Grade &
-                any(stringr::str_detect(V3, "^SEC \\d+$")) == TRUE ~ V1,
-              (V2 != Grade |
-                 is.na(Grade)) &
-                stringr::str_detect(V3, "\\.\\d\\d|^NT$|^NP$") &
-                stringr::str_detect(V2, "'[:upper:]'|^[:upper:]$|^\\'\\'$") == FALSE &
-                stringr::str_detect(V2, Time_Score_String) == FALSE ~ V2,
-              (V2 != Grade |
-                 is.na(Grade)) &
-                stringr::str_detect(V3, "\\.\\d\\d|^NT$|^NP$") &
-                stringr::str_detect(V2, "'[:upper:]'|^[:upper:]$|'[:upper:]'|^\\'\\'$") == TRUE &
-                (V1 != Name | is.na(Name)) ~ V1,
-              (V1 == Name |
-                 is.na(Name)) &
-                V2 != Grade ~ stringr::str_split_fixed(V2, " ", n = 2)[, 2],
-              stringr::str_detect(V2, "\\:\\d\\d|^NT$|^NP$") == TRUE ~ V1,
-              TRUE ~ stringr::str_split_fixed(V2, " ", n = 2)[, 2]
-            ),
-            School = dplyr::case_when(
-              stringr::str_detect(School, Grade) == TRUE &
-                is.na(School) == FALSE ~ stringr::str_replace(School, Grade, ""),
-              TRUE ~ School
-            ),
-            School = trimws(School)
-          ) %>%
-          dplyr::mutate(
-            Prelims_Time = dplyr::case_when(
-              stringr::str_detect(V2, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE &
-                stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE ~ V2,
-              stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE &
-                stringr::str_detect(V4, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE ~ V3,
-              stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == FALSE &
-                stringr::str_detect(V4, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE ~ "",
-              TRUE ~ ""
-            )
-          ) %>%
-          na_if("") %>%
-          dplyr::mutate(
-            Finals_Time = dplyr::case_when(
-              stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE &
-                stringr::str_detect(V4, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE ~ V4,
-              stringr::str_detect(V3, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == FALSE &
-                stringr::str_detect(V4, paste0(Time_Score_String, "|^NT$|^NP$|^DQ$")) == TRUE ~ V4,
-              TRUE ~ V3
-            )
-          ) %>%
-          dplyr::mutate(
-            Points = dplyr::case_when(Finals_Time == V3 ~ V4,
-                                      Finals_Time == V4 ~ "",
-                                      TRUE ~ ""),
-            Points = dplyr::case_when(is.numeric(Points) == FALSE ~ "",
-                                      TRUE ~ Points)
-          ) %>%
-          dplyr::na_if("") %>%
-          dplyr::mutate(V1 = NULL,
-                        V2 = NULL,
-                        V3 = NULL) %>%
-          dplyr::select(
-            Name,
-            Place,
-            Grade,
-            School,
-            Prelims_Time,
-            Finals_Time,
-            Row_Numb = V4
-          ) %>%
-          dplyr::na_if("") %>%
-          dplyr::na_if("''") %>%
-          dplyr::mutate(
-            Finals_Time = replace(Finals_Time, stringr::str_length(Finals_Time) < 3, NA),
-            Finals_Time = dplyr::case_when(
-              Place >= 1 &
-                is.na(Finals_Time) == TRUE ~ dplyr::coalesce(Finals_Time, Prelims_Time),
-              Place >= 1 &
-                is.na(Finals_Time) != TRUE ~ Finals_Time
-            )
-          ) %>%
-          dplyr::mutate(
-            School = dplyr::case_when(
-              is.na(School) == TRUE &
-                stringr::str_detect(Grade, "[[:alpha:]]") == TRUE &
-                stringr::str_length(Grade) > 1 ~ Grade,
-              is.na(School) == FALSE &
-                stringr::str_detect(Grade, "[[:alpha:]]") == FALSE ~ School,
-              is.na(School) == FALSE ~ School
-            ),
-            School = dplyr::case_when(
-              stringr::str_length(School) < 1 | is.na(School) == TRUE ~ Name,
-              stringr::str_length(School) >= 1 ~ School
-            )
-          ) %>%
-          dplyr::mutate(
-            Grade = replace(Grade, Grade == School, NA),
-            Name = stringr::str_replace(Name, "^-", ""),
-            Name = replace(Name, Name == School, NA)
-          ) %>%
-          dplyr::mutate(
-            Prelims_Time = dplyr::case_when(
-              is.na(Name) == TRUE &
-                stringr::str_detect(Grade, Time_Score_String) == TRUE ~ Grade,
-              TRUE ~ Prelims_Time
-            )
-          ) %>%
-          dplyr::mutate(
-            Grade = replace(Grade, is.na(Name) == TRUE &
-                              is.na(School) == FALSE, NA),
-            ### dealing with exhibition times 8/18/2020
-            Exhibition = dplyr::case_when(
-              stringr::str_detect(Finals_Time, "x|X") == TRUE ~ 1,
-              TRUE ~ 0
-            ),
-            Finals_Time = stringr::str_remove_all(Finals_Time, "[:alpha:]"),
-            Prelims_Time = stringr::str_remove_all(Prelims_Time, "[:alpha:]"),
-            ###
-            Prelims_Time = stringr::str_extract(Prelims_Time, "[[:digit:][\\.\\:]]*")
-          ) %>%
-          dplyr::mutate(
-            Finals_Time = stringr::str_extract(Finals_Time, "[[:digit:][\\.\\:]]*")
-          ) %>%
-          dplyr::na_if("") %>%
-          dplyr::mutate(
-            Prelims_Time = dplyr::case_when(
-              all(Prelims_Time == Finals_Time, na.rm = TRUE) ~ as.character(NA),
-              all(Prelims_Time == Finals_Time, na.rm = TRUE) == FALSE ~ Prelims_Time
-            )
-          ) %>%
-          dplyr::mutate(
-            Grade = replace(Grade, Grade == School, NA),
-            School = dplyr::case_when(
-              is.na(Grade) == FALSE &
-                stringr::str_detect(Grade, "\\'[[:alpha:]]\\'") == FALSE &
-                stringr::str_detect(Grade, "\\.\\d") == FALSE &
-                stringr::str_detect(Grade, "\\d") == FALSE &
-                Grade %in% c("SR", "JR", "SO", "FR") == FALSE &
-                Grade != School ~ paste(Grade, School, sep = " "),
-              TRUE ~ School
-            ),
-            School = dplyr::case_when(
-              stringr::str_detect(School, "\\'[[:upper:]]\\'") == TRUE &
-                is.na(Name) == FALSE ~ Name,
-              stringr::str_detect(School, "^[:upper:]$") == TRUE &
-                is.na(Name) == FALSE ~ Name,
-              stringr::str_detect(School, "^[:upper:]$") == FALSE |
-                is.na(Name) == TRUE ~ School
-            ),
-            Grade = replace(
-              Grade,
-              (
-                stringr::str_detect(Grade, "\\d") == FALSE &
-                  Grade %in% c("SR", "JR", "SO", "FR") == FALSE
+            Prelims_Time = replace(
+              Prelims_Time,
+              (stringr::str_detect(Prelims_Time, "\\.") == TRUE &
+                 stringr::str_detect(Prelims_Time, "\\:") == FALSE &
+                 as.numeric(Prelims_Time) < 15
               ),
               NA
             ),
-            Grade = dplyr::case_when(
-              stringr::str_detect(Name, "\\.d{1,3}") == TRUE ~ stringr::str_extract(Name, "\\d{1,3}"),
-              stringr::str_detect(Name, "\\.d{1,3}") == FALSE ~ Grade
+            Points = replace(
+              Points,
+              stringr::str_detect(Points, "[[:alpha:]]") == TRUE,
+              NA
             ),
-            Name = stringr::str_replace(Name, "\\d{1,3}", ""),
-            Prelims_Time = dplyr::case_when(
-              is.na(Prelims_Time) == TRUE &
-                stringr::str_detect(School, "\\.") == TRUE ~ stringr::str_extract(
-                  School,
-                  "[:digit:]*[:punct:]?[:digit:]*[:punct:]?[:digit:]*"
-                ),
-              is.na(Prelims_Time) == FALSE |
-                stringr::str_detect(School, "\\.") == FALSE ~ Prelims_Time
+            Points = replace(
+              Points,
+              stringr::str_detect(Points, "[^[:digit:]|\\.]"),
+              NA
             ),
-            School = stringr::str_replace(School, "-[:alpha:]*\\d.*$", ""),
-            School = stringr::str_replace(
-              School,
-              "^[:digit:]{1,2}\\s",
-              ""
-            )
+            Place = round(as.numeric(Place)),
+            Event = as.character(Event)
           ) %>%
-          na_if("") %>%
           dplyr::mutate(
-            Name = stringr::str_replace(Name, "^-", ""),
-            Name = replace(Name, Name == School, NA)
+            Place = dplyr::case_when(is.na(Place) == TRUE &
+                                       DQ == 0 ~ lag(Place) + 1,
+                                     TRUE ~ Place)
           ) %>%
-          dplyr::mutate(DQ = 0)
-      )
-    } else {
-      df_4 <- data.frame(
-        Name = character(),
-        Place = character(),
-        Grade = character(),
-        School = character(),
-        Prelims_Time = character(),
-        Finals_Time = character(),
-        Points = character(),
-        Row_Numb = character(),
-        stringsAsFactors = FALSE
-      )
-    }
+          ### added 8/20 as part of DQ, to remove records and such but not DQ results
+          dplyr::filter(
+            DQ == 0 &
+              stringr::str_detect(Finals_Time, Time_Score_String) == TRUE |
+              DQ == 0 & stringr::str_detect(Prelims_Time, Time_Score_String) == TRUE | DQ == 1
+          ) %>%
+          dplyr::mutate(Exhibition = dplyr::case_when(is.na(Exhibition) == TRUE ~ 0,
+                                                      TRUE ~ Exhibition)) %>%
+          dplyr::mutate(Finals_Time = dplyr::case_when(DQ == 1 ~ "NA",
+                                                       TRUE ~ Finals_Time)) %>%
+          dplyr::na_if("NA")
 
-    #### three variables ####
-    if (length(data_length_3) > 0) {
-      suppressWarnings(
-        df_3 <- data_length_3 %>%
-          list_transform() %>%
-          dplyr::mutate(
-            Place = stringr::str_split_fixed(V1, " ", n = 2)[, 1],
-            Name = stringr::str_split_fixed(V1, " ", n = 2)[, 2],
-            V1 = NULL,
-            Grade = as.character(NA),
-            School = as.character(NA),
-            Finals_Time = V2,
-            Prelims_Time = as.character(NA),
-            V2 = NULL,
-          ) %>%
-          dplyr::select(
-            Name,
-            Place,
-            Grade,
-            School,
-            Prelims_Time,
-            Finals_Time,
-            Row_Numb = V3
-          ) %>%
-          dplyr::na_if("") %>%
-          dplyr::na_if("''") %>%
-          dplyr::mutate(
-            Finals_Time = replace(Finals_Time, stringr::str_length(Finals_Time) < 3, NA),
-            Finals_Time = dplyr::case_when(
-              Place >= 1 &
-                is.na(Finals_Time) == TRUE ~ dplyr::coalesce(Finals_Time, Prelims_Time),
-              Place >= 1 &
-                is.na(Finals_Time) != TRUE ~ Finals_Time
-            ),
-            School = dplyr::case_when(
-              stringr::str_length(School) < 1 | is.na(School) == TRUE ~ Name,
-              stringr::str_length(School) >= 1 ~ School
-            ),
-            Name = stringr::str_replace(Name, "^-", ""),
-            Name = replace(Name, Name == School, NA),
-            Prelims_Time = dplyr::case_when(
-              is.na(Name) == TRUE ~ Grade,
-              is.na(Name) == FALSE ~ Prelims_Time
-            ),
-            Grade = replace(Grade, is.na(Name) == TRUE &
-                              is.na(School) == FALSE, NA),
-            ### dealing with exhibition times 8/18/2020
-            Exhibition = dplyr::case_when(
-              stringr::str_detect(Finals_Time, "x|X") == TRUE ~ 1,
-              TRUE ~ 0
-            ),
-            Finals_Time = stringr::str_remove_all(Finals_Time, "[:alpha:]"),
-            Prelims_Time = stringr::str_remove_all(Prelims_Time, "[:alpha:]"),
-            ###
-            Finals_Time = stringr::str_extract(Finals_Time, "[[:digit:][\\.\\:]]*"),
-            Prelims_Time = stringr::str_extract(Prelims_Time, "[[:digit:][\\.\\:]]*")
-          ) %>%
-          dplyr::na_if("") %>%
-          dplyr::mutate(
-            Prelims_Time = dplyr::case_when(
-              all(Prelims_Time == Finals_Time, na.rm = TRUE) ~ as.character(NA),
-              all(Prelims_Time == Finals_Time, na.rm = TRUE) == FALSE ~ Prelims_Time
-            )
-          ) %>%
-          dplyr::mutate(DQ = 0)
-      )
-    } else {
-      df_3 <- data.frame(
-        Name = character(),
-        Place = character(),
-        Grade = character(),
-        School = character(),
-        Prelims_Time = character(),
-        Finals_Time = character(),
-        Points = character(),
-        Row_Numb = character(),
-        stringsAsFactors = FALSE
-      )
-    }
-
-    #### DQ data ####
-    if (length(DQ_length_4) > 0) {
-      suppressWarnings(
-        df_DQ_4 <- DQ_length_4 %>%
-          list_transform() %>%
-          dplyr::mutate(Place = stringr::str_split_fixed(V1, " ", n = 2)[, 1]) %>%
-          dplyr::mutate(
-            Name = dplyr::case_when(
-              any(stringr::str_detect(V1, ",")) == TRUE &
-                stringr::str_detect(V1, ",") == TRUE ~ stringr::str_extract(V1, "_?[:alpha:]+'?[:alpha:]+, [:alpha:]+\\s?[:alpha:]?\\s?[:alpha:]?\\s?[:alpha:]?\\s?[:alpha:]?\\s?[:alpha:]?"),
-              any(stringr::str_detect(V1, ",")) == TRUE &
-                stringr::str_detect(V1, ",") == FALSE ~ "",
-              stringr::str_detect(V2, ",") == TRUE ~ stringr::str_extract(V2, "_?[:alpha:]+'?[:alpha:]+, [:alpha:]+\\s?[:alpha:]?\\s?[:alpha:]?\\s?[:alpha:]?\\s?[:alpha:]?\\s?[:alpha:]?"),
-              stringr::str_detect(V1, ",") == FALSE &
-                stringr::str_detect(V2, Time_Score_String) == TRUE ~ "",
-              TRUE ~ stringr::str_split_fixed(V1, " ", n = 2)[, 2]
-            )
-          ) %>%
-          dplyr::na_if("") %>%
-          dplyr::mutate(
-            V1 = dplyr::case_when(
-              is.na(Place) == FALSE ~ stringr::str_replace(V1, Place, ""),
-              TRUE ~ V1
-            ),
-            V1 = dplyr::case_when(
-              is.na(Name) == FALSE ~ stringr::str_replace(V1, Name, ""),
-              TRUE ~ V1
-            ),
-            V1 = trimws(V1),
-            Name = trimws(Name)
-          ) %>%
-          dplyr::mutate(
-            Grade = dplyr::case_when(
-              stringr::str_length(stringr::str_split_fixed(V2, " ", n = 2)[, 1]) <= 3 &
-                stringr::str_detect(V2, "SR|JR|SO|FR|12|11|10|9|8|7|^\\d{1,3} ") ~ stringr::str_split_fixed(V2, " ", n = 2)[, 1],
-              TRUE ~ ""
-            ),
-            Grade = trimws(Grade)
-          ) %>%
-          dplyr::na_if("") %>%
-          dplyr::mutate(
-            School = dplyr::case_when(
-              V2 == Grade &
-                any(stringr::str_detect(V3, "^SEC \\d+$")) == FALSE ~ V3,
-              V2 == Grade &
-                any(stringr::str_detect(V3, "^SEC \\d+$")) == TRUE ~ V1,
-              (V2 != Grade |
-                 is.na(Grade)) &
-<<<<<<< HEAD
-                stringr::str_detect(V3, "\\.\\d\\d|^NT$|^NP$") &
-=======
-                stringr::str_detect(V3, paste0(Time_Score_String, "|^DQ$|^NT$|^NP$")) &
->>>>>>> 9dff023e03be55f1eac9557724556031a44f1cf5
-                stringr::str_detect(V2, "'[:upper:]'|^[:upper:]$|^\\'\\'$") == FALSE &
-                stringr::str_detect(V2, Time_Score_String) == FALSE ~ V2,
-              (is.na(V1) == TRUE & stringr::str_detect(V3, paste0(Time_Score_String, "|^DQ$|^NT$|^NP$")) == TRUE & stringr::str_detect(V2, "\\d") == FALSE) ~ V2,
-              (V2 != Grade |
-                 is.na(Grade)) &
-<<<<<<< HEAD
-                stringr::str_detect(V3, "\\.\\d\\d|^NT$|^NP$") &
-=======
-                stringr::str_detect(V3, paste0(Time_Score_String, "^DQ$|^NT$|^NP$")) &
->>>>>>> 9dff023e03be55f1eac9557724556031a44f1cf5
-                stringr::str_detect(V2, "'[:upper:]'|^[:upper:]$|'[:upper:]'|^\\'\\'$") == TRUE &
-                (V1 != Name | is.na(Name)) ~ V1,
-              (V1 == Name |
-                 is.na(Name)) &
-                V2 != Grade ~ stringr::str_split_fixed(V2, " ", n = 2)[, 2],
-<<<<<<< HEAD
-              stringr::str_detect(V2, "\\:\\d\\d|^NT$|^NP$") == TRUE ~ V1,
-=======
-              stringr::str_detect(V2, paste0(Time_Score_String, "^DQ$|^NT$|^NP$")) == TRUE ~ V1,
->>>>>>> 9dff023e03be55f1eac9557724556031a44f1cf5
-              TRUE ~ stringr::str_split_fixed(V2, " ", n = 2)[, 2]
-            ),
-            School = dplyr::case_when(
-              stringr::str_detect(School, Grade) == TRUE &
-                is.na(School) == FALSE ~ stringr::str_replace(School, Grade, ""),
-              TRUE ~ School
-            ),
-            School = trimws(School)
-          ) %>%
-          dplyr::na_if("") %>%
-          dplyr::mutate(V1 = NULL,
-                        V2 = NULL,
-                        V3 = NULL) %>%
-          dplyr::select(Name,
-                        Place,
-                        Grade,
-                        School,
-                        Row_Numb = V4) %>%
-          dplyr::na_if("") %>%
-          dplyr::na_if("''") %>%
-          dplyr::mutate(DQ = 1)
       )
 
-    } else {
-      df_DQ_4 <- data.frame(
-        Name = character(),
-        Place = character(),
-        Grade = character(),
-        School = character(),
-        Prelims_Time = character(),
-        Finals_Time = character(),
-        Points = character(),
-        Row_Numb = character(),
-        stringsAsFactors = FALSE
-      )
-    }
-    if (length(DQ_length_3) > 0) {
-      suppressWarnings(
-        df_DQ_3 <- DQ_length_3 %>%
-          list_transform() %>%
-          dplyr::mutate(Place = stringr::str_split_fixed(V1, " ", n = 2)[, 1]) %>%
-          dplyr::mutate(
-            School = stringr::str_split_fixed(V1, " ", n = 2)[, 2],
-            School = trimws(School)
-          ) %>%
-          dplyr::na_if("") %>%
-          dplyr::mutate(V1 = NULL,
-                        V2 = NULL) %>%
-          dplyr::select(Place,
-                        School,
-                        Row_Numb = V3) %>%
-          dplyr::na_if("") %>%
-          dplyr::na_if("''") %>%
-          dplyr::mutate(DQ = 1)
-      )
-
-    } else {
-      df_DQ_3 <- data.frame(
-        Name = character(),
-        Place = character(),
-        Grade = character(),
-        School = character(),
-        Prelims_Time = character(),
-        Finals_Time = character(),
-        Points = character(),
-        Row_Numb = character(),
-        stringsAsFactors = FALSE
-      )
-
-    }
-
-
-    #### Rejoin dataframes from each number of variables ####
-    Min_Row_Numb <- min(events$Event_Row_Min)
-    suppressWarnings(
-      # data <- dplyr::full_join(df_7, df_6) %>%
-      #   dplyr::full_join(df_5) %>%
-      #   dplyr::full_join(df_4) %>%
-      #   dplyr::full_join(df_3) %>%
-<<<<<<< HEAD
-=======
-      #   dplyr::left_join(df_DQ_4) %>%
-      #   dplyr::left_join(df_DQ_3) %>%
->>>>>>> 9dff023e03be55f1eac9557724556031a44f1cf5
-      data <- dplyr::bind_rows(df_7, df_6) %>%
-        dplyr::bind_rows(df_5) %>%
-        dplyr::bind_rows(df_4) %>%
-        dplyr::bind_rows(df_3) %>%
-        dplyr::left_join(df_DQ_4) %>%
-        dplyr::left_join(df_DQ_3) %>%
-        # dplyr::filter(stringr::str_detect(Finals_Time, "\\.") == TRUE) %>% # removed for DQ testing 8/20
-        dplyr::mutate(Row_Numb = as.numeric(Row_Numb)) %>%
-        dplyr::arrange(Row_Numb) %>%
-        ### moved up from below for DQ work 8/20
-        dplyr::mutate(DQ = dplyr::case_when(Place == 10000 & Exhibition == 0 ~ 1, # added exhibition condition 8/27
-                                            TRUE ~ DQ)) %>%
-        na_if(10000) %>%
-        ####
-        dplyr::mutate(
-          Place = as.numeric(Place),
-          Place = dplyr::case_when(
-            is.na(dplyr::lag(Place)) == TRUE ~ Place,
-            dplyr::lag(Place) == Place ~ Place + 0.1,
-            dplyr::lag(Place) != Place ~ Place
-          ),
-          Place = as.character(Place),
-          Row_Numb = as.numeric(Row_Numb)
-        ) %>%
-        dplyr::filter(Row_Numb >= Min_Row_Numb)
-    )
-
-    #### add in events based on row number ranges ####
-    data  <-
-      transform(data, Event = events$Event[findInterval(Row_Numb, events$Event_Row_Min)])
-    # data$Row_Numb <- NULL
-
-    #### cleaning up final results ####
-
-    suppressWarnings(
-      data <- data %>%
-        dplyr::mutate(
-          Name = stringr::str_replace(Name, "_", "\\*"),
-          Prelims_Time = replace(
-            Prelims_Time,
-            stringr::str_detect(Prelims_Time, "\\.") == FALSE,
-            NA
-          ),
-          Prelims_Time = replace(
-            Prelims_Time,
-            (stringr::str_detect(Prelims_Time, "\\.") == TRUE &
-                stringr::str_detect(Prelims_Time, "\\:") == FALSE &
-                as.numeric(Prelims_Time) < 15
-            ),
-            NA
-          ),
-          Points = replace(
-            Points,
-            stringr::str_detect(Points, "[[:alpha:]]") == TRUE,
-            NA
-          ),
-          Points = replace(
-            Points,
-            stringr::str_detect(Points, "[^[:digit:]|\\.]"),
-            NA
-          ),
-          Place = round(as.numeric(Place)),
-          Event = as.character(Event)
-        ) %>%
-        dplyr::mutate(
-          Place = dplyr::case_when(is.na(Place) == TRUE &
-                                     DQ == 0 ~ lag(Place) + 1,
-                                   TRUE ~ Place)
-        ) %>%
-        ### added 8/20 as part of DQ, to remove records and such but not DQ results
-        dplyr::filter(
-          DQ == 0 &
-            stringr::str_detect(Finals_Time, Time_Score_String) == TRUE |
-            DQ == 0 & stringr::str_detect(Prelims_Time, Time_Score_String) == TRUE | DQ == 1
-        ) %>%
-        dplyr::mutate(Exhibition = dplyr::case_when(is.na(Exhibition) == TRUE ~ 0,
-                                                    TRUE ~ Exhibition)) %>%
-        dplyr::mutate(Finals_Time = dplyr::case_when(DQ == 1 ~ "NA",
-                                                     TRUE ~ Finals_Time)) %>%
-        dplyr::na_if("NA")
-
-    )
-    if(splits == TRUE){
+    if (splits == TRUE) {
       splits_df <- splits_parse(as_lines_list_2, split_len = split_length)
 
-      data <- data %>%
-        dplyr::mutate(Row_Numb = dplyr::case_when(stringr::str_detect(Event, "Relay") ~ Row_Numb + 1,
-                                                  TRUE ~ Row_Numb)) %>%
-        dplyr::left_join(splits_df, by = 'Row_Numb')
+      if (any(str_detect(data$Event, "Relay")) == TRUE) {
+        relay_row <- data %>%
+          dplyr::filter(stringr::str_detect(Event, "Relay")) %>%
+          head(1) %>%
+          dplyr::select(Row_Numb) %>%
+          dplyr::pull()
+
+        relay_offset <-
+          ifelse(stringr::str_detect(as_lines_list_2[relay_row + 2], "\\d\\d\\.\\d\\d") == TRUE,
+                 1,
+                 2)
+
+        data <- data %>%
+          dplyr::mutate(
+            Row_Numb = dplyr::case_when(
+              stringr::str_detect(Event, "Relay") == TRUE ~ Row_Numb + relay_offset,
+              TRUE ~ Row_Numb
+            )
+          ) %>%
+          dplyr::left_join(splits_df, by = 'Row_Numb')
+
+      } else {
+        data <- data %>%
+          dplyr::left_join(splits_df, by = 'Row_Numb')
+      }
 
       ### remove empty columns (all values are NA) ###
-      data <- Filter(function(x)!all(is.na(x)), data)
+      data <- Filter(function(x)
+        ! all(is.na(x)), data)
     }
 
     #### if there is a Place column it should be first ####
