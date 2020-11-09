@@ -126,7 +126,7 @@ Swim_Parse <-
     # replacement <- c("", "  ")
 
     # file <-
-    #   read_results("https://www.teamunify.com/eznslsc/UserFiles/File/Meet-Results/2018-2019/sych12142018results-rev1.pdf")
+    #   read_results("http://www.teamunify.com/eznslsc/UserFiles/File/Meet-Results/2018-2019/baac05052019_089141.pdf")
     # avoid <- avoid_default
     # typo <- "(?<=[:alpha:]) (?=[:digit:])"
     # replacement <- "   "
@@ -681,11 +681,13 @@ Swim_Parse <-
         suppressWarnings(
           df_5 <- data_length_5 %>%
             list_transform() %>%
-            dplyr::mutate(Place = stringr::str_split_fixed(V1, " ", n = 2)[, 1]) %>%
+            dplyr::mutate(Place = dplyr::case_when(stringr::str_detect(V1, "^\\d{1,}$") ~ V1,
+                                            TRUE ~ stringr::str_split_fixed(V1, " ", n = 2)[, 1])) %>%
             dplyr::mutate(
               Name = dplyr::case_when(
                 stringr::str_detect(V1, ",") == TRUE ~ stringr::str_extract(V1, Name_String),
                 stringr::str_detect(V2, ",") == TRUE ~ stringr::str_extract(V2, Name_String),
+                stringr::str_detect(V2, ",") == FALSE & V1 == Place & stringr::str_detect(V3, Time_Score_Specials_String) == FALSE ~ stringr::str_extract(V2, Name_String),
                 stringr::str_detect(V1, ",") == FALSE &
                   stringr::str_detect(V2, Time_Score_String) == TRUE ~ "",
                 TRUE ~ stringr::str_split_fixed(V1, " ", n = 2)[, 2]
@@ -1288,6 +1290,7 @@ Swim_Parse <-
                 stringr::str_detect(V2, ",") == TRUE ~ stringr::str_extract(V2, "_?[:alpha:]+'?[:alpha:]+, [:alpha:]+\\s?[:alpha:]?\\s?[:alpha:]?\\s?[:alpha:]?\\s?[:alpha:]?\\s?[:alpha:]?"),
                 stringr::str_detect(V1, ",") == FALSE &
                   stringr::str_detect(V2, Time_Score_String) == TRUE ~ "",
+                  # stringr::str_detect(V2, Time_Score_Special_String) == TRUE ~ "",
                 TRUE ~ stringr::str_split_fixed(V1, " ", n = 2)[, 2]
               )
             ) %>%

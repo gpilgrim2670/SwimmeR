@@ -62,7 +62,7 @@
 # df <- swim_parse(file)
 #
 #
-# name_test <- c("Mikulka, J.T.", "Jorgensen-Sauve, Kelsey M", "KAUS JR., HARRY L")
+# name_test <- c("Mikulka, J.T.", "Jorgensen-Sauve, Kelsey M", "KAUS JR., HARRY L", "Anderson P C Davies, Tiago", "Ritaj El Ghissassi")
 #
 # # Name_String <- "_?[:alpha:]+\\s?\\'?[:alpha:\\-\\'\\.]+\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\'\\.]*,?\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:]*\\.?,? [:alpha:]+\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\']*\\s?[:alpha:]*\\s?[:alpha:]*\\s?[:alpha:\\.]*"
 # Name_String <- "_?[:alpha:]+\\s?\\'?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\'\\.]*,?\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:]*\\.?,? [:alpha:]+\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\']*\\s?[:alpha:]*\\s?[:alpha:]*\\s?[:alpha:\\.]*"
@@ -72,7 +72,7 @@
 # dplyr::anti_join(df_standard, df_test)
 # dplyr::anti_join(df_test, df_standard) %>%
 #   View()
-#
+
 #
 # df <- data.frame(a = c("xxx", "123", "10000"),
 #                     b = c("10000", "12", "dfdff"))
@@ -81,8 +81,8 @@
 # df %>%
 #   mutate(dplyr::across(everything(), ~ stringr::str_replace_all(., "10000", 'replacement')))
 #
-# text <- read_results("https://www.teamunify.com/eznslsc/UserFiles/File/Meet-Results/2018-2019/ttsc10262018results-rev2.pdf")
-# df <- swim_parse(read_results(file_5), typo = "Clifton Park-Hal-AD", replacement = "Clifton Park-Hal-AD  ")
+# text <- read_results("http://www.teamunify.com/eznslsc/UserFiles/File/Meet-Results/2018-2019/baac05052019_089141.pdf")
+# df <- swim_parse(text, typo = "(?<=[:alpha:]) (?=[:digit:])", replacement = "   ")
 
 # file <- system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")
 # df <- swim_parse(
