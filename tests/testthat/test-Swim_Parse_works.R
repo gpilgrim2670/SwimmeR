@@ -54,14 +54,14 @@ test_that("swim_parse works USA", {
 test_that("swim_parse works list", {
 
   # import standard
-  df_standard <- read.csv(system.file("extdata", "df_standard.csv", package = "SwimmeR"), stringsAsFactors = FALSE, colClasses=c("character", "numeric", rep("character", 6), "numeric", "numeric"))
-  df_standard <- df_standard %>%
+  df_standard <- read.csv(system.file("extdata", "df_standard.csv", package = "SwimmeR"), stringsAsFactors = FALSE, colClasses=c("character", "numeric", rep("character", 6), "numeric", "numeric")) %>%
     dplyr::select(-X)
 
   # import test files
   file_1 <- system.file("extdata", "jets08082019_067546.pdf", package = "SwimmeR")
   file_2 <- system.file("extdata", "11102019roc.pdf", package = "SwimmeR")
   file_3 <- system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")
+  file_4 <- system.file("extdata", "s2-results.pdf", package = "SwimmeR")
   url91 <- "http://www.section11swim.com/Results/GirlsHS/2016/League1/Single.htm" # numbers as grades still attached to schools - fixed
   url92 <- "http://www.section1swim.com/Results/BoysHS/2020/Sec1/Single.htm" # schools are NA - fixed
   url93 <- "http://www.section2swim.com/Results/BoysHS/2004/Sec2/A/Single.htm" # schools as SR
@@ -69,10 +69,11 @@ test_that("swim_parse works list", {
   url97 <- "http://www.section3swim.com/Results/BoysHS/2020/Sec3/BC/Single.htm" # events errors - fixed
   url98 <- "http://www.section5swim.com/Results/BoysHS/2013/HAC/Single.htm"
   url100 <- "http://www.section9swim.com/Results/GirlsHS/2000/Sec9/Single.htm"
-  url101 <- "http://www.section5swim.com/Results/GirlsHS/2000/Sec5/B/Single.htm" # empy '' strings where 'A', 'B' would go for relays
+  url101 <- "http://www.section5swim.com/Results/GirlsHS/2000/Sec5/B/Single.htm" # empty '' strings where 'A', 'B' would go for relays
   sources <- c(file_1,
                file_2,
                file_3,
+               file_4,
                url91,
                url92,
                url93,
@@ -99,11 +100,29 @@ test_that("swim_parse works list", {
     all_results <-
       purrr::map(links, swim_parse, typo = c("\n", "Greece  Athena", "Newburgh Free  9", "FAYETTEVILLE MAN  ", "CICERO NORTH SYR  ", " - ", "Vineland  \\(Boy\\'s\\)",
                                       "\\(Kp\\)", "\\(Mc\\)", "\\(P", "  Psal", " Brian\\t A", "Williamsville E ", " B-AAB", "Section  X I", "Mexico  -B",
-                                      "Nottingham  -A", "Bronxville  High School", "A A", ",  CT", ",  MA", "-1NORTH ROCKL", "QUEENSBURY  HIGH", "Indiana  University", ", University of", "Sugrue_Neuendorf,"),
+                                      "Nottingham  -A", "Bronxville  High School", "A A", ",  CT", ",  MA", "-1NORTH ROCKL", "QUEENSBURY  HIGH", "Indiana  University", ", University of", "Sugrue_Neuendorf,",
+                                      "Swim\\s{2,}Club",
+                                      "Performance\\s{2,}Swim",
+                                      "Swimming\\s{2,}Club",
+                                      "Stamford\\s{2,}American\\s{2,}Internationa",
+                                      "Uwcsea\\s{2,}Phoenix-ZZ",
+                                      "AquaTech\\s{2,}Swimming",
+                                      "Chinese\\s{2,}Swimming",
+                                      "Aquatic\\s{2,}Performance",
+                                      "SwimDolphia\\s{2}Aquatic School"),
 
           replacement = c("", "Greece Athena", "Newburgh Free-9", "FAYETTEVILLE MAN ", "CICERO NORTH SYR ", "-", "Vineland",
                           "", "", "", "-Psal", "Brian A", "Williamsville East ", "B-AAB", "Section XI", "Mexico",
-                          "Nottingham", "Bronxville", "AA", "-CT", "-MA", "1-NORTH ROCKL", "QUEENSBURY", "Indiana University", "", "Neuendorf, Sugrue"))
+                          "Nottingham", "Bronxville", "AA", "-CT", "-MA", "1-NORTH ROCKL", "QUEENSBURY", "Indiana University", "", "Neuendorf, Sugrue",
+                          "Swim Club",
+                          "Performance Swim",
+                          "Swimming Club",
+                          "Stamford American International",
+                          "Uwcsea Phoenix-ZZ",
+                          "AquaTech Swimming",
+                          "Chinese Swimming",
+                          "Aquatic Performance",
+                          "SwimDolphia Aquatic School"))
 
     return(all_results)
 
@@ -114,6 +133,9 @@ test_that("swim_parse works list", {
   df_test <- Parse_Map(df_test)
   df_test <- dplyr::bind_rows(df_test, .id = "column_label") %>%
     dplyr::select(-column_label)
+
+  # to regenerate df_standard if df_test is more correct
+  # write.csv(df_test, "~/SwimmeR/inst/extdata/df_standard.csv")
 
   # compare standard to test
   expect_equivalent(df_standard,
