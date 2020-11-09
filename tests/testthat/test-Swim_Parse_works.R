@@ -54,33 +54,32 @@ test_that("swim_parse works USA", {
 test_that("swim_parse works list", {
 
   # import standard
-  df_standard <- read.csv(system.file("extdata", "df_standard.csv", package = "SwimmeR"), stringsAsFactors = FALSE, colClasses=c("character", "numeric", rep("character", 6), "numeric", "numeric")) %>%
-    dplyr::select(-X)
+  df_standard <- read.csv(system.file("extdata", "df_standard.csv", package = "SwimmeR"), stringsAsFactors = FALSE, colClasses=c("numeric", rep("character", 6), "numeric", "numeric", "character"))
 
   # import test files
   file_1 <- system.file("extdata", "jets08082019_067546.pdf", package = "SwimmeR")
   file_2 <- system.file("extdata", "11102019roc.pdf", package = "SwimmeR")
   file_3 <- system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")
   file_4 <- system.file("extdata", "s2-results.pdf", package = "SwimmeR")
+  file_5 <- system.file("extdata", "ttsc10262018results-rev2.pdf", package = "SwimmeR") # https://www.teamunify.com/eznslsc/UserFiles/File/Meet-Results/2018-2019/ttsc10262018results-rev2.pdf # potential addition, lot of df_7 stuff
   url91 <- "http://www.section11swim.com/Results/GirlsHS/2016/League1/Single.htm" # numbers as grades still attached to schools - fixed
   url92 <- "http://www.section1swim.com/Results/BoysHS/2020/Sec1/Single.htm" # schools are NA - fixed
   url93 <- "http://www.section2swim.com/Results/BoysHS/2004/Sec2/A/Single.htm" # schools as SR
-  url94 <- "http://www.section6swim.com/Results/GirlsHS/2012/NFL/Single.htm" # schools named NT
-  url97 <- "http://www.section3swim.com/Results/BoysHS/2020/Sec3/BC/Single.htm" # events errors - fixed
-  url98 <- "http://www.section5swim.com/Results/BoysHS/2013/HAC/Single.htm"
-  url100 <- "http://www.section9swim.com/Results/GirlsHS/2000/Sec9/Single.htm"
+  # url94 <- "http://www.section6swim.com/Results/GirlsHS/2012/NFL/Single.htm" # schools named NT - not going to support
+  url97 <- "http://www.section3swim.com/Results/BoysHS/2020/Sec3/BC/Single.htm" # events errors - fixed - events as Class B, Class C etc
+  url98 <- "http://www.section5swim.com/Results/BoysHS/2013/HAC/Single.htm" # 'A' 'B' strings
   url101 <- "http://www.section5swim.com/Results/GirlsHS/2000/Sec5/B/Single.htm" # empty '' strings where 'A', 'B' would go for relays
   sources <- c(file_1,
                file_2,
                file_3,
                file_4,
+               file_5,
                url91,
                url92,
                url93,
-               url94,
+               # url94,
                url97,
                url98,
-               url100,
                url101)
 
   # helper function to apply read_results across list of links
@@ -109,7 +108,9 @@ test_that("swim_parse works list", {
                                       "AquaTech\\s{2,}Swimming",
                                       "Chinese\\s{2,}Swimming",
                                       "Aquatic\\s{2,}Performance",
-                                      "SwimDolphia\\s{2}Aquatic School"),
+                                      "SwimDolphia\\s{2}Aquatic School",
+                                      "Young-Mandiak, Atticus F 11",
+                                      "Molina Ayquipa, Santiago 12"),
 
           replacement = c("", "Greece Athena", "Newburgh Free-9", "FAYETTEVILLE MAN ", "CICERO NORTH SYR ", "-", "Vineland",
                           "", "", "", "-Psal", "Brian A", "Williamsville East ", "B-AAB", "Section XI", "Mexico",
@@ -122,7 +123,9 @@ test_that("swim_parse works list", {
                           "AquaTech Swimming",
                           "Chinese Swimming",
                           "Aquatic Performance",
-                          "SwimDolphia Aquatic School"))
+                          "SwimDolphia Aquatic School",
+                          "Young-Mandiak, Atticus F   11",
+                          "Molina Ayquipa, Santiago   12"))
 
     return(all_results)
 
@@ -131,11 +134,11 @@ test_that("swim_parse works list", {
   # get test data to compare with standard
   df_test <- Read_Map(sources)
   df_test <- Parse_Map(df_test)
-  df_test <- dplyr::bind_rows(df_test, .id = "column_label") %>%
-    dplyr::select(-column_label)
+  df_test <- dplyr::bind_rows(df_test, .id = "source") %>%
+    dplyr::select(-source)
 
   # to regenerate df_standard if df_test is more correct
-  # write.csv(df_test, "~/SwimmeR/inst/extdata/df_standard.csv")
+  # write.csv(df_test, "~/SwimmeR/inst/extdata/df_standard.csv", row.names = FALSE)
 
   # compare standard to test
   expect_equivalent(df_standard,
