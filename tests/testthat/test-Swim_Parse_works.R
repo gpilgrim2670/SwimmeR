@@ -65,11 +65,11 @@ test_that("swim_parse works list", {
   url91 <- "http://www.section11swim.com/Results/GirlsHS/2016/League1/Single.htm" # numbers as grades still attached to schools - fixed
   url92 <- "http://www.section1swim.com/Results/BoysHS/2020/Sec1/Single.htm" # schools are NA - fixed
   url93 <- "http://www.section2swim.com/Results/BoysHS/2004/Sec2/A/Single.htm" # schools as SR
-  url94 <- "http://www.section6swim.com/Results/GirlsHS/2012/NFL/Single.htm" # schools as SR
+  url94 <- "http://www.section6swim.com/Results/GirlsHS/2012/NFL/Single.htm" # schools named NT
   url97 <- "http://www.section3swim.com/Results/BoysHS/2020/Sec3/BC/Single.htm" # events errors - fixed
   url98 <- "http://www.section5swim.com/Results/BoysHS/2013/HAC/Single.htm"
   url100 <- "http://www.section9swim.com/Results/GirlsHS/2000/Sec9/Single.htm"
-  url101 <- "http://www.section5swim.com/Results/GirlsHS/2000/Sec5/B/Single.htm"
+  url101 <- "http://www.section5swim.com/Results/GirlsHS/2000/Sec5/B/Single.htm" # empy '' strings where 'A', 'B' would go for relays
   sources <- c(file_1,
                file_2,
                file_3,
