@@ -1355,6 +1355,7 @@ Swim_Parse <-
           dplyr::mutate(DQ = dplyr::case_when(Place == 10000 & Exhibition == 0 ~ 1, # added exhibition condition 8/27
                                               TRUE ~ DQ)) %>%
           na_if(10000) %>%
+          dplyr::mutate(dplyr::across(where(is.character), ~ stringr::str_replace_all(., "10000", "--"))) %>% # remove any "10000"s added in erroniuously
           ####
           dplyr::mutate(
             Place = as.numeric(Place),
