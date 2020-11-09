@@ -34,7 +34,6 @@
 #' @importFrom purrr map_lgl
 #' @importFrom purrr map
 #' @importFrom stats setNames
-#' @importFrom tidyselect where
 #'
 #' @param file output from \code{read_results}
 #' @param avoid a list of strings.  Rows in \code{x} containing these strings will not be included. For example "Pool:", often used to label pool records, could be passed to \code{avoid}.  The default is \code{avoid_default}, which contains many strings similar to "Pool:", such as "STATE:" and "Qual:".  Users can supply their own lists to \code{avoid}.
@@ -1408,7 +1407,7 @@ Swim_Parse <-
           dplyr::mutate(DQ = dplyr::case_when(Place == 10000 & Exhibition == 0 ~ 1, # added exhibition condition 8/27
                                               TRUE ~ DQ)) %>%
           na_if(10000) %>%
-          dplyr::mutate(dplyr::across(tidyselect::where(is.character), ~ stringr::str_replace_all(., "10000", "--"))) %>% # remove any "10000"s added in erroniuously
+          dplyr::mutate(dplyr::across(c(Name, School), ~ stringr::str_replace_all(., "10000", "--"))) %>% # remove any "10000"s added in erroniuously
           ####
           dplyr::mutate(
             Place = as.numeric(Place),
