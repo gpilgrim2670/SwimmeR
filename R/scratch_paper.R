@@ -62,12 +62,21 @@
 # df <- swim_parse(file)
 #
 #
-# name_test <- c("Mikulka, J.T.", "Jorgensen-Sauve, Kelsey M", "KAUS JR., HARRY L", "Anderson P C Davies, Tiago", "Ritaj El Ghissassi")
+# name_test <-
+#   c(
+#     "Mikulka, J.T.",
+#     "Jorgensen-Sauve, Kelsey M",
+#     "KAUS JR., HARRY L",
+#     "Anderson P C Davies, Tiago",
+#     "Ritaj El Ghissassi"
+#   )
 #
 # # Name_String <- "_?[:alpha:]+\\s?\\'?[:alpha:\\-\\'\\.]+\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\'\\.]*,?\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:]*\\.?,? [:alpha:]+\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\']*\\s?[:alpha:]*\\s?[:alpha:]*\\s?[:alpha:\\.]*"
-# Name_String <- "_?[:alpha:]+\\s?\\'?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\'\\.]*,?\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:]*\\.?,? [:alpha:]+\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\']*\\s?[:alpha:]*\\s?[:alpha:]*\\s?[:alpha:\\.]*"
+# Name_String <-
+#   "_?[:alpha:]+\\s?\\'?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\'\\.]*,?\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:]*\\s?[:alpha:]*\\s?[:alpha:]*\\.?,? [:alpha:]+\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\']*\\s?[:alpha:]*\\s?[:alpha:]*\\s?[:alpha:\\.]*"
 # stringr::str_extract(name_test, Name_String)
 # stringr::str_extract(name_test, "[:alpha:]+ [:alpha:]*\\., [:alpha:]+ [:alpha:]+")
+
 #
 # dplyr::anti_join(df_standard, df_test)
 # dplyr::anti_join(df_test, df_standard) %>%
@@ -91,3 +100,12 @@
 #
 #   replacement = c("\n", "Indiana University", "")
 # )
+
+
+# Niagara_2018_2019 <-
+#   map(
+#     clean_results,
+#     safely(Swim_Parse, otherwise = NA),
+#     typo = c("Greater Rochester Area YMCA --NI", "Clifton Park-Hal-AD", "(?<=[:alpha:]) (?=[:digit:])", "111 ", "Alexis/Lexi J", "DQY", "La Face, Isabella or Bella F", "Cunningham, Rhys *", "(?<=[:digit:]) (?=[:alpha:])"),
+#     replacement = c("Greater Rochester Area YMCA-NI", "Clifton Park-Hal-AD  ", "   ", "", "Alexis J", "DQ", "La Face, Isabella", "Cunningham, Rhys", "   ")
+#   )
