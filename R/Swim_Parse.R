@@ -136,6 +136,40 @@ Swim_Parse <-
     #   typo <-  c("\n", "Indiana  University", ", University of")
     #   replacement <-  c("\n", "Indiana University", "")
 
+    # base <- "http://sidearmstats.com/auburn/swim/200218F0"
+    # event_numbers <-
+    #   1:42 # sequence of numbers, total of 42 events across men and women
+    # event_numbers <-
+    #   str_pad(event_numbers,
+    #           width = 2,
+    #           side = "left",
+    #           pad = "0") # add leading zeros to single digit numbers
+    # SEC_Links <-
+    #   paste0(base, event_numbers, ".htm") # paste together base urls and sequence of numbers (with leading zeroes as needed)
+    #
+    #
+    #   file <- unlist(map(SEC_Links, read_results, node = "pre")) # map SwimmeR::read_results over the list of links
+    #
+    #     typo <- c(
+    #       "A&M",
+    #       "FLOR",
+    #       "Celaya-Hernande",
+    #       # names which were cut off, and missing the last, first structure
+    #       "Hernandez-Tome",
+    #       "Garcia Varela,",
+    #       "Von Biberstein,"
+    #     )
+    #     replacement <- c(
+    #       "AM",
+    #       "Florida",
+    #       "Celaya, Hernande",
+    #       # replacement names that artificially impose last, first structure.  Names can be fixed after parsing
+    #       "Hernandez, Tome",
+    #       "Garcia, Varela",
+    #       "Von, Biberstein"
+    #     )
+    #     avoid <- avoid_default
+
     #### strings that if a line begins with one of them the line is ignored ####
     avoid_default <-
       c(
@@ -1426,6 +1460,9 @@ Swim_Parse <-
           ) %>%
           dplyr::filter(Row_Numb >= Min_Row_Numb)
       )
+
+      if("Points" %in% names(data) == FALSE)
+        {data$Points <- NA}
 
       #### add in events based on row number ranges ####
       data  <-

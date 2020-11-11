@@ -109,3 +109,39 @@
 #     typo = c("Greater Rochester Area YMCA --NI", "Clifton Park-Hal-AD", "(?<=[:alpha:]) (?=[:digit:])", "111 ", "Alexis/Lexi J", "DQY", "La Face, Isabella or Bella F", "Cunningham, Rhys *", "(?<=[:digit:]) (?=[:alpha:])"),
 #     replacement = c("Greater Rochester Area YMCA-NI", "Clifton Park-Hal-AD  ", "   ", "", "Alexis J", "DQ", "La Face, Isabella", "Cunningham, Rhys", "   ")
 #   )
+
+# base <- "http://sidearmstats.com/auburn/swim/200218F0"
+# event_numbers <-
+#   1:42 # sequence of numbers, total of 42 events across men and women
+# event_numbers <-
+#   str_pad(event_numbers,
+#           width = 2,
+#           side = "left",
+#           pad = "0") # add leading zeros to single digit numbers
+# SEC_Links <-
+#   paste0(base, event_numbers, ".htm") # paste together base urls and sequence of numbers (with leading zeroes as needed)
+#
+# SEC_Results <-
+#   map(SEC_Links, read_results, node = "pre") %>% # map SwimmeR::read_results over the list of links
+#   map(
+#     swim_parse,
+#     typo = c(
+#       "A&M",
+#       "FLOR",
+#       "Celaya-Hernande",
+#       # names which were cut off, and missing the last, first structure
+#       "Hernandez-Tome",
+#       "Garcia Varela,",
+#       "Von Biberstein,"
+#     ),
+#     replacement = c(
+#       "AM",
+#       "Florida",
+#       "Celaya, Hernande",
+#       # replacement names that artificially impose last, first structure.  Names can be fixed after parsing
+#       "Hernandez, Tome",
+#       "Garcia, Varela",
+#       "Von, Biberstein"
+#     )
+#   ) %>%
+#   bind_rows()
