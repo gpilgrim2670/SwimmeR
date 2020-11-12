@@ -33,3 +33,5 @@ test_that("Lilly King Times without score", {
                c("29.00", "2:17.78"))
 
 })
+
+# testthat::test_file("tests/testthat/test-ISL.R")

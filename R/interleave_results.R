@@ -20,7 +20,7 @@ interleave_results <-
     if (type == "individual") {
       # Adding in results
       i <- cut(results$Row_Numb, t(entries[, 6:7]))
-      levels(i)[c(FALSE, TRUE)] = NA
+      levels(i)[c(FALSE, TRUE)] <- NA
       entries[[names(results[1])]][i] <- results[[1]]
     } else if (type == "relay") {
       # relays

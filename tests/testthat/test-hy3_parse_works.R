@@ -6,3 +6,5 @@ test_that("hy3_parse_works", {
   ### still working on .hy3 parsing, hence minimal testing standard
   expect_equal(sum(results$DQ, na.rm = TRUE), 23)
 })
+
+# testthat::test_file("tests/testthat/test-hy3_parse_works.R")

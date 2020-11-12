@@ -47,13 +47,20 @@ parse_hy3 <-
 
     replacement_default <- c("typo")
 
+    #### testing ####
+    # file <- read_results(system.file("extdata", "2020_NI_Champs_Qualifier_UNAC.hy3", package = "SwimmeR")) # works 11/12
+    # file <- read_results(system.file("extdata", "Meet Results-2019 CIF SWIMMING AND  DIVING CHAMPIONSHIPS-10May2019-001.hy3", package = "SwimmeR")) # doesn't work 11/12
+    # file <- add_row_numbers(text = file)
+    # avoid = avoid_minimal
+    # typo = typo_default
+    # replacement = replacement_default
+
     file <- file %>%
       .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid)))] %>%
       stringr::str_replace_all(stats::setNames(replacement, typo))
 
 
     # data beginning with E1M or E1F contains results from each swim (male and female respectively)
-    # if(stringr::str_detect(file, "^E1M.*|^E1F.*") -- TRUE){
     entry <- file %>%
       stringr::str_extract_all("^E1M.*|^E1F.*") %>%
       .[purrr::map(., length) > 0] %>%
@@ -78,7 +85,13 @@ parse_hy3 <-
     rownames(entry) <- NULL
 
     entry <- data.frame(entry, stringsAsFactors = FALSE)
-    entry <- entry[c("X2", "X3", "X9")]
+
+    if (stringr::str_detect(entry$`X2`[1], "^\\d{2,3}[:alpha:]$")) {
+      entry <- entry[c("X1", "X2", "X7")]
+    } else {
+      entry <- entry[c("X2", "X3", "X9")]
+    }
+
     colnames(entry) <- c("ID", "Event", "Seed_Time")
     entry$Row_Numb <- as.numeric(entry_rows)
 
@@ -152,12 +165,12 @@ parse_hy3 <-
     # add prelims and finals times as well as finals places to entry
     entry <-
       interleave_results(entries = entry,
-                       results = finals,
-                       type = "individual")
+                         results = finals,
+                         type = "individual")
     entry <-
       interleave_results(entries = entry,
-                       results = prelims,
-                       type = "individual")
+                         results = prelims,
+                         type = "individual")
 
     entry <-
       interleave_results(entries = entry,
@@ -225,9 +238,21 @@ parse_hy3 <-
       purrr::map(unique) %>%
       purrr::map(head, 7)
 
+    # works for CA results 11/12 - reenable when completing hy3 work
+    # swimmer <- swimmer %>%
+    #   purrr::map(str_remove_all, "^\\d{1,4}$") %>%
+    #   purrr::map(str_remove_all, "^N$") %>%
+    #   purrr::map(str_remove_all, "^D1F\\d{1,}") %>%
+    #   purrr::map(str_remove_all, "^D1M\\d{1,}")
+
     swimmer <- data.frame(swimmer, stringsAsFactors = FALSE) %>%
       t()
     rownames(swimmer) <- NULL
+
+    # works for CA results 11/12 - reenable when completing hy3 work
+    # swimmer <- data.frame(swimmer, stringsAsFactors = FALSE) %>%
+    #   na_if("") %>%
+    #   fill_left()
 
     swimmer <- data.frame(swimmer, stringsAsFactors = FALSE)
 
@@ -389,6 +414,10 @@ parse_hy3 <-
       interleave_results(entries = relay,
                        results = relay_prelims,
                        type = "relay")
+
+    # works for CA results 11/12 - reenable when completing hy3 work
+    # relay  <-
+    #   transform(relay, Finals_Place = relay_places$Finals_Place[findInterval(Row_Min, relay_places$Row_Numb, all.inside = TRUE)])
 
     relay <-
       interleave_results(entries = relay,

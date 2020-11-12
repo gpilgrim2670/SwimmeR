@@ -145,3 +145,25 @@
 #     )
 #   ) %>%
 #   bind_rows()
+
+# ISL_1 <- "C:/Users/gpilgrim/Documents/Pilgrim_Data/ISL/Season_2_2020/ISL_16102020_Budapest_Match_1.pdf"
+# ISL_2 <- "C:/Users/gpilgrim/Documents/Pilgrim_Data/ISL/Season_2_2020/ISL_18102020_Budapest_Match_2.pdf"
+# ISL_3 <- "C:/Users/gpilgrim/Documents/Pilgrim_Data/ISL/Season_2_2020/ISL_24102020_Budapest_Match_3.pdf"
+# ISL_4 <- "C:/Users/gpilgrim/Documents/Pilgrim_Data/ISL/Season_2_2020/ISL_26102020_Budapest_Match_4.pdf"
+# ISL_5 <- "C:/Users/gpilgrim/Documents/Pilgrim_Data/ISL/Season_2_2020/ISL_30102020_Budapest_Match_5.pdf"
+# ISL_6 <- "C:/Users/gpilgrim/Documents/Pilgrim_Data/ISL/Season_2_2020/ISL_01112020_Budapest_Match_6.pdf"
+# ISL_7 <- "C:/Users/gpilgrim/Documents/Pilgrim_Data/ISL/Season_2_2020/ISL_05112020_Budapest_Match_7.pdf"
+# ISL_8 <- "C:/Users/gpilgrim/Documents/Pilgrim_Data/ISL/Season_2_2020/ISL_05112020_Budapest_Match_8.pdf"
+# ISL_9 <- "C:/Users/gpilgrim/Documents/Pilgrim_Data/ISL/Season_2_2020/ISL_09112020_Budapest_Match_9.pdf"
+# ISL_10 <- "C:/Users/gpilgrim/Documents/Pilgrim_Data/ISL/Season_2_2020/ISL_09112020_Budapest_Match_10.pdf"
+#
+# ISL_1_df <- swim_parse_ISL(read_results(ISL_1))
+# ISL_2_df <- swim_parse_ISL(read_results(ISL_2))
+# ISL_3_df <- swim_parse_ISL(read_results(ISL_3))
+# ISL_4_df <- swim_parse_ISL(read_results(ISL_4))
+# ISL_5_df <- swim_parse_ISL(read_results(ISL_5))
+# ISL_6_df <- swim_parse_ISL(read_results(ISL_6))
+# ISL_7_df <- swim_parse_ISL(read_results(ISL_7))
+# ISL_8_df <- swim_parse_ISL(read_results(ISL_8))
+# ISL_9_df <- swim_parse_ISL(read_results(ISL_9))
+# ISL_10_df <- swim_parse_ISL(read_results(ISL_10))
