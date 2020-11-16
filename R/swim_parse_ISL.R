@@ -184,13 +184,13 @@ swim_parse_ISL <-
         list_transform()
 
       df_relay_swimmer <- dplyr::bind_cols(df_left, df_right) %>%
-        na_if("NA")
+        dplyr::na_if("NA")
 
       df_relay_swimmer <- df_relay_swimmer %>%
         splits_sort(min_row = min(df_relay_swimmer$V1)) %>%
-        mutate(Row_Numb = as.numeric(Row_Numb) - 1) %>%
-        mutate(Row_Numb = as.character(Row_Numb)) %>%
-        rename("Relay_Swimmer_1" = V2,
+        dplyr::mutate(Row_Numb = as.numeric(Row_Numb) - 1) %>%
+        dplyr::mutate(Row_Numb = as.character(Row_Numb)) %>%
+        dplyr::rename("Relay_Swimmer_1" = V2,
                "Relay_Swimmer_2" = V3,
                "Relay_Swimmer_3" = V4,
                "Relay_Swimmer_4" = V5)
@@ -302,7 +302,7 @@ swim_parse_ISL <-
         ### deal with DQs ###
         dplyr::mutate(DQ = case_when(Time == "DSQ" ~ 1,
                                      TRUE ~ 0)) %>%
-        na_if("DSQ") %>%
+        dplyr::na_if("DSQ") %>%
         ### clean up relay names ###
         dplyr::rowwise() %>%
         dplyr::mutate(Team = stringr::str_split_fixed(Team, "\\s", 2)[1]) %>%
@@ -312,8 +312,12 @@ swim_parse_ISL <-
           Place = round(as.numeric(Place)),
           Event = as.character(Event)
         ) %>%
-        filter(stringr::str_detect(Event, "Club Standing") == FALSE)
+        dplyr::filter(stringr::str_detect(Event, "Club Standing") == FALSE)
     )
+
+    data <- data %>%
+      dplyr::select(Place, Lane, Name, Team, Time, Event, Points, DQ, Relay_Swimmer_1, Relay_Swimmer_2, Relay_Swimmer_3, Relay_Swimmer_4)
+
     return(data)
   }
 
