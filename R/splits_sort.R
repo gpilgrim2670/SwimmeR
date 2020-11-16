@@ -20,6 +20,9 @@
 #' @seealso \code{split_sort} is a helper function
 
 splits_sort <- function(x, min_row = minimum_row) {
+
+  min_row <- as.numeric(min_row)
+
   x <- x %>%
     dplyr::mutate(Row_Numb = as.numeric(V1)) %>%
     dplyr::arrange(Row_Numb) %>%

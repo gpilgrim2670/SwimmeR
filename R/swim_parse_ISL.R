@@ -169,6 +169,39 @@ swim_parse_ISL <-
       )
     }
 
+    #### relay swimmers df ####
+    if (length(data_relay_swimmer) > 0) {
+      left_side <- map(data_relay_swimmer, head, 1)
+      right_side <- map(data_relay_swimmer, tail, 1)
+
+      df_left <- left_side %>%
+        list_transform() %>%
+        dplyr::rename(
+          "Name" = V1
+        )
+
+      df_right <- right_side %>%
+        list_transform()
+
+      df_relay_swimmer <- dplyr::bind_cols(df_left, df_right) %>%
+        na_if("NA")
+
+      df_relay_swimmer <- df_relay_swimmer %>%
+        splits_sort(min_row = min(df_relay_swimmer$V1)) %>%
+        mutate(Row_Numb = as.numeric(Row_Numb) - 1) %>%
+        mutate(Row_Numb = as.character(Row_Numb)) %>%
+        rename("Relay_Swimmer_1" = V2,
+               "Relay_Swimmer_2" = V3,
+               "Relay_Swimmer_3" = V4,
+               "Relay_Swimmer_4" = V5)
+
+    } else {
+      df_relay_swimmer <- data.frame(
+        Row_Numb = character(),
+        stringsAsFactors = FALSE
+      )
+    }
+
     #### DQ df ####
     data_DSQ_4 <- data_DSQ[purrr::map(data_DSQ, length) == 4]
     data_DSQ_5 <- data_DSQ[purrr::map(data_DSQ, length) == 5]
@@ -229,6 +262,9 @@ swim_parse_ISL <-
         stringsAsFactors = FALSE
       )
     }
+
+    #### Join up relay and relay swimmers dataframes ####
+    df_relay <- dplyr::left_join(df_relay, df_relay_swimmer)
 
     #### Rejoin dataframes from each number of variables ####
     Min_Row_Numb <- min(events$Event_Row_Min)

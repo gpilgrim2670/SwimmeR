@@ -97,8 +97,8 @@ df_1[358:360,]
 International Swimming League results are technically .pdf files, but they're formatted very differently, so they have their own special function, `swim_parse_ISL`.  Handling of ISL results is otherwise the same, with the file first going to `read_results` and then to `swim_parse_ISL`, returning a dataframe.
 
 ```{r swim_parse_ISL, message = FALSE}
-url <- "https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/ISL_2019_CollegePark_Day_1.pdf"
-url_read <- read_results(url)
+file_url <- "https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_1_2019/ISL_16112019_CollegePark_Day_1.pdf"
+url_read <- read_results(file_url)
 df_ISL <- swim_parse_ISL(file = url_read)
 ```
 
