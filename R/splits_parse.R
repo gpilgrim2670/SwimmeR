@@ -200,22 +200,20 @@ splits_parse <- function(text, split_len = split_length) {
     }
 
     #### bind up results ####
-    # results are bound before going to splits_sort so that in cases where there are multiple rows with splits for the same race,
+    # results are bound before going to lines_sort so that in cases where there are multiple rows with splits for the same race,
     # like in longer events with many splits, those splits can be collected and treated together
     data <-
       dplyr::bind_rows(df_10, df_9, df_8, df_7, df_6, df_5, df_4, df_3, df_2) %>%
-      splits_sort(min_row = minimum_row) %>%
+      lines_sort(min_row = minimum_row) %>%
       dplyr::mutate(Row_Numb = as.numeric(Row_Numb) - 1) # make row number of split match row number of performance
 
     #### rename columns V1, V2 etc. by 50 ####
     old_names <- names(data)[grep("^V", names(data))]
     new_names <-
-      # paste("Split", seq(1, length(names(data)) - 1) * 50, sep = "_")
       paste("Split", seq(1, length(names(data)) - 1) * split_len, sep = "_")
 
     data <- data %>%
       dplyr::rename_at(dplyr::vars(old_names), ~ new_names)
-    # dplyr::mutate_at(dplyr::vars(new_names), as.numeric) # does not work if some splits are greater than 59.99
 
   } else { # if there are no rows with valid splits return blank dataframe
     data <- data.frame(Row_Numb = as.numeric())

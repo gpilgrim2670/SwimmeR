@@ -16,7 +16,7 @@ a list where NA values have been replaced with the closest previous non-NA value
 This is a base approximation of \code{tidyr::fill()}
 }
 \seealso{
-\code{fill_down} is a helper function
+\code{fill_down} is a helper function inside \code{lines_sort}
 }
 \author{
 Greg Pilgrim \email{gpilgrim2670@gmail.com}

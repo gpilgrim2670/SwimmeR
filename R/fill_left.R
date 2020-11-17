@@ -7,7 +7,7 @@
 #' @param df a dataframe having some NA values
 #' @return a dataframe where all values have been pushed left, replacing NAs, and all columns containing only NAs have been removed
 #'
-#' @seealso \code{fill_left} is a helper function
+#' @seealso \code{fill_left} is a helper function inside \code{lines_sort}
 #'
 
 fill_left <- function(df) {

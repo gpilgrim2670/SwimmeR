@@ -1,6 +1,6 @@
-#' Sorts splits by performance row number
+#' Sorts and collects lines by performance and row number
 #'
-#' Collects all splits associated with a particular performance (a swim) into a dataframe with the appropriate row number for that performance
+#' Collects all lines, (for example containing splits or relay swimmers) associated with a particular performance (a swim) into a dataframe with the appropriate row number for that performance
 #'
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
@@ -13,14 +13,13 @@
 #' @importFrom dplyr arrange
 #' @importFrom stats reshape
 #'
-#' @param x a list of splits
+#' @param x a list of character strings including performances, with tow numbers added by \code{add_row_numbers}
 #' @param min_row the lowest row number
-#' @return a dataframe with \code{Row_Numb} as the first column.  Other columns are splits, by distance
+#' @return a dataframe with \code{Row_Numb} as the first column.  Other columns are performance elements, like splits or relay swimmers, both in order of occurance left to right
 #'
-#' @seealso \code{split_sort} is a helper function
+#' @seealso \code{lines_sort} is a helper function inside \code{splits_parse} and \code{swim_parse_ISL}
 
-splits_sort <- function(x, min_row = minimum_row) {
-
+lines_sort <- function(x, min_row = minimum_row) {
   min_row <- as.numeric(min_row)
 
   x <- x %>%
@@ -36,17 +35,17 @@ splits_sort <- function(x, min_row = minimum_row) {
     ) %>%
     dplyr::mutate(
       Row_Fill = dplyr::case_when(Row_Numb_2 == "Different" ~ Row_Numb,
-                           Row_Numb_2 == "Same" ~ 0),
+                                  Row_Numb_2 == "Same" ~ 0),
       Row_Fill = as.character(Row_Fill)
     ) %>%
     dplyr::na_if(0) %>%
     dplyr::mutate(Row_Fill = fill_down(Row_Fill)) %>%
 
-    dplyr::select(-V1, -Row_Numb, -Row_Numb_2) %>%
+    dplyr::select(-V1,-Row_Numb,-Row_Numb_2) %>%
     dplyr::mutate(row_index = 1:dplyr::n()) %>%
     stats::reshape(direction = "wide",
-            idvar = "Row_Fill",
-            timevar = "row_index") %>%
+                   idvar = "Row_Fill",
+                   timevar = "row_index") %>%
     fill_left()
 
   names(x)[1] <- "Row_Numb"

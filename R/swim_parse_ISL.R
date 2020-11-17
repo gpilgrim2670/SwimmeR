@@ -187,7 +187,7 @@ swim_parse_ISL <-
         dplyr::na_if("NA")
 
       df_relay_swimmer <- df_relay_swimmer %>%
-        splits_sort(min_row = min(df_relay_swimmer$V1)) %>%
+        lines_sort(min_row = min(df_relay_swimmer$V1)) %>%
         dplyr::mutate(Row_Numb = as.numeric(Row_Numb) - 1) %>%
         dplyr::mutate(Row_Numb = as.character(Row_Numb)) %>%
         dplyr::rename("Relay_Swimmer_1" = V2,
