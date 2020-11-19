@@ -5,7 +5,7 @@ citEntry(
   title    = "{SwimmeR}: {P}ackage for working with Swimming Data",
   author   = "Gregory A. Pilgrim",
   year     = "2019",
-  note     = "version 0.5.4",
+  note     = "version 0.6.0",
   url      = "https://github.com/gpilgrim2670/SwimmeR",
   textVersion = paste("Pilgrim, Gregory A. (2019).",
         "SwimmeR: Package for working with swimming data.",

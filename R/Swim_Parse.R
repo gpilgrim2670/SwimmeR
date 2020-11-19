@@ -1531,6 +1531,8 @@ Swim_Parse <-
       return(data)
     }
 
+    # message("The Grade and School output columns have been renamed to Age and Team respectively.  Please adjust your work flows.")
+
   }
 #' @rdname Swim_Parse
 #' @export
