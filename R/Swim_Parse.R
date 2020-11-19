@@ -1466,6 +1466,7 @@ Swim_Parse <-
 
       )
 
+    #### adding splits back in ####
     if (splits == TRUE) {
       splits_df <- splits_parse(as_lines_list_2, split_len = split_length)
 

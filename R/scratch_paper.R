@@ -166,4 +166,4 @@
 # ISL_7_df <- swim_parse_ISL(read_results(ISL_7))
 # ISL_8_df <- swim_parse_ISL(read_results(ISL_8))
 # ISL_9_df <- swim_parse_ISL(read_results(ISL_9))
-# ISL_10_df <- swim_parse_ISL(read_results(ISL_10))
+# ISL_10_df <- swim_parse_ISL(read_results(ISL_10), splits = TRUE)

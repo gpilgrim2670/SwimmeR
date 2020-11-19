@@ -14,6 +14,7 @@
 #' @importFrom dplyr arrange
 #' @importFrom dplyr filter
 #' @importFrom dplyr bind_rows
+#' @importFrom dplyr rowwise
 #' @importFrom stringr str_replace_all
 #' @importFrom stringr str_split
 #' @importFrom stringr str_split_fixed
@@ -22,8 +23,8 @@
 #' @importFrom purrr map
 #'
 #' @param file output from \code{read_results}
-#' @return returns a dataframe with columns \code{Place}, \code{Lane}, \code{Name}, \code{Team}, \code{Time}, \code{Points}, \code{Event} and \code{DQ}.
-#'
+#' @param splits should splits be included, default is \code{FALSE}
+#' @return returns a dataframe of ISL results
 #' @examples \dontrun{
 #' swim_parse_ISL(
 #' read_results(
@@ -33,9 +34,11 @@
 #'
 
 swim_parse_ISL <-
-  function(file) {
+  function(file, splits = FALSE) {
 
     # file <- read_results( "https://cdn.swimswam.com/wp-content/uploads/2020/10/Results_Book_Full_M2-2.pdf")
+    # file <- read_results("https://isl.global/wp-content/uploads/2020/11/semi1_results_book.pdf")
+    # file <- read_results("https://isl.global/wp-content/uploads/2020/11/match10_results_book.pdf")
 
     as_lines_list_2 <- add_row_numbers(text = file)
 
@@ -291,7 +294,6 @@ swim_parse_ISL <-
     #### add in events based on row number ranges ####
     data  <-
       transform(data, Event = events$Event[findInterval(Row_Numb, events$Event_Row_Min)])
-    data$Row_Numb <- NULL
 
     #### cleaning up final results ####
     suppressWarnings(
@@ -316,8 +318,39 @@ swim_parse_ISL <-
     )
 
     data <- data %>%
-      dplyr::select(Place, Lane, Name, Team, Time, Event, Points, DQ, Relay_Swimmer_1, Relay_Swimmer_2, Relay_Swimmer_3, Relay_Swimmer_4)
+      dplyr::select(Row_Numb, Place, Lane, Name, Team, Time, Event, Points, DQ, Relay_Swimmer_1, Relay_Swimmer_2, Relay_Swimmer_3, Relay_Swimmer_4)
 
+    #### adding splits back in ####
+    if (splits == TRUE) {
+      splits_df <- splits_parse_ISL(as_lines_list_2)
+
+      data <- data %>%
+        dplyr::left_join(splits_df, by = 'Row_Numb')
+
+      #### calculate 50 split since it's blank coming in from  split_parse_ISL due to row mismatches
+      suppressWarnings(data <- data %>%
+        dplyr::mutate(Split_50 = as.numeric(Split_50)) %>%
+        dplyr::rowwise() %>%
+        dplyr::mutate(Split_50 = dplyr::case_when(is.na(Split_100) == FALSE & str_detect(Event, "\\dx\\d") == FALSE ~ round(
+          sec_format(Time) - sum(as.numeric(
+            c(
+              Split_100,
+              Split_150,
+              Split_200,
+              Split_250,
+              Split_300,
+              Split_350,
+              Split_400
+            )
+          ), na.rm = TRUE), 2
+        ),
+        TRUE ~ Split_50)) %>%
+        dplyr::mutate(Split_50 = sprintf("%.2f", Split_50)) %>% # to keep training zero e.g. in 24.50
+        na_if("NA")
+      )
+    }
+
+    data$Row_Numb <- NULL
     return(data)
   }
 

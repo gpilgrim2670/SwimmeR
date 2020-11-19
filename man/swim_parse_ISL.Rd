@@ -5,15 +5,17 @@
 \alias{Swim_Parse_ISL}
 \title{Formats swimming results from the International Swim League ('ISL') read with \code{read_results} into a dataframe}
 \usage{
-swim_parse_ISL(file)
+swim_parse_ISL(file, splits = FALSE)
 
-Swim_Parse_ISL(file)
+Swim_Parse_ISL(file, splits = FALSE)
 }
 \arguments{
 \item{file}{output from \code{read_results}}
+
+\item{splits}{should splits be included, default is \code{FALSE}}
 }
 \value{
-returns a dataframe with columns \code{Place}, \code{Lane}, \code{Name}, \code{Team}, \code{Time}, \code{Points}, \code{Event} and \code{DQ}.
+returns a dataframe of ISL results
 }
 \description{
 Takes the output of \code{read_results} and cleans it, yielding a dataframe of 'ISL' swimming results

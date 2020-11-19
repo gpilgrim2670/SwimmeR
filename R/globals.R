@@ -64,6 +64,7 @@ utils::globalVariables(
     "Relay_Swimmer_1",
     "Relay_Swimmer_2",
     "Relay_Swimmer_3",
-    "Relay_Swimmer_4"
+    "Relay_Swimmer_4",
+    "Split_50"
   )
 )
