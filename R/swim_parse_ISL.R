@@ -24,6 +24,8 @@
 #'
 #' @param file output from \code{read_results}
 #' @param splits should splits be included, default is \code{FALSE}
+#' @param relay_swimmers should relay swimmers be included as separate columns, default is \code{FALSE}
+#'
 #' @return returns a data frame of ISL results
 #' @examples \dontrun{
 #' swim_parse_ISL(
@@ -34,11 +36,13 @@
 #'
 
 swim_parse_ISL <-
-  function(file, splits = FALSE) {
+  function(file, splits = FALSE, relay_swimmers = FALSE) {
 
     # file <- read_results( "https://cdn.swimswam.com/wp-content/uploads/2020/10/Results_Book_Full_M2-2.pdf")
     # file <- read_results("https://isl.global/wp-content/uploads/2020/11/semi1_results_book.pdf")
     # file <- read_results("https://isl.global/wp-content/uploads/2020/11/match10_results_book.pdf")
+    # file <- read_results("https://isl.global/wp-content/uploads/2019/10/dallas_lewisville_isl_results_day_1.pdf")
+    # relay_swimmers <- FALSE
 
     as_lines_list_2 <- add_row_numbers(text = file)
 
@@ -71,15 +75,19 @@ swim_parse_ISL <-
     #### breaks data into subsets based on swim type ####
     is_digit <-
       purrr::map(data_1, stringr::str_detect, "^\\d") # is first element of list a digit - no for relay swimmers, yes for everyone else
+    if(relay_swimmers == TRUE){
     data_relay_swimmer <-
-      data_1[purrr::map(is_digit, 1) == FALSE] # pull out relay swimmers, not sure what to do with them yet
+      data_1[purrr::map(is_digit, 1) == FALSE] # pull out relay swimmers
+    } else {
+      data_relay_swimmer <- NULL
+    }
     data_entry <-
-      data_1[purrr::map(is_digit, 1) == TRUE] # all entries (ie not relay swimmers, which are a kind of subentry)
+      data_1[purrr::map(is_digit, 1) == TRUE] # all entries (ie not relay swimmers, which are a kind of sub entry)
 
     #### ind swimmer list ####
     suppressWarnings(data_ind_swimmer <-
                        data_entry[stringr::str_detect(data_entry, "[:upper:]{3}\\s-\\s[:upper:]{1,2}", negate = TRUE)] %>%  # removes relays coded as CLB - Club
-    map(stringr::str_remove_all, "^\\+?\\d{1}\\.\\d{2}$") %>%  # replaces time behind times with empty strings ("")
+    map(stringr::str_remove_all, "^\\+?1?\\d{1}\\.\\d{2}$") %>%  # replaces time behind times with empty strings ("")
       map(function(z){ z[!is.na(z) & z != ""]})) # removes empty strings from list# relays
     suppressWarnings(data_ind_swimmer <-
                        data_ind_swimmer[stringr::str_detect(data_ind_swimmer, "DSQ", negate = TRUE)]) # removes DQs
@@ -317,8 +325,13 @@ swim_parse_ISL <-
         dplyr::filter(stringr::str_detect(Event, "Club Standing") == FALSE)
     )
 
+    if(relay_swimmers == TRUE){
     data <- data %>%
       dplyr::select(Row_Numb, Place, Lane, Name, Team, Time, Event, Points, DQ, Relay_Swimmer_1, Relay_Swimmer_2, Relay_Swimmer_3, Relay_Swimmer_4)
+    } else {
+      data <- data %>%
+        dplyr::select(Row_Numb, Place, Lane, Name, Team, Time, Event, Points, DQ)
+    }
 
     #### adding splits back in ####
     if (splits == TRUE) {
@@ -331,7 +344,7 @@ swim_parse_ISL <-
       suppressWarnings(data <- data %>%
         dplyr::mutate(Split_50 = as.numeric(Split_50)) %>%
         dplyr::rowwise() %>%
-        dplyr::mutate(Split_50 = dplyr::case_when(is.na(Split_100) == FALSE & str_detect(Event, "\\dx\\d") == FALSE ~ round(
+        dplyr::mutate(Split_50 = dplyr::case_when(is.na(Split_100) == FALSE & str_detect(Event, "\\d\\s?x\\s?\\d") == FALSE ~ round(
           sec_format(Time) - sum(as.numeric(
             c(
               Split_100,

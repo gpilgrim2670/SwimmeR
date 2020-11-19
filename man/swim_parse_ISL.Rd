@@ -3,22 +3,24 @@
 \name{swim_parse_ISL}
 \alias{swim_parse_ISL}
 \alias{Swim_Parse_ISL}
-\title{Formats swimming results from the International Swim League ('ISL') read with \code{read_results} into a dataframe}
+\title{Formats swimming results from the International Swim League ('ISL') read with \code{read_results} into a data frame}
 \usage{
-swim_parse_ISL(file, splits = FALSE)
+swim_parse_ISL(file, splits = FALSE, relay_swimmers = FALSE)
 
-Swim_Parse_ISL(file, splits = FALSE)
+Swim_Parse_ISL(file, splits = FALSE, relay_swimmers = FALSE)
 }
 \arguments{
 \item{file}{output from \code{read_results}}
 
 \item{splits}{should splits be included, default is \code{FALSE}}
+
+\item{relay_swimmers}{should relay swimmers be included as separate columns, default is \code{FALSE}}
 }
 \value{
-returns a dataframe of ISL results
+returns a data frame of ISL results
 }
 \description{
-Takes the output of \code{read_results} and cleans it, yielding a dataframe of 'ISL' swimming results
+Takes the output of \code{read_results} and cleans it, yielding a data frame of 'ISL' swimming results
 }
 \examples{
 \dontrun{

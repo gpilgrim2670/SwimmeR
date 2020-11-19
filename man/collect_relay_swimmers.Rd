@@ -2,7 +2,7 @@
 % Please edit documentation in R/collect_relay_swimmers.R
 \name{collect_relay_swimmers}
 \alias{collect_relay_swimmers}
-\title{Colects relay swimmers as a dataframe within \code{swim_parse}}
+\title{Collects relay swimmers as a data frame within \code{swim_parse}}
 \usage{
 collect_relay_swimmers(x)
 }
@@ -10,13 +10,13 @@ collect_relay_swimmers(x)
 \item{x}{output from \code{read_results} followed by \code{add_row_numbers}}
 }
 \value{
-returns a dataframe of relay swimmers and the associated performance row number
+returns a data frame of relay swimmers and the associated performance row number
 }
 \description{
-Colects relay swimmers as a dataframe within \code{swim_parse}
+Collects relay swimmers as a data frame within \code{swim_parse}
 }
 \seealso{
-\code{swim_parse_ISL} must be run on the output of \code{\link{read_results}}
+\code{collect_relay_swimmers} runs inside of \code{\link{swim_parse}}
 }
 \author{
 Greg Pilgrim \email{gpilgrim2670@gmail.com}

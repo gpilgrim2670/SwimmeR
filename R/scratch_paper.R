@@ -156,7 +156,7 @@
 # ISL_8 <- "C:/Users/gpilgrim/Documents/Pilgrim_Data/ISL/Season_2_2020/ISL_05112020_Budapest_Match_8.pdf"
 # ISL_9 <- "C:/Users/gpilgrim/Documents/Pilgrim_Data/ISL/Season_2_2020/ISL_09112020_Budapest_Match_9.pdf"
 # ISL_10 <- "C:/Users/gpilgrim/Documents/Pilgrim_Data/ISL/Season_2_2020/ISL_09112020_Budapest_Match_10.pdf"
-#
+
 # ISL_1_df <- swim_parse_ISL(read_results(ISL_1))
 # ISL_2_df <- swim_parse_ISL(read_results(ISL_2))
 # ISL_3_df <- swim_parse_ISL(read_results(ISL_3))
@@ -166,8 +166,10 @@
 # ISL_7_df <- swim_parse_ISL(read_results(ISL_7))
 # ISL_8_df <- swim_parse_ISL(read_results(ISL_8))
 # ISL_9_df <- swim_parse_ISL(read_results(ISL_9))
-# ISL_10_df <- swim_parse_ISL(read_results(ISL_10), splits = TRUE)
+# ISL_10_df <- swim_parse_ISL(read_results(ISL_10), splits = TRUE, relay_swimmers = FALSE)
 
 # df <- swim_parse(read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm"), splits = TRUE, relay_swimmers = TRUE)
 #
 # df <- swim_parse(read_results(system.file("extdata", "11102019roc.pdf", package = "SwimmeR")), splits = TRUE, relay_swimmers = TRUE)
+
+# df <- swim_parse_ISL(read_results("https://isl.global/wp-content/uploads/2019/10/dallas_lewisville_isl_results_day_1.pdf"), splits= TRUE, relay_swimmers = TRUE)

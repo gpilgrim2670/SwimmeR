@@ -180,8 +180,8 @@ splits_parse_ISL <- function(text) {
       # arrange(as.numeric(V1)) %>%
       # View()
       lines_sort(min_row = minimum_row) %>%
-      dplyr::mutate(Row_Numb = as.numeric(Row_Numb) - 1) %>%  # make row number of split match row number of performance
-      dplyr::filter(Row_Numb < maximum_row)
+      dplyr::mutate(Row_Numb = as.numeric(Row_Numb) - 1)  # make row number of split match row number of performance
+      # dplyr::filter(Row_Numb < maximum_row)
 
     #### rename columns V1, V2 etc. by 50 ####
     old_names <- names(data)[grep("^V", names(data))]
