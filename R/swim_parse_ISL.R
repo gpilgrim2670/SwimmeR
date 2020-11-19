@@ -1,6 +1,6 @@
-#' Formats swimming results from the International Swim League ('ISL') read with \code{read_results} into a dataframe
+#' Formats swimming results from the International Swim League ('ISL') read with \code{read_results} into a data frame
 #'
-#' Takes the output of \code{read_results} and cleans it, yielding a dataframe of 'ISL' swimming results
+#' Takes the output of \code{read_results} and cleans it, yielding a data frame of 'ISL' swimming results
 #'
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
@@ -24,7 +24,7 @@
 #'
 #' @param file output from \code{read_results}
 #' @param splits should splits be included, default is \code{FALSE}
-#' @return returns a dataframe of ISL results
+#' @return returns a data frame of ISL results
 #' @examples \dontrun{
 #' swim_parse_ISL(
 #' read_results(

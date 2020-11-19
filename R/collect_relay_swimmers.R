@@ -1,4 +1,4 @@
-#' Colects relay swimmers as a dataframe within \code{swim_parse}
+#' Collects relay swimmers as a data frame within \code{swim_parse}
 #'
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
@@ -13,9 +13,9 @@
 #' @importFrom purrr map
 #'
 #' @param x output from \code{read_results} followed by \code{add_row_numbers}
-#' @return returns a dataframe of relay swimmers and the associated performance row number
+#' @return returns a data frame of relay swimmers and the associated performance row number
 #'
-#' @seealso \code{swim_parse_ISL} must be run on the output of \code{\link{read_results}}
+#' @seealso \code{collect_relay_swimmers} runs inside of \code{\link{swim_parse}}
 #'
 
 collect_relay_swimmers <- function(x){

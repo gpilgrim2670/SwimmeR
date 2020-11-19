@@ -23,7 +23,6 @@
 
 splits_parse_ISL <- function(text) {
   # text <- read_results("https://isl.global/wp-content/uploads/2020/11/semi1_results_book.pdf")
-  # text <- read_results("C:/Users/gpilgrim/Documents/Pilgrim_Data/ISL/Season_2_2020/ISL_09112020_Budapest_Match_10.pdf")
   # text <- add_row_numbers(text)
 
   ### define strings ###
