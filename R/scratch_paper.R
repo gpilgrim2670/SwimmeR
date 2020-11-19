@@ -167,3 +167,7 @@
 # ISL_8_df <- swim_parse_ISL(read_results(ISL_8))
 # ISL_9_df <- swim_parse_ISL(read_results(ISL_9))
 # ISL_10_df <- swim_parse_ISL(read_results(ISL_10), splits = TRUE)
+
+# df <- swim_parse(read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm"), splits = TRUE, relay_swimmers = TRUE)
+#
+# df <- swim_parse(read_results(system.file("extdata", "11102019roc.pdf", package = "SwimmeR")), splits = TRUE, relay_swimmers = TRUE)

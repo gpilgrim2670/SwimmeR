@@ -11,7 +11,8 @@ Swim_Parse(
   typo = typo_default,
   replacement = replacement_default,
   splits = FALSE,
-  split_length = 50
+  split_length = 50,
+  relay_swimmers = FALSE
 )
 
 swim_parse(
@@ -20,7 +21,8 @@ swim_parse(
   typo = typo_default,
   replacement = replacement_default,
   splits = FALSE,
-  split_length = 50
+  split_length = 50,
+  relay_swimmers = FALSE
 )
 }
 \arguments{
@@ -35,6 +37,8 @@ swim_parse(
 \item{splits}{either \code{TRUE} or the default, \code{FALSE} - should \code{swim_parse} attempt to include splits}
 
 \item{split_length}{either \code{25} or the default, \code{50}, the length of pool at which splits are recorded}
+
+\item{relay_swimmers}{either \code{TRUE} or the default, \code{FALSE} - should relay swimmers be reported}
 }
 \value{
 returns a dataframe with columns \code{Name}, \code{Place}, \code{Grade}, \code{School}, \code{Prelims_Time}, \code{Finals_Time}, \code{Points}, \code{Event} & \code{DQ}.  Note all swims will have a \code{Finals_Time}, even if that time was actually swam in the prelims (i.e. a swimmer did not qualify for finals).  This is so that final results for an event can be generated from just one column.
@@ -45,11 +49,15 @@ Takes the output of \code{read_results} and cleans it, yielding a dataframe of s
 \examples{
 \dontrun{
 swim_parse(read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm", node = "pre"),
- typo = c("-1NORTH ROCKL"), replacement = c("1-NORTH ROCKL"))
+ typo = c("-1NORTH ROCKL"), replacement = c("1-NORTH ROCKL"),
+ splits = TRUE,
+ relay_swimmers = TRUE)
  }
 \dontrun{
 swim_parse(read_results("inst/extdata/Texas-Florida-Indiana.pdf"),
- typo =  c("Indiana  University", ", University of"), replacement = c("Indiana University", ""))
+ typo =  c("Indiana  University", ", University of"), replacement = c("Indiana University", ""),
+ splits = TRUE,
+ relay_swimmers = TRUE)
  }
 }
 \seealso{

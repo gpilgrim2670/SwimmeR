@@ -4,10 +4,8 @@
 #'
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
-#' @importFrom dplyr full_join
 #' @importFrom dplyr bind_rows
 #' @importFrom dplyr rename_at
-#' @importFrom dplyr mutate_at
 #' @importFrom dplyr vars
 #' @importFrom stringr str_replace_all
 #' @importFrom stringr str_remove_all
@@ -62,8 +60,8 @@ splits_parse_ISL <- function(text) {
           .[purrr::map_lgl(., # remove rows with letters, which should take care of removing normal (non-split) times
                            stringr::str_detect,
                            "[:alpha:]", negate = TRUE)] %>%
-          stringr::str_replace_all("\n", "") %>%
-          stringr::str_replace_all("r\\:\\+\\s?\\d\\.\\d\\d", "") %>%
+          stringr::str_remove_all("\n") %>%
+          stringr::str_remove_all("r\\:\\+\\s?\\d\\.\\d\\d") %>%
           stringr::str_extract_all(paste0(
             "^\\s+\\d\\d\\.\\d\\d|", split_string
           )) %>%
@@ -143,8 +141,8 @@ splits_parse_ISL <- function(text) {
       .[purrr::map_lgl(., # remove rows that start with a place because relay swimmer rows don't
                        stringr::str_detect,
                        "^\n\\s+\\d", negate = TRUE)] %>%
-      stringr::str_replace_all("\n", "") %>%
-      stringr::str_replace_all("(?<=\\)) [\\d|\\.\\:]+", "") %>%
+      stringr::str_remove_all("\n") %>%
+      stringr::str_remove_all("(?<=\\)) [\\d|\\.\\:]+") %>%
       stringr::str_extract_all("\\d?\\:?\\d\\d\\.\\d\\d") %>%
       stringr::str_remove_all('\\"') %>%
       stringr::str_replace_all("\\(", " ") %>%
