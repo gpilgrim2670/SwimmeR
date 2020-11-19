@@ -1,3 +1,8 @@
+# Swimmer 0.6.0 - November 19 2020
+* added functionality to `swim_parse` to output relay swimmers
+* added functionality to `swim_parse_ISL` to output relay swimmers
+* added functionality to `swim_parse_ISL` to output splits
+
 # Swimmer 0.5.4 - November 4 2020
 * added functionality to output splits to `swim_parse`, works but more testing needed
 

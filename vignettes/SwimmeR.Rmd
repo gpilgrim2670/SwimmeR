@@ -16,7 +16,6 @@ knitr::opts_chunk$set(
 
 ```{r setup, message = FALSE}
 library(SwimmeR)
-library(rvest)
 library(dplyr)
 library(ggplot2)
 library(scales)
@@ -24,7 +23,7 @@ library(scales)
 
 `SwimmeR` was developed to work with results from swimming competitions.  Results are often shared as web pages (.html) or PDF documents, which are nice to read, but make data difficult to access.
 
-`SwimmeR` solves this problem by importing & cleaning .html and .pdf files containing swimming results, and returns a tidy dataframe.
+`SwimmeR` solves this problem by importing & cleaning .html and .pdf files containing swimming results, and returns a tidy data frame.
 
 Importing is performed by `read_results` which takes as an argument a file path as `file` and a `node` (for .html only).
 
@@ -65,7 +64,7 @@ df <-
   )
 ```
 
-Here are those same Women's 100 Breaststroke results, as a dataframe in tidy format:
+Here are those same Women's 100 Breaststroke results, as a data frame in tidy format:
 ```{r Swim Parse output, message = FALSE}
 df[100:102,]
 ```
@@ -75,8 +74,8 @@ df[100:102,]
 Reading html results is very similar to reading pdf results, but a value must be specified to `node`, containing which CSS node the `read_results` should look in for results.  Here results from the New York State 2003 Girls Championship meet will be read in, from the "pre" node.
 
 ```{r read_results html, message = FALSE}
-url <- "http://www.nyhsswim.com/Results/Girls/2003/NYS/Single.htm"
-url_read <- read_results(file = url, node = "pre")
+link <- "http://www.nyhsswim.com/Results/Girls/2003/NYS/Single.htm"
+url_read <- read_results(file = link, node = "pre")
 ```
 
 ```{r read_results html output, message = FALSE}
@@ -94,25 +93,30 @@ df_1[358:360,]
 ```
 
 # Reading ISL Results
-International Swimming League results are technically .pdf files, but they're formatted very differently, so they have their own special function, `swim_parse_ISL`.  Handling of ISL results is otherwise the same, with the file first going to `read_results` and then to `swim_parse_ISL`, returning a dataframe.
-
-```{r swim_parse_ISL, message = FALSE}
-file_url <- "https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_1_2019/ISL_16112019_CollegePark_Day_1.pdf"
-url_read <- read_results(file_url)
-df_ISL <- swim_parse_ISL(file = url_read)
-```
+International Swimming League results are technically .pdf files, but they're formatted very differently, so they have their own special function, `swim_parse_ISL`.  Handling of ISL results is otherwise the same, with the file first going to `read_results` and then to `swim_parse_ISL`, returning a data frame.
 
 The `SwimmeR` package's favorite swimmer, Lilly King, is involved in the ISL.  Let's see what she got up to at this particular meet.
 
-```{r swim_parse_ISL output, message = FALSE}
-df_ISL[which(df$Name == "KING Lilly"),]
+```{r swim_parse_ISL, message = FALSE}
+file_url <-
+  "https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_1_2019/ISL_16112019_CollegePark_Day_1.pdf"
+
+if (SwimmeR:::is_link_broken(file_url) == TRUE) {
+  warning("External data unavailable")
+} else {
+  file_read <- read_results(file_url)
+  df_ISL <- swim_parse_ISL(file = file_read)
+  df_ISL[which(df_ISL$Name == "KING Lilly"), ]
+  
+}
 ```
+
 
 Two first place finishes for Ms. King - very nice!  Otherwise all the normal information is here, place, time, team, event etc.  Beginning in the 2020 season ISL starts reporting points in their results, which `swim_parse_ISL` will also read.  At this moment `swim_parse_ISL` does not capture relay swimmers (only the overall relay team), although that function may be added to a future version.
 
 # Formatting Swimming Times
 
-Once results are captured in R as tidy dataframes the real fun can begin - but there's another problem.  Times in swimming are recorded as minutes:seconds.hundredth.  This is fine when a time is less than a minute, because `59.99` can be of class `numeric` in R, but times greater than or equal to a minute `1:00.00` are stuck as class `character`.  `SwimmeR` provides two functions, `sec_format` and `mmss_format` to convert between times as seconds (for doing math), and times as minutes:seconds.hundredths, for swimming-specific display.
+Once results are captured in R as tidy data frames the real fun can begin - but there's another problem.  Times in swimming are recorded as minutes:seconds.hundredth.  This is fine when a time is less than a minute, because `59.99` can be of class `numeric` in R, but times greater than or equal to a minute `1:00.00` are stuck as class `character`.  `SwimmeR` provides two functions, `sec_format` and `mmss_format` to convert between times as seconds (for doing math), and times as minutes:seconds.hundredths, for swimming-specific display.
 
 ```{r formatting times}
 data(King200Breast)

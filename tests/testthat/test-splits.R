@@ -38,16 +38,15 @@ test_that("Singapore results, splits in parenthesis", {
 
   expect_equivalent(match_sum, 0)
 
-  # df_splits_sum <-
-  #   sum(df[names(df) %in% names(df)[grep("^Split", names(df))]], na.rm = TRUE)
-
-  # expect_equivalent(df_splits_sum, 54448.73)
-
 })
 
 
 test_that("NYS results, multiple lines of splits with different lengths, has parenthesis", {
   file <- "http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm"
+
+  if(is_link_broken(file) == TRUE){
+    warning("Link to external data is broken")
+  } else {
   df <- swim_parse(
     read_results(file, node = "pre"),
     typo = c("-1NORTH ROCKL"),
@@ -69,6 +68,7 @@ test_that("NYS results, multiple lines of splits with different lengths, has par
   match_sum <- sum(df$not_matching, na.rm = TRUE) # should be 75.  Three swimmers in the 200 IM did not record splits, 20 200MRs did not have splits reported and the 32 400 free relays report splits by swimmer so the total does not sum to the total time for 75 errors
 
   expect_equivalent(match_sum, 75)
+  }
 
 })
 

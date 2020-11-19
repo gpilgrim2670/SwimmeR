@@ -1,3 +1,5 @@
+
+
 ### information on web resources failing gracefully
 # https://community.rstudio.com/t/internet-resources-should-fail-gracefully/49199/5
 
@@ -25,15 +27,22 @@ test_that("swim_parse works 2", {
 })
 
 test_that("swim_parse works 3", {
+
+  file <- "http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm"
+
+  if(is_link_broken(file) == TRUE){
+    warning("Link to external data is broken")
+  } else {
+
   expect_equivalent(sum(swim_parse(
     read_results(
-      "http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm",
-      node = "pre"
+      file
     ),
     typo = c("-1NORTH ROCKL", "\\s\\d{1,2}\\s{2,}"),
     replacement = c("1-NORTH ROCKL", "  ")
   )[,1], na.rm = TRUE),
   16235)
+  }
 
 })
 
@@ -72,6 +81,11 @@ test_that("swim_parse works list", {
   url97 <- "http://www.section3swim.com/Results/BoysHS/2020/Sec3/BC/Single.htm" # events errors - fixed - events as Class B, Class C etc
   url98 <- "http://www.section5swim.com/Results/BoysHS/2013/HAC/Single.htm" # 'A' 'B' strings
   url101 <- "http://www.section5swim.com/Results/GirlsHS/2000/Sec5/B/Single.htm" # empty '' strings where 'A', 'B' would go for relays
+
+  if(sum(sapply(c(url91, url92, url93, url97, url98, url101), is_link_broken)) > 0.9){
+    warning("A link to external data is broken")
+  }
+
   sources <- c(file_1,
                file_2,
                file_3,
