@@ -66,8 +66,8 @@ BigTen <- BigTen \%>\%
     stringr::str_detect(Event, "Time Trial") == FALSE,
     stringr::str_detect(Event, "Swim-off") == FALSE
   ) \%>\%
-  dplyr::mutate(School = dplyr::case_when(School == "Wisconsin, Madi" ~ "Wisconsin",
-                                          TRUE ~ School))
+  dplyr::mutate(Team = dplyr::case_when(Team == "Wisconsin, Madi" ~ "Wisconsin",
+                                          TRUE ~ Team))
 
 # begin results_score portion
 df <- BigTen \%>\%

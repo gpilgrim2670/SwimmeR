@@ -32,8 +32,8 @@ test_that("prelims_finals works", {
       stringr::str_detect(Event, "Time Trial") == FALSE,
       stringr::str_detect(Event, "Swim-off") == FALSE
     ) %>%
-    dplyr::mutate(School = dplyr::case_when(School == "Wisconsin, Madi" ~ "Wisconsin",
-                                            TRUE ~ School))
+    dplyr::mutate(Team = dplyr::case_when(Team == "Wisconsin, Madi" ~ "Wisconsin",
+                                            TRUE ~ Team))
 
   # begin results_score portion
   df <- BigTen %>%
@@ -48,7 +48,7 @@ test_that("prelims_finals works", {
     )
 
   Total <- df %>%
-    dplyr::group_by(School) %>%
+    dplyr::group_by(Team) %>%
     dplyr::summarise(Score = sum(Points, na.rm = TRUE)) %>%
     dplyr::arrange(dplyr::desc(Score)) %>%
     dplyr::ungroup() %>%
@@ -60,15 +60,10 @@ test_that("prelims_finals works", {
 
 test_that("timed_finals works", {
 
-  results <-
-    read.csv(
-      system.file("extdata", "TX_OH_Results.csv", package = "SwimmeR"),
-      stringsAsFactors = FALSE,
-      colClasses = c(rep("character", 6), "numeric", rep("character", 3))
-    )
+  results <- readRDS(system.file("extdata", "TX_OH_Results.rds", package = "SwimmeR"))
 
   results <- results %>%
-    select(-X) %>%
+    rename("Team" = School) %>%
     mutate(DQ = 0,
            Exhibition = 0)
 
@@ -86,7 +81,7 @@ test_that("timed_finals works", {
     group_by(State) %>%
     summarise(Score = sum(Points))
 
-  expect_equal(Scores$Score[1], 2160.5)
+  expect_equal(Scores$Score[1], 2155.5)
 })
 
 # test_file("tests/testthat/test-results_score_works.R")

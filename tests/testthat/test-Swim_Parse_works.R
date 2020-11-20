@@ -66,7 +66,9 @@ test_that("swim_parse works USA", {
 test_that("swim_parse works list", {
 
   # import standard
-  df_standard <- read.csv(system.file("extdata", "df_standard.csv", package = "SwimmeR"), stringsAsFactors = FALSE, colClasses=c("numeric", rep("character", 6), "numeric", "numeric", "character"))
+  # df_standard <- read.csv(system.file("extdata", "df_standard.csv", package = "SwimmeR"), stringsAsFactors = FALSE, colClasses=c("numeric", rep("character", 6), "numeric", "numeric", "character"))
+  df_standard <- results <- readRDS(system.file("extdata", "df_standard.rds", package = "SwimmeR"))
+
 
   # import test files
   file_1 <- system.file("extdata", "jets08082019_067546.pdf", package = "SwimmeR")
@@ -155,7 +157,7 @@ test_that("swim_parse works list", {
     dplyr::select(-source)
 
   # to regenerate df_standard if df_test is more correct
-  # write.csv(df_test, "~/SwimmeR/inst/extdata/df_standard.csv", row.names = FALSE)
+  # readr::write_rds(df_test, "~/SwimmeR/inst/extdata/df_standard.rds")
 
   # compare standard to test
   expect_equivalent(df_standard,

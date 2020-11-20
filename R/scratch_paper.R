@@ -1,5 +1,5 @@
 # base <- "http://www.results.teamunify.com/clov/2019/CIFSTATEMEET/190510F0" # base url
-# event_numbers <- 1:24 # sequence of numbers, total of 24 evetns across boys and girls
+# event_numbers <- 1:24 # sequence of numbers, total of 24 events across boys and girls
 # event_numbers <- str_pad(event_numbers, width = 2, side = "left", pad = "0") # add leading zeros to single digit numbers
 # CA_Links <- paste0(base, event_numbers, ".htm") # paste together base urls and sequence of numbers (with leading zeroes as needed)
 #
@@ -173,3 +173,10 @@
 # df <- swim_parse(read_results(system.file("extdata", "11102019roc.pdf", package = "SwimmeR")), splits = TRUE, relay_swimmers = TRUE)
 
 # df <- swim_parse_ISL(read_results("https://isl.global/wp-content/uploads/2019/10/dallas_lewisville_isl_results_day_1.pdf"), splits= TRUE, relay_swimmers = TRUE)
+#
+# file <- read_results("https://iuhoosiers.com/services/download_file.ashx?file_location=https://s3.amazonaws.com/sidearm.sites/iuhoosiers.com/documents/2019/2/1/Results_IU_UL.pdf")
+# df <- swim_parse(file)
+# df_2 <- results_score(df, events = unique(df$Event), meet_type = "timed_finals", scoring_heats = 1, lanes = 6, point_values = c(9, 4, 3, 2, 1))
+# df_2 %>%
+#   group_by(Team) %>%
+#   summarise(score = sum(Points, na.rm = TRUE))
