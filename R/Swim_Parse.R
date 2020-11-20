@@ -39,10 +39,10 @@
 #' @param avoid a list of strings.  Rows in \code{file} containing these strings will not be included. For example "Pool:", often used to label pool records, could be passed to \code{avoid}.  The default is \code{avoid_default}, which contains many strings similar to "Pool:", such as "STATE:" and "Qual:".  Users can supply their own lists to \code{avoid}.
 #' @param typo a list of strings that are typos in the original results.  \code{swim_parse} is particularly sensitive to accidental double spaces, so "Central  High School", with two spaces between "Central" and "High" is a problem, which can be fixed.  Pass "Central  High School" to \code{typo}.  Unexpected commas as also an issue, for example "Texas, University of" should be fixed using \code{typo} and \code{replacement}
 #' @param replacement a list of fixes for the strings in \code{typo}.  Here one could pass "Central High School" (one space between "Central" and "High") and "Texas" to \code{replacement} fix the issues described in \code{typo}
-#' @param splits either \code{TRUE} or the default, \code{FALSE} - should \code{swim_parse} attempt to include splits
-#' @param split_length either \code{25} or the default, \code{50}, the length of pool at which splits are recorded
-#' @param relay_swimmers either \code{TRUE} or the default, \code{FALSE} - should relay swimmers be reported
-#' @return returns a dataframe with columns \code{Name}, \code{Place}, \code{Age}, \code{Team}, \code{Prelims_Time}, \code{Finals_Time}, \code{Points}, \code{Event} & \code{DQ}.  Note all swims will have a \code{Finals_Time}, even if that time was actually swam in the prelims (i.e. a swimmer did not qualify for finals).  This is so that final results for an event can be generated from just one column.
+#' @param splits either \code{TRUE} or the default, \code{FALSE} - should \code{swim_parse} attempt to include splits.
+#' @param split_length either \code{25} or the default, \code{50}, the length of pool at which splits are recorded.  Not all results are internally consistent on this issue - some have races with splits by 50 and other races with splits by 25.
+#' @param relay_swimmers either \code{TRUE} or the default, \code{FALSE} - should relay swimmers be reported.  Relay swimmers are reported in separate columns named \code{Relay_Swimmer_1} etc.
+#' @return returns a data frame with columns \code{Name}, \code{Place}, \code{Age}, \code{Team}, \code{Prelims_Time}, \code{Finals_Time}, \code{Points}, \code{Event} & \code{DQ}.  Note all swims will have a \code{Finals_Time}, even if that time was actually swam in the prelims (i.e. a swimmer did not qualify for finals).  This is so that final results for an event can be generated from just one column.
 #'
 #' @examples \dontrun{
 #' swim_parse(read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm", node = "pre"),
@@ -1522,7 +1522,7 @@ Swim_Parse <-
     }
 
     data$Row_Numb <- NULL
-    message("The Grade and School output columns have been renamed to Age and Team respectively.  Please adjust your work flows.")
+    message("The Grade and School output columns have been renamed Age and Team respectively.  Please adjust your work flows as needed.")
 
 
       return(data)

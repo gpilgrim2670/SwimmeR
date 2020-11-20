@@ -174,9 +174,5 @@
 
 # df <- swim_parse_ISL(read_results("https://isl.global/wp-content/uploads/2019/10/dallas_lewisville_isl_results_day_1.pdf"), splits= TRUE, relay_swimmers = TRUE)
 #
-# file <- read_results("https://iuhoosiers.com/services/download_file.ashx?file_location=https://s3.amazonaws.com/sidearm.sites/iuhoosiers.com/documents/2019/2/1/Results_IU_UL.pdf")
-# df <- swim_parse(file)
-# df_2 <- results_score(df, events = unique(df$Event), meet_type = "timed_finals", scoring_heats = 1, lanes = 6, point_values = c(9, 4, 3, 2, 1))
-# df_2 %>%
-#   group_by(Team) %>%
-#   summarise(score = sum(Points, na.rm = TRUE))
+file <- read_results("https://iuhoosiers.com/services/download_file.ashx?file_location=https://s3.amazonaws.com/sidearm.sites/iuhoosiers.com/documents/2019/2/1/Results_IU_UL.pdf")
+df <- swim_parse(file, splits = TRUE, relay_swimmers = TRUE)
