@@ -19,7 +19,7 @@
 
 # Usage
 
-Version 0.5.3 of `SwimmeR` has two major uses - importing results and formatting times.  It also has functions for course conversions and drawing brackets.
+Version 0.6.0 of `SwimmeR` has two major uses - importing results and formatting times.  It also has functions for course conversions and drawing brackets.
 
 ## Importing Results
 
@@ -27,29 +27,48 @@ Version 0.5.3 of `SwimmeR` has two major uses - importing results and formatting
 
 `read_results` has two arguments, `file`, which is the file path to read in, and `node`, required only for HTML files, this is a CSS node where the results reside.  `node` defaults to `"pre"`, which has been correct in every instance tested thus far.
 
-`swim_parse` has four arguments. `file` is the output of `read_results` and is required.  `avoid` is a list of strings.  Rows of the read in file containing any of those strings will not be included.  `avoid` is optional.  Incorrectly specifying it may lead to nonsense rows in the final dataframe, but will not cause an error.  `typo` and `replacement` work together to fix typos, by replacing them with replacements.  Strings in `typo` will be replaced by strings in `replacement` in element index order - that is the first element of `typo` will be replaced everywhere it appears by the first element of `replacement`.  Typos can cause lost data and nonsense rows.  See `?swim_parse` or the package vignette for more information.
+`swim_parse` has seven arguments as of version 0.6.0.
+
+`file` is the output of `read_results` and is required.
+
+`avoid` is a list of strings.  Rows in `file` containing any of those strings will not be included.  `avoid` is optional.  Incorrectly specifying it may lead to nonsense rows in the final dataframe, but will not cause an error.  Nonsense rows can be removed after import.  
+
+`typo` and `replacement` work together to fix typos, by replacing them with replacements.  Strings in `typo` will be replaced by strings in `replacement` in element index order - that is the first element of `typo` will be replaced everywhere it appears by the first element of `replacement`.  Typos can cause lost data and nonsense rows.
+
+See `?swim_parse` or the package vignette for more information.
+
+*The following three arguments are only available in `SwimmeR v0.6.0` and higher*
+
+`splits` and `split_length` tell `swim_parse` if and how to import split times.  Setting `splits = TRUE` will import splits as columns.  `split_length` refers to the pool course (length) as defaults to `50`.  It may also be set to `25`, if splits are recorded every 25 rather than every 50.  Split reporting within source files is very inconsistant, so while `swim_parse` will import whatever splits are present they may require some inspection after import.
+`swim_parse_ISL` also has a `splits` argument that works the same way.  Set `splits = TRUE` to record splits.
+See the Splits sections of `vignette("SwimmeR")` for more information and examples.  
+
+`relay_swimmers` tells `swim_parse` or `swim_parse_ISL` whether or not to include the names of relay swimmers as additional columns.  Set `relay_swimmers = TRUE` to include.  There is more information available in `vignette("SwimmeR")`
 
 ```r
 swim_parse(
     read_results(
-      "http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm",
-      node = "pre"
+      "http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm"
     ),
     typo = c("-1NORTH ROCKL"),
-    replacement = c("1-NORTH ROCKL")
+    replacement = c("1-NORTH ROCKL"),
+    splits = TRUE, # requires version 0.6.0 or greater
+    relay_swimmers = TRUE # requires version 0.6.0 or greater
   )
 ```
 
-`swim_parse_ISL` only takes one argument, `file`, the output of `read_results`.
+`swim_parse_ISL` only requires one argument, `file`, the output of `read_results`.
 
 ```r
 swim_parse_ISL(
-    read_results(
-      "https://isl.global/wp-content/uploads/2019/10/isl-indianapols-results-day-2-2.pdf")
+    file = read_results(
+      "https://isl.global/wp-content/uploads/2019/10/isl-indianapols-results-day-2-2.pdf"),
+      splits = TRUE, # requires version 0.6.0 or greater
+      relay_swimmers = TRUE # requires version 0.6.0 or greater
   )
 ```
 
-`SwimmeR` can only read files in single column format, not double.  `SwimmeR` also does not capture split times.
+`SwimmeR` can only read files in single column format, not double.
 
 ### Will work - results in single column
 ![Will work](inst/extdata/HSEmpireMeet.png)
