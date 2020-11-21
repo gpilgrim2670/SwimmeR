@@ -1,16 +1,18 @@
 
 
-test_that("Lilly King Score ISL", {
-  file <- "https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_2_2020/ISL_16102020_Budapest_Match_1.pdf"
+test_that("ISL season 2 dataframe", {
+
+  file <- "https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_2_2020/ISL_01112020_Budapest_Match_6.pdf"
 
   if(is_link_broken(file) == TRUE){
     warning("Link to external data is broken")
   } else {
   df <- swim_parse_ISL(
-    read_results(file))
-  expect_equal(sum(unique(df[df$Name == "KING Lilly",])$Points, na.rm = TRUE),
-  108)
-  }
+    read_results(file),
+    splits = TRUE,
+    relay_swimmers = TRUE)
+  expect_equivalent(dim(df), c(324, 20)) # 324 is the normal number of rows, although there can be more depending on ties in the skins races
+  } # 20 is the normal number of columns
 
 })
 

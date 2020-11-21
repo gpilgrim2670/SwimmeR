@@ -380,14 +380,14 @@ swim_parse_ISL <-
           ), na.rm = TRUE), 2
         ),
         TRUE ~ Split_50)) %>%
-        dplyr::mutate(Split_50 = sprintf("%.2f", Split_50)) %>% # to keep training zero e.g. in 24.50
+        dplyr::mutate(Split_50 = sprintf("%.2f", Split_50)) %>% # to keep trailing zero e.g. in 24.50
         na_if("NA")
       )
     }
 
     ### remove empty columns (all values are NA) ###
     data <- Filter(function(x)
-      ! all(is.na(x)), data)
+      !all(is.na(x)), data)
 
     data$Row_Numb <- NULL
     return(data)

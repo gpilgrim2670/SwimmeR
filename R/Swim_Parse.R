@@ -1512,7 +1512,7 @@ Swim_Parse <-
 
       ### remove empty columns (all values are NA) ###
       data <- Filter(function(x)
-        ! all(is.na(x)), data)
+        !all(is.na(x)), data)
     }
 
     #### if there is a Place column it should be first ####
