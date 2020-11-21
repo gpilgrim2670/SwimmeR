@@ -22,6 +22,10 @@
 
 event_parse_ISL <- function(text){
 
+  # file <- read_results("https://isl.global/wp-content/uploads/2019/10/dallas_lewisville_isl_results_day_1.pdf")
+  # file = read_results("https://isl.global/wp-content/uploads/2019/10/isl-indianapols-results-day-2-2.pdf")
+  # text <- add_row_numbers(text = file)
+
   events <- text %>%
   .[purrr::map_lgl( # new 10/16
     .,
@@ -36,6 +40,7 @@ event_parse_ISL <- function(text){
     stringr::str_remove_all("\\(") %>%
     stringr::str_remove_all("\\)") %>%
     stringr::str_replace(".*(?=(Wom|Men|Boy|Girl|Mixed))", "") %>% # new 10/16
+    .[purrr::map_lgl(., stringr::str_detect, "Club Standings", negate = TRUE)] %>%
     trimws()
 
   events <-

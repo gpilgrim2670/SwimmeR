@@ -28,7 +28,7 @@ test_that("CAC Score ISL", {
 
 })
 
-test_that("Lilly King Times with score", {
+test_that("Lilly King Times with score - season 2", {
   file <- "https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_2_2020/ISL_16102020_Budapest_Match_1.pdf"
 
   if(is_link_broken(file) == TRUE){
@@ -42,7 +42,7 @@ test_that("Lilly King Times with score", {
 
 })
 
-test_that("Lilly King Times without score", {
+test_that("Lilly King Times without score - season 1", {
   file <- "https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_1_2019/ISL_16112019_CollegePark_Day_1.pdf"
 
   if(is_link_broken(file) == TRUE){

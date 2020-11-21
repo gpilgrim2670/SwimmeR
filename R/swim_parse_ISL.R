@@ -19,6 +19,7 @@
 #' @importFrom stringr str_split
 #' @importFrom stringr str_split_fixed
 #' @importFrom stringr str_detect
+#' @importFrom stringr str_extract
 #' @importFrom purrr map_lgl
 #' @importFrom purrr map
 #'
@@ -38,16 +39,31 @@
 swim_parse_ISL <-
   function(file, splits = FALSE, relay_swimmers = FALSE) {
 
+
+    #### Testing ####
     # file <- read_results( "https://cdn.swimswam.com/wp-content/uploads/2020/10/Results_Book_Full_M2-2.pdf")
     # file <- read_results("https://isl.global/wp-content/uploads/2020/11/semi1_results_book.pdf")
     # file <- read_results("https://isl.global/wp-content/uploads/2020/11/match10_results_book.pdf")
     # file <- read_results("https://isl.global/wp-content/uploads/2019/10/dallas_lewisville_isl_results_day_1.pdf")
-    # relay_swimmers <- FALSE
+    # file <- read_results("https://isl.global/wp-content/uploads/2019/10/isl-indianapols-results-day-2-2.pdf")
+    # file <- read_results("https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_2_2020/ISL_30102020_Budapest_Match_5.pdf")
+    # file <- read_results("https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_2_2020/ISL_24102020_Budapest_Match_3.pdf")
 
+    # file <- read_results("https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_2_2020/ISL_01112020_Budapest_Match_6.pdf")
+    # file <- read_results("https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_2_2020/ISL_30102020_Budapest_Match_5.pdf")
+    # file <- read_results("https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_1_2019/ISL_16112019_CollegePark_Day_1.pdf")
+
+    # relay_swimmers <- TRUE
+    # splits <- TRUE
+
+    #### Begin Actual Function ####
     as_lines_list_2 <- add_row_numbers(text = file)
 
     #### Pulls out event labels from text ####
     events <- event_parse_ISL(as_lines_list_2)
+
+    #### Define min row number ####
+    Min_Row_Numb <- min(events$Event_Row_Min)
 
     #### clean input data ####
     suppressWarnings(
@@ -64,6 +80,7 @@ swim_parse_ISL <-
         stringr::str_replace_all("\\s+Q\\s+", "   ") %>% # removes Q used to denote qualifying for skins rounds
         stringr::str_remove_all("\\=") %>% # removes the = used to denote ties
         stringr::str_remove_all("\\(\\d\\)") %>% # removes the split placing
+        stringr::str_replace_all("MUNOZ del CAMPO Lidon AQC", "MUNOZ del CAMPO Lidon   AQC") %>% # season 2 match 5 issue, would prefer general solution
         trimws()
     )
 
@@ -239,20 +256,25 @@ swim_parse_ISL <-
     if (length(data_DSQ_5) > 0) {
       df_DSQ_5 <- data_DSQ_5 %>%
         list_transform() %>%
-        dplyr::mutate(Points = NA) %>%
-        dplyr::rename(
-          "Lane" = V1,
-          "Name" = V2,
-          "Team" = V3,
-          "Time" = V4,
-          "Row_Numb" = V5
-        )
+        dplyr::rename("Lane" = V1,
+                      "Row_Numb" = V5) %>%
+        dplyr::mutate(Name = dplyr::case_when(stringr::str_detect(V4, "DSQ") == TRUE ~ V2)) %>%
+        dplyr::mutate(Team = dplyr::case_when(stringr::str_detect(V3, "DSQ") == TRUE ~ V2,
+                                              TRUE ~ V3)) %>%
+        dplyr::mutate(
+          Time = dplyr::case_when(
+            stringr::str_detect(V3, "DSQ") == TRUE ~ V3,
+            stringr::str_detect(V4, "DSQ") == TRUE ~ V4
+          )
+        ) %>%
+        dplyr::mutate(Points = dplyr::case_when(stringr::str_detect(V3, "DSQ") == TRUE ~ V4,
+                                                TRUE ~ "NA")) %>%
+        dplyr::na_if("NA") %>%
+        dplyr::select(Lane, Name, Team, Time, Row_Numb)
 
     } else {
-      df_DSQ_5 <- data.frame(
-        Row_Numb = character(),
-        stringsAsFactors = FALSE
-      )
+      df_DSQ_5 <- data.frame(Row_Numb = character(),
+                             stringsAsFactors = FALSE)
     }
 
     if (length(data_DSQ_6) > 0) {
@@ -278,7 +300,6 @@ swim_parse_ISL <-
     df_relay <- dplyr::left_join(df_relay, df_relay_swimmer)
 
     #### Rejoin dataframes from each number of variables ####
-    Min_Row_Numb <- min(events$Event_Row_Min)
     suppressWarnings(
       data <- dplyr::bind_rows(df_ind_swimmer, df_relay) %>%
         dplyr::bind_rows(df_DSQ_4) %>%
@@ -322,7 +343,8 @@ swim_parse_ISL <-
           Place = round(as.numeric(Place)),
           Event = as.character(Event)
         ) %>%
-        dplyr::filter(stringr::str_detect(Event, "Club Standing") == FALSE)
+        dplyr::filter(stringr::str_detect(Event, "Club Standing") == FALSE) %>%
+        dplyr::filter(stringr::str_detect(Team, "\\d") == FALSE) # removes summary stats the ISL appends to bottom of meet
     )
 
     if(relay_swimmers == TRUE){
@@ -362,6 +384,10 @@ swim_parse_ISL <-
         na_if("NA")
       )
     }
+
+    ### remove empty columns (all values are NA) ###
+    data <- Filter(function(x)
+      ! all(is.na(x)), data)
 
     data$Row_Numb <- NULL
     return(data)

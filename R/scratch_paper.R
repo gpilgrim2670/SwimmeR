@@ -176,3 +176,7 @@
 #
 # file <- read_results("https://iuhoosiers.com/services/download_file.ashx?file_location=https://s3.amazonaws.com/sidearm.sites/iuhoosiers.com/documents/2019/2/1/Results_IU_UL.pdf")
 # df <- swim_parse(file, splits = TRUE, relay_swimmers = TRUE)
+
+# file <- read_results("https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_2_2020/ISL_01112020_Budapest_Match_6.pdf")
+# df <- swim_parse_ISL(file, splits = TRUE, relay_swimmers = TRUE)
+
