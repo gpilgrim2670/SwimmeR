@@ -34,14 +34,14 @@ swim_parse(
 
 \item{replacement}{a list of fixes for the strings in \code{typo}.  Here one could pass "Central High School" (one space between "Central" and "High") and "Texas" to \code{replacement} fix the issues described in \code{typo}}
 
-\item{splits}{either \code{TRUE} or the default, \code{FALSE} - should \code{swim_parse} attempt to include splits}
+\item{splits}{either \code{TRUE} or the default, \code{FALSE} - should \code{swim_parse} attempt to include splits.}
 
-\item{split_length}{either \code{25} or the default, \code{50}, the length of pool at which splits are recorded}
+\item{split_length}{either \code{25} or the default, \code{50}, the length of pool at which splits are recorded.  Not all results are internally consistent on this issue - some have races with splits by 50 and other races with splits by 25.}
 
-\item{relay_swimmers}{either \code{TRUE} or the default, \code{FALSE} - should relay swimmers be reported}
+\item{relay_swimmers}{either \code{TRUE} or the default, \code{FALSE} - should relay swimmers be reported.  Relay swimmers are reported in separate columns named \code{Relay_Swimmer_1} etc.}
 }
 \value{
-returns a dataframe with columns \code{Name}, \code{Place}, \code{Age}, \code{Team}, \code{Prelims_Time}, \code{Finals_Time}, \code{Points}, \code{Event} & \code{DQ}.  Note all swims will have a \code{Finals_Time}, even if that time was actually swam in the prelims (i.e. a swimmer did not qualify for finals).  This is so that final results for an event can be generated from just one column.
+returns a data frame with columns \code{Name}, \code{Place}, \code{Age}, \code{Team}, \code{Prelims_Time}, \code{Finals_Time}, \code{Points}, \code{Event} & \code{DQ}.  Note all swims will have a \code{Finals_Time}, even if that time was actually swam in the prelims (i.e. a swimmer did not qualify for finals).  This is so that final results for an event can be generated from just one column.
 }
 \description{
 Takes the output of \code{read_results} and cleans it, yielding a dataframe of swimming (and diving) results

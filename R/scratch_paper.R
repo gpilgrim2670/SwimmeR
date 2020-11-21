@@ -174,5 +174,5 @@
 
 # df <- swim_parse_ISL(read_results("https://isl.global/wp-content/uploads/2019/10/dallas_lewisville_isl_results_day_1.pdf"), splits= TRUE, relay_swimmers = TRUE)
 #
-file <- read_results("https://iuhoosiers.com/services/download_file.ashx?file_location=https://s3.amazonaws.com/sidearm.sites/iuhoosiers.com/documents/2019/2/1/Results_IU_UL.pdf")
-df <- swim_parse(file, splits = TRUE, relay_swimmers = TRUE)
+# file <- read_results("https://iuhoosiers.com/services/download_file.ashx?file_location=https://s3.amazonaws.com/sidearm.sites/iuhoosiers.com/documents/2019/2/1/Results_IU_UL.pdf")
+# df <- swim_parse(file, splits = TRUE, relay_swimmers = TRUE)

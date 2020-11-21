@@ -26,15 +26,10 @@ test_that("Singapore results, splits in parenthesis", {
       "SwimDolphia Aquatic School"
     ),
     splits = TRUE
-  )
-  df <- df %>%
-    dplyr::mutate(F_sec = sec_format(Finals_Time)) %>% # finals time in seconds
-    dplyr::mutate(dplyr::across(dplyr::starts_with("Split"), ~sec_format(.x))) %>% # all splits in seconds to account for splits over 59.99
-    dplyr::mutate(total = dplyr::select(., Split_50:length(df)) %>% rowSums(na.rm = TRUE)) %>% # total up splits
-    dplyr::mutate(not_matching = case_when(round(F_sec - total, 2) == 0 ~ FALSE, # does total match finals time?
-                                    round(F_sec - total, 2) != 0 ~ TRUE))
+  ) %>%
+    splits_reform()
 
-  match_sum <- sum(df$not_matching, na.rm = TRUE)
+  match_sum <- sum(df$not_matching, na.rm = TRUE) # should be zero
 
   expect_equivalent(match_sum, 0)
 
@@ -48,46 +43,30 @@ test_that("NYS results, multiple lines of splits with different lengths, has par
     warning("Link to external data is broken")
   } else {
   df <- swim_parse(
-    read_results(file, node = "pre"),
+    read_results(file),
     typo = c("-1NORTH ROCKL"),
     replacement = c("1-NORTH ROCKL"),
     splits = TRUE
-  )
+  ) %>%
+    splits_reform()
 
-  df <- df %>%
-    filter(DQ != 1,
-           stringr::str_detect(Event, "Diving") == FALSE, # diving does not have splits
-           # stringr::str_detect(Event, "Relay") == FALSE, # relays now do have splits
-           stringr::str_detect(Event, "\\s50\\s") == FALSE) %>% # 50s do not have splits
-    dplyr::mutate(F_sec = sec_format(Finals_Time)) %>% # finals time in seconds
-    dplyr::mutate(dplyr::across(dplyr::starts_with("Split"), ~ sec_format(.x))) %>% # all splits in seconds to account for splits over 59.99
-    dplyr::mutate(total = dplyr::select(., Split_50:length(df)) %>% rowSums(na.rm = TRUE)) %>% # total up splits
-    dplyr::mutate(not_matching = dplyr::case_when(round(F_sec - total, 2) == 0 ~ FALSE, # does total match finals time?
-                                    round(F_sec - total, 2) != 0 ~ TRUE))
-
-  match_sum <- sum(df$not_matching, na.rm = TRUE) # should be 75.  Three swimmers in the 200 IM did not record splits, 20 200MRs did not have splits reported and the 32 400 free relays report splits by swimmer so the total does not sum to the total time for 75 errors
+  match_sum <- sum(df$not_matching, na.rm = TRUE)
+  # should be 75.  Three swimmers in the 200 IM did not record splits,
+  # 20 200MRs did not have splits reported and the 32 400 free relays report splits by swimmer
+  # so the total does not sum to the total time for 75 errors
 
   expect_equivalent(match_sum, 75)
   }
 
 })
 
-test_that("USA results, splits don't have parenthesis, some splits longer than 59.99", {
+test_that("USA Swimming results, splits don't have parenthesis, some splits longer than 59.99", {
   file <- system.file("extdata", "jets08082019_067546.pdf", package = "SwimmeR")
   df <- swim_parse(
-    read_results(file, node = "pre"),
+    read_results(file),
     splits = TRUE
-  )
-
-  df <- df %>%
-    filter(DQ != 1,
-           stringr::str_detect(Event, "Relay") == FALSE, # relays do not have splits
-           stringr::str_detect(Event, "\\s50\\s") == FALSE) %>% # 50s do not have splits
-    dplyr::mutate(F_sec = sec_format(Finals_Time)) %>% # finals time in seconds
-    dplyr::mutate(dplyr::across(dplyr::starts_with("Split"), ~ sec_format(.x))) %>% # all splits in seconds to account for splits over 59.99
-    dplyr::mutate(total = dplyr::select(., Split_50:length(df)) %>% rowSums(na.rm = TRUE)) %>% # total up splits
-    dplyr::mutate(not_matching = dplyr::case_when(round(F_sec - total, 2) == 0 ~ FALSE, # does total match finals time?
-                                                  round(F_sec - total, 2) != 0 ~ TRUE))
+  ) %>%
+    splits_reform()
 
   match_sum <- sum(df$not_matching, na.rm = TRUE) # should be 10 because 10 swimmers finished legally but did not record splits
 
@@ -95,4 +74,22 @@ test_that("USA results, splits don't have parenthesis, some splits longer than 5
 
 })
 
-# test_file("tests/testthat/test-splits.R")
+test_that("ISL results", {
+
+  file <- "https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_1_2019/ISL_19102019_Lewisville_Day_1.pdf"
+
+  if(is_link_broken(file) == TRUE){
+    warning("Link to external data is broken")
+  } else {
+    df <- swim_parse_ISL(read_results(file), splits = TRUE) %>%
+      dplyr::rename("Finals_Time" = Time) %>%
+      splits_reform()
+
+  match_sum <- sum(df$not_matching, na.rm = TRUE) # should be 24 due to 24 relays
+
+  expect_equivalent(match_sum, 24)
+  }
+
+})
+
+# testthat::test_file("tests/testthat/test-splits.R")
