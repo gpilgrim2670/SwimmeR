@@ -15,7 +15,7 @@
 #'
 #' @param x a list of character strings including performances, with tow numbers added by \code{add_row_numbers}
 #' @param min_row the lowest row number
-#' @return a dataframe with \code{Row_Numb} as the first column.  Other columns are performance elements, like splits or relay swimmers, both in order of occurance left to right
+#' @return a dataframe with \code{Row_Numb} as the first column.  Other columns are performance elements, like splits or relay swimmers, both in order of occurrence left to right
 #'
 #' @seealso \code{lines_sort} is a helper function inside \code{splits_parse} and \code{swim_parse_ISL}
 

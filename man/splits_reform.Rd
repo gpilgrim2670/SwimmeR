@@ -13,7 +13,10 @@ splits_reform(df)
 a dataframe with a column \code{not_matching} containing \code{TRUE} if the splits for that swim match the finals time and \code{FALSE} if they do not
 }
 \description{
-Used in testing the workings for \code{split_parse} inside test-splits.R.  Note that even properly handled splits may not match the finals time due to issues in the source material.  Sometimes splits aren't fully recorded in the source.  Some relays also will not match due to the convetiontin of reporting splits by swimmer (see vignette for more details).
+Used in testing the workings for \code{split_parse} inside test-splits.R.
+Note that even properly handled splits may not match the finals time due to issues in the source material.
+Sometimes splits aren't fully recorded in the source.
+Some relays also will not match due to the convention of reporting splits by swimmer (see vignette for more details).
 }
 \author{
 Greg Pilgrim \email{gpilgrim2670@gmail.com}

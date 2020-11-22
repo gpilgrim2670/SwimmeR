@@ -89,7 +89,6 @@ results_score <-
 
     max_place <- length(point_values)
 
-    # point_values = c(20, 17, 16, 15, 14, 13, 12, 11, 9, 7, 6, 5, 4, 3, 2, 1)
     # add 0 to list of point values
     point_values <- sort(point_values, decreasing = TRUE)
     point_values <- c(point_values, 0)

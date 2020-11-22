@@ -1,4 +1,8 @@
-#' Discards elements of list that have an error value from \code{purrr::safely}
+#' Discards elements of list that have an error value from \code{purrr::safely}.
+#'
+#' Used in scrapping, when \code{swim_parse} is applied over a list of results using \code{purrr::map} the result is a list of two element lists.
+#' The first element is the results, the second element is an error register.  This funtion removes all elements where the error register is not NULL,
+#' and then returns the results (first element) of the remaining lists.
 #'
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
@@ -6,12 +10,11 @@
 #' @return a list of lists where elements with an error have been discarded and all error elements have been removed
 #'
 #' @importFrom purrr discard
-#'
-#' @references https://pilgrim.netlify.app/post/scrapping-websites-and-building-a-large-dataset-with-swimmer/
+
 
 discard_errors <- function(x) {
-  element_extract <- function(lst, n) {
-    sapply(lst, `[`, n)
+  element_extract <- function(a_list, n) {
+    sapply(a_list, `[`, n)
   }
   x <- purrr::discard(x, ~ !is.null(.x$error))
   x <- element_extract(x, 1)

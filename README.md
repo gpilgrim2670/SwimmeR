@@ -39,7 +39,7 @@ See `?swim_parse` or the package vignette for more information.
 
 *The following three arguments are only available in `SwimmeR v0.6.0` and higher*
 
-`splits` and `split_length` tell `swim_parse` if and how to import split times.  Setting `splits = TRUE` will import splits as columns.  `split_length` refers to the pool course (length) as defaults to `50`.  It may also be set to `25`, if splits are recorded every 25 rather than every 50.  Split reporting within source files is very inconsistant, so while `swim_parse` will import whatever splits are present they may require some inspection after import.
+`splits` and `split_length` tell `swim_parse` if and how to import split times.  Setting `splits = TRUE` will import splits as columns.  `split_length` refers to the pool course (length) as defaults to `50`.  It may also be set to `25`, if splits are recorded every 25 rather than every 50.  Split reporting within source files is very inconsistent, so while `swim_parse` will import whatever splits are present they may require some inspection after import.
 `swim_parse_ISL` also has a `splits` argument that works the same way.  Set `splits = TRUE` to record splits.
 See the Splits sections of `vignette("SwimmeR")` for more information and examples.  
 

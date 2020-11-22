@@ -22,10 +22,6 @@
 #' @seealso \code{splits_parse_ISL} runs inside \code{\link{swim_parse_ISL}} on the output of \code{\link{read_results}} with row numbers from \code{\link{add_row_numbers}}
 
 splits_parse_ISL <- function(text) {
-  # text <- read_results("https://isl.global/wp-content/uploads/2020/11/semi1_results_book.pdf")
-  # text <- add_row_numbers(text)
-#
-#   text <- as_lines_list_2
 
   ### define strings ###
   split_string <- "\\s\\d\\d\\.\\d\\d\\s"
@@ -43,15 +39,6 @@ splits_parse_ISL <- function(text) {
   #### if there are still no valid splits return blank dataframe ####
   if (length(row_numbs_ind) > 0) {
     minimum_row <- min(as.numeric(row_numbs_ind))
-
-    #### define row number ranges ####
-    # if (sum(stringr::str_detect(text, "Match MVP Standings")) >= 1) {
-    #   maximum_row <-
-    #     # min(as.numeric(stringr::str_extract(text[stringr::str_detect(text, "Club Standing")], "\\d{1,}$")))
-    #     min(as.numeric(stringr::str_extract(text[stringr::str_detect(text, "Match MVP Standings")], "\\d{1,}$")))
-    # } else {
-    #   maximum_row <- as.numeric(length(text))
-    # }
 
     #### pull out rows containing splits, which will also remove row numbers ####
       suppressWarnings(

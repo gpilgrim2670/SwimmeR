@@ -49,23 +49,6 @@ swim_parse_ISL <-
       stop("relay_swimmers must be logical, either TRUE or FALSE")
     }
 
-
-    #### Testing ####
-    # file <- read_results( "https://cdn.swimswam.com/wp-content/uploads/2020/10/Results_Book_Full_M2-2.pdf")
-    # file <- read_results("https://isl.global/wp-content/uploads/2020/11/semi1_results_book.pdf")
-    # file <- read_results("https://isl.global/wp-content/uploads/2020/11/match10_results_book.pdf")
-    # file <- read_results("https://isl.global/wp-content/uploads/2019/10/dallas_lewisville_isl_results_day_1.pdf")
-    # file <- read_results("https://isl.global/wp-content/uploads/2019/10/isl-indianapols-results-day-2-2.pdf")
-    # file <- read_results("https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_2_2020/ISL_30102020_Budapest_Match_5.pdf")
-    # file <- read_results("https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_2_2020/ISL_24102020_Budapest_Match_3.pdf")
-
-    # file <- read_results("https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_2_2020/ISL_01112020_Budapest_Match_6.pdf")
-    # file <- read_results("https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_2_2020/ISL_30102020_Budapest_Match_5.pdf")
-    # file <- read_results("https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_1_2019/ISL_16112019_CollegePark_Day_1.pdf")
-
-    # relay_swimmers <- TRUE
-    # splits <- TRUE
-
     #### Begin Actual Function ####
     as_lines_list_2 <- add_row_numbers(text = file)
 

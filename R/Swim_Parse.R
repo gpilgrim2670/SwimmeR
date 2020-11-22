@@ -70,6 +70,11 @@ Swim_Parse <-
            split_length = 50,
            relay_swimmers = FALSE) {
 
+    #### default typo and replacement strings ####
+    typo_default <- c("typo")
+
+    replacement_default <- c("typo")
+
     if(length(typo) != length(replacement)) {
       stop("typo and replacement must have the same number of elements (be the same length)")
     }
@@ -85,52 +90,6 @@ Swim_Parse <-
     if(is.logical(relay_swimmers) == FALSE) {
       stop("relay_swimmers must be logical, either TRUE or FALSE")
     }
-
-
-
-    # file <- read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm", node = "pre")
-    # typo <- c("-1NORTH ROCKL")
-    # replacement <- c("1-NORTH ROCKL")
-    # avoid <- avoid_default
-
-    # file <- read_results("~/SwimmeR/inst/extdata/s2-results.pdf")
-    # avoid <- c("MR:")
-    # typo <- c("Swim\\s{2,}Club", "Performance\\s{2,}Swim", "Swimming\\s{2,}Club", "Stamford\\s{2,}American\\s{2,}Internationa", "Uwcsea\\s{2,}Phoenix-ZZ", "AquaTech\\s{2,}Swimming", "Chinese\\s{2,}Swimming", "Aquatic\\s{2,}Performance", "SwimDolphia\\s{2}Aquatic School")
-    # replacement <- c("Swim Club", "Performance Swim", "Swimming Club", "Stamford American International", "Uwcsea Phoenix-ZZ", "AquaTech Swimming", "Chinese Swimming", "Aquatic Performance", "SwimDolphia Aquatic School")
-
-    # file <- read_results(system.file("extdata", "jets08082019_067546.pdf", package = "SwimmeR"))
-    # avoid <- avoid_default
-    # typo <- typo_default
-    # replacement <- replacement_default
-
-    # file <- read_results("http://www.section5swim.com/Results/GirlsHS/2000/Sec5/B/Single.htm", node = "pre")
-    # avoid <- avoid_default
-    # typo <- typo_default
-    # replacement <- replacement_default
-
-    # file <- read_results("https://www.swimming.org.sg/SSA/SWIMMING/Events/China-Life-48th-SNAG-Swimming-Championships/full-results.aspx")
-    # avoid <- c("SEA GAMES", "Meet Qualifying")
-    # typo <- typo_default
-    # replacement <- replacement_default
-
-    # file <-
-    #   read_results("http://www.section1swim.com/Results/BoysHS/2000/Sec1/Single.htm")
-    # avoid <- avoid_default
-    # typo <-
-    #   c("  [A-Z]  ", "(?<=[:alpha:]) (?=[:digit:])")
-    # replacement <- c("", "  ")
-
-    # file <-
-    #   read_results("http://www.teamunify.com/eznslsc/UserFiles/File/Meet-Results/2018-2019/baac05052019_089141.pdf")
-    # avoid <- avoid_default
-    # typo <- "(?<=[:alpha:]) (?=[:digit:])"
-    # replacement <- "   "
-
-    # file <- read_results(system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR"))
-    # avoid <- avoid_default
-    #   typo <-  c("\n", "Indiana  University", ", University of")
-    #   replacement <-  c("\n", "Indiana University", "")
-
 
     #### strings that if a line begins with one of them the line is ignored ####
     avoid_default <-
@@ -214,11 +173,6 @@ Swim_Parse <-
 
     #### define avoid_minimal ####
     avoid_minimal <- c("^\\s{1,}r\\:")
-
-    #### default typo and replacement strings ####
-    typo_default <- c("typo")
-
-    replacement_default <- c("typo")
 
     #### assign row numbers ####
     as_lines_list_2 <- add_row_numbers(text = file)

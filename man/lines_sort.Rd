@@ -12,7 +12,7 @@ lines_sort(x, min_row = minimum_row)
 \item{min_row}{the lowest row number}
 }
 \value{
-a dataframe with \code{Row_Numb} as the first column.  Other columns are performance elements, like splits or relay swimmers, both in order of occurance left to right
+a dataframe with \code{Row_Numb} as the first column.  Other columns are performance elements, like splits or relay swimmers, both in order of occurrence left to right
 }
 \description{
 Collects all lines, (for example containing splits or relay swimmers) associated with a particular performance (a swim) into a dataframe with the appropriate row number for that performance

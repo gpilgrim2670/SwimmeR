@@ -2,7 +2,7 @@
 % Please edit documentation in R/discard_errors.R
 \name{discard_errors}
 \alias{discard_errors}
-\title{Discards elements of list that have an error value from \code{purrr::safely}}
+\title{Discards elements of list that have an error value from \code{purrr::safely}.}
 \usage{
 discard_errors(x)
 }
@@ -13,10 +13,9 @@ discard_errors(x)
 a list of lists where elements with an error have been discarded and all error elements have been removed
 }
 \description{
-Discards elements of list that have an error value from \code{purrr::safely}
-}
-\references{
-https://pilgrim.netlify.app/post/scrapping-websites-and-building-a-large-dataset-with-swimmer/
+Used in scrapping, when \code{swim_parse} is applied over a list of results using \code{purrr::map} the result is a list of two element lists.
+The first element is the results, the second element is an error register.  This funtion removes all elements where the error register is not NULL,
+and then returns the results (first element) of the remaining lists.
 }
 \author{
 Greg Pilgrim \email{gpilgrim2670@gmail.com}
