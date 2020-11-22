@@ -70,6 +70,10 @@ Swim_Parse <-
            split_length = 50,
            relay_swimmers = FALSE) {
 
+    if(length(typo) != length(replacement)) {
+      stop("typo and replacement must have the same number of elements (be the same length)")
+    }
+
     if(is.logical(splits) == FALSE) {
       stop("splits must be logical, either TRUE or FALSE")
     }
@@ -77,6 +81,11 @@ Swim_Parse <-
     if(is.numeric(split_length) == FALSE) {
       stop("split_length must be numeric, usually 50 or 25")
     }
+
+    if(is.logical(relay_swimmers) == FALSE) {
+      stop("relay_swimmers must be logical, either TRUE or FALSE")
+    }
+
 
 
     # file <- read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm", node = "pre")

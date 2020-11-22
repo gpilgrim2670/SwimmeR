@@ -31,13 +31,23 @@
 #' @examples \dontrun{
 #' swim_parse_ISL(
 #' read_results(
-#' "https://isl.global/wp-content/uploads/2019/11/isl_college_park_results_day_2.pdf"))
+#' "https://isl.global/wp-content/uploads/2019/11/isl_college_park_results_day_2.pdf"),
+#' splits = TRUE,
+#' relay_swimmers = TRUE)
 #'  }
 #' @seealso \code{swim_parse_ISL} must be run on the output of \code{\link{read_results}}
 #'
 
 swim_parse_ISL <-
   function(file, splits = FALSE, relay_swimmers = FALSE) {
+
+    if(is.logical(splits) == FALSE) {
+      stop("splits must be logical, either TRUE or FALSE")
+    }
+
+    if(is.logical(relay_swimmers) == FALSE) {
+      stop("relay_swimmers must be logical, either TRUE or FALSE")
+    }
 
 
     #### Testing ####

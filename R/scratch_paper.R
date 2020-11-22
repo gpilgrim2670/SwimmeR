@@ -180,3 +180,6 @@
 # file <- read_results("https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_2_2020/ISL_01112020_Budapest_Match_6.pdf")
 # df <- swim_parse_ISL(file, splits = TRUE, relay_swimmers = TRUE)
 
+# file <- read_results("https://www.teamunify.com/eznslsc/UserFiles/File/Meet-Results/2018-2019/nisl-emac12082018results.pdf")
+# df <- swim_parse(file, splits = TRUE, relay_swimmers = TRUE, typo = c("111", "x"), replacement = "III")
+

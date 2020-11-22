@@ -1,5 +1,9 @@
-# Version 0.5.1
-* fixed breaking issue caused by change in International Swimming League result reporting format between version 0.5.0 and now.
+# Version 0.6.0
+* added functionality for reading splits and relay swimmers to swim_parse and swim_parse_ISL
+* added fixes to make calls to web resources fail more gracefully
+* updates to vignette and documentation
+* various bug fixes
+* significant updates to improve testing coverage
 
 ## Test environments
 * local Windows 10 install, R 4.0.2

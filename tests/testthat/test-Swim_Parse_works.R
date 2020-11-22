@@ -1,8 +1,4 @@
 
-
-### information on web resources failing gracefully
-# https://community.rstudio.com/t/internet-resources-should-fail-gracefully/49199/5
-
 test_that("swim_parse works", {
   file <- system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")
   expect_match(swim_parse(

@@ -31,7 +31,7 @@
 #' @param avoid a list of strings.  Rows in \code{x} containing these strings will not be included. For example "Pool:", often used to label pool records, could be passed to \code{avoid}.  The default is \code{avoid_default}, which contains many strings similar to "Pool:", such as "STATE:" and "Qual:".  Users can supply their own lists to \code{avoid}.
 #' @param typo a list of strings that are typos in the original results.  \code{swim_parse} is particularly sensitive to accidental double spaces, so "Central  High School", with two spaces between "Central" and "High" is a problem, which can be fixed.  Pass "Central High School" to \code{typo}.  Unexpected commas as also an issue, for example "Texas, University of" should be fixed using \code{typo} and \code{replacement}
 #' @param replacement a list of fixes for the strings in \code{typo}.  Here one could pass "Central High School" (one space between "Central" and "High") and "Texas" to \code{replacement} fix the issues described in \code{typo}
-#' @return returns a dataframe with columns \code{Name}, \code{Place}, \code{Grade}, \code{School}, \code{Prelims_Time}, \code{Finals_Time}, & \code{Event}.  May also contain \code{Seed_Time}, \code{USA_ID}, and/or \code{Birthdate}.  Note all swims will have a \code{Finals_Time}, even if that time was actually swam in the prelims (i.e. a swimmer did not qualify for finals).  This is so that final results for an event can be generated from just one column.
+#' @return returns a dataframe with columns \code{Name}, \code{Place}, \code{Age}, \code{Team}, \code{Prelims_Time}, \code{Finals_Time}, & \code{Event}.  May also contain \code{Seed_Time}, \code{USA_ID}, and/or \code{Birthdate}.  Note all swims will have a \code{Finals_Time}, even if that time was actually swam in the prelims (i.e. a swimmer did not qualify for finals).  This is so that final results for an event can be generated from just one column.
 #'
 #' @seealso \code{parse_hy3} must be run on the output of \code{\link{read_results}}
 #' @seealso \code{parse_hy3} runs inside of \code{\link{swim_parse}}
@@ -270,7 +270,7 @@ parse_hy3 <-
           stringr::str_detect(X6, "[A-Z]{3,}") == FALSE &
             stringr::str_length(X6) >= 6 ~ X6
         ),
-        Grade = dplyr::case_when(
+        Age = dplyr::case_when(
           stringr::str_length(X5) < 6 &
             stringr::str_length(X5) >= 1 &
             X5 != "0" & stringr::str_detect(X4, "[A-Z]{3,}") == FALSE ~ X5,
@@ -281,7 +281,7 @@ parse_hy3 <-
         )
       ) %>%
       dplyr::mutate(Row_Numb = as.numeric(swimmer_rows)) %>%
-      dplyr::select(ID, First, USA_ID, Birthdate, Grade, Row_Numb)
+      dplyr::select(ID, First, USA_ID, Birthdate, Age, Row_Numb)
 
     swimmer <- swimmer %>%
       dplyr::mutate(
@@ -313,8 +313,8 @@ parse_hy3 <-
       purrr::map(paste, collapse = " ")
 
     team <-
-      data.frame(School = unlist(team), Row_Numb = as.numeric(team_rows)) %>%
-      dplyr::mutate(School = stringr::str_remove(School, "^C1[A-Z]{1,} ")) %>%
+      data.frame(Team = unlist(team), Row_Numb = as.numeric(team_rows)) %>%
+      dplyr::mutate(Team = stringr::str_remove(Team, "^C1[A-Z]{1,} ")) %>%
       dplyr::mutate(
         Row_Min = as.numeric(Row_Numb),
         Row_Max = dplyr::lead(Row_Min, 1L, default = length(file)) - 1,
@@ -448,8 +448,8 @@ parse_hy3 <-
       relay <- data.frame(
         Name = character(),
         Place = numeric(),
-        Grade = character(),
-        School = character(),
+        Age = character(),
+        Team = character(),
         Prelims_Time = character(),
         Finals_Time = character(),
         Row_Numb = character(),
@@ -466,7 +466,7 @@ parse_hy3 <-
     data <- dplyr::bind_rows(data, relay)
 
     data  <-
-      transform(data, School = team$School[findInterval(Row_Numb, team$Row_Min)])
+      transform(data, Team = team$Team[findInterval(Row_Numb, team$Row_Min)])
 
     data <- data %>%
       dplyr::mutate(

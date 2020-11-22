@@ -26,7 +26,9 @@ Takes the output of \code{read_results} and cleans it, yielding a data frame of 
 \dontrun{
 swim_parse_ISL(
 read_results(
-"https://isl.global/wp-content/uploads/2019/11/isl_college_park_results_day_2.pdf"))
+"https://isl.global/wp-content/uploads/2019/11/isl_college_park_results_day_2.pdf"),
+splits = TRUE,
+relay_swimmers = TRUE)
  }
 }
 \seealso{
