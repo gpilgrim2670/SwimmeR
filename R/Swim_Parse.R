@@ -59,8 +59,6 @@
 #' @seealso \code{swim_parse} must be run on the output of \code{\link{read_results}}
 #'
 
-
-
 Swim_Parse <-
   function(file,
            avoid = avoid_default,
