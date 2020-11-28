@@ -184,4 +184,3 @@
 
 # file <- read_results("https://www.teamunify.com/eznslsc/UserFiles/File/Meet-Results/2018-2019/nisl-emac12082018results.pdf")
 # df <- swim_parse(file, splits = TRUE, relay_swimmers = TRUE, typo = c("111", "x"), replacement = "III")
-

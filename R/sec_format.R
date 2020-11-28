@@ -4,8 +4,6 @@
 #'
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
-#' @importFrom stringr str_detect
-#' @importFrom stringr str_split_fixed
 #' @importFrom purrr map_dbl
 #'
 #' @param x A character vector of time(s) in swimming format (e.g. 1:35.93) to be converted to seconds (95.93)

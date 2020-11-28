@@ -10,8 +10,10 @@
 #' @seealso \code{add_row_numbers} is a helper function inside \code{\link{swim_parse}}
 
 
-add_row_numbers <- function(text){
-row_numbs <- seq(1, length(text), 1)
-text <- paste(text, row_numbs, sep = "    ") # increased spacing 8/21
-return(text)
+add_row_numbers <- function(text) {
+  row_numbs <- seq(1, length(text), 1)
+  text <-
+    paste(text, row_numbs, sep = "    ") # increased spacing 8/21
+
+  return(text)
 }
