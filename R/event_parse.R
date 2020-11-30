@@ -25,7 +25,9 @@ event_parse <- function(text) {
       .,
       stringr::str_detect,
       "Event \\d{1,}|Women .* Yard|Women .* Meter|Girls .* Yard|Girls .* Meter|Men .* Yard|Men .* Meter|Boys .* Yard|Boys .* Meter|Mixed .* Yard|Mixed .* Meter"
-    )]
+    )] %>%
+    .[purrr::map_lgl(., ~ !any(stringr::str_detect(., "\\.\\.\\.")))] # removes subheaders like in OT results "Semi-Finals ... (women...)" etc.
+
   events <- stringr::str_replace(events, ".*Event \\d{1,4} ", "")
   events <- stringr::str_replace(events, "Open  ", "") ## Addition
   events <-
