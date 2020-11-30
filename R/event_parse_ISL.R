@@ -40,6 +40,8 @@ event_parse_ISL <- function(text){
     stringr::str_remove_all("\\(") %>%
     stringr::str_remove_all("\\)") %>%
     stringr::str_replace(".*(?=(Wom|Men|Boy|Girl|Mixed))", "") %>% # new 10/16
+    str_replace_all("\\s{2,}", " ") %>% # in case there are improperly formatted events with to many spaces - 1
+    str_replace(" (\\d{1,}$)", "   \\1") %>% # in case there are improperly formatted events with to many spaces - 2 - moves row numbers back out multiple spaces
     # .[purrr::map_lgl(., stringr::str_detect, "Club Standings", negate = TRUE)] %>%
     trimws()
 
