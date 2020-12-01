@@ -43,9 +43,10 @@ collect_relay_swimmers <- function(x){
         stringr::str_remove_all("\n") %>%
         stringr::str_remove_all("\\)") %>%
         stringr::str_remove_all("[A-Z]\\d{1,3}") %>% # for M25 designations in masters - Male 25
-        stringr::str_remove_all("r\\:\\+?\\-?\\d\\.\\d\\d") %>% # for reaction pad outputs
+        stringr::str_remove_all("r\\:\\+?\\-?\\d?\\.\\d\\d") %>% # for reaction pad outputs
         stringr::str_remove_all("r\\:NRT") %>% # for reaction time fail to register
         stringr::str_remove_all("\\d+") %>% # all digits
+        stringr::str_remove_all("r\\:\\+?\\-?\\.") %>%
         stringr::str_remove_all(" SR| JR| SO| FR") %>% # grade designators
         trimws()
     )

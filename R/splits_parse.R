@@ -30,7 +30,8 @@ splits_parse <- function(text, split_len = split_length) {
   # text <- read_results("inst/extdata/11102019roc.pdf")
   # text <- read_results("inst/extdata/s2-results.pdf")
   # text <- read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm")
-  # text <- add_row_numbers(text)
+  # text <- add_row_numbers(file)
+  # split_len <- 50
 
   #### Actual Function ####
   ### collect row numbers from rows containing splits ###
@@ -52,6 +53,7 @@ splits_parse <- function(text, split_len = split_length) {
       .[purrr::map_lgl(.,
                        stringr::str_detect,
                        split_string)] %>%
+      stringr::str_remove_all("r\\:\\+?\\s?\\d?\\d\\.\\d\\d") %>%
       .[purrr::map_lgl(., # remove rows with letters, which should take care of removing normal (non-split) times
                        stringr::str_detect,
                        "[:alpha:]", negate = TRUE)] %>%
@@ -74,11 +76,12 @@ splits_parse <- function(text, split_len = split_length) {
           .[purrr::map_lgl(.,
                            stringr::str_detect,
                            split_string)] %>%
+          stringr::str_remove_all("r\\:\\+?\\s?\\d?\\d\\.\\d\\d") %>%
           .[purrr::map_lgl(., # removes rows with letters
                            stringr::str_detect,
                            "[:alpha:]", negate = TRUE)] %>%
-          stringr::str_replace_all("\n", "") %>%
-          stringr::str_replace_all("r\\:\\+\\s?\\d\\.\\d\\d", "") %>%
+          stringr::str_remove_all("\n") %>%
+          # stringr::str_remove_all("r\\:\\+?\\s?\\d?\\d\\.\\d\\d") %>%
           stringr::str_extract_all(paste0(
             "^\\s+\\d\\d\\.\\d\\d|", split_string
           )) %>%
@@ -96,7 +99,8 @@ splits_parse <- function(text, split_len = split_length) {
                            stringr::str_detect,
                            split_string)] %>%
           stringr::str_replace_all("\n", "") %>%
-          stringr::str_replace_all("r\\:\\+\\s?\\d\\.\\d\\d", "") %>%
+          # stringr::str_replace_all("r\\:\\+\\s?\\d\\.\\d\\d", "") %>%
+          stringr::str_remove_all("r\\:\\+?\\s?\\d?\\d\\.\\d\\d") %>%
           stringr::str_extract_all(paste0(
             "^\\s+\\d\\d\\.\\d\\d|", split_string
           )) %>%
