@@ -11,14 +11,17 @@
 #' @importFrom stringr str_detect
 #' @importFrom purrr map_lgl
 #' @importFrom purrr map
+#' @importFrom stats setNames
 #'
 #' @param x output from \code{read_results} followed by \code{add_row_numbers}
+#' @param typo_2 list of typos from \code{swim_parse}
+#' @param replacement_2 list of replacements for typos from \code{swim_parse}
 #' @return returns a data frame of relay swimmers and the associated performance row number
 #'
-#' @seealso \code{collect_relay_swimmers} runs inside of \code{\link{swim_parse}}
+#' @seealso \code{collect_relay_swimmers} runs inside of \code{swim_parse}
 #'
 
-collect_relay_swimmers <- function(x){
+collect_relay_swimmers <- function(x, typo_2 = typo, replacement_2 = replacement){
   # x <- read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm")
   #
   # x <- read_results(system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR"))
@@ -41,6 +44,7 @@ collect_relay_swimmers <- function(x){
                          stringr::str_detect,
                          relay_swimmer_string)] %>%
         stringr::str_remove_all("\n") %>%
+        stringr::str_replace_all(stats::setNames(replacement_2, typo_2)) %>%
         stringr::str_remove_all("\\)") %>%
         stringr::str_remove_all("[A-Z]\\d{1,3}") %>% # for M25 designations in masters - Male 25
         stringr::str_remove_all("r\\:\\+?\\-?\\d?\\.\\d\\d") %>% # for reaction pad outputs

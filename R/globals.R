@@ -66,6 +66,8 @@ utils::globalVariables(
     "Relay_Swimmer_3",
     "Relay_Swimmer_4",
     "Split_50",
-    "Age"
+    "Age",
+    "typo",
+    "replacement"
   )
 )

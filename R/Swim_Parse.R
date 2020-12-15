@@ -174,6 +174,9 @@ Swim_Parse <-
 
     #### assign row numbers ####
     as_lines_list_2 <- add_row_numbers(text = file)
+      # stringr::str_remove_all("\n") %>%
+      # # trimws() %>%
+      # stringr::str_replace_all(stats::setNames(replacement, typo))
 
     #### parsing html and pdf files ####
     if (stringr::str_detect(file[1], "^A107") == FALSE) {
@@ -1436,7 +1439,7 @@ Swim_Parse <-
 
     #### adding relay swimmers in ####
     if (relay_swimmers == TRUE) {
-      relay_swimmers_df <- collect_relay_swimmers(as_lines_list_2)
+      relay_swimmers_df <- collect_relay_swimmers(as_lines_list_2, typo_2 = typo, replacement_2 = replacement)
       data <- data %>%
         dplyr::left_join(relay_swimmers_df, by = 'Row_Numb')
     }
