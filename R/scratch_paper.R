@@ -182,8 +182,8 @@
 # file <- read_results("https://isl.global/wp-content/uploads/2020/11/final_results_book.pdf")
 # df <- swim_parse_ISL(file, splits = TRUE, relay_swimmers = TRUE)
 
-# file <- read_results("https://www.teamunify.com/eznslsc/UserFiles/File/Meet-Results/2018-2019/nisl-emac12082018results.pdf")
-# df <- swim_parse(file, splits = TRUE, relay_swimmers = TRUE, typo = c("111", "x"), replacement = "III")
+# file <- read_results("https://cdn.swimswam.com/wp-content/uploads/2018/08/2005-Division-I-NCAA-Championships-Men-results1.pdf")
+# df <- swim_parse(file, splits = TRUE, relay_swimmers = TRUE, typo)
 
 # webpage <- xml2::read_html("http://www.swimdata.info/NYState/Sec5/SwimMeet.nsf/Meet%20List/Brighton%20vs%20Our%20Lady%20Of%20Mercy%20on%2010-13-2020?OpenDocument")
 # html <- rvest::html_nodes(webpage, "b+ table td")

@@ -21,11 +21,16 @@
 
 event_parse <- function(text) {
   events <- text %>%
+    # .[purrr::map_lgl(
+    #   .,
+    #   stringr::str_detect,
+    #   "Event \\d{1,}|Women .* Yard|Women .* Meter|Girls .* Yard|Girls .* Meter|Men .* Yard|Men .* Meter|Boys .* Yard|Boys .* Meter|Mixed .* Yard|Mixed .* Meter"
+    # )] %>%
     .[purrr::map_lgl(
       .,
       stringr::str_detect,
-      "Event \\d{1,}|Women .* Yard|Women .* Meter|Girls .* Yard|Girls .* Meter|Men .* Yard|Men .* Meter|Boys .* Yard|Boys .* Meter|Mixed .* Yard|Mixed .* Meter"
-    )] %>%
+      "Event\\:?\\s+\\d{1,}|EVENT\\:?\\s+\\d{1,}|Women.* Yard|Women.* Meter|Girls.* Yard|Girls.* Meter|Men.* Yard|Men.* Meter|Boys.* Yard|Boys.* Meter|Mixed.* Yard|Mixed.* Meter"
+    )] %>% # new 12/15 for older NCAA results
     .[purrr::map_lgl(., ~ !any(stringr::str_detect(., "\\.\\.\\.")))] # removes subheaders like in OT results "Semi-Finals ... (women...)" etc.
 
   events <- stringr::str_replace(events, ".*Event \\d{1,4} ", "")
@@ -39,6 +44,8 @@ event_parse <- function(text) {
     stringr::str_replace_all("\\\n", "") %>%
     stringr::str_replace_all("\\(", "") %>%
     stringr::str_replace_all("\\)", "") %>%
+    str_replace_all("\\s{2,}", " ") %>%
+    str_replace(" (\\d{1,})$", "   \\1") %>% # new 12/15 for older NCAA results
     # stringr::str_replace(".*(?=(Wom|Men|Boy|Girl))", "") %>% # new 10/16
     trimws()
 
