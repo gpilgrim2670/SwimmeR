@@ -259,6 +259,7 @@ swim_parse_2 <-
           .[purrr::map_lgl(., stringr::str_detect, paste0(Time_Score_String,"|DQ"))] %>% # must have \\.\\d\\d because all swimming and diving times do
           .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]")] %>%
           .[purrr::map_lgl(., stringr::str_detect, "r\\:\\+?\\-?\\s?\\d", negate = TRUE)] %>% # remove reaction times
+          .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]\\:", negate = TRUE)] %>% # remove records
           stringr::str_replace_all("\\s*[&%]\\s*", " ") %>% # added 8/21 for removing "&" and "%" as record designator
           # removed J etc. from next to swim, but does not remove X or x (for exhibition tracking)
           stringr::str_replace_all("[A-WYZa-wyz]+(\\d{1,2}\\:\\d{2}\\.\\d{2})", "\\1") %>%
@@ -285,7 +286,7 @@ swim_parse_2 <-
 
       #### insert double spaces where needed ####
       data_1 <- data_1 %>%
-        stringr::str_replace_all("(?<=\\d)\\s+[:graph:]+\\s+(?=\\d)", "  ") %>% # letters like P or M to denote pool or meet record
+        stringr::str_replace_all("(?<=\\d)\\s+[:graph:]?\\s+(?=\\d)", "  ") %>% # letters like P or M to denote pool or meet record
         stringr::str_replace_all("(?<=\\d) (?=[:alpha:])", "  ") %>% # mostly to split place and name
         stringr::str_replace_all("(?<=\\d) (?=_)", "  ") %>% # spacing between place and atheltes with */_ leading name
         stringr::str_replace_all("(?<=\\)) (?=[:alpha:])", "  ") %>% # spacing between place) and names
@@ -377,7 +378,7 @@ swim_parse_2 <-
       if (length(data_length_6) > 0) {
         suppressWarnings(
           df_6 <- data_length_6 %>%
-            list_transform %>%
+            list_transform() %>%
             dplyr::na_if("") %>%
             dplyr::select(
               Name,
