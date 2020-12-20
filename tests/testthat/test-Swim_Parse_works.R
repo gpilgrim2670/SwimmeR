@@ -6,6 +6,7 @@ test_that("swim_parse works", {
     typo =  c("\n", "Indiana  University", ", University of"),
     replacement = c("\n", "Indiana University", "")
   )[100, 2],
+  # )[102, 2], for swim_parse_2 because scratch lines are now included
   "Lilly King")
 
 })
@@ -18,6 +19,7 @@ test_that("swim_parse works 2", {
 
     replacement = c("\n", "Indiana University", "")
   )[252, 6],
+  # )[252, 6], for swim_parse_2 because scratch lines are now included
   "2:01.78")
 
 })
@@ -37,7 +39,7 @@ test_that("swim_parse works 3", {
     typo = c("-1NORTH ROCKL", "\\s\\d{1,2}\\s{2,}"),
     replacement = c("1-NORTH ROCKL", "  ")
   )[,1], na.rm = TRUE),
-  16235)
+  16235) # works with swim_parse_2
   }
 
 })
@@ -151,6 +153,8 @@ test_that("swim_parse works list", {
   df_test <- Parse_Map(df_test)
   df_test <- dplyr::bind_rows(df_test, .id = "source") %>%
     dplyr::select(-source)
+
+  # df <- dplyr::anti_join(df_standard, df_test)
 
   # to regenerate df_standard if df_test is more correct
   # readr::write_rds(df_test, "~/SwimmeR/inst/extdata/df_standard.rds")

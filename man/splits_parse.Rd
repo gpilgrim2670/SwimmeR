@@ -7,7 +7,7 @@
 splits_parse(text, split_len = split_length)
 }
 \arguments{
-\item{text}{output of \code{read_results} with tow numbers appended by \code{add_row_numbers}}
+\item{text}{output of \code{read_results} with row numbers appended by \code{add_row_numbers}}
 
 \item{split_len}{length of pool at which splits are measured - usually 25 or 50}
 }

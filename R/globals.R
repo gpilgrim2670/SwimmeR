@@ -8,6 +8,7 @@ utils::globalVariables(
     "V5",
     "V6",
     "V7",
+    "V8",
     "Event_Row_Min",
     "Grade",
     "Finals_Time",
@@ -68,6 +69,8 @@ utils::globalVariables(
     "Split_50",
     "Age",
     "typo",
-    "replacement"
+    "replacement",
+    "clean",
+    "Switch"
   )
 )
