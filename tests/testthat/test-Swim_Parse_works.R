@@ -5,26 +5,26 @@ test_that("swim_parse works", {
     read_results(file),
     typo =  c("\n", "Indiana  University", ", University of"),
     replacement = c("\n", "Indiana University", "")
-  )[100, 2],
-  # )[102, 2], for swim_parse_2 because scratch lines are now included
+  # )[100, 2],
+  )[102, 2], # for swim_parse_2 because scratch lines are now included
   "Lilly King")
 
 })
 
-test_that("swim_parse works 2", {
+test_that("swim_parse_2 works 2", {
   file <- system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")
   expect_match(swim_parse(
     read_results(file),
     typo =  c("\n", "Indiana  University", ", University of"),
 
     replacement = c("\n", "Indiana University", "")
-  )[252, 6],
-  # )[252, 6], for swim_parse_2 because scratch lines are now included
+  # )[252, 6],
+  )[257, 6], # for swim_parse_2 because scratch lines are now included
   "2:01.78")
 
 })
 
-test_that("swim_parse works 3", {
+test_that("swim_parse_2 works 3", {
 
   file <- "http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm"
 
@@ -32,14 +32,14 @@ test_that("swim_parse works 3", {
     warning("Link to external data is broken")
   } else {
 
-  expect_equivalent(sum(swim_parse(
-    read_results(
-      file
-    ),
-    typo = c("-1NORTH ROCKL", "\\s\\d{1,2}\\s{2,}"),
-    replacement = c("1-NORTH ROCKL", "  ")
-  )[,1], na.rm = TRUE),
-  16235) # works with swim_parse_2
+    expect_equivalent(sum(swim_parse(
+      read_results(
+        file
+      ),
+      typo = c("-1NORTH ROCKL", "\\s\\d{1,2}\\s{2,}"),
+      replacement = c("1-NORTH ROCKL", "  ")
+    )[,1], na.rm = TRUE),
+    16235) # works with swim_parse_2
   }
 
 })
@@ -115,34 +115,34 @@ test_that("swim_parse works list", {
 
     all_results <-
       purrr::map(links, swim_parse, typo = c("\n", "Greece  Athena", "Newburgh Free  9", "FAYETTEVILLE MAN  ", "CICERO NORTH SYR  ", " - ", "Vineland  \\(Boy\\'s\\)",
-                                      "\\(Kp\\)", "\\(Mc\\)", "\\(P", "  Psal", " Brian\\t A", "Williamsville E ", " B-AAB", "Section  X I", "Mexico  -B",
-                                      "Nottingham  -A", "Bronxville  High School", "A A", ",  CT", ",  MA", "-1NORTH ROCKL", "QUEENSBURY  HIGH", "Indiana  University", ", University of", "Sugrue_Neuendorf,",
-                                      "Swim\\s{2,}Club",
-                                      "Performance\\s{2,}Swim",
-                                      "Swimming\\s{2,}Club",
-                                      "Stamford\\s{2,}American\\s{2,}Internationa",
-                                      "Uwcsea\\s{2,}Phoenix-ZZ",
-                                      "AquaTech\\s{2,}Swimming",
-                                      "Chinese\\s{2,}Swimming",
-                                      "Aquatic\\s{2,}Performance",
-                                      "SwimDolphia\\s{2}Aquatic School",
-                                      "Young-Mandiak, Atticus F 11",
-                                      "Molina Ayquipa, Santiago 12"),
+                                             "\\(Kp\\)", "\\(Mc\\)", "\\(P", "  Psal", " Brian\\t A", "Williamsville E ", " B-AAB", "Section  X I", "Mexico  -B",
+                                             "Nottingham  -A", "Bronxville  High School", "A A", ",  CT", ",  MA", "-1NORTH ROCKL", "QUEENSBURY  HIGH", "Indiana  University", ", University of", "Sugrue_Neuendorf,",
+                                             "Swim\\s{2,}Club",
+                                             "Performance\\s{2,}Swim",
+                                             "Swimming\\s{2,}Club",
+                                             "Stamford\\s{2,}American\\s{2,}Internationa",
+                                             "Uwcsea\\s{2,}Phoenix-ZZ",
+                                             "AquaTech\\s{2,}Swimming",
+                                             "Chinese\\s{2,}Swimming",
+                                             "Aquatic\\s{2,}Performance",
+                                             "SwimDolphia\\s{2}Aquatic School",
+                                             "Young-Mandiak, Atticus F 11",
+                                             "Molina Ayquipa, Santiago 12"),
 
-          replacement = c("", "Greece Athena", "Newburgh Free-9", "FAYETTEVILLE MAN ", "CICERO NORTH SYR ", "-", "Vineland",
-                          "", "", "", "-Psal", "Brian A", "Williamsville East ", "B-AAB", "Section XI", "Mexico",
-                          "Nottingham", "Bronxville", "AA", "-CT", "-MA", "1-NORTH ROCKL", "QUEENSBURY", "Indiana University", "", "Neuendorf, Sugrue",
-                          "Swim Club",
-                          "Performance Swim",
-                          "Swimming Club",
-                          "Stamford American International",
-                          "Uwcsea Phoenix-ZZ",
-                          "AquaTech Swimming",
-                          "Chinese Swimming",
-                          "Aquatic Performance",
-                          "SwimDolphia Aquatic School",
-                          "Young-Mandiak, Atticus F   11",
-                          "Molina Ayquipa, Santiago   12"))
+                 replacement = c("", "Greece Athena", "Newburgh Free-9", "FAYETTEVILLE MAN ", "CICERO NORTH SYR ", "-", "Vineland",
+                                 "", "", "", "-Psal", "Brian A", "Williamsville East ", "B-AAB", "Section XI", "Mexico",
+                                 "Nottingham", "Bronxville", "AA", "-CT", "-MA", "1-NORTH ROCKL", "QUEENSBURY", "Indiana University", "", "Neuendorf, Sugrue",
+                                 "Swim Club",
+                                 "Performance Swim",
+                                 "Swimming Club",
+                                 "Stamford American International",
+                                 "Uwcsea Phoenix-ZZ",
+                                 "AquaTech Swimming",
+                                 "Chinese Swimming",
+                                 "Aquatic Performance",
+                                 "SwimDolphia Aquatic School",
+                                 "Young-Mandiak, Atticus F   11",
+                                 "Molina Ayquipa, Santiago   12"))
 
     return(all_results)
 
@@ -164,4 +164,4 @@ test_that("swim_parse works list", {
                     df_test)
 })
 
-# testthat::test_file("tests/testthat/test-swim_parse_works.R")
+# testthat::test_file("tests/testthat/test-Swim_Parse_works.R")

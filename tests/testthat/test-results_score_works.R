@@ -6,24 +6,26 @@ test_that("prelims_finals works", {
   BigTen <- swim_parse(
     BigTenRaw,
     typo = c(
-      "^\\s{1,}\\*",
-      "^\\s{1,}(\\d{1,2})\\s{2,}",
+      # "^\\s{1,}\\*",
+      # "^\\s{1,}(\\d{1,2})\\s{2,}",
       # not sure if needed
       ",\\s{1,}University\\s{1,}of",
       "University\\s{1,}of\\s{1,}",
-      "\\s{1,}University",
-      "SR\\s{2,}",
-      "JR\\s{2,}",
-      "SO\\s{2,}",
-      "FR\\s{2,}"
+      "\\s{1,}University"
+      # "SR\\s{2,}",
+      # "JR\\s{2,}",
+      # "SO\\s{2,}",
+      # "FR\\s{2,}"
     ),
-    replacement = c(" ",
-                    "  \\1 ",
-                    "", "", "",
-                    "SR ",
-                    "JR ",
-                    "SO ",
-                    "FR "),
+    replacement = c(
+      # " ",
+      #               "  \\1 ",
+                    "", "", ""
+                    # "SR ",
+                    # "JR ",
+                    # "SO ",
+                    # "FR "
+                    ),
     avoid = c("B1G", "Pool")
   )
 
