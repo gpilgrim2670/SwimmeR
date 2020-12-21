@@ -130,7 +130,9 @@ Swim_Parse <-
     #
     # file <- c(file_1, file_2, file_3, file_4, file_5, url91, url92, url93, url97, url98, url101, url102, url103)
     # file <- read_results("https://cdn.swimswam.com/wp-content/uploads/2019/03/W.NCAA-2019.pdf")
+    # file <- read_results("http://www.nyhsswim.com/Results/Boys/2005/NYS/Single.htm")
     # file <- read_results(system.file("extdata", "s2-results.pdf", package = "SwimmeR"))
+    # file <- read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm")
     # file <- read_results("https://cdn.swimswam.com/wp-content/uploads/2018/07/2005-Division-I-NCAA-Championships-Women-results1.pdf")
     # typo = c("-1NORTH ROCKL")
     # "\\s\\d{1,2}\\s{2,}",
@@ -197,10 +199,11 @@ Swim_Parse <-
       .[purrr::map_lgl(., stringr::str_detect, "Early take-off", negate = TRUE)] %>% # removes DQ rational used in some relay DQs that messes up line spacing between relay and swimmers/splits - must happen before adding in row numbers
       # .[purrr::map_lgl(., ~ !any(stringr::str_detect(., "Early take-off")))] %>%
       add_row_numbers() %>%
+      .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid)))] %>%
       stringr::str_replace_all(stats::setNames(replacement, typo)) %>% # replace typos with replacements
       stringr::str_replace_all("DISQUAL", " DQ ") %>%
-      stringr::str_replace_all("EVENT\\:", "Event") %>%
-      .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid)))]  # do not include any lines with avoid strings in them
+      stringr::str_replace_all("EVENT\\:", "Event")
+      # .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid)))]  # do not include any lines with avoid strings in them
 
     #### parsing html and pdf files ####
     if (stringr::str_detect(file[1], "^A107") == FALSE) {
@@ -237,7 +240,7 @@ Swim_Parse <-
         stringr::str_replace_all(" [:punct:]+(\\d{1,2}\\:\\d{2}\\.\\d{2})", " \\1") %>%
         stringr::str_replace_all("(\\d{1,2}\\:\\d{2}\\.\\d{2})[:punct:]+", " \\1") %>%
         stringr::str_replace_all(" [:punct:]+(\\d{2,3}\\.\\d{2})", " \\1") %>%
-        stringr::str_replace_all("(\\d{2,3}\\.\\d{2})[:punct:]+", " \\1") %>%
+        stringr::str_replace_all("(\\d{2,3}\\.\\d{2})[:punct:]+", "\\1 ") %>%
         stringr::str_remove_all("\\s{2}J\\s{2}") %>%
         # remove 'A', 'B' etc. relay designators - should this go in typo instead?
         stringr::str_replace_all(" \\'[A-Z]\\' ", "  ") %>%

@@ -222,6 +222,7 @@ swim_parse_old <-
           stringr::str_replace_all("(\\d{1,2}\\:\\d{2}\\.\\d{2})[:punct:]+", " \\1") %>%
           stringr::str_replace_all(" [:punct:]+(\\d{2,3}\\.\\d{2})", " \\1") %>%
           stringr::str_replace_all("(\\d{2,3}\\.\\d{2})[:punct:]+", " \\1") %>%
+          # stringr::str_replace_all("(\\d{2,3}\\.\\d{2})[:punct:]+", "\\1 ") %>% should swap for line above 12/21 - need to test
           stringr::str_remove_all("\\s{2}J\\s{2}") %>%
           # remove 'A', 'B' etc. relay designators - should this go in typo instead?
           stringr::str_replace_all("  \\'[A-Z]\\'  ", "  ") %>%
