@@ -264,10 +264,11 @@ Swim_Parse <-
         stringr::str_replace_all("(?<=[:alpha:])\\. (?=[:digit:])", "\\.  ") %>% # split abreviated team names like Southern Cal. and times
         stringr::str_replace_all("(?<=\\d) (?=_)", "  ") %>% # spacing between place and atheltes with */_ leading name
         stringr::str_replace_all("(?<=\\)) (?=[:alpha:])", "  ") %>% # spacing between place) and names
-        stringr::str_replace_all(" FR ", "  FR  ") %>% # split age and team
-        stringr::str_replace_all(" SO ", "  SO  ") %>% # split age and team
-        stringr::str_replace_all(" JR ", "  JR  ") %>% # split age and team
-        stringr::str_replace_all(" SR ", "  SR  ") %>% # split age and team
+        stringr::str_replace_all(" FR ", "       FR      ") %>% # split age and team
+        stringr::str_replace_all(" SO ", "       SO      ") %>% # split age and team
+        stringr::str_replace_all(" JR ", "       JR      ") %>% # split age and team
+        stringr::str_replace_all(" SR ", "       SR      ") %>% # split age and team
+        stringr::str_replace_all("(?<=[:alpha:])\\s{2,3}(?=[:alpha:])", " ") %>% # testing 12/21/2020 would help with typos
         stringr::str_replace_all("(?<=[:alpha:]) (?=\\d)", "  ") %>% # split name and age
         stringr::str_replace_all("(?<=\\,) (?=\\d)", "  ") %>% # split name and age if name is so long that it ends with a ","
         stringr::str_replace_all("(?<=\\d) (?=\\d{1,}$)", "  ") %>%  # split off row_numb
