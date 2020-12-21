@@ -30,13 +30,29 @@ splits_parse <- function(text, split_len = split_length) {
   # text <- read_results("inst/extdata/11102019roc.pdf")
   # text <- read_results("inst/extdata/s2-results.pdf")
   # text <- read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm")
-  # text <- add_row_numbers(file)
+
+  # text <- read_results("https://cdn.swimswam.com/wp-content/uploads/2018/07/2005-Division-I-NCAA-Championships-Women-results1.pdf")
+  # typo <- "typo"
+  # replacement <- "typo"
+  # avoid <- "xxx"
+  #
+  # text <- text %>%
+  #   .[purrr::map_lgl(., stringr::str_detect, "Early take-off", negate = TRUE)] %>% # removes DQ rational used in some relay DQs that messes up line spacing between relay and swimmers/splits - must happen before adding in row numbers
+  #   # .[purrr::map_lgl(., ~ !any(stringr::str_detect(., "Early take-off")))] %>%
+  #   add_row_numbers() %>%
+  #   stringr::str_replace_all(stats::setNames(replacement, typo)) %>% # replace typos with replacements
+  #   stringr::str_replace_all("DISQUAL", " DQ ") %>%
+  #   .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid)))]  # do not include any lines with avoid strings in them
+  #
   # split_len <- 50
 
   #### Actual Function ####
   ### collect row numbers from rows containing splits ###
   ### define strings ###
-  # split_string <- "\\(\\d\\d\\.\\d\\d\\)|\\s\\d\\d\\.\\d\\d\\s"
+
+  text <- text %>%
+    stringr::str_replace_all(" \\:", "  ")
+
   split_string <- "\\(\\d?\\:?\\d\\d\\.\\d\\d\\)"
 
   row_numbs <- text %>%

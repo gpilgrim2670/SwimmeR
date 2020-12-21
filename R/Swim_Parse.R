@@ -131,7 +131,7 @@ Swim_Parse <-
     # file <- c(file_1, file_2, file_3, file_4, file_5, url91, url92, url93, url97, url98, url101, url102, url103)
     # file <- read_results("https://cdn.swimswam.com/wp-content/uploads/2019/03/W.NCAA-2019.pdf")
     # file <- read_results(system.file("extdata", "s2-results.pdf", package = "SwimmeR"))
-    # file <- read_results(system.file("extdata", "jets08082019_067546.pdf", package = "SwimmeR"))
+    # file <- read_results("https://cdn.swimswam.com/wp-content/uploads/2018/07/2005-Division-I-NCAA-Championships-Women-results1.pdf")
     # typo = c("-1NORTH ROCKL")
     # "\\s\\d{1,2}\\s{2,}",
     # "AAA",
@@ -199,6 +199,7 @@ Swim_Parse <-
       add_row_numbers() %>%
       stringr::str_replace_all(stats::setNames(replacement, typo)) %>% # replace typos with replacements
       stringr::str_replace_all("DISQUAL", " DQ ") %>%
+      stringr::str_replace_all("EVENT\\:", "Event") %>%
       .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid)))]  # do not include any lines with avoid strings in them
 
     #### parsing html and pdf files ####
@@ -297,6 +298,7 @@ Swim_Parse <-
 
       DQ_length_3 <- DQ[purrr::map(DQ, length) == 3]
       DQ_length_4 <- DQ[purrr::map(DQ, length) == 4]
+      # DQ_length_5 <- DQ[purrr::map(DQ, length) == 5]
 
       # #### nine variables
       # if (length(data_length_9) > 0) {
@@ -451,11 +453,17 @@ Swim_Parse <-
           df_5 <- data_length_5 %>%
             list_transform() %>%
             dplyr::mutate(
+              Place = dplyr::case_when(stringr::str_detect(V1, "\\d") == TRUE ~ V1,
+                                       TRUE ~ "NA"),
               Name = dplyr::case_when(
+                stringr::str_detect(V1, Name_String) == TRUE &
+                  stringr::str_detect(V2, Time_Score_Specials_String) == FALSE ~ V1,
                 stringr::str_detect(V2, Name_String) == TRUE &
                   stringr::str_detect(V3, Time_Score_Specials_String) == FALSE ~ V2,
                 TRUE ~ "NA"
               ),
+              Age = dplyr::case_when(stringr::str_detect(V2, Age_String) == TRUE ~ V2,
+                          TRUE ~ "NA"),
               Team = dplyr::case_when(
                 stringr::str_detect(V3, Time_Score_Specials_String) == TRUE ~ V2,
                 stringr::str_detect(V3, Time_Score_Specials_String) == FALSE ~ V3,
@@ -469,7 +477,7 @@ Swim_Parse <-
               Finals_Time = dplyr::case_when(
                 stringr::str_detect(V3, Time_Score_Specials_String) == TRUE &
                   stringr::str_detect(V4, Time_Score_Specials_String) == FALSE ~ V3,
-                stringr::str_detect(V3, Time_Score_Specials_String) == TRUE &
+                # stringr::str_detect(V3, Time_Score_Specials_String) == TRUE &
                   stringr::str_detect(V4, Time_Score_Specials_String) == TRUE ~ V4,
                 TRUE ~ "NA"
               )
@@ -477,8 +485,9 @@ Swim_Parse <-
 
             dplyr::na_if("NA") %>%
             dplyr::select(
-              Place = V1,
+              Place,
               Name,
+              Age,
               Team,
               Prelims_Time,
               Finals_Time,
@@ -621,6 +630,7 @@ Swim_Parse <-
           ### moved up from below for DQ work 8/20
           dplyr::mutate(DQ = dplyr::case_when(Place == 10000 &
                                                 Exhibition == 0 ~ 1, # added exhibition condition 8/27
+                                              stringr::str_detect(Finals_Time, "DQ") == TRUE ~ 1,
                                               is.na(DQ) ~ 0,
                                               TRUE ~ DQ)) %>%
           na_if(10000) %>%

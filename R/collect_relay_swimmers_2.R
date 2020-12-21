@@ -23,6 +23,7 @@ collect_relay_swimmers_2 <- function(x){
   #
   # x <- read_results(system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR"))
   # x <- add_row_numbers(x)
+  # x <- as_lines_list_2
 
   relay_swimmer_string <- "\n\\s*[1-4]\\)"
 
@@ -46,9 +47,11 @@ collect_relay_swimmers_2 <- function(x){
         stringr::str_remove_all("[A-Z]\\d{1,3}") %>% # for M25 designations in masters - Male 25
         stringr::str_remove_all("r\\:\\+?\\-?\\d?\\.\\d\\d") %>% # for reaction pad outputs
         stringr::str_remove_all("r\\:NRT") %>% # for reaction time fail to register
-        stringr::str_remove_all("\\d+") %>% # all digits
+        stringr::str_remove_all("\\d+|\\:|\\.|DQ|\\=\\=|\\*\\*") %>% # all digits or colons or periods (times, DQ, record designators)
+        # stringr::str_remove_all("\\:\\.") %>% # all digits
         stringr::str_remove_all("r\\:\\+?\\-?\\.") %>%
-        stringr::str_remove_all(" SR| JR| SO| FR") %>% # grade designators
+        trimws() %>%
+        stringr::str_remove_all(" SR$| SR | JR$| JR | SO$| SO | FR$| FR ") %>% # grade designators
         trimws()
     )
 
@@ -61,7 +64,10 @@ collect_relay_swimmers_2 <- function(x){
     data_length_5_relay_swimmer <- data_1_relay_swimmer[purrr::map(data_1_relay_swimmer, length) == 5] # all four swimmers on one line
     data_length_4_relay_swimmer <- data_1_relay_swimmer[purrr::map(data_1_relay_swimmer, length) == 4] # all four swimmers on one line but one is missing
     data_length_3_relay_swimmer <- data_1_relay_swimmer[purrr::map(data_1_relay_swimmer, length) == 3] # for two-line relays, two swimmers per line
-    data_length_2_relay_swimmer <- data_1_relay_swimmer[purrr::map(data_1_relay_swimmer, length) == 2] # for two-line relays, two swimmers per line, but one is missing
+    data_length_2_relay_swimmer <- data_1_relay_swimmer[purrr::map(data_1_relay_swimmer, length) == 2] %>%  # for two-line relays, two swimmers per line, but one is missing
+      .[purrr::map_lgl(., ~
+                       any(stringr::str_detect(.,
+                       "\\s|\\,")))] # to differentiate names from teams (like in circa 2005 NCAA results) - must have space or comma for separating names
 
     if (length(data_length_5_relay_swimmer) > 0) {
       # splits from 100M relay legs
@@ -107,11 +113,12 @@ collect_relay_swimmers_2 <- function(x){
       dplyr::bind_rows(df_5_relay_swimmer, df_4_relay_swimmer, df_3_relay_swimmer, df_2_relay_swimmer) %>%
       lines_sort(min_row = minimum_row) %>%
       dplyr::mutate(Row_Numb = as.numeric(Row_Numb) - 1) %>%   # make row number of relay match row number of performance
-      dplyr::rename(
+      dplyr::select(
         "Relay_Swimmer_1" = V2,
         "Relay_Swimmer_2" = V3,
         "Relay_Swimmer_3" = V4,
-        "Relay_Swimmer_4" = V5
+        "Relay_Swimmer_4" = V5,
+        Row_Numb
       )
 
   } else {
