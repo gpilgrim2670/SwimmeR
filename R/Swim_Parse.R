@@ -131,9 +131,9 @@ Swim_Parse <-
     #
     # file <- c(file_1, file_2, file_3, file_4, file_5, url91, url92, url93, url97, url98, url101, url102, url103)
     # file <- read_results("https://cdn.swimswam.com/wp-content/uploads/2019/03/W.NCAA-2019.pdf")
-    # file <- read_results("http://www.nyhsswim.com/Results/Boys/2005/NYS/Single.htm")
+    # file <- read_results("http://www.nyhsswim.com/Results/Boys/2002/NYS/Single.htm")
     # file <- read_results(system.file("extdata", "s2-results.pdf", package = "SwimmeR"))
-    # file <- read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm")
+    # file <- read_results("https://www.swimming.org.au/sites/default/files/assets/documents/full%20results_0.pdf")
     # file <- read_results("https://cdn.swimswam.com/wp-content/uploads/2018/07/2005-Division-I-NCAA-Championships-Women-results1.pdf")
     # typo = c("-1NORTH ROCKL")
     # "\\s\\d{1,2}\\s{2,}",
@@ -232,7 +232,7 @@ Swim_Parse <-
         # .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]\\:", negate = TRUE)] %>% # remove records
         .[purrr::map_dbl(., stringr::str_count, "\\)") < 2] %>%  # remove inline splits from older style hy-tek results circa 2005
         .[purrr::map_lgl(., stringr::str_detect, " \\:\\d", negate = TRUE)] %>% # remove other inline splits from older style hytek results circa 2005
-        stringr::str_replace_all("\\s*[&%]\\s*", " ") %>% # added 8/21 for removing "&" and "%" as record designator
+        stringr::str_replace_all("\\s?[&%]\\s?", " ") %>% # added 8/21 for removing "&" and "%" as record designator
         # removed J etc. from next to swim, but does not remove X or x (for exhibition tracking)
         stringr::str_replace_all("[A-WYZa-wyz]+(\\d{1,2}\\:\\d{2}\\.\\d{2})", "\\1") %>%
         stringr::str_replace_all("(\\d{1,2}\\:\\d{2}\\.\\d{2})[A-WYZa-wyz]+", "\\1") %>%
@@ -247,6 +247,8 @@ Swim_Parse <-
         stringr::str_replace_all(" \\'[A-Z]\\' ", "  ") %>%
         stringr::str_replace_all("  [A-Z]  ", "  ") %>%
         stringr::str_replace_all("\\'\\'", "  ") %>%
+        # remove meet ID from old result
+        stringr::str_replace_all(" \\d{4} ", "   ") %>%
         # remove q from next to time 10/21/2020
         stringr::str_remove_all(" q ") %>% # removes " q " sometimes used to designate a qualifying time
         stringr::str_replace_all("-{2,5}", "10000") %>% #8/26
