@@ -20,16 +20,19 @@
 #' @seealso \code{event_parse} is a helper function inside \code{\link{swim_parse}}
 
 event_parse <- function(text) {
+
+  event_string <- "Event\\:?\\s+\\d{1,}|EVENT\\:?\\s+\\d{1,}|Women.* Yard|Women.* Meter|Women.* Metre|Girls.* Yard|Girls.* Meter|Girls.* Metre|Men.* Yard|Men.* Meter|Men.* Metre|Boys.* Yard|Boys.* Meter|Boys.* Metre|Mixed.* Yard|Mixed.* Meter|Mixed.* Metre"
+
   events <- text %>%
     # .[purrr::map_lgl(
     #   .,
     #   stringr::str_detect,
-    #   "Event \\d{1,}|Women .* Yard|Women .* Meter|Girls .* Yard|Girls .* Meter|Men .* Yard|Men .* Meter|Boys .* Yard|Boys .* Meter|Mixed .* Yard|Mixed .* Meter"
+    #   event_string
     # )] %>%
     .[purrr::map_lgl(
       .,
       stringr::str_detect,
-      "Event\\:?\\s+\\d{1,}|EVENT\\:?\\s+\\d{1,}|Women.* Yard|Women.* Meter|Girls.* Yard|Girls.* Meter|Men.* Yard|Men.* Meter|Boys.* Yard|Boys.* Meter|Mixed.* Yard|Mixed.* Meter"
+      event_string
     )] %>% # new 12/15 for older NCAA results
     .[purrr::map_lgl(., ~ !any(stringr::str_detect(., "\\.\\.\\.")))] # removes subheaders like in OT results "Semi-Finals ... (women...)" etc.
 

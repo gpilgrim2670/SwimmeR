@@ -89,6 +89,7 @@ Swim_Parse <-
         "[:upper:]\\:",
         "[a-q]\\:", # want to make sure to include r: for reaciton times in splits lines
         "[s-z]\\:", # want to make sure to include r: for reaciton times in splits lines
+        "[:alpha:]r\\:",
         "\\.\\:",
         "\\d\\:\\s",
         "\\'\\:"
