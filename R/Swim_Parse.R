@@ -131,7 +131,7 @@ Swim_Parse <-
     #
     # file <- c(file_1, file_2, file_3, file_4, file_5, url91, url92, url93, url97, url98, url101, url102, url103)
     # file <- read_results("https://cdn.swimswam.com/wp-content/uploads/2019/03/W.NCAA-2019.pdf")
-    # file <- read_results("http://www.section4swim.com/Results/BoysHS/2004/EFA/Single.htm")
+    # file <- read_results("http://www.section3swim.com/Results/BoysHS/2007/Sec3/Finals/Single.htm")
     # file <- read_results(system.file("extdata", "s2-results.pdf", package = "SwimmeR"))
     # file <- read_results("https://www.swimming.org.au/sites/default/files/assets/documents/full%20results_0.pdf")
     # file <- read_results("https://cdn.swimswam.com/wp-content/uploads/2018/07/2005-Division-I-NCAA-Championships-Women-results1.pdf")
@@ -250,7 +250,7 @@ Swim_Parse <-
         # remove meet ID from old result
         stringr::str_replace_all(" \\d{4} ", "   ") %>%
         stringr::str_replace_all(" \\d{1,3} (?=\\s*\\d{1,2}\\.?\\d?\\d?\\s+\\d{1,5}$)", "   ") %>% # remove column of powerpoint values in NYS Boys 2007.  It goes time, powerpoint, actual points, row numb
-        stringr::str_replace_all("(?<=\\.\\d)(\\d)\\s+X(?=\\s+\\d{1,5}$)", "\\1X") %>%
+        stringr::str_replace_all("(?<=\\.\\d)(\\d)\\s+X(?=\\s+\\d{1,5}$)", "\\1X") %>% # brings Xs for exhibition that are spaced out in closer
         # remove q from next to time 10/21/2020
         stringr::str_remove_all(" q ") %>% # removes " q " sometimes used to designate a qualifying time
         stringr::str_replace_all("-{2,5}", "10000") %>% #8/26
@@ -717,36 +717,20 @@ Swim_Parse <-
       if (splits == TRUE) {
         splits_df <- splits_parse(as_lines_list_2, split_len = split_length)
 
-        if (any(stringr::str_detect(data$Event, "Relay")) == TRUE) {
-          relay_row <- data %>%
-            dplyr::filter(stringr::str_detect(Event, "Relay")) %>%
-            head(1) %>%
-            dplyr::select(Row_Numb) %>%
-            dplyr::pull()
+        #### matches row numbers in splits_df to avaiable row numbers in data
+        # helps a lot with relays, since their row numbers vary based on whether or not relay swimmers are included
+        # and if those swimmers are listed on one line or two
+        splits_df  <-
+          transform(splits_df, Row_Numb_Adjusted = data$Row_Numb[findInterval(Row_Numb, data$Row_Numb)])
 
-          relay_offset <-
-            # ifelse(stringr::str_detect(as_lines_list_2[relay_row + 2], "\\d\\d\\.\\d\\d") == TRUE,
-            ifelse(stringr::str_detect(file[relay_row + 2], "\\d\\d\\.\\d\\d") == TRUE,
-                   1,
-                   2)
 
           data <- data %>%
-            dplyr::mutate(
-              Row_Numb = dplyr::case_when(
-                stringr::str_detect(Event, "Relay") == TRUE ~ Row_Numb + relay_offset,
-                TRUE ~ Row_Numb
-              )
-            ) %>%
-            dplyr::left_join(splits_df, by = 'Row_Numb')
+            dplyr::left_join(splits_df, by = c("Row_Numb" = "Row_Numb_Adjusted"))
 
-        } else {
-          data <- data %>%
-            dplyr::left_join(splits_df, by = 'Row_Numb')
-        }
+          ### remove empty columns (all values are NA) ###
+          data <- Filter(function(x)
+            !all(is.na(x)), data)
 
-        ### remove empty columns (all values are NA) ###
-        data <- Filter(function(x)
-          !all(is.na(x)), data)
       }
 
       #### if there is a Place column it should be first ####
@@ -758,7 +742,6 @@ Swim_Parse <-
       data$Row_Numb <- NULL
 
       message("Beginning with version 0.6.0 the Grade and School output columns have been renamed Age and Team respectively.  Please adjust your work flows as needed.")
-
 
       return(data)
 
