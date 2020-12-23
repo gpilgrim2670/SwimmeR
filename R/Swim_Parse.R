@@ -131,7 +131,7 @@ Swim_Parse <-
     #
     # file <- c(file_1, file_2, file_3, file_4, file_5, url91, url92, url93, url97, url98, url101, url102, url103)
     # file <- read_results("https://cdn.swimswam.com/wp-content/uploads/2019/03/W.NCAA-2019.pdf")
-    # file <- read_results("http://www.section9swim.com/Results/BoysHS/2000/OCL/Single.htm")
+    # file <- read_results("http://www.section4swim.com/Results/BoysHS/2004/EFA/Single.htm")
     # file <- read_results(system.file("extdata", "s2-results.pdf", package = "SwimmeR"))
     # file <- read_results("https://www.swimming.org.au/sites/default/files/assets/documents/full%20results_0.pdf")
     # file <- read_results("https://cdn.swimswam.com/wp-content/uploads/2018/07/2005-Division-I-NCAA-Championships-Women-results1.pdf")
@@ -245,11 +245,12 @@ Swim_Parse <-
         stringr::str_remove_all("\\s{2}J\\s{2}") %>%
         # remove 'A', 'B' etc. relay designators - should this go in typo instead?
         stringr::str_replace_all(" \\'[A-Z]\\' ", "  ") %>%
-        stringr::str_replace_all("  [A-Z]  ", "  ") %>%
+        stringr::str_replace_all("  [A-WYZ]  ", "  ") %>%
         stringr::str_replace_all("\\'\\'", "  ") %>%
         # remove meet ID from old result
         stringr::str_replace_all(" \\d{4} ", "   ") %>%
-        stringr::str_replace_all(" \\d{2,3} (?=\\s*\\d{1,2}\\.?\\d?\\d?\\s+\\d{1,4}$)", "   ") %>% # remove column of powerpoint values in NYS Boys 2007.  It goes time, powerpoint, actual points, row numb
+        stringr::str_replace_all(" \\d{1,3} (?=\\s*\\d{1,2}\\.?\\d?\\d?\\s+\\d{1,5}$)", "   ") %>% # remove column of powerpoint values in NYS Boys 2007.  It goes time, powerpoint, actual points, row numb
+        stringr::str_replace_all("(?<=\\.\\d)(\\d)\\s+X(?=\\s+\\d{1,5}$)", "\\1X") %>%
         # remove q from next to time 10/21/2020
         stringr::str_remove_all(" q ") %>% # removes " q " sometimes used to designate a qualifying time
         stringr::str_replace_all("-{2,5}", "10000") %>% #8/26
@@ -379,7 +380,7 @@ Swim_Parse <-
                             # stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
                               stringr::str_detect(V5, Finals_Time) == TRUE &
                                 stringr::str_detect(V6, "^5\\d\\.|^4\\d\\.|^3\\d\\.|^2\\d\\.") == FALSE &
-                              stringr::str_detect(V6, "\\d{1,2}\\.?\\d?\\d?") ~ V6,
+                              stringr::str_detect(V6, "^\\d{1,2}\\.?\\d?\\d?") ~ V6,
                             TRUE ~ "NA"
                           )
             ) %>%
@@ -444,7 +445,7 @@ Swim_Parse <-
                 # stringr::str_detect(V3, Time_Score_Specials_String) == TRUE &
                 stringr::str_detect(V4, Finals_Time) == TRUE &
                   stringr::str_detect(V5, "^5\\d\\.|^4\\d\\.|^3\\d\\.|^2\\d\\.") == FALSE &
-                  stringr::str_detect(V5, "\\d{1,2}\\.?\\d?\\d?") ~ V5,
+                  stringr::str_detect(V5, "^\\d{1,2}\\.?\\d?\\d?") ~ V5,
                 TRUE ~ "NA"
               )
             ) %>%
