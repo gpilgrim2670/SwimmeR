@@ -721,7 +721,8 @@ Swim_Parse <-
         # helps a lot with relays, since their row numbers vary based on whether or not relay swimmers are included
         # and if those swimmers are listed on one line or two
         splits_df  <-
-          transform(splits_df, Row_Numb_Adjusted = data$Row_Numb[findInterval(Row_Numb, data$Row_Numb)])
+          transform(splits_df, Row_Numb_Adjusted = data$Row_Numb[findInterval(Row_Numb, data$Row_Numb)]) %>%
+          dplyr::select(-Row_Numb)
 
 
           data <- data %>%
