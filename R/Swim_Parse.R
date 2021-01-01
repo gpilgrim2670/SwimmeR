@@ -86,7 +86,10 @@ Swim_Parse <-
     #### strings that if a line begins with one of them the line is ignored ####
     avoid_default <-
       c(
-        "[:upper:]\\:",
+        # "[:upper:]\\:",
+        "[A-S]\\:", # to allow EVENT:
+        "[U-Z]\\:", # to allow EVENT:
+        "[A-MO-Z]T\\:", # to allow EVENT:
         "[a-q]\\:", # want to make sure to include r: for reaciton times in splits lines
         "[s-z]\\:", # want to make sure to include r: for reaciton times in splits lines
         "[:alpha:]r\\:",
@@ -186,7 +189,7 @@ Swim_Parse <-
     #                 "Ohio St",
     #                 "Arizona St",
     #                 "SOUTHERN CAL.")
-    #
+    # file <- read_results("https://cdn.swimswam.com/wp-content/uploads/2018/08/2004-Division-I-NCAA-Championships-Men-results1.pdf")
     # avoid <- avoid_default
     # typo <- typo_default
     # replacement <- replacement_default
@@ -197,6 +200,7 @@ Swim_Parse <-
 
     #### assign row numbers ####
     as_lines_list_2 <- file %>%
+    # x_1 <- read_results(system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")) %>%
       .[purrr::map_lgl(., stringr::str_detect, "Early take-off", negate = TRUE)] %>% # removes DQ rational used in some relay DQs that messes up line spacing between relay and swimmers/splits - must happen before adding in row numbers
       # .[purrr::map_lgl(., ~ !any(stringr::str_detect(., "Early take-off")))] %>%
       add_row_numbers() %>%
@@ -231,7 +235,7 @@ Swim_Parse <-
         .[purrr::map_lgl(., stringr::str_detect, "r\\:\\+?\\-?\\s?\\d", negate = TRUE)] %>% # remove reaction times
         # .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]\\:", negate = TRUE)] %>% # remove records
         .[purrr::map_dbl(., stringr::str_count, "\\)") < 2] %>%  # remove inline splits from older style hy-tek results circa 2005
-        .[purrr::map_lgl(., stringr::str_detect, " \\:\\d", negate = TRUE)] %>% # remove other inline splits from older style hytek results circa 2005
+        # .[purrr::map_lgl(., stringr::str_detect, " \\:\\d", negate = TRUE)] %>% # remove other inline splits from older style hytek results circa 2005
         stringr::str_replace_all("\\s?[&%]\\s?", " ") %>% # added 8/21 for removing "&" and "%" as record designator
         # removed J etc. from next to swim, but does not remove X or x (for exhibition tracking)
         stringr::str_replace_all("[A-WYZa-wyz]+(\\d{1,2}\\:\\d{2}\\.\\d{2})", "\\1") %>%
@@ -671,16 +675,25 @@ Swim_Parse <-
             #                          TRUE ~ Place),
             # Place = dplyr::na_if(Place, "NA"),
             Row_Numb = as.numeric(Row_Numb)
-          ) %>%
-          dplyr::filter(Row_Numb >= Min_Row_Numb)
+          )
+          # ) %>%
+          # dplyr::filter(Row_Numb >= Min_Row_Numb)
       )
 
       if("Points" %in% names(data) == FALSE)
       {data$Points <- NA}
 
       #### add in events based on row number ranges ####
+      if(min(data$Row_Numb) < min(events$Event_Row_Min)){
+        unknown_event <- data.frame(Event = "Unknown",
+                                    Event_Row_Min = min(data$Row_Numb),
+                                    Event_Row_Max = min(events$Event_Row_Min) - 1)
+        events <- dplyr::bind_rows(unknown_event, events)
+      }
+
       data  <-
-        transform(data, Event = events$Event[findInterval(Row_Numb, events$Event_Row_Min)])
+        transform(data, Event = events$Event[findInterval(Row_Numb, events$Event_Row_Min)]) %>%
+        dplyr::na_if("Unknown")
 
       #### cleaning up final results ####
 
@@ -709,12 +722,19 @@ Swim_Parse <-
       if (relay_swimmers == TRUE) {
         # relay_swimmers_df <- collect_relay_swimmers(as_lines_list_2, typo_2 = typo, replacement_2 = replacement)
         relay_swimmers_df <- collect_relay_swimmers_2(as_lines_list_2)
+        # relay_swimmers_df <- relay_swimmers
+
+        relay_swimmers_df <-
+        transform(relay_swimmers_df, Row_Numb_Adjusted = data$Row_Numb[findInterval(Row_Numb, data$Row_Numb)]) %>%
+          dplyr::select(-Row_Numb)
+
         data <- data %>%
-          dplyr::left_join(relay_swimmers_df, by = 'Row_Numb')
+          dplyr::left_join(relay_swimmers_df, c("Row_Numb" = "Row_Numb_Adjusted"))
       }
 
       #### adding splits back in ####
       if (splits == TRUE) {
+        # split_length <- 50
         splits_df <- splits_parse(as_lines_list_2, split_len = split_length)
 
         #### matches row numbers in splits_df to avaiable row numbers in data
@@ -723,7 +743,6 @@ Swim_Parse <-
         splits_df  <-
           transform(splits_df, Row_Numb_Adjusted = data$Row_Numb[findInterval(Row_Numb, data$Row_Numb)]) %>%
           dplyr::select(-Row_Numb)
-
 
           data <- data %>%
             dplyr::left_join(splits_df, by = c("Row_Numb" = "Row_Numb_Adjusted"))
@@ -734,6 +753,11 @@ Swim_Parse <-
 
       }
 
+      ##### remove duplicated results ####
+      # data <- data %>%
+      #   dplyr::arrange(Name, Team, is.na(Wind_Speed), is.na(Prelims_Result)) %>% # new 1/1/21 to deal with results presented by heat and as final on same page
+      #   dplyr::distinct(Name, Team, Event, Prelims_Result, Finals_Result, .keep_all = TRUE) # new 1/1/21 to deal with results presented by heat and as final on same page
+      #
       #### if there is a Place column it should be first ####
       if("Place" %in% names(data)){
         data <- data %>%

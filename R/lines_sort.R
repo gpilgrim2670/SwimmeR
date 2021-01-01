@@ -41,7 +41,7 @@ lines_sort <- function(x, min_row = minimum_row) {
     dplyr::na_if(0) %>%
     dplyr::mutate(Row_Fill = fill_down(Row_Fill)) %>%
 
-    dplyr::select(-V1,-Row_Numb,-Row_Numb_2) %>%
+    dplyr::select(-V1, -Row_Numb, -Row_Numb_2) %>%
     dplyr::mutate(row_index = 1:dplyr::n()) %>%
     stats::reshape(direction = "wide",
                    idvar = "Row_Fill",

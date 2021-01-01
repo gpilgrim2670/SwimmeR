@@ -44,6 +44,7 @@ splits_parse <- function(text, split_len = split_length) {
   #   stringr::str_replace_all("DISQUAL", " DQ ") %>%
   #   .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid)))]  # do not include any lines with avoid strings in them
   #
+  # text <- as_lines_list_2
   # split_len <- 50
 
   #### Actual Function ####
@@ -138,86 +139,86 @@ splits_parse <- function(text, split_len = split_length) {
       unlist(purrr::map(data_1, stringr::str_split, "\\s{2,}"),
              recursive = FALSE)
 
-    data_length_2 <- data_1[purrr::map(data_1, length) == 2]
-    data_length_3 <- data_1[purrr::map(data_1, length) == 3]
-    data_length_4 <- data_1[purrr::map(data_1, length) == 4]
-    data_length_5 <- data_1[purrr::map(data_1, length) == 5]
-    data_length_6 <- data_1[purrr::map(data_1, length) == 6]
-    data_length_7 <- data_1[purrr::map(data_1, length) == 7]
-    data_length_8 <- data_1[purrr::map(data_1, length) == 8]
-    data_length_9 <- data_1[purrr::map(data_1, length) == 9]
-    data_length_10 <- data_1[purrr::map(data_1, length) == 10]
+    data_splits_length_2 <- data_1[purrr::map(data_1, length) == 2]
+    data_splits_length_3 <- data_1[purrr::map(data_1, length) == 3]
+    data_splits_length_4 <- data_1[purrr::map(data_1, length) == 4]
+    data_splits_length_5 <- data_1[purrr::map(data_1, length) == 5]
+    data_splits_length_6 <- data_1[purrr::map(data_1, length) == 6]
+    data_splits_length_7 <- data_1[purrr::map(data_1, length) == 7]
+    data_splits_length_8 <- data_1[purrr::map(data_1, length) == 8]
+    data_splits_length_9 <- data_1[purrr::map(data_1, length) == 9]
+    data_splits_length_10 <- data_1[purrr::map(data_1, length) == 10]
 
     #### transform all lists to dataframes ####
-    if (length(data_length_10) > 0) {
-      df_10 <- data_length_10 %>%
+    if (length(data_splits_length_10) > 0) {
+      df_10_splits <- data_splits_length_10 %>%
         list_transform()
     } else {
-      df_10 <- data.frame(Row_Numb = character(),
+      df_10_splits <- data.frame(Row_Numb = character(),
                           stringsAsFactors = FALSE)
     }
 
-    if (length(data_length_9) > 0) {
-      df_9 <- data_length_9 %>%
+    if (length(data_splits_length_9) > 0) {
+      df_9_splits <- data_splits_length_9 %>%
         list_transform()
     } else {
-      df_9 <- data.frame(Row_Numb = character(),
+      df_9_splits <- data.frame(Row_Numb = character(),
                          stringsAsFactors = FALSE)
     }
 
-    if (length(data_length_8) > 0) {
-      df_8 <- data_length_8 %>%
+    if (length(data_splits_length_8) > 0) {
+      df_8_splits <- data_splits_length_8 %>%
         list_transform()
     } else {
-      df_8 <- data.frame(Row_Numb = character(),
+      df_8_splits <- data.frame(Row_Numb = character(),
                          stringsAsFactors = FALSE)
     }
 
-    if (length(data_length_7) > 0) {
-      df_7 <- data_length_7 %>%
+    if (length(data_splits_length_7) > 0) {
+      df_7_splits <- data_splits_length_7 %>%
         list_transform()
     } else {
-      df_7 <- data.frame(Row_Numb = character(),
+      df_7_splits <- data.frame(Row_Numb = character(),
                          stringsAsFactors = FALSE)
     }
 
-    if (length(data_length_6) > 0) {
-      df_6 <- data_length_6 %>%
+    if (length(data_splits_length_6) > 0) {
+      df_6_splits <- data_splits_length_6 %>%
         list_transform()
     } else {
-      df_6 <- data.frame(Row_Numb = character(),
+      df_6_splits <- data.frame(Row_Numb = character(),
                          stringsAsFactors = FALSE)
     }
 
-    if (length(data_length_5) > 0) {
-      df_5 <- data_length_5 %>%
+    if (length(data_splits_length_5) > 0) {
+      df_5_splits <- data_splits_length_5 %>%
         list_transform()
     } else {
-      df_5 <- data.frame(Row_Numb = character(),
+      df_5_splits <- data.frame(Row_Numb = character(),
                          stringsAsFactors = FALSE)
     }
 
-    if (length(data_length_4) > 0) {
-      df_4 <- data_length_4 %>%
+    if (length(data_splits_length_4) > 0) {
+      df_4_splits <- data_splits_length_4 %>%
         list_transform()
     } else {
-      df_4 <- data.frame(Row_Numb = character(),
+      df_4_splits <- data.frame(Row_Numb = character(),
                          stringsAsFactors = FALSE)
     }
 
-    if (length(data_length_3) > 0) {
-      df_3 <- data_length_3 %>%
+    if (length(data_splits_length_3) > 0) {
+      df_3_splits <- data_splits_length_3 %>%
         list_transform()
     } else {
-      df_3 <- data.frame(Row_Numb = character(),
+      df_3_splits <- data.frame(Row_Numb = character(),
                          stringsAsFactors = FALSE)
     }
 
-    if (length(data_length_2) > 0) {
-      df_2 <- data_length_2 %>%
+    if (length(data_splits_length_2) > 0) {
+      df_2_splits <- data_splits_length_2 %>%
         list_transform()
     } else {
-      df_2 <- data.frame(Row_Numb = character(),
+      df_2_splits <- data.frame(Row_Numb = character(),
                          stringsAsFactors = FALSE)
     }
 
@@ -225,7 +226,7 @@ splits_parse <- function(text, split_len = split_length) {
     # results are bound before going to lines_sort so that in cases where there are multiple rows with splits for the same race,
     # like in longer events with many splits, those splits can be collected and treated together
     data <-
-      dplyr::bind_rows(df_10, df_9, df_8, df_7, df_6, df_5, df_4, df_3, df_2) %>%
+      dplyr::bind_rows(df_10_splits, df_9_splits, df_8_splits, df_7_splits, df_6_splits, df_5_splits, df_4_splits, df_3_splits, df_2_splits) %>%
       lines_sort(min_row = minimum_row) %>%
       dplyr::mutate(Row_Numb = as.numeric(Row_Numb) - 1) # make row number of split match row number of performance
 

@@ -20,17 +20,12 @@
 #' @seealso \code{event_parse} is a helper function inside \code{\link{swim_parse}}
 
 event_parse <- function(text) {
+  # text <- as_lines_list_2
+
   event_string <-
     "Event\\:?\\s+\\d{1,}|EVENT\\:?\\s+\\d{1,}|Women.* Yard|Women.* Meter|Women.* Metre|Girls.* Yard|Girls.* Meter|Girls.* Metre|Men.* Yard|Men.* Meter|Men.* Metre|Boys.* Yard|Boys.* Meter|Boys.* Metre|Mixed.* Yard|Mixed.* Meter|Mixed.* Metre"
 
-  # event_string <- "xxxx"
-
   events <- text %>%
-    # .[purrr::map_lgl(
-    #   .,
-    #   stringr::str_detect,
-    #   event_string
-    # )] %>%
     .[purrr::map_lgl(.,
                      stringr::str_detect,
                      event_string)] %>% # new 12/15 for older NCAA results
@@ -38,7 +33,6 @@ event_parse <- function(text) {
 
   if (length(events) > 0) {
     #if event names are recognized clean them up and determine row ranges
-
     events <- stringr::str_replace(events, ".*Event \\d{1,4} ", "")
     events <- stringr::str_replace(events, "Open  ", "") ## Addition
     events <-
@@ -76,7 +70,7 @@ event_parse <- function(text) {
       Event_Row_Min = 1,
       Event_Row_Max = length(text) - 1
     )
-    warning("No event names recognized - defaulting to 'Unknown'")
+    warning("No event names recognized - defaulting to NA")
   }
   return(events)
 

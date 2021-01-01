@@ -24,6 +24,7 @@ collect_relay_swimmers_2 <- function(x){
   # x <- read_results(system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR"))
   # x <- add_row_numbers(x)
   # x <- as_lines_list_2
+  # x <- x_1
 
   relay_swimmer_string <- "\n\\s*[1-4]\\)"
 
@@ -51,6 +52,7 @@ collect_relay_swimmers_2 <- function(x){
         stringr::str_remove_all("\\d+|\\:|\\.|DQ|\\=\\=|\\*\\*") %>% # all digits or colons or periods (times, DQ, record designators)
         # stringr::str_remove_all("\\:\\.") %>% # all digits
         stringr::str_remove_all("r\\:\\+?\\-?\\.") %>%
+        stringr::str_remove_all("\\+\\+|\\*\\*") %>%
         trimws() %>%
         stringr::str_remove_all(" SR$| SR | JR$| JR | SO$| SO | FR$| FR ") %>% # grade designators
         trimws()
@@ -100,7 +102,10 @@ collect_relay_swimmers_2 <- function(x){
 
     if (length(data_length_2_relay_swimmer) > 0) {
       df_2_relay_swimmer <- data_length_2_relay_swimmer %>%
-        list_transform()
+        list_transform() %>%
+        # dplyr::mutate(V1 = as.numeric(V1)) %>%
+        dplyr::filter((as.numeric(V1) + 1) %!in% as.numeric(unlist(row_numbs_relay_swimmer)) & (as.numeric(V1) + 2) %!in% as.numeric(unlist(row_numbs_relay_swimmer))) # sometimes team names get caught up in relay data - this removes them by making sure no relay covers more than two rows
+        # dplyr::mutate(V1 = as.character(V1))
 
     } else {
       df_2_relay_swimmer <- data.frame(Row_Numb = character(),
@@ -111,9 +116,11 @@ collect_relay_swimmers_2 <- function(x){
     # results are bound before going to lines_sort so that in cases where there are multiple rows with splits for the same race,
     # like in results where relays swimmers are reported on two lines, the results can be collected together
     relay_swimmers <-
-      dplyr::bind_rows(df_5_relay_swimmer, df_4_relay_swimmer, df_3_relay_swimmer, df_2_relay_swimmer) %>%
-      lines_sort(min_row = minimum_row) %>%
-      dplyr::mutate(Row_Numb = as.numeric(Row_Numb) - 1) %>%   # make row number of relay match row number of performance
+      dplyr::bind_rows(df_5_relay_swimmer, df_4_relay_swimmer, df_3_relay_swimmer, df_2_relay_swimmer)
+
+    relay_swimmers <- relay_swimmers %>%
+      lines_sort(min_row = min(as.numeric(relay_swimmers$V1) - 2)) %>%
+      dplyr::mutate(Row_Numb = as.numeric(Row_Numb)) %>%   # make row number of relay match row number of performance
       dplyr::select(
         "Relay_Swimmer_1" = V2,
         "Relay_Swimmer_2" = V3,
