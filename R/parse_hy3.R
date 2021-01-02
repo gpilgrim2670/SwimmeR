@@ -41,6 +41,7 @@ parse_hy3 <-
            avoid = avoid_minimal,
            typo = typo_default,
            replacement = replacement_default) {
+
     avoid_minimal <- c("Sammy Steroids")
 
     typo_default <- c("typo")
@@ -58,7 +59,6 @@ parse_hy3 <-
     file <- file %>%
       .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid)))] %>%
       stringr::str_replace_all(stats::setNames(replacement, typo))
-
 
     # data beginning with E1M or E1F contains results from each swim (male and female respectively)
     entry <- file %>%
@@ -503,7 +503,6 @@ parse_hy3 <-
       ) %>%
       dplyr::na_if("00.00")
       # filter(is.na(Finals_Time) == FALSE | is.na(Prelims_Time) == FALSE)
-
 
     return(data)
 

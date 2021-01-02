@@ -10,7 +10,7 @@ Swim_Parse(
   avoid = avoid_default,
   typo = typo_default,
   replacement = replacement_default,
-  format = TRUE,
+  format_results = TRUE,
   splits = FALSE,
   split_length = 50,
   relay_swimmers = FALSE
@@ -21,7 +21,7 @@ swim_parse(
   avoid = avoid_default,
   typo = typo_default,
   replacement = replacement_default,
-  format = TRUE,
+  format_results = TRUE,
   splits = FALSE,
   split_length = 50,
   relay_swimmers = FALSE
@@ -30,13 +30,13 @@ swim_parse(
 \arguments{
 \item{file}{output from \code{read_results}}
 
-\item{avoid}{a list of strings.  Rows in \code{file} containing these strings will not be included. For example "Pool:", often used to label pool records, could be passed to \code{avoid}.  The default is \code{avoid_default}, which contains many strings similar to "Pool:", such as "STATE:" and "Qual:".  Users can supply their own lists to \code{avoid}.}
+\item{avoid}{a list of strings.  Rows in \code{file} containing these strings will not be included. For example "Pool:", often used to label pool records, could be passed to \code{avoid}.  The default is \code{avoid_default}, which contains many strings similar to "Pool:", such as "STATE:" and "Qual:".  Users can supply their own lists to \code{avoid}.  \code{avoid} is handled before \code{typo} and \code{replacement}.}
 
 \item{typo}{a list of strings that are typos in the original results.  \code{swim_parse} is particularly sensitive to accidental double spaces, so "Central  High School", with two spaces between "Central" and "High" is a problem, which can be fixed.  Pass "Central  High School" to \code{typo}.  Unexpected commas as also an issue, for example "Texas, University of" should be fixed using \code{typo} and \code{replacement}}
 
 \item{replacement}{a list of fixes for the strings in \code{typo}.  Here one could pass "Central High School" (one space between "Central" and "High") and "Texas" to \code{replacement} fix the issues described in \code{typo}}
 
-\item{format}{should the data be formated for analysis (special strings like \code{"DQ"} replaced with \code{NA}, \code{Finals_Time} as definative column)?  Default is \code{TRUE}}
+\item{format_results}{should the results be formated for analysis (special strings like \code{"DQ"} replaced with \code{NA}, \code{Finals_Time} as definative column)?  Default is \code{TRUE}}
 
 \item{splits}{either \code{TRUE} or the default, \code{FALSE} - should \code{swim_parse} attempt to include splits.}
 

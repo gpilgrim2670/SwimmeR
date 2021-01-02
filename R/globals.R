@@ -9,6 +9,13 @@ utils::globalVariables(
     "V6",
     "V7",
     "V8",
+    "V9",
+    "V10",
+    "V11",
+    "V12",
+    "V13",
+    "V14",
+    "V15",
     "Event_Row_Min",
     "Grade",
     "Finals_Time",
@@ -71,6 +78,10 @@ utils::globalVariables(
     "typo",
     "replacement",
     "clean",
-    "Switch"
+    "Switch",
+    "avoid",
+    "Place_1",
+    "Min_C_Place",
+    "Prelims_Place"
   )
 )

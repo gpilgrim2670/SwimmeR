@@ -24,10 +24,10 @@
 #' @importFrom stats setNames
 #'
 #' @param file output from \code{read_results}
-#' @param avoid a list of strings.  Rows in \code{file} containing these strings will not be included. For example "Pool:", often used to label pool records, could be passed to \code{avoid}.  The default is \code{avoid_default}, which contains many strings similar to "Pool:", such as "STATE:" and "Qual:".  Users can supply their own lists to \code{avoid}.
+#' @param avoid a list of strings.  Rows in \code{file} containing these strings will not be included. For example "Pool:", often used to label pool records, could be passed to \code{avoid}.  The default is \code{avoid_default}, which contains many strings similar to "Pool:", such as "STATE:" and "Qual:".  Users can supply their own lists to \code{avoid}.  \code{avoid} is handled before \code{typo} and \code{replacement}.
 #' @param typo a list of strings that are typos in the original results.  \code{swim_parse} is particularly sensitive to accidental double spaces, so "Central  High School", with two spaces between "Central" and "High" is a problem, which can be fixed.  Pass "Central  High School" to \code{typo}.  Unexpected commas as also an issue, for example "Texas, University of" should be fixed using \code{typo} and \code{replacement}
 #' @param replacement a list of fixes for the strings in \code{typo}.  Here one could pass "Central High School" (one space between "Central" and "High") and "Texas" to \code{replacement} fix the issues described in \code{typo}
-#' @param format should the data be formated for analysis (special strings like \code{"DQ"} replaced with \code{NA}, \code{Finals_Time} as definative column)?  Default is \code{TRUE}
+#' @param format_results should the results be formated for analysis (special strings like \code{"DQ"} replaced with \code{NA}, \code{Finals_Time} as definative column)?  Default is \code{TRUE}
 #' @param splits either \code{TRUE} or the default, \code{FALSE} - should \code{swim_parse} attempt to include splits.
 #' @param split_length either \code{25} or the default, \code{50}, the length of pool at which splits are recorded.  Not all results are internally consistent on this issue - some have races with splits by 50 and other races with splits by 25.
 #' @param relay_swimmers either \code{TRUE} or the default, \code{FALSE} - should relay swimmers be reported.  Relay swimmers are reported in separate columns named \code{Relay_Swimmer_1} etc.
@@ -53,7 +53,7 @@ Swim_Parse <-
            avoid = avoid_default,
            typo = typo_default,
            replacement = replacement_default,
-           format = TRUE,
+           format_results = TRUE,
            splits = FALSE,
            split_length = 50,
            relay_swimmers = FALSE) {
@@ -67,8 +67,8 @@ Swim_Parse <-
       stop("typo and replacement must have the same number of elements (be the same length)")
     }
 
-    if(is.logical(format) == FALSE) {
-      stop("format must be logical, either TRUE or FALSE")
+    if(is.logical(format_results) == FALSE) {
+      stop("format_results must be logical, either TRUE or FALSE")
     }
 
     if(is.logical(splits) == FALSE) {
@@ -116,102 +116,41 @@ Swim_Parse <-
     #### define avoid_minimal ####
     avoid_minimal <- c("^\\s{1,}r\\:")
 
-
     #### testing ####
-    # file_1 <- read_results(system.file("extdata", "jets08082019_067546.pdf", package = "SwimmeR"))
-    # file_2 <- read_results(system.file("extdata", "11102019roc.pdf", package = "SwimmeR"))
-    # file_3 <- read_results(system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR"))
-    # file_4 <- read_results(system.file("extdata", "s2-results.pdf", package = "SwimmeR"))
-    # file_5 <- read_results(system.file("extdata", "ttsc10262018results-rev2.pdf", package = "SwimmeR")) # https://www.teamunify.com/eznslsc/UserFiles/File/Meet-Results/2018-2019/ttsc10262018results-rev2.pdf # potential addition, lot of df_7 stuff
-    # url91 <- read_results("http://www.section11swim.com/Results/GirlsHS/2016/League1/Single.htm") # numbers as grades still attached to schools - fixed
-    # url92 <- read_results("http://www.section1swim.com/Results/BoysHS/2020/Sec1/Single.htm") # schools are NA - fixed
-    # url93 <- read_results("http://www.section2swim.com/Results/BoysHS/2004/Sec2/A/Single.htm") # schools as SR
-    # url97 <- read_results("http://www.section3swim.com/Results/BoysHS/2020/Sec3/BC/Single.htm") # events errors - fixed - events as Class B, Class C etc
-    # url98 <- read_results("http://www.section5swim.com/Results/BoysHS/2013/HAC/Single.htm") # 'A' 'B' strings
-    # url101 <- read_results("http://www.section5swim.com/Results/GirlsHS/2000/Sec5/B/Single.htm") # empty '' strings where 'A', 'B' would go for relays
-    # url102 <- read_results("https://cdn.swimswam.com/wp-content/uploads/2019/03/W.NCAA-2019.pdf")
-    # url103 <- read_results("https://cdn.swimswam.com/wp-content/uploads/2018/07/2005-Division-I-NCAA-Championships-Women-results1.pdf") # not using yet
-    #
-    # file <- c(file_1, file_2, file_3, file_4, file_5, url91, url92, url93, url97, url98, url101, url102, url103)
-    # file <- read_results("https://cdn.swimswam.com/wp-content/uploads/2019/03/W.NCAA-2019.pdf")
-    # file <- read_results("http://www.section3swim.com/Results/BoysHS/2007/Sec3/Finals/Single.htm")
-    # file <- read_results(system.file("extdata", "s2-results.pdf", package = "SwimmeR"))
-    # file <- read_results("https://www.swimming.org.au/sites/default/files/assets/documents/full%20results_0.pdf")
-    # file <- read_results("https://cdn.swimswam.com/wp-content/uploads/2018/07/2005-Division-I-NCAA-Championships-Women-results1.pdf")
-    # typo = c("-1NORTH ROCKL")
-    # "\\s\\d{1,2}\\s{2,}",
-    # "AAA",
-    # "AAC")
-    # replacement = c("1-NORTH ROCKL")
-    # "  ",
-    # "  ",
-    # "  ")
-    # typo = c("\n", "Greece  Athena", "Newburgh Free  9", "FAYETTEVILLE MAN  ", "CICERO NORTH SYR  ", " - ", "Vineland  \\(Boy\\'s\\)",
-    #          "\\(Kp\\)", "\\(Mc\\)", "\\(P", "  Psal", " Brian\\t A", "Williamsville E ", " B-AAB", "Section  X I", "Mexico  -B",
-    #          "Nottingham  -A", "Bronxville  High School", "A A", ",  CT", ",  MA", "-1NORTH ROCKL", "QUEENSBURY  HIGH", "Indiana  University", ", University of", "Sugrue_Neuendorf,",
-    #          "Swim\\s{2,}Club",
-    #          "Performance\\s{2,}Swim",
-    #          "Swimming\\s{2,}Club",
-    #          "Stamford\\s{2,}American\\s{2,}Internationa",
-    #          "Uwcsea\\s{2,}Phoenix-ZZ",
-    #          "AquaTech\\s{2,}Swimming",
-    #          "Chinese\\s{2,}Swimming",
-    #          "Aquatic\\s{2,}Performance",
-    #          "SwimDolphia\\s{2}Aquatic School",
-    #          "Hwaseong  City Swimming  Team",
-    #          "Young-Mandiak, Atticus F 11",
-    #          "Molina Ayquipa, Santiago 12",
-    #          "South  Carolina",
-    #          "Southern  Cali",
-    #          "Texas  A",
-    #          "Ohio  St",
-    #          "Arizona  St",
-    #          "SOUTHERN  CAL.")
-    #
-    # replacement = c("", "Greece Athena", "Newburgh Free-9", "FAYETTEVILLE MAN ", "CICERO NORTH SYR ", "-", "Vineland",
-    #                 "", "", "", "-Psal", "Brian A", "Williamsville East ", "B-AAB", "Section XI", "Mexico",
-    #                 "Nottingham", "Bronxville", "AA", "-CT", "-MA", "1-NORTH ROCKL", "QUEENSBURY", "Indiana University", "", "Neuendorf, Sugrue",
-    #                 "Swim Club",
-    #                 "Performance Swim",
-    #                 "Swimming Club",
-    #                 "Stamford American International",
-    #                 "Uwcsea Phoenix-ZZ",
-    #                 "AquaTech Swimming",
-    #                 "Chinese Swimming",
-    #                 "Aquatic Performance",
-    #                 "SwimDolphia Aquatic School",
-    #                 "Hwaseong City Swimming Team",
-    #                 "Young-Mandiak, Atticus F   11",
-    #                 "Molina Ayquipa, Santiago   12",
-    #                 "South Carolina",
-    #                 "Southern Cali",
-    #                 "Texas A",
-    #                 "Ohio St",
-    #                 "Arizona St",
-    #                 "SOUTHERN CAL.")
     # file <- read_results("https://cdn.swimswam.com/wp-content/uploads/2018/08/2004-Division-I-NCAA-Championships-Men-results1.pdf")
     # avoid <- avoid_default
     # typo <- typo_default
     # replacement <- replacement_default
 
     #### combine avoid and avoid_default
-
     avoid <- unique(c(avoid, avoid_default))
+
+  if (stringr::str_detect(file[1], "^A107") == TRUE) { # for .hy3 files
+    # file <- add_row_numbers(text = file)
+    data <- parse_hy3(file = file)
+    return(data)
+
+  } else if (any(stringr::str_detect(file[1:5], "S\\.A\\.M\\.M\\.S\\.")) == TRUE) { # for S.A.M.M.S files
+    data <- parse_samms(file_samms = file,
+                        avoid_samms = avoid,
+                        typo_samms = typo,
+                        replacement_samms = replacement,
+                        format_samms = format_results)
+    return(data)
+
+  } else { # hytek files
 
     #### assign row numbers ####
     as_lines_list_2 <- file %>%
-    # x_1 <- read_results(system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")) %>%
       .[purrr::map_lgl(., stringr::str_detect, "Early take-off", negate = TRUE)] %>% # removes DQ rational used in some relay DQs that messes up line spacing between relay and swimmers/splits - must happen before adding in row numbers
-      # .[purrr::map_lgl(., ~ !any(stringr::str_detect(., "Early take-off")))] %>%
       add_row_numbers() %>%
       .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid)))] %>%
       stringr::str_replace_all(stats::setNames(replacement, typo)) %>% # replace typos with replacements
       stringr::str_replace_all("DISQUAL", " DQ ") %>%
       stringr::str_replace_all("EVENT\\:", "Event")
-      # .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid)))]  # do not include any lines with avoid strings in them
 
     #### parsing html and pdf files ####
-    if (stringr::str_detect(file[1], "^A107") == FALSE) {
+    # if (stringr::str_detect(file[1], "^A107") == FALSE) {
 
       #### Pulls out event labels from text ####
       events <- event_parse(as_lines_list_2)
@@ -222,7 +161,7 @@ Swim_Parse <-
       Time_Score_String <- "\\d{0,2}\\:?\\d{1,3}\\.\\d{2}"
       Time_Score_Specials_String <- paste0(Time_Score_String, "|^NT$|^NP$|^DQ$|^NS$|^SCR$")
       Age_String <- "^SR$|^JR$|^SO$|^FR$|^[:digit:]{1,3}$"
-      Colon_String <- "\\:\\d\\d"
+      # Colon_String <- "\\:\\d\\d"
 
       #### clean input data ####
 
@@ -714,7 +653,7 @@ Swim_Parse <-
       )
 
       #### cleaning ####
-      if(format == TRUE){
+      if(format_results == TRUE){
         data <- format_results(data)
       }
 
@@ -770,14 +709,10 @@ Swim_Parse <-
 
       return(data)
 
-    } else if (stringr::str_detect(file[1], "^A107") == TRUE) {
-      # file <- add_row_numbers(text = file)
-      data <- parse_hy3(file = file)
-      return(data)
-    }
-
-
   }
+  }
+
+
 #' @rdname Swim_Parse
 #' @export
 swim_parse <- Swim_Parse
