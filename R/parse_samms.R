@@ -88,7 +88,7 @@ parse_samms <-
     #### Set up strings ####
     # Name_String <-
     #   "_?[:alpha:]+\\s?\\'?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\'\\.]*,?\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:]*\\s?[:alpha:]*\\s?[:alpha:]*\\.?,? [:alpha:]+\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\']*\\s?[:alpha:]*\\s?[:alpha:]*\\s?[:alpha:\\.]*"
-    # Time_Score_String <- "\\d{0,2}\\:?\\d{1,3}\\.\\d{2}"
+    Time_Score_String <- "\\d{0,2}\\:?\\d{1,3}\\.\\d{2}"
     Time_Score_Specials_String <- paste0(Time_Score_String, "|^NT$|^NP$|^DQ$|^NS$|^SCR$")
     Finals_Place_String <- "^[FCB]?\\d{1,4}$"
     # Age_String <- "^SR$|^JR$|^SO$|^FR$|^[:digit:]{1,3}$"
