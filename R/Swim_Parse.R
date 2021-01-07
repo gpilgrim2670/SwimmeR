@@ -705,12 +705,13 @@ Swim_Parse <-
 
       data$Row_Numb <- NULL
 
-      message("Beginning with version 0.6.0 the Grade and School output columns have been renamed Age and Team respectively.  Please adjust your work flows as needed.")
+      message("Beginning with SwimmeR v0.6.0 the Grade and School output columns are renamed Age and Team respectively.  Please adjust your work flows as needed.")
 
       return(data)
 
   }
   }
+
 
 
 #' @rdname Swim_Parse

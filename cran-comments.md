@@ -1,3 +1,8 @@
+# Version 0.7.0
+* added functionality for reading S.A.M.M.S. style results
+* improvements and simplifications to use of swim_parse function
+* various bug fixes 
+
 # Version 0.6.0
 * added functionality for reading splits and relay swimmers to swim_parse and swim_parse_ISL
 * added fixes to make calls to web resources fail more gracefully
