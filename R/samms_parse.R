@@ -33,12 +33,13 @@
 #'
 #' @seealso \code{swim_parse} must be run on the output of \code{\link{read_results}}
 
-parse_samms <-
+samms_parse <-
   function(file_samms,
            avoid_samms = avoid,
            typo_samms = typo,
            replacement_samms = replacement,
            format_samms = format_results) {
+
     # typo_default <- c("typo")
     #
     # replacement_default <- c("typo")
@@ -72,7 +73,7 @@ parse_samms <-
     #     # "NCAA",
     #   )
     #
-    # file_samms <- read_results(url_5)
+    # file_samms <- read_results(url_6)
     # avoid_samms <- avoid_default
     # typo_samms <- typo_default
     # replacement_samms <- replacement_default
@@ -83,14 +84,14 @@ parse_samms <-
       .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid_samms)))] %>%
       stringr::str_replace_all(stats::setNames(replacement_samms, typo_samms)) %>% # replace typos with replacements
       stringr::str_replace_all("DQUED", "   DQ   ") %>%
-      stringr::str_replace_all(" NO SHOW ", "   SCR   ")
+      stringr::str_replace_all(" NO SHOW ", "   NS   ")
 
     #### Set up strings ####
     # Name_String <-
     #   "_?[:alpha:]+\\s?\\'?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\'\\.]*,?\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:]*\\s?[:alpha:]*\\s?[:alpha:]*\\.?,? [:alpha:]+\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\']*\\s?[:alpha:]*\\s?[:alpha:]*\\s?[:alpha:\\.]*"
     Time_Score_String <- "\\d{0,2}\\:?\\d{1,3}\\.\\d{2}"
     Time_Score_Specials_String <- paste0(Time_Score_String, "|^NT$|^NP$|^DQ$|^NS$|^SCR$")
-    Finals_Place_String <- "^[FCB]?\\d{1,4}$"
+    Finals_Place_String <- "^[FCB]?\\d{0,4}$"
     # Age_String <- "^SR$|^JR$|^SO$|^FR$|^[:digit:]{1,3}$"
     # Relay_Age_String <- "^\\d\\d?\\-UP$|^\\d\\d?&UN$|^\\d\\d?\\-\\d\\d?$"
 
@@ -102,7 +103,7 @@ parse_samms <-
       .[purrr::map(., stringr::str_length) > 50] %>% # slight speed boost from cutting down length of file
       .[purrr::map_lgl(.,
                        stringr::str_detect,
-                       paste0(Time_Score_String, "|DQ|SCR"))] %>% # must have \\.\\d\\d because all swimming and diving results do
+                       paste0(Time_Score_String, "|DQ|SCR|NS"))] %>% # must have \\.\\d\\d because all swimming and diving results do
       .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]{2,}")] %>%
       trimws()
 
@@ -141,6 +142,7 @@ parse_samms <-
       stringr::str_replace_all("(?<=DQ) B ", "  B  ") %>% # spread out heat markers
       stringr::str_replace_all("(?<=DQ) F ", "  F  ") %>% # spread out heat markers
       stringr::str_replace_all("(?<=DQ) C ", "  C  ") %>%  # spread out heat markers
+      stringr::str_replace_all("  \\([:upper:]{2}\\)  ", "    ") %>%  # spread out heat markers
       stringr::str_replace_all("(?<=\\d) (?=\\d)", "  ")
 
     #### splits data into variables by splitting at multiple (>= 2) spaces ####
@@ -246,7 +248,7 @@ parse_samms <-
       suppressWarnings(
         df_14 <- data_length_14 %>%
           list_transform() %>%
-          mutate(Finals_Time = stringr::str_remove_all(V6, " [:upper:]$")) %>%
+          dplyr::mutate(Finals_Time = stringr::str_remove_all(V6, " [:upper:]$")) %>%
           dplyr::select(
             Name = V1,
             Age = V2,
@@ -347,23 +349,23 @@ parse_samms <-
       suppressWarnings(
         df_11 <- data_length_11 %>%
           list_transform() %>%
-          dplyr::mutate(Prelims_Time = case_when(stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
+          dplyr::mutate(Prelims_Time = dplyr::case_when(stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
                                                    stringr::str_detect(V5, Finals_Place_String) == TRUE &
                                                    stringr::str_detect(V6, Time_Score_Specials_String) == TRUE &
                                                    stringr::str_detect(V7, Time_Score_Specials_String) == FALSE ~ V4,
                                                  TRUE ~ "NA")) %>%
-          dplyr::mutate(Prelims_Place = case_when(stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
+          dplyr::mutate(Prelims_Place = dplyr::case_when(stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
                                                     stringr::str_detect(V5, Finals_Place_String) == TRUE &
                                                     stringr::str_detect(V6, Time_Score_Specials_String) == TRUE &
                                                     stringr::str_detect(V7, Time_Score_Specials_String) == FALSE ~ V5,
                                                   TRUE ~ "NA")) %>%
-          dplyr::mutate(Finals_Time = case_when(stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
+          dplyr::mutate(Finals_Time = dplyr::case_when(stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
                                                   stringr::str_detect(V5, Finals_Place_String) == TRUE &
                                                   # stringr::str_detect(V6, Time_Score_Specials_String) == TRUE &
                                                   stringr::str_detect(V7, Time_Score_Specials_String) == TRUE &
                                                   stringr::str_detect(V8, Time_Score_Specials_String) == TRUE ~ V4,
                                                 TRUE ~ V6)) %>%
-          dplyr::mutate(Finals_Place = case_when(stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
+          dplyr::mutate(Finals_Place = dplyr::case_when(stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
                                                    stringr::str_detect(V5, Finals_Place_String) == TRUE &
                                                    # stringr::str_detect(V6, Time_Score_Specials_String) == TRUE &
                                                    stringr::str_detect(V7, Finals_Place_String) == TRUE &
@@ -405,23 +407,23 @@ parse_samms <-
       suppressWarnings(
         df_10 <- data_length_10 %>%
           list_transform() %>%
-          dplyr::mutate(Prelims_Time = case_when(stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
+          dplyr::mutate(Prelims_Time = dplyr::case_when(stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
                                                    stringr::str_detect(V5, Finals_Place_String) == TRUE &
                                                    stringr::str_detect(V6, Time_Score_Specials_String) == TRUE &
                                                    stringr::str_detect(V7, Time_Score_Specials_String) == FALSE ~ V4,
                                                  TRUE ~ "NA")) %>%
-          dplyr::mutate(Prelims_Place = case_when(stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
+          dplyr::mutate(Prelims_Place = dplyr::case_when(stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
                                                     stringr::str_detect(V5, Finals_Place_String) == TRUE &
                                                     stringr::str_detect(V6, Time_Score_Specials_String) == TRUE &
                                                     stringr::str_detect(V7, Time_Score_Specials_String) == FALSE ~ V5,
                                                   TRUE ~ "NA")) %>%
-          dplyr::mutate(Finals_Time = case_when(stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
+          dplyr::mutate(Finals_Time = dplyr::case_when(stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
                                                   stringr::str_detect(V5, Finals_Place_String) == TRUE &
                                                   # stringr::str_detect(V6, Time_Score_Specials_String) == TRUE &
                                                   stringr::str_detect(V7, Time_Score_Specials_String) == TRUE &
                                                   stringr::str_detect(V8, Time_Score_Specials_String) == TRUE ~ V4,
                                                 TRUE ~ V6)) %>%
-          dplyr::mutate(Finals_Place = case_when(stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
+          dplyr::mutate(Finals_Place = dplyr::case_when(stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
                                                    stringr::str_detect(V5, Finals_Place_String) == TRUE &
                                                    # stringr::str_detect(V6, Time_Score_Specials_String) == TRUE &
                                                    stringr::str_detect(V7, Finals_Place_String) == TRUE &
@@ -462,23 +464,23 @@ parse_samms <-
       suppressWarnings(
         df_9 <- data_length_9 %>%
           list_transform() %>%
-          dplyr::mutate(Prelims_Time = case_when(stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
+          dplyr::mutate(Prelims_Time = dplyr::case_when(stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
                                                    stringr::str_detect(V5, Finals_Place_String) == TRUE &
                                                    stringr::str_detect(V6, Time_Score_Specials_String) == TRUE &
                                                    stringr::str_detect(V7, Finals_Place_String) == TRUE ~ V4,
                                                  TRUE ~ "NA")) %>%
-          dplyr::mutate(Prelims_Place = case_when(stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
+          dplyr::mutate(Prelims_Place = dplyr::case_when(stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
                                                     stringr::str_detect(V5, Finals_Place_String) == TRUE &
                                                     stringr::str_detect(V6, Time_Score_Specials_String) == TRUE &
                                                     stringr::str_detect(V7, Finals_Place_String) == TRUE ~ V5,
                                                   TRUE ~ "NA")) %>%
-          dplyr::mutate(Finals_Time = case_when(stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
+          dplyr::mutate(Finals_Time = dplyr::case_when(stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
                                                   stringr::str_detect(V5, Finals_Place_String) == TRUE &
                                                   # stringr::str_detect(V6, Time_Score_Specials_String) == TRUE &
                                                   stringr::str_detect(V7, Time_Score_Specials_String) == TRUE &
                                                   stringr::str_detect(V8, Time_Score_Specials_String) == TRUE ~ V4,
                                                 TRUE ~ V6)) %>%
-          dplyr::mutate(Finals_Place = case_when(stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
+          dplyr::mutate(Finals_Place = dplyr::case_when(stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
                                                    stringr::str_detect(V5, Finals_Place_String) == TRUE &
                                                    # stringr::str_detect(V6, Time_Score_Specials_String) == TRUE &
                                                    stringr::str_detect(V7, Finals_Place_String) == TRUE &
@@ -521,7 +523,7 @@ parse_samms <-
         df_8 <- data_length_8 %>%
           list_transform() %>%
           dplyr::mutate(
-            Prelims_Time = case_when(
+            Prelims_Time = dplyr::case_when(
               stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
                 stringr::str_detect(V5, Time_Score_Specials_String) == FALSE &
                 stringr::str_detect(V6, Time_Score_Specials_String) == TRUE &
@@ -530,7 +532,7 @@ parse_samms <-
             )
           ) %>%
           dplyr::mutate(
-            Prelims_Place = case_when(
+            Prelims_Place = dplyr::case_when(
               stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
                 stringr::str_detect(V5, Finals_Place_String) == TRUE &
                 stringr::str_detect(V6, Time_Score_Specials_String) == TRUE &
@@ -539,7 +541,7 @@ parse_samms <-
             )
           ) %>%
           dplyr::mutate(
-            Finals_Time = case_when(
+            Finals_Time = dplyr::case_when(
               stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
                 stringr::str_detect(V5, Finals_Place_String) == TRUE &
                 stringr::str_detect(V6, paste0(Time_Score_Specials_String, "|^[:upper:]$")) == TRUE &
@@ -556,7 +558,7 @@ parse_samms <-
             )
           ) %>%
           dplyr::mutate(
-            Finals_Place = case_when(
+            Finals_Place = dplyr::case_when(
               stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
                 stringr::str_detect(V5, Finals_Place_String) == TRUE &
                 stringr::str_detect(V6, paste0(Time_Score_Specials_String, "|^[:upper:]$")) == TRUE &
@@ -650,7 +652,7 @@ parse_samms <-
       suppressWarnings(
         df_6 <- data_length_6 %>%
           list_transform() %>%
-          dplyr::mutate(Finals_Place = case_when(stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
+          dplyr::mutate(Finals_Place = dplyr::case_when(stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
                                                   stringr::str_detect(V5, "[FC]?^\\d{1,4}$") == TRUE ~ V5,
                                                 TRUE ~ "NA")) %>%
           dplyr::select(
@@ -672,7 +674,7 @@ parse_samms <-
       suppressWarnings(
         df_5 <- data_length_5 %>%
           list_transform() %>%
-          mutate(DQ = dplyr::case_when(
+          dplyr::mutate(DQ = dplyr::case_when(
             stringr::str_detect(V4, "DQ") ~ 1,
             TRUE ~ 0
           )) %>%
@@ -694,7 +696,7 @@ parse_samms <-
     #   suppressWarnings(
     #     df_4 <- data_length_4 %>%
     #       list_transform() %>%
-    #       mutate(DQ = dplyr::case_when(
+    #       dplyr::mutate(DQ = dplyr::case_when(
     #         stringr::str_detect(V4, "DQ") ~ 1,
     #         TRUE ~ 0
     #       )) %>%
@@ -816,7 +818,7 @@ parse_samms <-
             TRUE ~ as.numeric(Finals_Place)
           )
         ) %>%
-        select(Place, dplyr::everything(),-Min_C_Place, -Prelims_Place, -Finals_Place, -Row_Numb)
+        dplyr::select(Place, dplyr::everything(),-Min_C_Place, -Prelims_Place, -Finals_Place, -Row_Numb)
     )
 
     remove(C_Places)
@@ -837,19 +839,33 @@ parse_samms <-
       if("Prelims_Time" %!in% names(data)){
         data <- data %>%
           dplyr::mutate(Prelims_Time = "NA") %>%
-          dplyr::mutate(Prelims_Time = na_if(Prelims_Time, "NA"))
+          dplyr::mutate(Prelims_Time = dplyr::na_if(Prelims_Time, "NA"))
       }
       data <- format_results(data)
     }
+
+    data <- data %>%
+      dplyr::mutate(
+        Finals_Time = dplyr::case_when(
+          stringr::str_detect(Event, "DIVING|Diving") == TRUE ~ stringr::str_remove(Finals_Time, "\\:"),
+          TRUE ~ Finals_Time
+        )
+      ) %>%
+      dplyr::mutate(
+        Prelims_Time = dplyr::case_when(
+          stringr::str_detect(Event, "DIVING|Diving") == TRUE ~ stringr::str_remove(Prelims_Time, "\\:"),
+          TRUE ~ Prelims_Time
+        )
+      )
 
     #### Remove Empty Columns ####
     data <- Filter(function(x)
       ! all(is.na(x)), data)
 
-    #### this does work, to chnag elisted Finals_Time for atheltes who complete in Prelims and Finals to Prelims_Time for preliminary round.
-    # However it leaves ahtletes who didn't make finals with their times as Finals_Times (also as desired)
-    # I have kept this out to match how hytek results are handled
-    # Means athletes have a place for their preformance in finals and another place, as another row, for their place in prelims
+    #### this does work, to change listed Finals_Time for athletes who complete in Prelims and Finals to Prelims_Time for preliminary round.
+    # However it leaves athletes who didn't make finals with their times as Finals_Times (also as desired)
+    # I have kept this out to match how Hy-tek results are handled
+    # Means athletes have a place for their performance in finals and another place, as another row, for their place in prelims
 
     # data <- data %>%
     #   dplyr::group_by(Name, Event) %>%

@@ -36,7 +36,7 @@
 #' @seealso \code{parse_hy3} must be run on the output of \code{\link{read_results}}
 #' @seealso \code{parse_hy3} runs inside of \code{\link{swim_parse}}
 
-parse_hy3 <-
+hy3_parse <-
   function(file,
            avoid = avoid_minimal,
            typo = typo_default,

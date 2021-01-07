@@ -21,7 +21,7 @@ a dataframe where column 1 is times and column 2 is row number
 Used to pull prelims and finals places from .hy3 files as part of parsing them.
 }
 \seealso{
-\code{hy3_places} is run inside of \code{\link{parse_hy3}}
+\code{hy3_places} is run inside of \code{\link{hy3_parse}}
 }
 \author{
 Greg Pilgrim \email{gpilgrim2670@gmail.com}

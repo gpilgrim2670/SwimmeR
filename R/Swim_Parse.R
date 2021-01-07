@@ -127,11 +127,11 @@ Swim_Parse <-
 
   if (stringr::str_detect(file[1], "^A107") == TRUE) { # for .hy3 files
     # file <- add_row_numbers(text = file)
-    data <- parse_hy3(file = file)
+    data <- hy3_parse(file = file)
     return(data)
 
-  } else if (any(stringr::str_detect(file[1:5], "S\\.A\\.M\\.M\\.S\\.")) == TRUE) { # for S.A.M.M.S files
-    data <- parse_samms(file_samms = file,
+  } else if (any(stringr::str_detect(file[1:5], "S\\.A\\.M\\.M\\.S\\.|MEET SANCTION NUMBER")) == TRUE) { # for S.A.M.M.S files
+    data <- samms_parse(file_samms = file,
                         avoid_samms = avoid,
                         typo_samms = typo,
                         replacement_samms = replacement,

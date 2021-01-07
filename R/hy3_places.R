@@ -16,7 +16,7 @@
 #' @param type type of times, either "prelims", "relay_prelims", "finals" or "relay_finals"
 #' @return a dataframe where column 1 is times and column 2 is row number
 #'
-#' @seealso \code{hy3_places} is run inside of \code{\link{parse_hy3}}
+#' @seealso \code{hy3_places} is run inside of \code{\link{hy3_parse}}
 #'
 
 hy3_places <-

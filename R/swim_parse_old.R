@@ -1493,7 +1493,7 @@ swim_parse_old <-
 
     } else if (stringr::str_detect(file[1], "^A107") == TRUE) {
       # file <- add_row_numbers(text = file)
-      data <- parse_hy3(file = file)
+      data <- hy3_parse(file = file)
       return(data)
     }
 

@@ -8,7 +8,7 @@
 #' @param type either "individual" or "relay"
 #' @return a modified version of `entries` with values from `results` interleaved on the basis of row number
 #'
-#' @seealso \code{interleave_results} is a helper function used in \code{\link{parse_hy3}}
+#' @seealso \code{interleave_results} is a helper function used in \code{\link{hy3_parse}}
 #'
 #'
 

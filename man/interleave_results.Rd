@@ -20,7 +20,7 @@ a modified version of `entries` with values from `results` interleaved on the ba
 Interleaves times or places based on row number ranges.
 }
 \seealso{
-\code{interleave_results} is a helper function used in \code{\link{parse_hy3}}
+\code{interleave_results} is a helper function used in \code{\link{hy3_parse}}
 }
 \author{
 Greg Pilgrim \email{gpilgrim2670@gmail.com}
