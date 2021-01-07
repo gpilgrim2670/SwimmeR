@@ -125,6 +125,13 @@ Swim_Parse <-
     #### combine avoid and avoid_default
     avoid <- unique(c(avoid, avoid_default))
 
+    #### message only posts once per session ####
+    if(getOption("age_team_warning_0.6.0", TRUE)) {
+      message("Beginning with SwimmeR v0.6.0 the Grade and School output columns are renamed Age and Team respectively.  Please adjust your work flows as needed.")
+
+      options("age_team_warning_0.6.0" = FALSE)
+    }
+
   if (stringr::str_detect(file[1], "^A107") == TRUE) { # for .hy3 files
     # file <- add_row_numbers(text = file)
     data <- hy3_parse(file = file)
@@ -705,11 +712,13 @@ Swim_Parse <-
 
       data$Row_Numb <- NULL
 
-      message("Beginning with SwimmeR v0.6.0 the Grade and School output columns are renamed Age and Team respectively.  Please adjust your work flows as needed.")
+      # message("Beginning with SwimmeR v0.6.0 the Grade and School output columns are renamed Age and Team respectively.  Please adjust your work flows as needed.")
+
 
       return(data)
 
   }
+
   }
 
 
