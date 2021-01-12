@@ -19,15 +19,15 @@
 
 # Usage
 
-Version 0.6.0 of `SwimmeR` has two major uses - importing results and formatting times.  It also has functions for course conversions and drawing brackets.
+Version 0.7.0 of `SwimmeR` has two major uses - importing results and formatting times.  It also has functions for course conversions and drawing brackets.
 
 ## Importing Results
 
-`SwimmeR` reads swimming results into R and outputs tidy dataframes of the results.  `SwimmeR` uses `read_results` to read in either a PDF or HTML file (like a url) and the `swim_parse` or `swim_parse_ISL` function to convert the read file to a tidy dataframe.  Reading .hy3 files is also now possible with `swim_parse`, although .hy3 functionality is still under development and quite buggy.
+`SwimmeR` reads swimming results into R and outputs tidy dataframes of the results.  `SwimmeR` uses `read_results` to read in either a PDF or HTML file (like a url) and the `swim_parse` or `swim_parse_ISL` function to convert the read file to a tidy dataframe.  Reading .hy3 files is also now possible with `swim_parse`, although .hy3 functionality is still under development and quite buggy.  As of version 0.7.0 `SwimmeR` can also read S.A.M.M.S. style results.
 
 `read_results` has two arguments, `file`, which is the file path to read in, and `node`, required only for HTML files, this is a CSS node where the results reside.  `node` defaults to `"pre"`, which has been correct in every instance tested thus far.
 
-`swim_parse` has seven arguments as of version 0.6.0.
+`swim_parse` has seven arguments as of version 0.7.0.
 
 `file` is the output of `read_results` and is required.
 
