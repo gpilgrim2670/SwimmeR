@@ -1,7 +1,8 @@
-# Swimmer 0.7.0 - January 8 2020
+# Swimmer 0.7.0 - January 12 2020
 * added functionality to `swim_parse` to parse S.A.M.M.S. style files
 * added functionality to `swim_parse` to prevent function from failing when no event names are detected
 * broadened event name definitions
+* added functionality to `swim_parse` to allow raw-er results to be displayed, including swimming-specific strings like DQ and SCR
 * major overhaul to `swim_parse` to lessen the need for `typo` and `replacement` arguments and to simplify their use
 
 # Swimmer 0.6.0 - November 19 2020
