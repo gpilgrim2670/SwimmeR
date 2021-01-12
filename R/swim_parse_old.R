@@ -1,6 +1,6 @@
 #' Formats swimming and diving data read with \code{read_results} into a dataframe
 #'
-#' Takes the output of \code{read_results} and cleans it, yielding a dataframe of swimming (and diving) results.  Od version, retired in dev build on Dec 21, 2020
+#' Takes the output of \code{read_results} and cleans it, yielding a dataframe of swimming (and diving) results.  Old version, retired in dev build on Dec 21, 2020 and release version 0.7.0
 #'
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'

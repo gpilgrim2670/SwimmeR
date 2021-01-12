@@ -36,7 +36,7 @@ swim_parse(
 
 \item{replacement}{a list of fixes for the strings in \code{typo}.  Here one could pass "Central High School" (one space between "Central" and "High") and "Texas" to \code{replacement} fix the issues described in \code{typo}}
 
-\item{format_results}{should the results be formated for analysis (special strings like \code{"DQ"} replaced with \code{NA}, \code{Finals_Time} as definative column)?  Default is \code{TRUE}}
+\item{format_results}{should the results be formatted for analysis (special strings like \code{"DQ"} replaced with \code{NA}, \code{Finals_Time} as definitive column)?  Default is \code{TRUE}}
 
 \item{splits}{either \code{TRUE} or the default, \code{FALSE} - should \code{swim_parse} attempt to include splits.}
 
