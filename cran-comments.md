@@ -1,3 +1,12 @@
+# Version 0.7.1
+* addressed testing issues for Debian builds
+
+## Test environments
+* local Windows 10 install, R 4.0.2
+* local OS X install, R 4.0.2
+* win_devel
+* rhub
+
 # Version 0.7.0
 * added functionality for reading S.A.M.M.S. style results
 * improvements and simplifications to use of swim_parse function

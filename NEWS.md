@@ -1,3 +1,6 @@
+# Swimmer 0.7.1 - January 12 2020
+* Testing fixes for Debian builds
+
 # Swimmer 0.7.0 - January 12 2020
 * added functionality to `swim_parse` to parse S.A.M.M.S. style files
 * added functionality to `swim_parse` to prevent function from failing when no event names are detected

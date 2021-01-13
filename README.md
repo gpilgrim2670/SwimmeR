@@ -19,7 +19,7 @@
 
 # Usage
 
-Version 0.7.0 of `SwimmeR` has two major uses - importing results and formatting times.  It also has functions for course conversions and drawing brackets.
+Version 0.7.1 of `SwimmeR` has two major uses - importing results and formatting times.  It also has functions for course conversions and drawing brackets.
 
 ## Importing Results
 
