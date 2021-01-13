@@ -41,6 +41,14 @@
 swim_parse_ISL <-
   function(file, splits = FALSE, relay_swimmers = FALSE) {
 
+
+    #### testing ####
+    # file <- "https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_2_2020/ISL_01112020_Budapest_Match_6.pdf"
+    # file <- read_results(file)
+    # splits = TRUE
+    # relay_swimmers = TRUE
+
+    #### Begin Actual Function ####
     if(is.logical(splits) == FALSE) {
       stop("splits must be logical, either TRUE or FALSE")
     }
@@ -49,7 +57,7 @@ swim_parse_ISL <-
       stop("relay_swimmers must be logical, either TRUE or FALSE")
     }
 
-    #### Begin Actual Function ####
+    #### Add row numbers ####
     as_lines_list_2 <- add_row_numbers(text = file)
 
     #### Pulls out event labels from text ####
@@ -85,12 +93,14 @@ swim_parse_ISL <-
     #### breaks data into subsets based on swim type ####
     is_digit <-
       purrr::map(data_1, stringr::str_detect, "^\\d") # is first element of list a digit - no for relay swimmers, yes for everyone else
+
     if(relay_swimmers == TRUE){
     data_relay_swimmer <-
       data_1[purrr::map(is_digit, 1) == FALSE] # pull out relay swimmers
     } else {
       data_relay_swimmer <- NULL
     }
+
     data_entry <-
       data_1[purrr::map(is_digit, 1) == TRUE] # all entries (ie not relay swimmers, which are a kind of sub entry)
 
@@ -207,6 +217,7 @@ swim_parse_ISL <-
       df_relay_swimmer <- dplyr::bind_cols(df_left, df_right) %>%
         dplyr::na_if("NA")
 
+      suppressWarnings(
       df_relay_swimmer <- df_relay_swimmer %>%
         lines_sort(min_row = min(df_relay_swimmer$V1)) %>%
         dplyr::mutate(Row_Numb = as.numeric(Row_Numb) - 1) %>%
@@ -215,6 +226,7 @@ swim_parse_ISL <-
                "Relay_Swimmer_2" = V3,
                "Relay_Swimmer_3" = V4,
                "Relay_Swimmer_4" = V5)
+      )
 
     } else {
       df_relay_swimmer <- data.frame(
