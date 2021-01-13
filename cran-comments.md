@@ -7,7 +7,6 @@
 * win_devel
 * rhub debian-clang-devel
 
-
 # Version 0.7.1
 * addressed testing issues for Debian builds
 
