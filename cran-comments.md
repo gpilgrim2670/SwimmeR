@@ -5,7 +5,6 @@
 * local Windows 10 install, R 4.0.2
 * local OS X install, R 4.0.2
 * win_devel
-* rhub
 
 # Version 0.7.0
 * added functionality for reading S.A.M.M.S. style results

@@ -17,8 +17,6 @@ knitr::opts_chunk$set(
 ```{r setup, message = FALSE}
 library(SwimmeR)
 library(dplyr)
-library(ggplot2)
-library(scales)
 ```
 
 `SwimmeR` was developed to work with results from swimming competitions.  Results are often shared as web pages (.html) or PDF documents, which are nice to read, but make data difficult to access.
@@ -207,6 +205,16 @@ King200Breast
 
 This is useful for comparing times, or plotting
 ```{r formatted times plot, fig.height = 5, fig.width = 7}
+plot(King200Breast$Date, King200Breast$Time_sec, axes = FALSE, ann = FALSE)
+axis(1, at = c(16800, 17200, 17600, 18000), labels = c(2016, 2017, 2018, 2019))
+axis(2, at = c(125, 130, 135, 140), labels = mmss_format(c(125, 130, 135, 140)), las = 1)
+par(mar = c(5,7,4,2) + 0.3)
+
+```
+
+The same thing can be done in `ggplot`.
+
+```{r formatted times ggplot, eval = FALSE}
 King200Breast %>% 
   ggplot(aes(x = Date, y = Time_sec)) +
   geom_point() +
@@ -215,7 +223,6 @@ King200Breast %>%
   labs(y= "Time",
        title = "Lilly King NCAA 200 Breaststroke")
 ```
-
 \
 
 *************
