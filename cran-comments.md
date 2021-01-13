@@ -1,3 +1,13 @@
+# Version 0.7.2
+* addressed testing issues for Debian builds which I think are related to debian/pdftools/poppler issues that are beyond my control
+
+## Test environments
+* local Windows 10 install, R 4.0.2
+* local OS X install, R 4.0.2
+* win_devel
+* rhub debian-clang-devel
+
+
 # Version 0.7.1
 * addressed testing issues for Debian builds
 

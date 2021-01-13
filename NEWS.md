@@ -1,3 +1,6 @@
+# Swimmer 0.7.2 - January 13 2020
+* More testing fixes for Debian builds
+
 # Swimmer 0.7.1 - January 12 2020
 * Testing fixes for Debian builds
 
