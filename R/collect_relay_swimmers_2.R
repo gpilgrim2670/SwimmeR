@@ -5,7 +5,10 @@
 #' @importFrom dplyr mutate
 #' @importFrom dplyr rename
 #' @importFrom dplyr bind_rows
+#' @importFrom dplyr select
+#' @importFrom dplyr na_if
 #' @importFrom stringr str_remove_all
+#' @importFrom stringr str_replace_all
 #' @importFrom stringr str_extract_all
 #' @importFrom stringr str_split
 #' @importFrom stringr str_detect
@@ -43,10 +46,12 @@ collect_relay_swimmers_2 <- function(x){
                          stringr::str_detect,
                          relay_swimmer_string)] %>%
         stringr::str_remove_all("\n") %>%
+        stringr::str_replace_all("\\s(?=\\d)", "  ") %>% # make to sure have enough spaces between athlete names
+        stringr::str_replace_all("(?<=\\s[1-4]\\))   ", " NA  ") %>% # if a relay swimmer is missing should replace spot with "NA"
         # stringr::str_replace_all(stats::setNames(replacement_2, typo_2)) %>%
         stringr::str_remove_all("\\)") %>%
         stringr::str_remove_all("[A-Z]\\d{1,3}") %>% # for M25 designations in masters - Male 25
-        stringr::str_remove_all(" MFR| MSO| MJR| MSR| FFR| FSO| FJR| FSR| WFR| WSO| WJR| WSR") %>% # for gender/grade designations
+        stringr::str_remove_all(" M?FR | M?SO | M?JR | M?SR | F?FR | F?SO | F?JR | F?SR | W?FR | W?SO | W?JR | W?SR ") %>% # for gender/grade designations
         stringr::str_remove_all("r\\:\\+?\\-?\\d?\\.\\d\\d?") %>% # for reaction pad outputs
         stringr::str_remove_all("r\\:NRT") %>% # for reaction time fail to register
         stringr::str_remove_all("\\d+|\\:|\\.|DQ|\\=\\=|\\*\\*") %>% # all digits or colons or periods (times, DQ, record designators)
@@ -127,7 +132,8 @@ collect_relay_swimmers_2 <- function(x){
         "Relay_Swimmer_3" = V4,
         "Relay_Swimmer_4" = V5,
         Row_Numb
-      )
+      ) %>%
+      dplyr::na_if("NA")
 
   } else {
     relay_swimmers <- data.frame(Row_Numb = as.numeric())
