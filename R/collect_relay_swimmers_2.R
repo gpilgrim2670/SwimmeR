@@ -18,7 +18,7 @@
 #' @param x output from \code{read_results} followed by \code{add_row_numbers}
 #' @return returns a data frame of relay swimmers and the associated performance row number
 #'
-#' @seealso \code{collect_relay_swimmers} runs inside of \code{swim_parse}
+#' @seealso \code{collect_relay_swimmers_data} runs inside of \code{swim_parse}
 #'
 
 collect_relay_swimmers_2 <- function(x){
@@ -120,11 +120,11 @@ collect_relay_swimmers_2 <- function(x){
     #### bind up results ####
     # results are bound before going to lines_sort so that in cases where there are multiple rows with splits for the same race,
     # like in results where relays swimmers are reported on two lines, the results can be collected together
-    relay_swimmers <-
+    relay_swimmers_data <-
       dplyr::bind_rows(df_5_relay_swimmer, df_4_relay_swimmer, df_3_relay_swimmer, df_2_relay_swimmer)
 
-    relay_swimmers <- relay_swimmers %>%
-      lines_sort(min_row = min(as.numeric(relay_swimmers$V1) - 2)) %>%
+    relay_swimmers_data <- relay_swimmers_data %>%
+      lines_sort(min_row = min(as.numeric(relay_swimmers_data$V1) - 2)) %>%
       dplyr::mutate(Row_Numb = as.numeric(Row_Numb)) %>%   # make row number of relay match row number of performance
       dplyr::select(
         "Relay_Swimmer_1" = V2,
@@ -136,8 +136,8 @@ collect_relay_swimmers_2 <- function(x){
       dplyr::na_if("NA")
 
   } else {
-    relay_swimmers <- data.frame(Row_Numb = as.numeric())
+    relay_swimmers_data <- data.frame(Row_Numb = as.numeric())
   }
 
-  return(relay_swimmers)
+  return(relay_swimmers_data)
 }

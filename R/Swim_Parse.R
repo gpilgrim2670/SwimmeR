@@ -180,7 +180,7 @@ Swim_Parse <-
         .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]")] %>%
         .[purrr::map_lgl(., stringr::str_detect, "r\\:\\+?\\-?\\s?\\d", negate = TRUE)] %>% # remove reaction times
         # .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]\\:", negate = TRUE)] %>% # remove records
-        .[purrr::map_dbl(., stringr::str_count, "\\)") < 2] %>%  # remove inline splits from older style hy-tek results circa 2005
+        .[purrr::map_dbl(., stringr::str_count, "\\d\\)") < 2] %>%  # remove inline splits from older style hy-tek results circa 2005
         # .[purrr::map_lgl(., stringr::str_detect, " \\:\\d", negate = TRUE)] %>% # remove other inline splits from older style hytek results circa 2005
         stringr::str_replace_all("\\s?[&%]\\s?", " ") %>% # added 8/21 for removing "&" and "%" as record designator
         # removed J etc. from next to swim, but does not remove X or x (for exhibition tracking)

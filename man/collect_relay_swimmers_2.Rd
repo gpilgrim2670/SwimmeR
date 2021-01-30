@@ -16,7 +16,7 @@ returns a data frame of relay swimmers and the associated performance row number
 Collects relay swimmers as a data frame within \code{swim_parse}
 }
 \seealso{
-\code{collect_relay_swimmers} runs inside of \code{swim_parse}
+\code{collect_relay_swimmers_data} runs inside of \code{swim_parse}
 }
 \author{
 Greg Pilgrim \email{gpilgrim2670@gmail.com}
