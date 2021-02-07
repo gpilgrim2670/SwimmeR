@@ -25,7 +25,7 @@ Read_Results <- function(file, node = "pre") {
   if (stringr::str_detect(file, "\\.pdf$|\\.pdf\\.aspx$|\\.aspx$") == TRUE) {
     ### PDF ###
     results <- pdftools::pdf_text(file)
-    as_lines <- str_extract_all(results, "\n.*")
+    as_lines <- stringr::str_extract_all(results, "\n.*")
     as_lines_list_2 <- unlist(as_lines, recursive = FALSE)
 
     return(as_lines_list_2)
@@ -38,7 +38,7 @@ Read_Results <- function(file, node = "pre") {
       webpage <- xml2::read_html(file)
       html <- rvest::html_nodes(webpage, node)
       results <- rvest::html_text(html)
-      as_lines <- str_extract_all(results, "\n.*")
+      as_lines <- stringr::str_extract_all(results, "\n.*")
       as_lines_list_2 <- unlist(as_lines, recursive = FALSE)
 
       return(as_lines_list_2)
