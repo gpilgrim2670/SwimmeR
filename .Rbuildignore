@@ -14,3 +14,4 @@
 ^testing_results_score.R$
 ^R/splits_scratch\.R$
 ^R/scratch_paper\.R$
+^\.github$
