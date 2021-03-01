@@ -117,7 +117,7 @@ Swim_Parse <-
     avoid_minimal <- c("^\\s{1,}r\\:")
 
     #### testing ####
-    # file <- read_results("https://cdn.swimswam.com/wp-content/uploads/2018/08/2004-Division-I-NCAA-Championships-Men-results1.pdf")
+    # file <- read_results("http://a.espncdn.com/sec/media/2021/Mens%20Day%20Four%20Finals.pdf")
     # avoid <- avoid_default
     # typo <- typo_default
     # replacement <- replacement_default
@@ -183,6 +183,7 @@ Swim_Parse <-
         .[purrr::map_dbl(., stringr::str_count, "\\d\\)") < 2] %>%  # remove inline splits from older style hy-tek results circa 2005
         # .[purrr::map_lgl(., stringr::str_detect, " \\:\\d", negate = TRUE)] %>% # remove other inline splits from older style hytek results circa 2005
         stringr::str_replace_all("\\s?[&%]\\s?", " ") %>% # added 8/21 for removing "&" and "%" as record designator
+        stringr::str_remove_all("(?<=\\.\\d{2}\\s?)[A-WYZ|\\$|q](?=\\s)") %>% # remove letters attached to times as record designator
         # removed J etc. from next to swim, but does not remove X or x (for exhibition tracking)
         stringr::str_replace_all("[A-WYZa-wyz]+(\\d{1,2}\\:\\d{2}\\.\\d{2})", "\\1") %>%
         stringr::str_replace_all("(\\d{1,2}\\:\\d{2}\\.\\d{2})[A-WYZa-wyz]+", "\\1") %>%
@@ -259,7 +260,7 @@ Swim_Parse <-
       DQ_length_4 <- DQ[purrr::map(DQ, length) == 4]
       # DQ_length_5 <- DQ[purrr::map(DQ, length) == 5]
 
-      # #### nine variables
+      #### nine variables
       # if (length(data_length_9) > 0) {
       #   suppressWarnings(
       #     df_9 <- data_length_9 %>%
@@ -626,8 +627,8 @@ Swim_Parse <-
           # dplyr::filter(Row_Numb >= Min_Row_Numb)
       )
 
-      if("Points" %in% names(data) == FALSE)
-      {data$Points <- NA}
+      if("Points" %in% names(data) == FALSE){
+        data$Points <- NA}
 
       #### add in events based on row number ranges ####
       if(min(data$Row_Numb) < min(events$Event_Row_Min)){

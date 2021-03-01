@@ -1,3 +1,7 @@
+# Swimmer 0.7.3 - March 1 2021
+* Fixes for 25 length splits under 10.00 seconds
+* Other bug fixes for record designation
+
 # Swimmer 0.7.2 - January 13 2020
 * More testing fixes for Debian builds
 

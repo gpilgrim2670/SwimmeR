@@ -31,20 +31,8 @@ splits_parse <- function(text, split_len = split_length) {
   # text <- read_results("inst/extdata/s2-results.pdf")
   # text <- read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm")
 
-  # text <- read_results("https://cdn.swimswam.com/wp-content/uploads/2018/07/2005-Division-I-NCAA-Championships-Women-results1.pdf")
-  # typo <- "typo"
-  # replacement <- "typo"
-  # avoid <- "xxx"
-  #
-  # text <- text %>%
-  #   .[purrr::map_lgl(., stringr::str_detect, "Early take-off", negate = TRUE)] %>% # removes DQ rational used in some relay DQs that messes up line spacing between relay and swimmers/splits - must happen before adding in row numbers
-  #   # .[purrr::map_lgl(., ~ !any(stringr::str_detect(., "Early take-off")))] %>%
-  #   add_row_numbers() %>%
-  #   stringr::str_replace_all(stats::setNames(replacement, typo)) %>% # replace typos with replacements
-  #   stringr::str_replace_all("DISQUAL", " DQ ") %>%
-  #   .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid)))]  # do not include any lines with avoid strings in them
-  #
-  # text <- as_lines_list_2
+  # text <- read_results("http://a.espncdn.com/sec/media/2021/Mens%20Day%20Four%20Finals.pdf") %>%
+  #   add_row_numbers()
   # split_len <- 50
 
   #### Actual Function ####
@@ -65,7 +53,7 @@ splits_parse <- function(text, split_len = split_length) {
 
   if (length(row_numbs) == 0) { # looks for splits that don't have parenthesis around them but will also capture rows with normal times
     split_string <-
-      "\\(\\d?\\:?\\d\\d\\.\\d\\d\\)|\\s\\d?\\:?\\d\\d\\.\\d\\d\\s"
+      "\\(\\d?\\:?\\d\\d\\.\\d\\d\\)|\\s\\d?\\:?\\d\\d\\.\\d\\d\\s|\\s[8-9]\\.\\d{2}"
     row_numbs <- text %>%
       .[purrr::map_lgl(.,
                        stringr::str_detect,
@@ -119,7 +107,7 @@ splits_parse <- function(text, split_len = split_length) {
           # stringr::str_replace_all("r\\:\\+\\s?\\d\\.\\d\\d", "") %>%
           stringr::str_remove_all("r\\:\\+?\\s?\\d?\\d\\.\\d\\d") %>%
           stringr::str_extract_all(paste0(
-            "^\\s+\\d\\d\\.\\d\\d|", split_string
+            "^\\s+\\d\\d\\.\\d\\d|\\s[8-9]\\.\\d{2}|", split_string
           )) %>%
           stringr::str_remove_all('\\"') %>%
           stringr::str_replace_all("\\(", " ") %>%
@@ -225,23 +213,23 @@ splits_parse <- function(text, split_len = split_length) {
     #### bind up results ####
     # results are bound before going to lines_sort so that in cases where there are multiple rows with splits for the same race,
     # like in longer events with many splits, those splits can be collected and treated together
-    data <-
+    data_splits <-
       dplyr::bind_rows(df_10_splits, df_9_splits, df_8_splits, df_7_splits, df_6_splits, df_5_splits, df_4_splits, df_3_splits, df_2_splits) %>%
       lines_sort(min_row = minimum_row) %>%
       dplyr::mutate(Row_Numb = as.numeric(Row_Numb) - 1) # make row number of split match row number of performance
 
     #### rename columns V1, V2 etc. by 50 ####
-    old_names <- names(data)[grep("^V", names(data))]
+    old_names <- names(data_splits)[grep("^V", names(data_splits))]
     new_names <-
-      paste("Split", seq(1, length(names(data)) - 1) * split_len, sep = "_")
+      paste("Split", seq(1, length(names(data_splits)) - 1) * split_len, sep = "_")
 
-    data <- data %>%
+    data_splits <- data_splits %>%
       dplyr::rename_at(dplyr::vars(old_names), ~ new_names)
 
   } else { # if there are no rows with valid splits return blank dataframe
-    data <- data.frame(Row_Numb = as.numeric())
+    data_splits <- data.frame(Row_Numb = as.numeric())
   }
-  return(data)
+  return(data_splits)
 
 }
 
