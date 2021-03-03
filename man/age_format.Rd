@@ -2,15 +2,15 @@
 % Please edit documentation in R/age_format.R
 \name{age_format}
 \alias{age_format}
-\title{Formatting yy-mm ages as years}
+\title{Formatting yyy-mm ages as years}
 \usage{
 age_format(x)
 }
 \arguments{
-\item{x}{A character vector of time(s) in swimming format (e.g. 1:35.93) to be converted to seconds (95.93)}
+\item{x}{A character vector of ages in yyy-mm format (e.g. 93-03) to be converted to years (93.25)}
 }
 \value{
-returns the value of the string \code{x} which represents a time in swimming format (mm:ss.hh) and converts it to seconds
+returns the value of the string \code{x} which represents an age in yyy-mm format (93-03) and converts it to years (93.25)
 }
 \description{
 Takes a character string (or list) representing an age as years-months (e.g. 13-06 for 13 years, 6 months) and converts it to a character value (13.5) or a list of values representing ages in years.

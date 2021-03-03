@@ -1,4 +1,4 @@
-#' Formatting yy-mm ages as years
+#' Formatting yyy-mm ages as years
 #'
 #' Takes a character string (or list) representing an age as years-months (e.g. 13-06 for 13 years, 6 months) and converts it to a character value (13.5) or a list of values representing ages in years.
 #'
@@ -6,8 +6,8 @@
 #'
 #' @importFrom purrr map_chr
 #'
-#' @param x A character vector of time(s) in swimming format (e.g. 1:35.93) to be converted to seconds (95.93)
-#' @return returns the value of the string \code{x} which represents a time in swimming format (mm:ss.hh) and converts it to seconds
+#' @param x A character vector of ages in yyy-mm format (e.g. 93-03) to be converted to years (93.25)
+#' @return returns the value of the string \code{x} which represents an age in yyy-mm format (93-03) and converts it to years (93.25)
 #'
 #' @examples age_format("13-06")
 #' age_format(c("13-06", "25-03", NA))

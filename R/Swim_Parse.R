@@ -279,6 +279,7 @@ Swim_Parse <-
                           Age = dplyr::case_when(stringr::str_detect(V3, Age_String) == TRUE ~ V3,
                                                  stringr::str_detect(V4, Age_String) == TRUE ~ V4,
                                                  TRUE ~ "NA")) %>%
+            dplyr::na_if("NA") %>%
             dplyr::select(
               Place = V1,
               Name = V2,
@@ -321,6 +322,7 @@ Swim_Parse <-
             #   TRUE ~ "NA"
             # )
             ) %>%
+            dplyr::na_if("NA") %>%
             dplyr::select(
               Place = V1,
               Name = V2,
