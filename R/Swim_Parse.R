@@ -117,7 +117,9 @@ Swim_Parse <-
     avoid_minimal <- c("^\\s{1,}r\\:")
 
     #### testing ####
-    # file <- read_results("https://www.swimming.org.au/sites/default/files/assets/documents/Full%20Results%20Age.pdf")
+    # file <- read_results("http://www.section5swim.com/Results/BoysHS/2013/HAC/Single.htm")
+    # file <- read_results(system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR"))
+
     # avoid <- avoid_default
     # typo <- c("typo")
     # replacement <- c("typo")
@@ -166,7 +168,8 @@ Swim_Parse <-
       Name_String <-
         "_?[:alpha:]+\\s?\\'?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\'\\.]*,?\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:]*\\s?[:alpha:]*\\s?[:alpha:]*\\.?,? [:alpha:]+\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\']*\\s?[:alpha:]*\\s?[:alpha:]*\\s?[:alpha:\\.]*"
       Time_Score_String <- "\\d{0,2}\\:?\\d{1,3}\\.\\d{2}"
-      Time_Score_Specials_String <- paste0(Time_Score_String, "|^NT$|^NP$|^DQ$|^NS$|^SCR$")
+      Time_Score_Specials_String <- paste0("^NT$|^NP$|^DQ$|^NS$|^SCR$|^x?X?", Time_Score_String, "x?X?$")
+      Time_Score_Specials_String_Extract <- paste0(Time_Score_String, "|^NT$|^NP$|^DQ$|^NS$|^SCR$")
       Age_String <- "^SR$|^JR$|^SO$|^FR$|^[:digit:]{1,3}$|^\\d{1,3}\\-\\d{2}$"
       Para_String <- "^SB?M?\\d{1,2}$"
       Reaction_String <- "^\\+\\s?\\d\\.\\d{3}$|^\\-\\s?\\d\\.\\d{3}$|^0.00$"
@@ -181,6 +184,7 @@ Swim_Parse <-
         .[purrr::map_lgl(., stringr::str_detect, paste0(Time_Score_String,"|DQ|SCR"))] %>% # must have \\.\\d\\d because all swimming and diving times do
         .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]")] %>%
         .[purrr::map_lgl(., stringr::str_detect, "r\\:\\+?\\-?\\s?\\d", negate = TRUE)] %>% # remove reaction times
+        .[purrr::map_lgl(., stringr::str_detect, "^50m", negate = TRUE)] %>%  # remove Brithish results that start with 50m for splits lines
         # .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]\\:", negate = TRUE)] %>% # remove records
         .[purrr::map_dbl(., stringr::str_count, "\\d\\)") < 2] %>%  # remove inline splits from older style hy-tek results circa 2005
         # .[purrr::map_lgl(., stringr::str_detect, " \\:\\d", negate = TRUE)] %>% # remove other inline splits from older style hytek results circa 2005
@@ -233,9 +237,10 @@ Swim_Parse <-
         stringr::str_replace_all(" SO ", "       SO      ") %>% # split age and team
         stringr::str_replace_all(" JR ", "       JR      ") %>% # split age and team
         stringr::str_replace_all(" SR ", "       SR      ") %>% # split age and team
+        stringr::str_replace_all(" NT ", "       NT      ") %>% # split prelim and final
         stringr::str_replace_all("(?<=[:alpha:])\\s{2,3}(?=[:alpha:])", " ") %>% # testing 12/21/2020 would help with typos
         stringr::str_replace_all("(?<=[:alpha:]) (?=\\d)", "  ") %>% # split name and age
-        stringr::str_replace_all("(?<=[:alpha:])(\\d{1,3}\\-\\d{2})", "  \\1  ") %>% # split name and yy-mm age
+        stringr::str_replace_all("(?<=[:alpha:])(\\d{1,3}\\-\\d{2})", "  \\1  ") %>% # split name and yyy-mm age
         stringr::str_replace_all("(?<=\\,) (?=\\d)", "  ") %>% # split name and age if name is so long that it ends with a ","
         stringr::str_replace_all("(?<=\\d) (?=\\d{1,}$)", "  ") %>%  # split off row_numb
         stringr::str_replace_all("(?<=\\.\\d\\d\\s{1,10}\\d?\\d?\\:?\\d?\\d\\.\\d\\d)\\s{1,10}[:alpha:]{1,5}\\d?\\s{1,10}(?=\\d{1,})", "  ") %>%  # removes "AAC" or "AAA" or "NYS" or "SEC1" etc. from after finals time
@@ -423,7 +428,7 @@ Swim_Parse <-
               Prelims_Time = dplyr::case_when(
                 stringr::str_detect(V3, Time_Score_Specials_String) == TRUE &
                   stringr::str_detect(V4, Time_Score_Specials_String) == TRUE ~ V3,
-                # stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
+                stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
                 stringr::str_detect(V5, Time_Score_Specials_String) == TRUE ~ V4,
                 TRUE ~ "NA"
               ),
@@ -638,8 +643,8 @@ Swim_Parse <-
             Exhibition = dplyr::case_when(stringr::str_detect(Finals_Time, "x|X") == TRUE ~ 1,
                                           TRUE ~ 0),
             ###
-            Finals_Time = stringr::str_extract(Finals_Time, Time_Score_Specials_String),
-            Prelims_Time = stringr::str_extract(Prelims_Time, Time_Score_Specials_String)
+            Finals_Time = stringr::str_extract(Finals_Time, Time_Score_Specials_String_Extract),
+            Prelims_Time = stringr::str_extract(Prelims_Time, Time_Score_Specials_String_Extract)
           ) %>%
           ### moved up from below for DQ work 8/20
           dplyr::mutate(DQ = dplyr::case_when(Place == 10000 &
