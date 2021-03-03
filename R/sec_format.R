@@ -21,6 +21,6 @@
 
 
 sec_format <- function(x) {
-  x <- map_dbl(x, sec_format_helper)
+  x <- purrr::map_dbl(x, sec_format_helper)
   return(x)
 }
