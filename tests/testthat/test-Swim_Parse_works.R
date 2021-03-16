@@ -15,6 +15,56 @@ test_that("swim_parse works", {
 
 })
 
+
+test_that("swim_parse works para", {
+
+  file <-
+    system.file("extdata", "2018_jimi_flowers_PARA.pdf", package = "SwimmeR")
+
+  df <- swim_parse(
+    read_results(file),
+    typo =  c("\n",
+              # "Indiana  University",
+              ", University of"),
+    replacement = c("\n",
+                    # "Indiana University",
+                    "")
+  )
+
+  expect_equivalent(
+    unique(df$Para),
+    c(
+      "S3",
+      "S6",
+      "S7",
+      "S8",
+      "S9" ,
+      "S10",
+      "S11",
+      "S12",
+      "S14",
+      NA,
+      "SB7",
+      "SB9",
+      "SB12",
+      "SB14",
+      "S5",
+      "SB3",
+      "SB5",
+      "SB6",
+      "SB8",
+      "SB11",
+      "SM6",
+      "SM7",
+      "SM8",
+      "SM9",
+      "SM10",
+      "SM11"
+    )
+  )
+
+})
+
 test_that("swim_parse_2 works 2", {
   file <-
     system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")
@@ -34,6 +84,8 @@ test_that("swim_parse_2 works 2", {
 })
 
 test_that("swim_parse_2 works 3", {
+
+  skip_on_cran() # due to risk of external resources failing
 
   file <- "http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm"
 
@@ -75,6 +127,8 @@ test_that("swim_parse works USA", {
 })
 
 test_that("swim_parse works list", {
+
+  skip_on_cran() # due to time, risk of external resources failing
 
   # import standard
   # df_standard <- read.csv(system.file("extdata", "df_standard.csv", package = "SwimmeR"), stringsAsFactors = FALSE, colClasses=c("numeric", rep("character", 6), "numeric", "numeric", "character"))

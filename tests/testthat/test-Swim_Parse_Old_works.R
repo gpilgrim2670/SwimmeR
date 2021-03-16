@@ -1,3 +1,4 @@
+#  ### testing for old version of swim_parse
 #
 # test_that("swim_parse works", {
 #   file <- system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")

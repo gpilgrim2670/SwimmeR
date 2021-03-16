@@ -2,6 +2,8 @@
 
 test_that("ISL season 2 dataframe", {
 
+  skip_on_cran() # due to risk of external resources failing
+
   file <- "https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_2_2020/ISL_01112020_Budapest_Match_6.pdf"
 
   if(is_link_broken(file) == TRUE){
@@ -17,6 +19,9 @@ test_that("ISL season 2 dataframe", {
 })
 
 test_that("CAC Score ISL", {
+
+  skip_on_cran() # due to risk of external resources failing
+
   file <- "https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_2_2020/ISL_16102020_Budapest_Match_1.pdf"
 
   if(is_link_broken(file) == TRUE){
@@ -31,6 +36,9 @@ test_that("CAC Score ISL", {
 })
 
 test_that("Lilly King Times with score - season 2", {
+
+  skip_on_cran() # due to risk of external resources failing
+
   file <- "https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_2_2020/ISL_16102020_Budapest_Match_1.pdf"
 
   if(is_link_broken(file) == TRUE){
@@ -45,6 +53,9 @@ test_that("Lilly King Times with score - season 2", {
 })
 
 test_that("Lilly King Times without score - season 1", {
+
+  skip_on_cran() # due to risk of external resources failing
+
   file <- "https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_1_2019/ISL_16112019_CollegePark_Day_1.pdf"
 
   if(is_link_broken(file) == TRUE){

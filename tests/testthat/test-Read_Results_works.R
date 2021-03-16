@@ -8,6 +8,9 @@ test_that("read_results PDF works", {
 })
 
 test_that("read_results HTML works", {
+
+  skip_on_cran() # due to risk of external resources failing
+
   file <- "http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm"
 
   if (is_link_broken(file) == TRUE) {

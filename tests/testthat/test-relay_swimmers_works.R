@@ -16,6 +16,9 @@ test_that("relay swimmers one line works", {
 })
 
 test_that("relay swimmers two lines works", {
+
+  skip_on_cran() # due to risk of external resources failing
+
   file <-
     "https://cdn.swimswam.com/wp-content/uploads/2018/08/2004-Division-I-NCAA-Championships-Men-results1.pdf"
 
