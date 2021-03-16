@@ -16,7 +16,7 @@
 #' @importFrom dplyr rowwise
 #' @importFrom stringr str_detect
 #'
-#' @param df a dataframe output from \code{swim_parse} creates with \code{splits = TRUE}
+#' @param df a dataframe output from \code{swim_parse} created with \code{splits = TRUE}
 #' @return a dataframe with a column \code{not_matching} containing \code{TRUE} if the splits for that swim match the finals time and \code{FALSE} if they do not
 
 splits_reform <- function(df){

@@ -1,5 +1,11 @@
+# Swimmer 0.8.0 - March 16 2021
+* Introduces parsing of Para athlete codes inside `swim_parse`
+* Bug fixes in splits
+* Improved handling of symbols as record designations (!, $ etc.) inside `swim_parse`
+* Added `names_reorder` function for dealing with names in Lastname, Firstname order
+
 # Swimmer 0.7.3 - March 1 2021
-* Fixes for 25 length splits under 10.00 seconds
+* Fixes bugs in 25 length splits under 10.00 seconds
 * Other bug fixes for record designation
 
 # Swimmer 0.7.2 - January 13 2020
