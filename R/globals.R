@@ -75,6 +75,7 @@ utils::globalVariables(
     "Relay_Swimmer_4",
     "Split_50",
     "Age",
+    "Para",
     "typo",
     "replacement",
     "clean",

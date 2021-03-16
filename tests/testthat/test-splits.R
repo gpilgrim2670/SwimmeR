@@ -1,5 +1,7 @@
 test_that("Singapore results, splits in parenthesis", {
+
   file <- system.file("extdata", "s2-results.pdf", package = "SwimmeR")
+
   df <- swim_parse(
     read_results(file),
     avoid = c("MR:"),
@@ -37,6 +39,9 @@ test_that("Singapore results, splits in parenthesis", {
 
 
 test_that("NYS results, multiple lines of splits with different lengths, has parenthesis", {
+
+  skip_on_cran() # due to risk of external resources failing
+
   file <- "http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm"
 
   if(is_link_broken(file) == TRUE){
@@ -61,6 +66,7 @@ test_that("NYS results, multiple lines of splits with different lengths, has par
 })
 
 test_that("USA Swimming results, splits don't have parenthesis, some splits longer than 59.99", {
+
   file <- system.file("extdata", "jets08082019_067546.pdf", package = "SwimmeR")
   df <- swim_parse(
     read_results(file),
@@ -76,6 +82,8 @@ test_that("USA Swimming results, splits don't have parenthesis, some splits long
 
 test_that("ISL results", {
 
+  skip_on_cran() # due to risk of external resources failing
+
   file <- "https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_1_2019/ISL_19102019_Lewisville_Day_1.pdf"
 
   if(is_link_broken(file) == TRUE){
@@ -88,6 +96,38 @@ test_that("ISL results", {
   match_sum <- sum(df$not_matching, na.rm = TRUE) # should be 24 due to 24 relays
 
   expect_equivalent(match_sum, 24)
+  }
+
+})
+
+test_that("multiple splits below 59.99 in parens and out", {
+
+  skip_on_cran() # due to risk of external resources failing
+
+  file <- "https://data.ohiostatebuckeyes.com/livestats/m-swim/210302F001.htm"
+
+  if(is_link_broken(file) == TRUE){
+    warning("Link to external data is broken")
+  } else {
+    df <-
+      swim_parse(
+        read_results(file),
+        splits = TRUE,
+        relay_swimmers = TRUE,
+        split_length = 25
+      ) %>%
+      dplyr::mutate(dplyr::across(Split_25:Split_200, as.numeric)) %>%
+      dplyr::rowwise() %>%
+      dplyr::mutate(
+        total = sum(Split_50, Split_100, Split_150, Split_200),
+        F_sec = sec_format(Finals_Time),
+        not_matching = dplyr::case_when(round(F_sec - total, 2) == 0 ~ FALSE, # does total match finals time?
+                                        round(F_sec - total, 2) != 0 ~ TRUE)
+      )
+
+    match_sum <- sum(df$not_matching, na.rm = TRUE) # should be 0 because they all should be correct
+
+    expect_equivalent(match_sum, 0)
   }
 
 })

@@ -4,8 +4,8 @@
 #'
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
-#' @param df a dataframe having some NA values
-#' @return a dataframe where all values have been pushed left, replacing NAs, and all columns containing only NAs have been removed
+#' @param df a dataframe having some `NA` values
+#' @return a dataframe where all values have been pushed left, replacing `NA`s, and all columns containing only `NA`s have been removed
 #'
 #' @seealso \code{fill_left} is a helper function inside \code{lines_sort}
 #'

@@ -7,10 +7,10 @@
 fill_left(df)
 }
 \arguments{
-\item{df}{a dataframe having some NA values}
+\item{df}{a dataframe having some `NA` values}
 }
 \value{
-a dataframe where all values have been pushed left, replacing NAs, and all columns containing only NAs have been removed
+a dataframe where all values have been pushed left, replacing `NA`s, and all columns containing only `NA`s have been removed
 }
 \description{
 Moves non-NA data left into NA spaces, then removes all columns that contain only NA values

@@ -31,7 +31,10 @@ splits_parse <- function(text, split_len = split_length) {
   # text <- read_results("inst/extdata/s2-results.pdf")
   # text <- read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm")
 
-  # text <- read_results("http://a.espncdn.com/sec/media/2021/Mens%20Day%20Four%20Finals.pdf") %>%
+  # text <- read_results("https://data.ohiostatebuckeyes.com/livestats/m-swim/210302F001.htm") %>%
+  # text <- read_results("https://data.ohiostatebuckeyes.com/livestats/m-swim/210302P003.htm") %>%
+  # file <- system.file("extdata", "jets08082019_067546.pdf", package = "SwimmeR")
+  # text <-   read_results(file) %>%
   #   add_row_numbers()
   # split_len <- 50
 
@@ -42,7 +45,8 @@ splits_parse <- function(text, split_len = split_length) {
   text <- text %>%
     stringr::str_replace_all(" \\:", "  ")
 
-  split_string <- "\\(\\d?\\:?\\d\\d\\.\\d\\d\\)"
+  # split_string <- "\\(\\d?\\:?\\d\\d\\.\\d\\d\\)"
+  split_string <- "\\(\\d?\\:?\\d?\\d\\.\\d\\d\\)"
 
   row_numbs <- text %>%
     .[purrr::map_lgl(.,
@@ -77,7 +81,7 @@ splits_parse <- function(text, split_len = split_length) {
     #### pull out rows containing splits, which will remove row numbers ####
     if (flag == TRUE) { # if there's a risk of rows with letters
       suppressWarnings(
-        data_1 <- text %>%
+        data_1_splits <- text %>%
           .[purrr::map_lgl(.,
                            stringr::str_detect,
                            split_string)] %>%
@@ -97,45 +101,48 @@ splits_parse <- function(text, split_len = split_length) {
           stringr::str_remove_all(',') %>%
           trimws()
       )
-    } else{
+    } else {
       suppressWarnings(
-        data_1 <- text %>%
+        data_1_splits <- text %>%
           .[purrr::map_lgl(.,
                            stringr::str_detect,
                            split_string)] %>%
           stringr::str_replace_all("\n", "") %>%
           # stringr::str_replace_all("r\\:\\+\\s?\\d\\.\\d\\d", "") %>%
           stringr::str_remove_all("r\\:\\+?\\s?\\d?\\d\\.\\d\\d") %>%
-          stringr::str_extract_all(paste0(
-            "^\\s+\\d\\d\\.\\d\\d|\\s[8-9]\\.\\d{2}|", split_string
-          )) %>%
+          stringr::str_extract_all(
+            paste0("^\\s+\\d\\d\\.\\d\\d|\\s[8-9]\\.\\d{2}|", split_string)
+          ) %>%
+          map(trimws) %>%
           stringr::str_remove_all('\\"') %>%
-          stringr::str_replace_all("\\(", " ") %>%
-          stringr::str_replace_all("\\)", " ") %>%
-          stringr::str_remove_all("c") %>%
+          stringr::str_remove_all("c\\(") %>%
+          stringr::str_remove_all("\\)$") %>%
+          stringr::str_replace_all("\\(", "  qq") %>% # replace parens around splits with qq to make detecting easier
+          stringr::str_replace_all("\\)", "qq  ") %>% # replace parens around splits with qq to make detecting easier
           stringr::str_remove_all(',') %>%
+          stringr::str_replace_all(" ", "  ") %>%
           trimws()
       )
     }
 
 
     #### add row numbers back in since they were removed ####
-    data_1 <- paste(row_numbs, data_1, sep = "   ")
+    data_1_splits <- paste(row_numbs, data_1_splits, sep = "   ")
 
     #### break out by length ####
-    data_1 <-
-      unlist(purrr::map(data_1, stringr::str_split, "\\s{2,}"),
+    data_1_splits <-
+      unlist(purrr::map(data_1_splits, stringr::str_split, "\\s{2,}"),
              recursive = FALSE)
 
-    data_splits_length_2 <- data_1[purrr::map(data_1, length) == 2]
-    data_splits_length_3 <- data_1[purrr::map(data_1, length) == 3]
-    data_splits_length_4 <- data_1[purrr::map(data_1, length) == 4]
-    data_splits_length_5 <- data_1[purrr::map(data_1, length) == 5]
-    data_splits_length_6 <- data_1[purrr::map(data_1, length) == 6]
-    data_splits_length_7 <- data_1[purrr::map(data_1, length) == 7]
-    data_splits_length_8 <- data_1[purrr::map(data_1, length) == 8]
-    data_splits_length_9 <- data_1[purrr::map(data_1, length) == 9]
-    data_splits_length_10 <- data_1[purrr::map(data_1, length) == 10]
+    data_splits_length_2 <- data_1_splits[purrr::map(data_1_splits, length) == 2]
+    data_splits_length_3 <- data_1_splits[purrr::map(data_1_splits, length) == 3]
+    data_splits_length_4 <- data_1_splits[purrr::map(data_1_splits, length) == 4]
+    data_splits_length_5 <- data_1_splits[purrr::map(data_1_splits, length) == 5]
+    data_splits_length_6 <- data_1_splits[purrr::map(data_1_splits, length) == 6]
+    data_splits_length_7 <- data_1_splits[purrr::map(data_1_splits, length) == 7]
+    data_splits_length_8 <- data_1_splits[purrr::map(data_1_splits, length) == 8]
+    data_splits_length_9 <- data_1_splits[purrr::map(data_1_splits, length) == 9]
+    data_splits_length_10 <- data_1_splits[purrr::map(data_1_splits, length) == 10]
 
     #### transform all lists to dataframes ####
     if (length(data_splits_length_10) > 0) {
@@ -214,9 +221,38 @@ splits_parse <- function(text, split_len = split_length) {
     # results are bound before going to lines_sort so that in cases where there are multiple rows with splits for the same race,
     # like in longer events with many splits, those splits can be collected and treated together
     data_splits <-
-      dplyr::bind_rows(df_10_splits, df_9_splits, df_8_splits, df_7_splits, df_6_splits, df_5_splits, df_4_splits, df_3_splits, df_2_splits) %>%
+      dplyr::bind_rows(
+        df_10_splits,
+        df_9_splits,
+        df_8_splits,
+        df_7_splits,
+        df_6_splits,
+        df_5_splits,
+        df_4_splits,
+        df_3_splits,
+        df_2_splits
+      ) %>%
       lines_sort(min_row = minimum_row) %>%
       dplyr::mutate(Row_Numb = as.numeric(Row_Numb) - 1) # make row number of split match row number of performance
+
+
+    ### goal here is to deal with cases where there are multiple splits in parens and outside.  Want to keep only fist split outside parens
+    ### and remove all others
+    ### parens are replaced with "qq" above becuase dealing with detecting parens is annoying
+    if(suppressWarnings(any(stringr::str_detect(data_splits, "qq"))) == TRUE) {
+      data_splits <- data_splits %>%
+        dplyr::mutate(dplyr::across(
+          3:length(data_splits),
+          ~ dplyr::case_when(stringr::str_detect(., "qq") == FALSE ~ "NA",
+                             TRUE ~ .)
+        )) %>%
+        dplyr::na_if("NA") %>%
+        dplyr::mutate(dplyr::across(
+          dplyr::everything(),
+          ~ stringr::str_replace_all(., "qq", "")
+        )) %>%
+        fill_left()
+    }
 
     #### rename columns V1, V2 etc. by 50 ####
     old_names <- names(data_splits)[grep("^V", names(data_splits))]
