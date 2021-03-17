@@ -83,6 +83,9 @@ utils::globalVariables(
     "avoid",
     "Place_1",
     "Min_C_Place",
-    "Prelims_Place"
+    "Prelims_Place",
+    "First_Name",
+    "Name_2",
+    "Name_3"
   )
 )
