@@ -102,7 +102,7 @@ swim_parse_ISL(
 `Split_X`: Split corresponding to a given distance X
 
 
-### Usabe Formats
+### Usable Formats
 
 `SwimmeR` can only read files in single column format, not double.
 
