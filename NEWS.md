@@ -3,6 +3,8 @@
 * Bug fixes in splits
 * Improved handling of symbols as record designations (!, $ etc.) inside `swim_parse`
 * Added `names_reorder` function for dealing with names in Lastname, Firstname order
+* Better aligned testing with CRAN policies
+* Various documentation updates
 
 # Swimmer 0.7.3 - March 1 2021
 * Fixes bugs in 25 length splits under 10.00 seconds

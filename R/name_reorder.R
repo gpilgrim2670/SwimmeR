@@ -1,7 +1,7 @@
-#' Orders all names as Firstname Lastname
+#' Orders all names as "Firstname Lastname"
 #'
 #' Names are sometimes listed as Firstname Lastname, and sometimes as Lastname, Firstname.  The \code{names_reorder} function converts all names to Firstname Lastname based on comma position.
-#' The reverse, going to Lastname, Firstname is not possible because some people have multiple first names or multiple last names and without the comma to differentiate between the two a distition cannot be made.
+#' The reverse, going to Lastname, Firstname is not possible because some athletes have multiple first names or multiple last names and without the comma to differentiate between the two a distinction cannot be made.
 #'
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'

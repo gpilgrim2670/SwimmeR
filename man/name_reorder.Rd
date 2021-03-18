@@ -20,10 +20,10 @@ The reverse, going to Lastname, Firstname is not possible because some people ha
 }
 \examples{
 name_reorder(
-data.frame(Name = c("King, Lilly", "Lilly King", NA, "Richards Ross, Sonia"))
+data.frame(Name = c("King, Lilly", "Lilly King", NA, "Richards Ross, Sanya", "Phelps, Michael F"))
 )
 name_reorder(
-data.frame(Name = c("King, Lilly", "Lilly King", NA, "Richards Ross, Sonia")), verbose = TRUE)
+data.frame(Name = c("King, Lilly", "Lilly King", NA, "Richards Ross, Sanya")), verbose = TRUE)
 
 }
 \author{

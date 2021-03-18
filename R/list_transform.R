@@ -12,7 +12,7 @@
 
 
 list_transform <- function(x) {
-  df <- as.data.frame(t(as.data.frame(x)),
+  df <- as.data.frame(t(as.data.frame(x, stringsAsFactors = FALSE)),
                       row.names = FALSE,
                       stringsAsFactors = FALSE)
   return(df)

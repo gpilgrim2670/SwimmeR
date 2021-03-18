@@ -68,7 +68,8 @@ event_parse <- function(text) {
     events <- data.frame(
       Event = "Unknown",
       Event_Row_Min = 1,
-      Event_Row_Max = length(text) - 1
+      Event_Row_Max = length(text) - 1,
+      stringsAsFactors = FALSE
     )
     warning("No event names recognized - defaulting to NA")
   }

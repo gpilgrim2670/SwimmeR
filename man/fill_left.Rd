@@ -16,7 +16,7 @@ a dataframe where all values have been pushed left, replacing `NA`s, and all col
 Moves non-NA data left into NA spaces, then removes all columns that contain only NA values
 }
 \seealso{
-\code{fill_left} is a helper function inside \code{lines_sort}
+\code{fill_left} is a helper function inside \code{lines_sort} and \code{splits_parse}
 }
 \author{
 Greg Pilgrim \email{gpilgrim2670@gmail.com}
