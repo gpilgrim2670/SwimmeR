@@ -36,7 +36,7 @@ Version 0.8.0
 
 `file` is the output of `read_results` and is required.
 
-`avoid` is a list of strings.  Rows in `file` containing any of those strings will not be included.  `avoid` is optional.  Incorrectly specifying it may lead to nonsense rows in the final dataframe, but will not cause an error.  Nonsense rows can be removed after import.  
+`avoid` is a list of strings.  Rows in `file` containing any of those strings will not be included.  `avoid` is optional.  Incorrectly specifying it may lead to nonsense rows in the final data frame, but will not cause an error.  Nonsense rows can be removed after import.  
 
 `typo` and `replacement` work together to fix typos, by replacing them with replacements.  Strings in `typo` will be replaced by strings in `replacement` in element index order - that is the first element of `typo` will be replaced everywhere it appears by the first element of `replacement`.  Typos can cause lost data and nonsense rows.
 
@@ -73,6 +73,26 @@ swim_parse_ISL(
   )
 ```
 
+### Inported Information
+
+`swim_parse` will attempt to capture the following information, assuming it is present in the raw results.
+
+`Place`: Order of finish
+`Name`: An athlete's name.  Relays do not have ages
+`Age`: Could be a number of years (25) or a year in school (SR)
+`Para`: An athlete's para-swimming classification (e.g. S10)
+`Team`: The name of a team, for athletes or relays
+`Prelims_Time`: If two times/scores are listed, this is the first one.  `swim_parse` currently can't differentiate between a seed time and a prelims time.  They're both called `Prelims_Time`.  Prelim/seed diving scores are also included here even though they're not technically times.
+`Finals_Time`: If two times/scores are listed this is the second one.  If only one time/score is listed this is it.
+`DQ`: Was an athlete/relay team disqualified
+`Exhibition`: Was an athlete/relay team competing as a non-scoring (exhibition) entry
+`Points`: Points award based on place (not diving score)
+`Relay_Swimmer_X`: Names of athletes in a relay
+`Split_X`: Split corresponding to a given distance X
+
+
+### Usabe Formats
+
 `SwimmeR` can only read files in single column format, not double.
 
 ### Will work - results in single column
@@ -97,7 +117,7 @@ times_mmss
 all.equal(times, times_mmss)
 ```
 
-## Regularizing team names
+## Regularizing Team Names
 
 Team names are often abbreviated.  Rather than specifying every abbreviation `SwimmeR` provides `get_mode` to make the task simpler.
 
@@ -109,6 +129,17 @@ df %>%
   group_by(name) %>% 
   mutate(Team = get_mode(team))
 ```
+
+## Reordering Athlete Names
+
+Athlete names are sometimes formatted as "Firstname Lastname" and sometimes as "Lastname, Firstname".  For purposes of plotting and presentation it's often desirable to format all names the same way.  The `name_reorder` function, available in versions >= 0.8.0, will reorder all "Lastname, Firstname" names as "Firstname Lastname".
+
+```
+df <- data.frame(Name = c("King, Lilly", "Lilly King", NA, "Richards Ross, Sanya", "Phelps, Michael F"))
+name_reorder(df)
+```
+
+While "Lastname, Firstname" is actually more informative in that it differentiates between last names and first names it's not always possible to convert "Firstname Lastname" to "Lastname, Firstname".  Consider an athlete named "Michael Fred Phelps II" - it's not possible to determine programmatically where a comma should go.  Is it "II, Michael Fred Phelps"?  Or maybe "Fred Phelps II, Michael"?  There's no way to tell.  On the other hand converting "Phelps II, Michael Fred" to "Michael Fred Phelps II" is straightforward.
 
 ### Drawing brackets
 
