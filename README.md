@@ -78,16 +78,27 @@ swim_parse_ISL(
 `swim_parse` will attempt to capture the following information, assuming it is present in the raw results.
 
 `Place`: Order of finish
+
 `Name`: An athlete's name.  Relays do not have ages
+
 `Age`: Could be a number of years (25) or a year in school (SR)
+
 `Para`: An athlete's para-swimming classification (e.g. S10)
+
 `Team`: The name of a team, for athletes or relays
+
 `Prelims_Time`: If two times/scores are listed, this is the first one.  `swim_parse` currently can't differentiate between a seed time and a prelims time.  They're both called `Prelims_Time`.  Prelim/seed diving scores are also included here even though they're not technically times.
+
 `Finals_Time`: If two times/scores are listed this is the second one.  If only one time/score is listed this is it.
+
 `DQ`: Was an athlete/relay team disqualified
+
 `Exhibition`: Was an athlete/relay team competing as a non-scoring (exhibition) entry
+
 `Points`: Points award based on place (not diving score)
+
 `Relay_Swimmer_X`: Names of athletes in a relay
+
 `Split_X`: Split corresponding to a given distance X
 
 
