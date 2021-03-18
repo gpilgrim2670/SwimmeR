@@ -73,7 +73,7 @@ swim_parse_ISL(
   )
 ```
 
-### Inported Information
+### Imported Information
 
 `swim_parse` will attempt to capture the following information, assuming it is present in the raw results.
 
