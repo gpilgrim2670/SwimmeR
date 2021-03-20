@@ -1,3 +1,19 @@
+# Version 0.8.0
+* added name_reorder function
+* aded handling of paralympic codes to swim_parse
+* fixes to better align package tests with CRAN policies
+* various bug fixes
+
+## Test environments
+* local Windows 10 install, R 4.0.2
+* local OS X install, R 4.0.2
+* win_devel
+
+## R CMD check results
+
+0 errors | 0 warnings | 0 notes
+
+
 # Version 0.7.2
 * addressed testing issues for Debian builds which I think are related to debian/pdftools/poppler issues that are beyond my control
 
