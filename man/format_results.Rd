@@ -10,7 +10,7 @@ format_results(df)
 \item{df}{a dataframe of results at the end of \code{swim_parse}}
 }
 \value{
-returns a formated dataframe
+returns a formatted dataframe
 }
 \description{
 Takes the output of \code{read_results} and, inside of \code{swim_parse}, removes "special" strings like DQ and SCR from results, replacing them with NA.  Also ensures that all athletes have a Finals_Time, by moving over Prelims_Time.  This makes later analysis much easier.
