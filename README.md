@@ -10,8 +10,6 @@
 
 ### Latest Released Version from CRAN
 
-Version 0.7.2
-
 `install.packages("SwimmeR")`
 
 `library(SwimmeR)`
