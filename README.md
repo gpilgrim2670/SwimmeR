@@ -10,11 +10,8 @@
 
 ### Latest Released Version from CRAN
 
-<<<<<<< HEAD
 Version 0.8.0
 
-=======
->>>>>>> eaddce7db6db8716fdc9e3940f2ba6059a7b3dd6
 `install.packages("SwimmeR")`
 
 `library(SwimmeR)`
