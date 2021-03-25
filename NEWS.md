@@ -1,3 +1,6 @@
+# Swimmer 0.8.1 - March 25 2021
+* Bug fix in splits
+
 # Swimmer 0.8.0 - March 16 2021
 * Introduces parsing of Para athlete codes inside `swim_parse`
 * Bug fixes in splits

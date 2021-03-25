@@ -10,7 +10,7 @@
 
 ### Latest Released Version from CRAN
 
-Version 0.7.2
+Version 0.8.0
 
 `install.packages("SwimmeR")`
 
@@ -18,7 +18,7 @@ Version 0.7.2
 
 ### Latest Development Version from Github
 
-Version 0.8.0
+Version 0.8.1
 
 `devtools::install_github("gpilgrim2670/SwimmeR", build_vignettes = TRUE)`
 

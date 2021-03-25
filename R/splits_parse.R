@@ -8,6 +8,7 @@
 #' @importFrom dplyr bind_rows
 #' @importFrom dplyr rename_at
 #' @importFrom dplyr mutate_at
+#' @importFrom dplyr rename
 #' @importFrom dplyr vars
 #' @importFrom stringr str_replace_all
 #' @importFrom stringr str_remove_all
@@ -31,9 +32,9 @@ splits_parse <- function(text, split_len = split_length) {
   # text <- read_results("inst/extdata/s2-results.pdf")
   # text <- read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm")
 
-  # text <- read_results("https://data.ohiostatebuckeyes.com/livestats/m-swim/210302F001.htm") %>%
-  # text <- read_results("https://data.ohiostatebuckeyes.com/livestats/m-swim/210302P003.htm") %>%
+  # text <- read_results("https://data.ohiostatebuckeyes.com/livestats/m-swim/210302F001.htm")
   # file <- system.file("extdata", "jets08082019_067546.pdf", package = "SwimmeR")
+  # file <- "https://s3.amazonaws.com/sidearm.sites/gopack.com/documents/2021/3/20/2021_DI_Women_Final_Results.pdf"
   # text <-   read_results(file) %>%
   #   add_row_numbers()
   # split_len <- 50
@@ -238,7 +239,7 @@ splits_parse <- function(text, split_len = split_length) {
 
     ### goal here is to deal with cases where there are multiple splits in parens and outside.  Want to keep only fist split outside parens
     ### and remove all others
-    ### parens are replaced with "qq" above becuase dealing with detecting parens is annoying
+    ### parens are replaced with "qq" above because dealing with detecting parens is annoying
     if(suppressWarnings(any(stringr::str_detect(data_splits, "qq"))) == TRUE) {
       data_splits <- data_splits %>%
         dplyr::mutate(dplyr::across(
@@ -252,6 +253,11 @@ splits_parse <- function(text, split_len = split_length) {
           ~ stringr::str_replace_all(., "qq", "")
         )) %>%
         fill_left()
+
+      if("V1" %in% names(data_splits) & any(stringr::str_detect(data_splits$V1, "\\.") == FALSE)){
+        data_splits <- data_splits %>%
+          dplyr::rename("Row_Numb" = V1)
+      }
     }
 
     #### rename columns V1, V2 etc. by 50 ####

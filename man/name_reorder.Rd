@@ -2,7 +2,7 @@
 % Please edit documentation in R/name_reorder.R
 \name{name_reorder}
 \alias{name_reorder}
-\title{Orders all names as Firstname Lastname}
+\title{Orders all names as "Firstname Lastname"}
 \usage{
 name_reorder(df, verbose = FALSE)
 }
@@ -16,7 +16,7 @@ a data frame with a column \code{Name_Reorder} containing values from \code{Name
 }
 \description{
 Names are sometimes listed as Firstname Lastname, and sometimes as Lastname, Firstname.  The \code{names_reorder} function converts all names to Firstname Lastname based on comma position.
-The reverse, going to Lastname, Firstname is not possible because some people have multiple first names or multiple last names and without the comma to differentiate between the two a distition cannot be made.
+The reverse, going to Lastname, Firstname is not possible because some athletes have multiple first names or multiple last names and without the comma to differentiate between the two a distinction cannot be made.
 }
 \examples{
 name_reorder(
