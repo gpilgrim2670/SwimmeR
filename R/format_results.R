@@ -11,7 +11,7 @@
 #' @importFrom dplyr na_if
 #'
 #' @param df a dataframe of results at the end of \code{swim_parse}
-#' @return returns a formated dataframe
+#' @return returns a formatted dataframe
 #'
 #' @export
 #'
