@@ -1,5 +1,7 @@
 # Swimmer 0.8.1 - March 25 2021
 * Bug fix in splits
+* `name_reoder` now accepts lists
+* improvements to `verbose = TRUE` setting in `name_reorder`
 
 # Swimmer 0.8.0 - March 16 2021
 * Introduces parsing of Para athlete codes inside `swim_parse`
