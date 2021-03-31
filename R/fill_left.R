@@ -1,4 +1,4 @@
-#' Shifts non-NA values to left in dataframe
+#' Shifts non-NA values to left in data frame
 #'
 #' Moves non-NA data left into NA spaces, then removes all columns that contain only NA values
 #'
@@ -8,7 +8,6 @@
 #' @return a dataframe where all values have been pushed left, replacing `NA`s, and all columns containing only `NA`s have been removed
 #'
 #' @seealso \code{fill_left} is a helper function inside \code{lines_sort} and \code{splits_parse}
-#'
 
 fill_left <- function(df) {
   df <- as.data.frame(t(apply(df, 1, function(x) {

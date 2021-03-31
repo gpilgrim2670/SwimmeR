@@ -2,7 +2,7 @@
 % Please edit documentation in R/fill_left.R
 \name{fill_left}
 \alias{fill_left}
-\title{Shifts non-NA values to left in dataframe}
+\title{Shifts non-NA values to left in data frame}
 \usage{
 fill_left(df)
 }
