@@ -18,6 +18,10 @@ fill_left <- function(df) {
   df <- Filter(function(x)
     ! all(is.na(x)), df)
 
+
+  # not sure if I want to implement this or not 3/31/21
+  # names(df)[names(df) == "V1"] <- "Row_Numb"
+
   return(df)
 
 }
