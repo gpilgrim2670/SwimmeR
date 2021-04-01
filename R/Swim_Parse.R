@@ -14,11 +14,14 @@
 #' @importFrom dplyr bind_rows
 #' @importFrom dplyr everything
 #' @importFrom dplyr pull
+#' @importFrom dplyr select
+#' @importFrom dplyr starts_with
 #' @importFrom stringr str_replace_all
 #' @importFrom stringr str_extract
 #' @importFrom stringr str_split
 #' @importFrom stringr str_detect
 #' @importFrom stringr str_length
+#' @importFrom stringr str_sort
 #' @importFrom purrr map_lgl
 #' @importFrom purrr map
 #' @importFrom stats setNames
@@ -775,7 +778,7 @@ Swim_Parse <-
         # split_length <- 50
         splits_df <- splits_parse(as_lines_list_2, split_len = split_length)
 
-        #### matches row numbers in splits_df to avaiable row numbers in data
+        #### matches row numbers in splits_df to available row numbers in data
         # helps a lot with relays, since their row numbers vary based on whether or not relay swimmers are included
         # and if those swimmers are listed on one line or two
         splits_df  <-
@@ -783,7 +786,8 @@ Swim_Parse <-
           dplyr::select(-Row_Numb)
 
           data <- data %>%
-            dplyr::left_join(splits_df, by = c("Row_Numb" = "Row_Numb_Adjusted"))
+            dplyr::left_join(splits_df, by = c("Row_Numb" = "Row_Numb_Adjusted")) %>%
+            dplyr::select(!dplyr::starts_with("Split"), stringr::str_sort(names(.), numeric = TRUE)) # keep splits columns in order
 
       }
 
