@@ -4,17 +4,22 @@
 #'
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
-#' @param df a dataframe having some split columns (Split_50, Split_100 etc.)
+#' @importFrom dplyr bind_rows
+#' @importFrom dplyr filter
+#' @importFrom dplyr full_join
+#' @importFrom dplyr mutate
+#' @importFrom dplyr arrange
+#' @importFrom purrr map
+#'
+#' @param df a data frame having some split columns (Split_50, Split_100 etc.)
 #' @param new_split_length split length to rename split columns based on
 #' @param events list of events to correct splits for
-#' @return a dataframe where all values have been pushed left, replacing `NA`s, and all columns containing only `NA`s have been removed
-#'
-#' @seealso \code{fill_left} is a helper function inside \code{lines_sort} and \code{splits_parse}
+#' @return a data frame where all events named in the \code{events} parameter have their split column labeles adjusted to reflect \code{new_split_length}
 #'
 #' @export
 
 
-correct_splits <- function(df, new_split_length, events){
+correct_split_distance <- function(df, new_split_length, events){
 
   # events <- c("Women 50 Yard Freestyle")
 
@@ -36,6 +41,5 @@ correct_splits <- function(df, new_split_length, events){
     dplyr::arrange(Event)
 
   return(df)
-
 
 }
