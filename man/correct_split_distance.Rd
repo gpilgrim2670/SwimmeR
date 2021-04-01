@@ -19,6 +19,18 @@ a data frame where all events named in the \code{events} parameter have their sp
 \description{
 Useful for dealing with meets where some events are split by 50 and others by 25.
 }
+\examples{
+df <- data.frame(Name = c("Lilly King", "Caeleb Dressel"),
+Event = c("Women 100 Meter Breaststroke", "Men 50 Yard Freestyle"),
+Split_50 = c("29.80", "8.48"),
+Split_100 = c("34.33", "9.15"))
+
+df \%>\% correct_split_distance(
+ new_split_length = 25,
+ events = c("Men 50 Yard Freestyle")
+)
+
+}
 \author{
 Greg Pilgrim \email{gpilgrim2670@gmail.com}
 }

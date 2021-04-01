@@ -18,12 +18,42 @@
 #' @param events list of events to correct splits for
 #' @return a data frame where all events named in the \code{events} parameter have their split column labels adjusted to reflect \code{new_split_length}
 #'
+#' @examples df <- data.frame(Name = c("Lilly King", "Caeleb Dressel"),
+#' Event = c("Women 100 Meter Breaststroke", "Men 50 Yard Freestyle"),
+#' Split_50 = c("29.80", "8.48"),
+#' Split_100 = c("34.33", "9.15"))
+#'
+#' df %>% correct_split_distance(
+#'  new_split_length = 25,
+#'  events = c("Men 50 Yard Freestyle")
+#' )
+#'
 #' @export
 
 
 correct_split_distance <- function(df, new_split_length, events){
 
   # events <- c("Women 50 Yard Freestyle")
+
+  if(is.data.frame(df) == FALSE){
+    stop("`df` must be a data frame with a column named 'Event' and at least one column beginning with 'Split_'" )
+  }
+
+  if(is.numeric(new_split_length) == FALSE){
+    stop("`new_split_length` must be numeric")
+  }
+
+  if(any(str_detect(names(df), "^Split_")) == FALSE){
+    stop("the data must contain at least one split column, with a name begining with 'Split_'.")
+  }
+
+  if("Event" %in% names(df) == FALSE){
+    stop("data must contain a column named 'Event'.")
+  }
+
+  if(all(events %in% unique(df$Event)) == FALSE){
+    stop("all of the events named in `events` must appear in the data frame, in a column named 'Event'.")
+  }
 
   df_split <- df %>%
     split(f = as.factor(.$Event)) # split df by event
