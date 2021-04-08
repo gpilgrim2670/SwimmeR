@@ -7,7 +7,7 @@
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
 #' @param x a list of lists from \code{purrr::map} and \code{purrr:safely}
-#' @return a list of lists where elements with an error have been discarded and all error elements have been removed
+#' @return a list of lists where sub lists containing a non-NULL error have been discarded and error elements have been removed from all remaining sub lists
 #'
 #' @importFrom purrr discard
 #'
@@ -17,7 +17,7 @@
 #' list_1 <- list(result_1, error)
 #' names(list_1) <- c("result", "error")
 #'
-#' result_2 <- data.frame(result = c(1, 2, 3))
+#' result_2 <- data.frame(result = c(4, 5, 6))
 #' error <- "result is corrupt"
 #'
 #' list_2 <- list(result_2, error)
@@ -30,10 +30,16 @@
 
 
 discard_errors <- function(x) {
+
+  # function to extract the nth element of a list
   element_extract <- function(a_list, n) {
     sapply(a_list, `[`, n)
   }
+
+  # discard all elements named error that aren't NULL
   x <- purrr::discard(x, ~ !is.null(.x$error))
-  x <- element_extract(x, 1)
+
+  # extract the first element of each list
+  x <- element_extract(x, n = 1)
   return(x)
 }
