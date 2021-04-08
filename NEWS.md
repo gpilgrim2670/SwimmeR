@@ -3,6 +3,7 @@
 * `name_reoder` now accepts lists
 * improvements to `verbose = TRUE` setting in `name_reorder`
 * `correct_split_distance` function added for renaming split columns
+* `discard_errors` function added for cleaning web scrapping results
 
 # Swimmer 0.8.0 - March 16 2021
 * Introduces parsing of Para athlete codes inside `swim_parse`
