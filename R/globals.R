@@ -86,6 +86,7 @@ utils::globalVariables(
     "Prelims_Place",
     "First_Name",
     "Name_2",
-    "Name_3"
+    "Name_3",
+    "where"
   )
 )

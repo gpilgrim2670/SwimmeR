@@ -10,6 +10,23 @@
 #' @return a list of lists where elements with an error have been discarded and all error elements have been removed
 #'
 #' @importFrom purrr discard
+#'
+#' @examples result_1 <- data.frame(result = c(1, 2, 3))
+#' error <- NULL
+#'
+#' list_1 <- list(result_1, error)
+#' names(list_1) <- c("result", "error")
+#'
+#' result_2 <- data.frame(result = c(1, 2, 3))
+#' error <- "result is corrupt"
+#'
+#' list_2 <- list(result_2, error)
+#' names(list_2) <- c("result", "error")
+#'
+#' list_of_lists <- list(list_1, list_2)
+#' discard_errors(list_of_lists)
+#'
+#' @export
 
 
 discard_errors <- function(x) {

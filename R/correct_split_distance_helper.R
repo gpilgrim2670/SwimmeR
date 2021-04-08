@@ -24,9 +24,9 @@ correct_split_distance_helper <- function(df_helper, new_split_length_helper){
   # df_helper <- df
 
   old_split_cols <- names(df_helper)[stringr::str_detect(names(df_helper), "Split")]
-  old_split_distances <- as.numeric(stringr::str_extract_all(split_cols, "\\d{1,}"))
+  old_split_distances <- as.numeric(stringr::str_extract_all(old_split_cols, "\\d{1,}"))
 
-  split_distances_multiplier <- new_split_length/min(old_split_distances, na.rm = TRUE)
+  split_distances_multiplier <- new_split_length_helper/min(old_split_distances, na.rm = TRUE)
 
   new_split_distances <- old_split_distances * split_distances_multiplier
   new_split_cols <- paste0("Split_", new_split_distances)

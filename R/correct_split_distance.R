@@ -33,6 +33,9 @@
 
 correct_split_distance <- function(df, new_split_length, events){
 
+  # new_split_length = 25
+  # events = c("Men 50 Yard Freestyle")
+
   # events <- c("Women 50 Yard Freestyle")
 
   if(is.data.frame(df) == FALSE){
@@ -60,11 +63,11 @@ correct_split_distance <- function(df, new_split_length, events){
 
   event_order <- unique(df$Event) # get order of events to help with reassembling whole df
 
-  df_split <- df_split[names(df_split) %in% events] # only want events named in `evetns` parameter
+  df_split <- df_split[names(df_split) %in% events] # only want events named in `events` parameter
 
   df_split <- df_split %>%
     purrr::map(correct_split_distance_helper, new_split_length_helper = new_split_length) %>% # helper function to actually change split distances for each element of df_split
-    dplyr::bind_rows() # df_split back to single dataframe
+    dplyr::bind_rows() # df_split back to single data frame
 
   suppressMessages( # to suppress join by message
   df <- df %>%

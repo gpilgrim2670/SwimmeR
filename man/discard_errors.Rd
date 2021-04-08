@@ -17,6 +17,23 @@ Used in scrapping, when \code{swim_parse} is applied over a list of results usin
 The first element is the results, the second element is an error register.  This function removes all elements where the error register is not NULL,
 and then returns the results (first element) of the remaining lists.
 }
+\examples{
+result_1 <- data.frame(result = c(1, 2, 3))
+error <- NULL
+
+list_1 <- list(result_1, error)
+names(list_1) <- c("result", "error")
+
+result_2 <- data.frame(result = c(1, 2, 3))
+error <- "result is corrupt"
+
+list_2 <- list(result_2, error)
+names(list_2) <- c("result", "error")
+
+list_of_lists <- list(list_1, list_2)
+discard_errors(list_of_lists)
+
+}
 \author{
 Greg Pilgrim \email{gpilgrim2670@gmail.com}
 }
