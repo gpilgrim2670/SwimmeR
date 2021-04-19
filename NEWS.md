@@ -1,11 +1,11 @@
-# Swimmer 0.8.1 - March 25 2021
+# SwimmeR 0.9.0 - April 19th 2021
 * Bug fix in splits
-* `name_reoder` now accepts lists
-* improvements to `verbose = TRUE` setting in `name_reorder`
-* `correct_split_distance` function added for renaming split columns
+* `name_reorder` now accepts lists
+* Improvements to `verbose = TRUE` setting in `name_reorder`
+* `correct_split_distance` function added for renaming split columns in data frames with mixed split lengths
 * `discard_errors` function added for cleaning web scrapping results
 
-# Swimmer 0.8.0 - March 16 2021
+# SwimmeR 0.8.0 - March 16 2021
 * Introduces parsing of Para athlete codes inside `swim_parse`
 * Bug fixes in splits
 * Improved handling of symbols as record designations (!, $ etc.) inside `swim_parse`
@@ -13,29 +13,29 @@
 * Better aligned testing with CRAN policies
 * Various documentation updates
 
-# Swimmer 0.7.3 - March 1 2021
+# SwimmeR 0.7.3 - March 1 2021
 * Fixes bugs in 25 length splits under 10.00 seconds
 * Other bug fixes for record designation
 
-# Swimmer 0.7.2 - January 13 2020
+# SwimmeR 0.7.2 - January 13 2020
 * More testing fixes for Debian builds
 
-# Swimmer 0.7.1 - January 12 2020
+# SwimmeR 0.7.1 - January 12 2020
 * Testing fixes for Debian builds
 
-# Swimmer 0.7.0 - January 12 2020
+# SwimmeR 0.7.0 - January 12 2020
 * added functionality to `swim_parse` to parse S.A.M.M.S. style files
 * added functionality to `swim_parse` to prevent function from failing when no event names are detected
 * broadened event name definitions
 * added functionality to `swim_parse` to allow raw-er results to be displayed, including swimming-specific strings like DQ and SCR
 * major overhaul to `swim_parse` to lessen the need for `typo` and `replacement` arguments and to simplify their use
 
-# Swimmer 0.6.0 - November 19 2020
+# SwimmeR 0.6.0 - November 19 2020
 * added functionality to `swim_parse` to output relay swimmers
 * added functionality to `swim_parse_ISL` to output relay swimmers
 * added functionality to `swim_parse_ISL` to output splits
 
-# Swimmer 0.5.4 - November 4 2020
+# SwimmeR 0.5.4 - November 4 2020
 * added functionality to output splits to `swim_parse`, works but more testing needed
 
 # SwimmeR 0.5.3 - October 23 2020

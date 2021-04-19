@@ -1,6 +1,13 @@
+# Version 0.9.0
+* name_reorder function now accepts lists
+* Improvements to `verbose = TRUE` setting in `name_reorder`
+* correct_split_distance function added for renaming split columns in data frames with mixed split lengths
+* discard_errors function added for cleaning web scrapping results
+* various bug fixes
+
 # Version 0.8.0
 * added name_reorder function
-* aded handling of paralympic codes to swim_parse
+* added handling of paralympic codes to swim_parse
 * fixes to better align package tests with CRAN policies
 * various bug fixes
 
