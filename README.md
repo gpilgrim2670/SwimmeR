@@ -18,7 +18,7 @@ Version 0.8.0
 
 ### Latest Development Version from Github
 
-Version 0.8.1
+Version 0.9.0
 
 `devtools::install_github("gpilgrim2670/SwimmeR", build_vignettes = TRUE)`
 
