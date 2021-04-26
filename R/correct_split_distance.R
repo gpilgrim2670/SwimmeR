@@ -84,3 +84,7 @@ correct_split_distance <- function(df, new_split_length, events){
   return(df)
 
 }
+
+#' @rdname correct_split_distance
+#' @export
+correct_split_length <- correct_split_distance

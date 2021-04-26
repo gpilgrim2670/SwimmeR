@@ -2,9 +2,12 @@
 % Please edit documentation in R/correct_split_distance.R
 \name{correct_split_distance}
 \alias{correct_split_distance}
+\alias{correct_split_length}
 \title{Changes lengths associated with splits to new values}
 \usage{
 correct_split_distance(df, new_split_length, events)
+
+correct_split_length(df, new_split_length, events)
 }
 \arguments{
 \item{df}{a data frame having some split columns (Split_50, Split_100 etc.)}
