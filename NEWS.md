@@ -1,3 +1,6 @@
+# SwimmeR 0.9.1 - May 12th 2021
+* Bug fixes in S.A.M.M.S results
+
 # SwimmeR 0.9.0 - April 19th 2021
 * Bug fix in splits
 * `name_reorder` now accepts lists

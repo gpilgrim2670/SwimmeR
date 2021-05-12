@@ -11,9 +11,9 @@
 #' @importFrom dplyr filter
 #' @importFrom dplyr arrange
 #'
-#' @param df a dataframe with results from \code{swim_parse}, including only swimming results (not diving)
+#' @param df a data frame with results from \code{swim_parse}, including only swimming results (not diving)
 #' @param max_place highest place value that scores
-#' @return df modified so that places have been appended based on swimming time
+#' @return a data frame modified so that places have been appended based on swimming time
 #'
 #' @seealso \code{swim_place} is a helper function used inside of \code{results_score}
 

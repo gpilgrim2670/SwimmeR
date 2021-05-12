@@ -32,6 +32,3 @@ Takes the output of \code{read_results} of S.A.M.M.S. results and cleans it, yie
 \seealso{
 \code{swim_parse} must be run on the output of \code{\link{read_results}}
 }
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
-}
