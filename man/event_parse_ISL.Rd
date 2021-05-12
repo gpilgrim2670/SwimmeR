@@ -7,14 +7,19 @@
 event_parse_ISL(text)
 }
 \arguments{
-\item{text}{output from \code{read_results} followed by \code{add_row_numbers}}
+\item{text}{output from \code{read_results} followed by
+\code{add_row_numbers}}
 }
 \value{
-returns a data frame with event names and row numbers to eventually be recombined with swimming results inside \code{swim_parse_ISL}
+returns a data frame with event names and row numbers to eventually
+  be recombined with swimming results inside \code{swim_parse_ISL}
 }
 \description{
-Locates event labels in text of 'ISL' results output from \code{read_results} and their associated row numbers.  The resulting data frame is joined back into results to include event names
+Locates event labels in text of 'ISL' results output from \code{read_results}
+and their associated row numbers.  The resulting data frame is joined back
+into results to include event names
 }
 \seealso{
-\code{event_parse_ISL} is a helper function inside \code{\link{swim_parse_ISL}}
+\code{event_parse_ISL} is a helper function inside
+  \code{\link{swim_parse_ISL}}
 }

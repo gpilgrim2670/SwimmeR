@@ -18,11 +18,14 @@ results_score(
 
 \item{events}{list of events}
 
-\item{meet_type}{how to score based on \code{timed_finals}, where any place is possible, or \code{prelims_finals} where athletes are locked into heats for scoring purposes}
+\item{meet_type}{how to score based on \code{timed_finals}, where any place
+is possible, or \code{prelims_finals} where athletes are locked into heats
+for scoring purposes}
 
 \item{lanes}{number of lanes in to the pool, for purposes of heat}
 
-\item{scoring_heats}{number of heats which score (if 1 only A final scores, if 2 A and B final score etc.)}
+\item{scoring_heats}{number of heats which score (if 1 only A final scores,
+if 2 A and B final score etc.)}
 
 \item{point_values}{a list of point values for each scoring place}
 }
@@ -30,7 +33,10 @@ results_score(
 results with point values in a column called \code{Points}
 }
 \description{
-Used to add a \code{Points} column with point values for each place.  Can either score "timed finals" type meets where any athlete can get any place, or "prelims-finals", type meets, where placing is restricted by prelim performance.
+Used to add a \code{Points} column with point values for each place.  Can
+either score "timed finals" type meets where any athlete can get any place,
+or "prelims-finals", type meets, where placing is restricted by prelim
+performance.
 }
 \examples{
 \dontrun{

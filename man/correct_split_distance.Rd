@@ -17,10 +17,12 @@ correct_split_length(df, new_split_length, events)
 \item{events}{list of events to correct splits for}
 }
 \value{
-a data frame where all events named in the \code{events} parameter have their split column labels adjusted to reflect \code{new_split_length}
+a data frame where all events named in the \code{events} parameter
+  have their split column labels adjusted to reflect \code{new_split_length}
 }
 \description{
-Useful for dealing with meets where some events are split by 50 and others by 25.
+Useful for dealing with meets where some events are split by 50 and others by
+25.
 }
 \examples{
 df <- data.frame(Name = c("Lilly King", "Caeleb Dressel"),

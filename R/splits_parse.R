@@ -1,6 +1,7 @@
 #' Collects splits within \code{swim_parse}
 #'
-#' Takes the output of \code{read_results} and, inside of \code{swim_parse}, extracts split times and associated row numbers
+#' Takes the output of \code{read_results} and, inside of \code{swim_parse},
+#' extracts split times and associated row numbers
 #'
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
@@ -18,11 +19,15 @@
 #' @importFrom purrr map_lgl
 #' @importFrom purrr map
 #'
-#' @param text output of \code{read_results} with row numbers appended by \code{add_row_numbers}
-#' @param split_len length of pool at which splits are measured - usually 25 or 50
+#' @param text output of \code{read_results} with row numbers appended by
+#'   \code{add_row_numbers}
+#' @param split_len length of pool at which splits are measured - usually 25 or
+#'   50
 #' @return returns a dataframe with split times and row numbers
 #'
-#' @seealso \code{splits_parse} runs inside \code{\link{swim_parse}} on the output of \code{\link{read_results}} with row numbers from \code{\link{add_row_numbers}}
+#' @seealso \code{splits_parse} runs inside \code{\link{swim_parse}} on the
+#'   output of \code{\link{read_results}} with row numbers from
+#'   \code{\link{add_row_numbers}}
 
 splits_parse <- function(text, split_len = split_length) {
 

@@ -1,6 +1,9 @@
 #' Scores a swim meet
 #'
-#' Used to add a \code{Points} column with point values for each place.  Can either score "timed finals" type meets where any athlete can get any place, or "prelims-finals", type meets, where placing is restricted by prelim performance.
+#' Used to add a \code{Points} column with point values for each place.  Can
+#' either score "timed finals" type meets where any athlete can get any place,
+#' or "prelims-finals", type meets, where placing is restricted by prelim
+#' performance.
 #'
 #' @importFrom dplyr slice
 #' @importFrom dplyr ungroup
@@ -19,9 +22,12 @@
 #'
 #' @param results an output from \code{swim_parse}
 #' @param events list of events
-#' @param meet_type how to score based on \code{timed_finals}, where any place is possible, or \code{prelims_finals} where athletes are locked into heats for scoring purposes
+#' @param meet_type how to score based on \code{timed_finals}, where any place
+#'   is possible, or \code{prelims_finals} where athletes are locked into heats
+#'   for scoring purposes
 #' @param lanes number of lanes in to the pool, for purposes of heat
-#' @param scoring_heats number of heats which score (if 1 only A final scores, if 2 A and B final score etc.)
+#' @param scoring_heats number of heats which score (if 1 only A final scores,
+#'   if 2 A and B final score etc.)
 #' @param point_values a list of point values for each scoring place
 #'
 #' @return results with point values in a column called \code{Points}

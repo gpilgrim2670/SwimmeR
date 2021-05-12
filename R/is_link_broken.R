@@ -1,7 +1,8 @@
 #' Determines if a link is valid
 #'
-#' Used in testing links to external data, specifically inside of internal package tests.
-#' Attempts to connect to link for the length of duration (in s).  If it fails it returns \code{FALSE}
+#' Used in testing links to external data, specifically inside of internal
+#' package tests. Attempts to connect to link for the length of duration (in s).
+#' If it fails it returns \code{FALSE}
 #'
 #' @param link_to_test a link
 #' @param duration the lowest row number

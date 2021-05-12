@@ -14,20 +14,40 @@ hy3_parse(
 \arguments{
 \item{file}{output from \code{read_results}}
 
-\item{avoid}{a list of strings.  Rows in \code{x} containing these strings will not be included. For example "Pool:", often used to label pool records, could be passed to \code{avoid}.  The default is \code{avoid_default}, which contains many strings similar to "Pool:", such as "STATE:" and "Qual:".  Users can supply their own lists to \code{avoid}.}
+\item{avoid}{a list of strings.  Rows in \code{x} containing these strings
+will not be included. For example "Pool:", often used to label pool
+records, could be passed to \code{avoid}.  The default is
+\code{avoid_default}, which contains many strings similar to "Pool:", such
+as "STATE:" and "Qual:".  Users can supply their own lists to \code{avoid}.}
 
-\item{typo}{a list of strings that are typos in the original results.  \code{swim_parse} is particularly sensitive to accidental double spaces, so "Central  High School", with two spaces between "Central" and "High" is a problem, which can be fixed.  Pass "Central High School" to \code{typo}.  Unexpected commas as also an issue, for example "Texas, University of" should be fixed using \code{typo} and \code{replacement}}
+\item{typo}{a list of strings that are typos in the original results.
+\code{swim_parse} is particularly sensitive to accidental double spaces, so
+"Central  High School", with two spaces between "Central" and "High" is a
+problem, which can be fixed.  Pass "Central High School" to \code{typo}.
+Unexpected commas as also an issue, for example "Texas, University of"
+should be fixed using \code{typo} and \code{replacement}}
 
-\item{replacement}{a list of fixes for the strings in \code{typo}.  Here one could pass "Central High School" (one space between "Central" and "High") and "Texas" to \code{replacement} fix the issues described in \code{typo}}
+\item{replacement}{a list of fixes for the strings in \code{typo}.  Here one
+could pass "Central High School" (one space between "Central" and "High")
+and "Texas" to \code{replacement} fix the issues described in \code{typo}}
 }
 \value{
-returns a data frame with columns \code{Name}, \code{Place}, \code{Age}, \code{Team}, \code{Prelims_Time}, \code{Finals_Time}, & \code{Event}.  May also contain \code{Seed_Time}, \code{USA_ID}, and/or \code{Birthdate}.  Note all swims will have a \code{Finals_Time}, even if that time was actually swam in the prelims (i.e. a swimmer did not qualify for finals).  This is so that final results for an event can be generated from just one column.
+returns a data frame with columns \code{Name}, \code{Place},
+  \code{Age}, \code{Team}, \code{Prelims_Time}, \code{Finals_Time}, &
+  \code{Event}.  May also contain \code{Seed_Time}, \code{USA_ID}, and/or
+  \code{Birthdate}.  Note all swims will have a \code{Finals_Time}, even if
+  that time was actually swam in the prelims (i.e. a swimmer did not qualify
+  for finals).  This is so that final results for an event can be generated
+  from just one column.
 }
 \description{
-Helper function used inside `swim_parse` for dealing with Hy-Tek .hy3 files.  Can have more columns than other `swim_parse` outputs, because .hy3 files can contain more data
+Helper function used inside `swim_parse` for dealing with Hy-Tek .hy3 files.
+Can have more columns than other `swim_parse` outputs, because .hy3 files can
+contain more data
 }
 \seealso{
-\code{parse_hy3} must be run on the output of \code{\link{read_results}}
+\code{parse_hy3} must be run on the output of
+  \code{\link{read_results}}
 
 \code{parse_hy3} runs inside of \code{\link{swim_parse}}
 }

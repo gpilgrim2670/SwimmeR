@@ -7,14 +7,17 @@
 fill_left(df)
 }
 \arguments{
-\item{df}{a dataframe having some `NA` values}
+\item{df}{a data frame having some `NA` values}
 }
 \value{
-a dataframe where all values have been pushed left, replacing `NA`s, and all columns containing only `NA`s have been removed
+a data frame where all values have been pushed left, replacing `NA`s,
+  and all columns containing only `NA`s have been removed
 }
 \description{
-Moves non-NA data left into NA spaces, then removes all columns that contain only NA values
+Moves non-NA data left into NA spaces, then removes all columns that contain
+only NA values
 }
 \seealso{
-\code{fill_left} is a helper function inside \code{lines_sort} and \code{splits_parse}
+\code{fill_left} is a helper function inside \code{lines_sort} and
+  \code{splits_parse}
 }

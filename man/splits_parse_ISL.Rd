@@ -7,14 +7,18 @@
 splits_parse_ISL(text)
 }
 \arguments{
-\item{text}{output of \code{read_results} with tow numbers appended by \code{add_row_numbers}}
+\item{text}{output of \code{read_results} with tow numbers appended by
+\code{add_row_numbers}}
 }
 \value{
 returns a data frame with split times and row numbers
 }
 \description{
-Takes the output of \code{read_results} and, inside of \code{swim_parse_ISL}, extracts split times and associated row numbers
+Takes the output of \code{read_results} and, inside of \code{swim_parse_ISL},
+extracts split times and associated row numbers
 }
 \seealso{
-\code{splits_parse_ISL} runs inside \code{\link{swim_parse_ISL}} on the output of \code{\link{read_results}} with row numbers from \code{\link{add_row_numbers}}
+\code{splits_parse_ISL} runs inside \code{\link{swim_parse_ISL}} on
+  the output of \code{\link{read_results}} with row numbers from
+  \code{\link{add_row_numbers}}
 }

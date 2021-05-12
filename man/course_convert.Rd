@@ -7,19 +7,26 @@
 course_convert(time, event, course, course_to)
 }
 \arguments{
-\item{time}{A time, or vector of times to convert.  Can be in either seconds (numeric, \code{95.97}) format or swim (character, \code{"1:35.97"}) format}
+\item{time}{A time, or vector of times to convert.  Can be in either seconds
+(numeric, \code{95.97}) format or swim (character, \code{"1:35.97"}) format}
 
-\item{event}{The event swum as \code{"100 Fly"}, \code{"200 IM"}, \code{"400 Free"}, \code{"50 Back"}, \code{"200 Breast"} etc.}
+\item{event}{The event swum as \code{"100 Fly"}, \code{"200 IM"}, \code{"400
+Free"}, \code{"50 Back"}, \code{"200 Breast"} etc.}
 
-\item{course}{The course in which the time was swum as \code{"LCM"}, \code{"SCM"} or \code{"SCY"}}
+\item{course}{The course in which the time was swum as \code{"LCM"},
+\code{"SCM"} or \code{"SCY"}}
 
-\item{course_to}{The course to convert the time to as \code{"LCM"}, \code{"SCM"} or \code{"SCY"}}
+\item{course_to}{The course to convert the time to as \code{"LCM"},
+\code{"SCM"} or \code{"SCY"}}
 }
 \value{
-returns the \code{time} for a specified \code{event} and \code{course} converted to a time for the specified \code{course_to} in swimming format
+returns the \code{time} for a specified \code{event} and
+  \code{course} converted to a time for the specified \code{course_to} in
+  swimming format
 }
 \description{
-Used to convert times between Long Course Meters, Short Course Meters and Short Course Yards
+Used to convert times between Long Course Meters, Short Course Meters and
+Short Course Yards
 }
 \note{
 Relays are not presently supported.
@@ -31,5 +38,6 @@ course_convert(time = 53.89, event = "100 Fly", course = "scm", course_to = "scy
 
 }
 \references{
-Uses the USA swimming age group method described here: \url{https://support.teamunify.com/en/articles/260}
+Uses the USA swimming age group method described here:
+  \url{https://support.teamunify.com/en/articles/260}
 }

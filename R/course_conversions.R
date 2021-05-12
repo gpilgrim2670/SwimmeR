@@ -1,6 +1,7 @@
 #' Swimming Course Convertor
 #'
-#' Used to convert times between Long Course Meters, Short Course Meters and Short Course Yards
+#' Used to convert times between Long Course Meters, Short Course Meters and
+#' Short Course Yards
 #'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr case_when
@@ -8,18 +9,25 @@
 #' @importFrom stringr str_to_title
 #' @importFrom stringr str_split_fixed
 #'
-#' @param time A time, or vector of times to convert.  Can be in either seconds (numeric, \code{95.97}) format or swim (character, \code{"1:35.97"}) format
-#' @param event The event swum as \code{"100 Fly"}, \code{"200 IM"}, \code{"400 Free"}, \code{"50 Back"}, \code{"200 Breast"} etc.
-#' @param course The course in which the time was swum as \code{"LCM"}, \code{"SCM"} or \code{"SCY"}
-#' @param course_to The course to convert the time to as \code{"LCM"}, \code{"SCM"} or \code{"SCY"}
-#' @return returns the \code{time} for a specified \code{event} and \code{course} converted to a time for the specified \code{course_to} in swimming format
+#' @param time A time, or vector of times to convert.  Can be in either seconds
+#'   (numeric, \code{95.97}) format or swim (character, \code{"1:35.97"}) format
+#' @param event The event swum as \code{"100 Fly"}, \code{"200 IM"}, \code{"400
+#'   Free"}, \code{"50 Back"}, \code{"200 Breast"} etc.
+#' @param course The course in which the time was swum as \code{"LCM"},
+#'   \code{"SCM"} or \code{"SCY"}
+#' @param course_to The course to convert the time to as \code{"LCM"},
+#'   \code{"SCM"} or \code{"SCY"}
+#' @return returns the \code{time} for a specified \code{event} and
+#'   \code{course} converted to a time for the specified \code{course_to} in
+#'   swimming format
 #'
 #' @examples course_convert(time = "1:35.93", event = "200 Free", course = "SCY", course_to = "LCM")
 #' course_convert(time = 95.93, event = "200 Free", course = "scy", course_to = "lcm")
 #' course_convert(time = 53.89, event = "100 Fly", course = "scm", course_to = "scy")
 #'
 #' @note Relays are not presently supported.
-#' @references Uses the USA swimming age group method described here: \url{https://support.teamunify.com/en/articles/260}
+#' @references Uses the USA swimming age group method described here:
+#'   \url{https://support.teamunify.com/en/articles/260}
 #'
 #' @export
 
@@ -90,7 +98,8 @@ course_convert <- function(time, event, course, course_to) {
 
 #' Course converter, returns data frame
 #'
-#' Used to convert times between Long Course Meters, Short Course Meters and Short Course Yards, returns data frame
+#' Used to convert times between Long Course Meters, Short Course Meters and
+#' Short Course Yards, returns data frame
 #'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr case_when
@@ -99,27 +108,26 @@ course_convert <- function(time, event, course, course_to) {
 #' @importFrom stringr str_to_title
 #' @importFrom stringr str_split_fixed
 #'
-#' @param time A time, or vector of times to convert.  Can be in either seconds (numeric, \code{95.97}) format or swim (character, \code{"1:35.97"}) format
-#' @param event The event swum as \code{"100 Fly"}, \code{"200 IM"}, \code{"400 Free"}, \code{"50 Back"}, \code{"200 Breast"} etc.
-#' @param course The course in which the time was swum as \code{"LCM"}, \code{"SCM"} or \code{"SCY"}
-#' @param course_to The course to convert the time to as \code{"LCM"}, \code{"SCM"} or \code{"SCY"}
+#' @param time A time, or vector of times to convert.  Can be in either seconds
+#'   (numeric, \code{95.97}) format or swim (character, \code{"1:35.97"}) format
+#' @param event The event swum as \code{"100 Fly"}, \code{"200 IM"}, \code{"400
+#'   Free"}, \code{"50 Back"}, \code{"200 Breast"} etc.
+#' @param course The course in which the time was swum as \code{"LCM"},
+#'   \code{"SCM"} or \code{"SCY"}
+#' @param course_to The course to convert the time to as \code{"LCM"},
+#'   \code{"SCM"} or \code{"SCY"}
 #'
-#' @return This function returns a data frame including columns:
-#' \itemize{
-#'  \item Time
-#'  \item Course
-#'  \item Course_To
-#'  \item Event
-#'  \item Time_Converted_sec
-#'  \item Time_Converted_mmss
-#' }
+#' @return This function returns a data frame including columns: \itemize{ \item
+#'   Time \item Course \item Course_To \item Event \item Time_Converted_sec
+#'   \item Time_Converted_mmss }
 #'
 #' @examples course_convert_DF(time = "1:35.93", event = "200 Free", course = "SCY", course_to = "LCM")
 #' course_convert_DF(time = 95.93, event = "200 Free", course = "scy", course_to = "lcm")
 #' course_convert_DF(time = 53.89, event = "100 Fly", course = "scm", course_to = "scy")
 #'
 #' @note Relays are not presently supported.
-#' @references Uses the USA swimming age group method described here \url{https://support.teamunify.com/en/articles/260}
+#' @references Uses the USA swimming age group method described here
+#'   \url{https://support.teamunify.com/en/articles/260}
 #'
 #' @export
 

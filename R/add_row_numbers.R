@@ -3,9 +3,11 @@
 #' Takes the output of \code{read_results} and adds row numbers to it
 #'
 #' @param text output from \code{read_results}
-#' @return returns a data frame with event names and row numbers to eventually be recombined with swimming results inside \code{swim_parse}
+#' @return returns a data frame with event names and row numbers to eventually
+#'   be recombined with swimming results inside \code{swim_parse}
 #'
-#' @seealso \code{add_row_numbers} is a helper function inside \code{\link{swim_parse}}
+#' @seealso \code{add_row_numbers} is a helper function inside
+#'   \code{\link{swim_parse}}
 
 
 add_row_numbers <- function(text) {

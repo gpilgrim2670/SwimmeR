@@ -10,12 +10,15 @@ discard_errors(x)
 \item{x}{a list of lists from \code{purrr::map} and \code{purrr:safely}}
 }
 \value{
-a list of lists where sub lists containing a non-NULL error have been discarded and error elements have been removed from all remaining sub lists
+a list of lists where sub lists containing a non-NULL error have been
+  discarded and error elements have been removed from all remaining sub lists
 }
 \description{
-Used in scrapping, when \code{swim_parse} is applied over a list of results using \code{purrr::map} the result is a list of two element lists.
-The first element is the results, the second element is an error register.  This function removes all elements where the error register is not NULL,
-and then returns the results (first element) of the remaining lists.
+Used in scrapping, when \code{swim_parse} is applied over a list of results
+using \code{purrr::map} the result is a list of two element lists. The first
+element is the results, the second element is an error register.  This
+function removes all elements where the error register is not NULL, and then
+returns the results (first element) of the remaining lists.
 }
 \examples{
 result_1 <- data.frame(result = c(1, 2, 3))

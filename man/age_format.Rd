@@ -7,13 +7,17 @@
 age_format(x)
 }
 \arguments{
-\item{x}{A character vector of ages in yyy-mm format (e.g. 93-03) to be converted to years (93.25)}
+\item{x}{A character vector of ages in yyy-mm format (e.g. 93-03) to be
+converted to years (93.25)}
 }
 \value{
-returns the value of the string \code{x} which represents an age in yyy-mm format (93-03) and converts it to years (93.25)
+returns the value of the string \code{x} which represents an age in
+  yyy-mm format (93-03) and converts it to years (93.25)
 }
 \description{
-Takes a character string (or list) representing an age as years-months (e.g. 13-06 for 13 years, 6 months) and converts it to a character value (13.5) or a list of values representing ages in years.
+Takes a character string (or list) representing an age as years-months (e.g.
+13-06 for 13 years, 6 months) and converts it to a character value (13.5) or
+a list of values representing ages in years.
 }
 \examples{
 age_format("13-06")
@@ -21,5 +25,6 @@ age_format(c("13-06", "25-03", NA))
 
 }
 \seealso{
-\code{\link{age_format_helper}} \code{age_format} uses \code{age_format_helper}
+\code{\link{age_format_helper}} \code{age_format} uses
+  \code{age_format_helper}
 }

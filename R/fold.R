@@ -2,10 +2,12 @@
 #'
 #' @param x a vector
 #' @param block.size the size of groups in which to block the data
-#' @return a new vector in the following order: first block, last block,
-#'   second block, second-to-last block, ...
+#' @return a new vector in the following order: first block, last block, second
+#'   block, second-to-last block, ...
 #'
-#' @references from the seemingly now defunct \code{mRchmadness} package by Eli Shayer and Saber Powers and used per the terms of that package's GPL-2 license
+#' @references from the seemingly now defunct \code{mRchmadness} package by Eli
+#'   Shayer and Saber Powers and used per the terms of that package's GPL-2
+#'   license
 
 fold <- function(x, block.size = 1) {
 

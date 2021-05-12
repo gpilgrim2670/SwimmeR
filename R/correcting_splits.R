@@ -1,6 +1,7 @@
 #' Changes lengths associated with splits to new values
 #'
-#' Useful for dealing with meets where some events are split by 50 and others by 25.
+#' Useful for dealing with meets where some events are split by 50 and others by
+#' 25.
 #'
 #' @importFrom dplyr bind_rows
 #' @importFrom dplyr filter
@@ -14,7 +15,8 @@
 #' @param df a data frame having some split columns (Split_50, Split_100 etc.)
 #' @param new_split_length split length to rename split columns based on
 #' @param events list of events to correct splits for
-#' @return a data frame where all events named in the \code{events} parameter have their split column labels adjusted to reflect \code{new_split_length}
+#' @return a data frame where all events named in the \code{events} parameter
+#'   have their split column labels adjusted to reflect \code{new_split_length}
 #'
 #' @examples df <- data.frame(Name = c("Lilly King", "Caeleb Dressel"),
 #' Event = c("Women 100 Meter Breaststroke", "Men 50 Yard Freestyle"),
@@ -87,18 +89,22 @@ correct_split_length <- correct_split_distance
 
 #' Changes lengths associated with splits to new values
 #'
-#' Useful for dealing with meets where some events are split by 50 and others by 25.
+#' Useful for dealing with meets where some events are split by 50 and others by
+#' 25.
 #'
 #' @importFrom dplyr rename_with
 #' @importFrom dplyr select
 #' @importFrom stringr str_detect
 #' @importFrom stringr str_extract_all
 #'
-#' @param df_helper a data frame having some split columns (Split_50, Split_100 etc.)
+#' @param df_helper a data frame having some split columns (Split_50, Split_100
+#'   etc.)
 #' @param new_split_length_helper split length to rename split columns based on
-#' @return a data frame where all values have been pushed left, replacing `NA`s, and all columns containing only `NA`s have been removed
+#' @return a data frame where all values have been pushed left, replacing `NA`s,
+#'   and all columns containing only `NA`s have been removed
 #'
-#' @seealso \code{correct_split_distance_helper} is a helper function inside \code{correct_split_distance}
+#' @seealso \code{correct_split_distance_helper} is a helper function inside
+#'   \code{correct_split_distance}
 
 
 

@@ -1,11 +1,15 @@
 #' Formatting mm:ss.tt times as seconds
 #'
-#' Takes a character string (or list) representing time in swimming format (e.g. 1:35.37) and converts it to a numeric value (95.37) or a list of values representing seconds.
+#' Takes a character string (or list) representing time in swimming format (e.g.
+#' 1:35.37) and converts it to a numeric value (95.37) or a list of values
+#' representing seconds.
 #'
 #' @importFrom purrr map_dbl
 #'
-#' @param x A character vector of time(s) in swimming format (e.g. 1:35.93) to be converted to seconds (95.93)
-#' @return returns the value of the string \code{x} which represents a time in swimming format (mm:ss.hh) and converts it to seconds
+#' @param x A character vector of time(s) in swimming format (e.g. 1:35.93) to
+#'   be converted to seconds (95.93)
+#' @return returns the value of the string \code{x} which represents a time in
+#'   swimming format (mm:ss.hh) and converts it to seconds
 #'
 #' @examples sec_format("1:35.93")
 #' sec_format("16:45.19")
@@ -24,13 +28,15 @@ sec_format <- function(x) {
 }
 
 
-#' Helper function for formatting mm:ss.hh times as seconds, used to enable vectorized operation of \code{sec_format}
+#' Helper function for formatting mm:ss.hh times as seconds, used to enable
+#' vectorized operation of \code{sec_format}
 #'
 #' @importFrom stringr str_detect
 #' @importFrom stringr str_split_fixed
 #' @importFrom stringr str_remove
 #'
-#' @param x A character vector of time(s) in swimming format (e.g. 1:35.93) to be converted to seconds (95.93)
+#' @param x A character vector of time(s) in swimming format (e.g. 1:35.93) to
+#'   be converted to seconds (95.93)
 
 
 sec_format_helper <- function(x) {

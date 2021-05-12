@@ -7,16 +7,27 @@
 name_reorder(x, verbose = FALSE)
 }
 \arguments{
-\item{x}{a data frame output from \code{swim_parse} containing a column called \code{Name} with some names as Lastname, Firstname}
+\item{x}{a data frame output from \code{swim_parse} containing a column
+called \code{Name} with some names as Lastname, Firstname}
 
-\item{verbose}{defaults to \code{FALSE}.  If set to \code{TRUE} and if \code{x} is a data frame then returned data frame will include columns \code{First_Name} and \code{Last_Name} extracted as best as possible from \code{Name}}
+\item{verbose}{defaults to \code{FALSE}.  If set to \code{TRUE} and if
+\code{x} is a data frame then returned data frame will include columns
+\code{First_Name} and \code{Last_Name} extracted as best as possible from
+\code{Name}}
 }
 \value{
-a data frame with a column \code{Name_Reorder}, or a list, containing strings reordered as Firstname Lastname in addition to all other columns in input \code{df}.  Can also contain columns \code{First_Name} and \code{Last_Name} depending on value of \code{verbose} argument
+a data frame with a column \code{Name_Reorder}, or a list, containing
+  strings reordered as Firstname Lastname in addition to all other columns in
+  input \code{df}.  Can also contain columns \code{First_Name} and
+  \code{Last_Name} depending on value of \code{verbose} argument
 }
 \description{
-Names are sometimes listed as Firstname Lastname, and sometimes as Lastname, Firstname.  The \code{names_reorder} function converts all names to Firstname Lastname based on comma position.
-The reverse, going to Lastname, Firstname is not possible because some athletes have multiple first names or multiple last names and without the comma to differentiate between the two a distinction cannot be made.
+Names are sometimes listed as Firstname Lastname, and sometimes as Lastname,
+Firstname.  The \code{names_reorder} function converts all names to Firstname
+Lastname based on comma position. The reverse, going to Lastname, Firstname
+is not possible because some athletes have multiple first names or multiple
+last names and without the comma to differentiate between the two a
+distinction cannot be made.
 }
 \examples{
 name_reorder(

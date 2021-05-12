@@ -7,14 +7,19 @@
 event_parse(text)
 }
 \arguments{
-\item{text}{output from \code{read_results} followed by \code{add_row_numbers}}
+\item{text}{output from \code{read_results} followed by
+\code{add_row_numbers}}
 }
 \value{
-returns a data frame with event names and row numbers to eventually be recombined with swimming results inside \code{swim_parse}
+returns a data frame with event names and row numbers to eventually
+  be recombined with swimming results inside \code{swim_parse}
 }
 \description{
-Locates event labels in text of results output from \code{read_results} and their associated row numbers.  The resulting data frame is joined back into results to include event names
+Locates event labels in text of results output from \code{read_results} and
+their associated row numbers.  The resulting data frame is joined back into
+results to include event names
 }
 \seealso{
-\code{event_parse} is a helper function inside \code{\link{swim_parse}}
+\code{event_parse} is a helper function inside
+  \code{\link{swim_parse}}
 }

@@ -2,13 +2,16 @@
 % Please edit documentation in R/format_as_seconds.R
 \name{sec_format_helper}
 \alias{sec_format_helper}
-\title{Helper function for formatting mm:ss.hh times as seconds, used to enable vectorized operation of \code{sec_format}}
+\title{Helper function for formatting mm:ss.hh times as seconds, used to enable
+vectorized operation of \code{sec_format}}
 \usage{
 sec_format_helper(x)
 }
 \arguments{
-\item{x}{A character vector of time(s) in swimming format (e.g. 1:35.93) to be converted to seconds (95.93)}
+\item{x}{A character vector of time(s) in swimming format (e.g. 1:35.93) to
+be converted to seconds (95.93)}
 }
 \description{
-Helper function for formatting mm:ss.hh times as seconds, used to enable vectorized operation of \code{sec_format}
+Helper function for formatting mm:ss.hh times as seconds, used to enable
+vectorized operation of \code{sec_format}
 }

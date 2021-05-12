@@ -1,6 +1,7 @@
 #' "Not in" function
 #'
-#' The opposite of `%in%`.  Returns `TRUE` if `x` is not `%in%` `y`.  Returns `FALSE` otherwise.
+#' The opposite of `%in%`.  Returns `TRUE` if `x` is not `%in%` `y`.  Returns
+#' `FALSE` otherwise.
 #'
 #' @param x a value
 #' @param y a list of values

@@ -13,8 +13,13 @@ format_results(df)
 returns a formatted data frame
 }
 \description{
-Takes the output of \code{read_results} and, inside of \code{swim_parse}, removes "special" strings like DQ and SCR from results, replacing them with NA.  Also ensures that all athletes have a Finals_Time, by moving over Prelims_Time.  This makes later analysis much easier.
+Takes the output of \code{read_results} and, inside of \code{swim_parse},
+removes "special" strings like DQ and SCR from results, replacing them with
+NA.  Also ensures that all athletes have a Finals_Time, by moving over
+Prelims_Time.  This makes later analysis much easier.
 }
 \seealso{
-\code{splits_parse} runs inside \code{\link{swim_parse}} on the output of \code{\link{read_results}} with row numbers from \code{\link{add_row_numbers}}
+\code{splits_parse} runs inside \code{\link{swim_parse}} on the
+  output of \code{\link{read_results}} with row numbers from
+  \code{\link{add_row_numbers}}
 }

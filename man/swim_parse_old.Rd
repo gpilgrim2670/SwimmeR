@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprec_swim_parse.R
 \name{swim_parse_old}
 \alias{swim_parse_old}
-\title{Formats swimming and diving data read with \code{read_results} into a data frame}
+\title{Formats swimming and diving data read with \code{read_results} into a data
+frame}
 \usage{
 swim_parse_old(
   file,
@@ -17,23 +18,47 @@ swim_parse_old(
 \arguments{
 \item{file}{output from \code{read_results}}
 
-\item{avoid}{a list of strings.  Rows in \code{file} containing these strings will not be included. For example "Pool:", often used to label pool records, could be passed to \code{avoid}.  The default is \code{avoid_default}, which contains many strings similar to "Pool:", such as "STATE:" and "Qual:".  Users can supply their own lists to \code{avoid}.}
+\item{avoid}{a list of strings.  Rows in \code{file} containing these strings
+will not be included. For example "Pool:", often used to label pool
+records, could be passed to \code{avoid}.  The default is
+\code{avoid_default}, which contains many strings similar to "Pool:", such
+as "STATE:" and "Qual:".  Users can supply their own lists to \code{avoid}.}
 
-\item{typo}{a list of strings that are typos in the original results.  \code{swim_parse_old} is particularly sensitive to accidental double spaces, so "Central  High School", with two spaces between "Central" and "High" is a problem, which can be fixed.  Pass "Central  High School" to \code{typo}.  Unexpected commas as also an issue, for example "Texas, University of" should be fixed using \code{typo} and \code{replacement}}
+\item{typo}{a list of strings that are typos in the original results.
+\code{swim_parse_old} is particularly sensitive to accidental double
+spaces, so "Central  High School", with two spaces between "Central" and
+"High" is a problem, which can be fixed.  Pass "Central  High School" to
+\code{typo}.  Unexpected commas as also an issue, for example "Texas,
+University of" should be fixed using \code{typo} and \code{replacement}}
 
-\item{replacement}{a list of fixes for the strings in \code{typo}.  Here one could pass "Central High School" (one space between "Central" and "High") and "Texas" to \code{replacement} fix the issues described in \code{typo}}
+\item{replacement}{a list of fixes for the strings in \code{typo}.  Here one
+could pass "Central High School" (one space between "Central" and "High")
+and "Texas" to \code{replacement} fix the issues described in \code{typo}}
 
-\item{splits}{either \code{TRUE} or the default, \code{FALSE} - should \code{swim_parse_old} attempt to include splits.}
+\item{splits}{either \code{TRUE} or the default, \code{FALSE} - should
+\code{swim_parse_old} attempt to include splits.}
 
-\item{split_length}{either \code{25} or the default, \code{50}, the length of pool at which splits are recorded.  Not all results are internally consistent on this issue - some have races with splits by 50 and other races with splits by 25.}
+\item{split_length}{either \code{25} or the default, \code{50}, the length of
+pool at which splits are recorded.  Not all results are internally
+consistent on this issue - some have races with splits by 50 and other
+races with splits by 25.}
 
-\item{relay_swimmers}{either \code{TRUE} or the default, \code{FALSE} - should relay swimmers be reported.  Relay swimmers are reported in separate columns named \code{Relay_Swimmer_1} etc.}
+\item{relay_swimmers}{either \code{TRUE} or the default, \code{FALSE} -
+should relay swimmers be reported.  Relay swimmers are reported in separate
+columns named \code{Relay_Swimmer_1} etc.}
 }
 \value{
-returns a data frame with columns \code{Name}, \code{Place}, \code{Age}, \code{Team}, \code{Prelims_Time}, \code{Finals_Time}, \code{Points}, \code{Event} & \code{DQ}.  Note all swims will have a \code{Finals_Time}, even if that time was actually swam in the prelims (i.e. a swimmer did not qualify for finals).  This is so that final results for an event can be generated from just one column.
+returns a data frame with columns \code{Name}, \code{Place},
+  \code{Age}, \code{Team}, \code{Prelims_Time}, \code{Finals_Time},
+  \code{Points}, \code{Event} & \code{DQ}.  Note all swims will have a
+  \code{Finals_Time}, even if that time was actually swam in the prelims
+  (i.e. a swimmer did not qualify for finals).  This is so that final results
+  for an event can be generated from just one column.
 }
 \description{
-Takes the output of \code{read_results} and cleans it, yielding a data frame of swimming (and diving) results.  Old version, retired in dev build on Dec 21, 2020 and release version 0.7.0
+Takes the output of \code{read_results} and cleans it, yielding a data frame
+of swimming (and diving) results.  Old version, retired in dev build on Dec
+21, 2020 and release version 0.7.0
 }
 \examples{
 \dontrun{
@@ -51,5 +76,6 @@ swim_parse_old(read_results("inst/extdata/Texas-Florida-Indiana.pdf"),
  }
 }
 \seealso{
-\code{swim_parse_old} must be run on the output of \code{\link{read_results}}
+\code{swim_parse_old} must be run on the output of
+  \code{\link{read_results}}
 }
