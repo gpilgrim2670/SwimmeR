@@ -759,9 +759,7 @@ Swim_Parse <-
 
       #### adding relay swimmers in ####
       if (relay_swimmers == TRUE) {
-        # relay_swimmers_df <- collect_relay_swimmers(as_lines_list_2, typo_2 = typo, replacement_2 = replacement)
-        relay_swimmers_df <- collect_relay_swimmers_2(as_lines_list_2)
-        # relay_swimmers_df <- relay_swimmers
+        relay_swimmers_df <- collect_relay_swimmers(as_lines_list_2)
 
         relay_swimmers_df <-
         transform(relay_swimmers_df, Row_Numb_Adjusted = data$Row_Numb[findInterval(Row_Numb, data$Row_Numb)]) %>%
