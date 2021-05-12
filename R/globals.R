@@ -87,6 +87,10 @@ utils::globalVariables(
     "First_Name",
     "Name_2",
     "Name_3",
-    "where"
+    "where",
+    "fFactor",
+    "fIncre",
+    "Time_Converted_sec",
+    "Time_Converted_mmss"
   )
 )

@@ -1,9 +1,6 @@
-utils::globalVariables(c("fFactor", "fIncre", "Time_Converted_sec"))
 #' Swimming Course Convertor
 #'
 #' Used to convert times between Long Course Meters, Short Course Meters and Short Course Yards
-#'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
 #' @importFrom tibble tibble
 #' @importFrom dplyr mutate

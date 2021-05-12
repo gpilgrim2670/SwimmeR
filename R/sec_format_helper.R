@@ -1,7 +1,5 @@
 #' Helper function for formatting mm:ss.hh times as seconds
 #'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
-#'
 #' @importFrom stringr str_detect
 #' @importFrom stringr str_split_fixed
 #' @importFrom stringr str_remove

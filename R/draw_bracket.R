@@ -2,8 +2,6 @@
 #'
 #' Will draw a single elimination bracket for the appropriate number of teams, inserting first round byes for higher seeds as needed
 #'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
-#'
 #' @export
 #'
 #' @importFrom stringr str_pad

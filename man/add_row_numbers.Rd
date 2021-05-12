@@ -10,14 +10,11 @@ add_row_numbers(text)
 \item{text}{output from \code{read_results}}
 }
 \value{
-returns a dataframe with event names and row numbers to eventually be recombined with swimming results inside \code{swim_parse}
+returns a data frame with event names and row numbers to eventually be recombined with swimming results inside \code{swim_parse}
 }
 \description{
 Takes the output of \code{read_results} and adds row numbers to it
 }
 \seealso{
 \code{add_row_numbers} is a helper function inside \code{\link{swim_parse}}
-}
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
 }

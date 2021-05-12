@@ -25,6 +25,3 @@ mmss_format(c(95.37, 200.95, 59.47, NA))
 \seealso{
 \code{\link{sec_format}} \code{mmss_format} is the reverse of \code{sec_format}
 }
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
-}

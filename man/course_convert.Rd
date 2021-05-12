@@ -33,6 +33,3 @@ course_convert(time = 53.89, event = "100 Fly", course = "scm", course_to = "scy
 \references{
 Uses the USA swimming age group method described here: \url{https://support.teamunify.com/en/articles/260}
 }
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
-}

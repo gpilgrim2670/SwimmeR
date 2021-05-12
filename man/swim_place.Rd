@@ -7,12 +7,12 @@
 swim_place(df, max_place)
 }
 \arguments{
-\item{df}{a dataframe with results from \code{swim_parse}, including only swimming results (not diving)}
+\item{df}{a data frame with results from \code{swim_parse}, including only swimming results (not diving)}
 
 \item{max_place}{highest place value that scores}
 }
 \value{
-df modified so that places have been appended based on swimming time
+a data frame modified so that places have been appended based on swimming time
 }
 \description{
 Places are awarded on the basis of time, with fastest (lowest) time winning.  Ties are placed as ties (both athletes get 2nd etc.)

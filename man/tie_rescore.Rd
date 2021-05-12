@@ -7,7 +7,7 @@
 tie_rescore(df, point_values, lanes)
 }
 \arguments{
-\item{df}{a dataframe with results from \code{swim_parse}, with places from \code{swim_place} and/or \code{dive_place}}
+\item{df}{a data frame with results from \code{swim_parse}, with places from \code{swim_place} and/or \code{dive_place}}
 
 \item{point_values}{a named list of point values for each scoring place}
 
@@ -21,7 +21,4 @@ Rescoring to average point values for ties.  Ties are placed as ties (both athle
 }
 \seealso{
 \code{tie_rescore} is a helper function used inside of \code{results_score}
-}
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
 }

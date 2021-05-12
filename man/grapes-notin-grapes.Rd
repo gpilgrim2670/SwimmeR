@@ -25,6 +25,3 @@ The opposite of `%in%`.  Returns `TRUE` if `x` is not `%in%` `y`.  Returns `FALS
 "a" \%notin\% c("b", "c")
 
 }
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
-}

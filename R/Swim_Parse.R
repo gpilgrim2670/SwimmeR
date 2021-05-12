@@ -1,8 +1,6 @@
-#' Formats swimming and diving data read with \code{read_results} into a dataframe
+#' Formats swimming and diving data read with \code{read_results} into a data frame
 #'
 #' Takes the output of \code{read_results} and cleans it, yielding a dataframe of swimming (and diving) results
-#'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr lag

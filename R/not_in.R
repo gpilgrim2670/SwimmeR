@@ -2,8 +2,6 @@
 #'
 #' The opposite of `%in%`.  Returns `TRUE` if `x` is not `%in%` `y`.  Returns `FALSE` otherwise.
 #'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
-#'
 #' @param x a value
 #' @param y a list of values
 #' @return a `TRUE` or `FALSE`

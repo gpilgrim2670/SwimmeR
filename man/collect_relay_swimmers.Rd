@@ -22,6 +22,3 @@ Collects relay swimmers as a data frame within \code{swim_parse}
 \seealso{
 \code{collect_relay_swimmers} runs inside of \code{swim_parse}
 }
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
-}

@@ -7,19 +7,16 @@
 correct_split_distance_helper(df_helper, new_split_length_helper)
 }
 \arguments{
-\item{df_helper}{a dataframe having some split columns (Split_50, Split_100 etc.)}
+\item{df_helper}{a data frame having some split columns (Split_50, Split_100 etc.)}
 
 \item{new_split_length_helper}{split length to rename split columns based on}
 }
 \value{
-a dataframe where all values have been pushed left, replacing `NA`s, and all columns containing only `NA`s have been removed
+a data frame where all values have been pushed left, replacing `NA`s, and all columns containing only `NA`s have been removed
 }
 \description{
 Useful for dealing with meets where some events are split by 50 and others by 25.
 }
 \seealso{
 \code{correct_split_distance_helper} is a helper function inside \code{correct_split_distance}
-}
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
 }

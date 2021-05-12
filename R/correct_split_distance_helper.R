@@ -2,16 +2,14 @@
 #'
 #' Useful for dealing with meets where some events are split by 50 and others by 25.
 #'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
-#'
 #' @importFrom dplyr rename_with
 #' @importFrom dplyr select
 #' @importFrom stringr str_detect
 #' @importFrom stringr str_extract_all
 #'
-#' @param df_helper a dataframe having some split columns (Split_50, Split_100 etc.)
+#' @param df_helper a data frame having some split columns (Split_50, Split_100 etc.)
 #' @param new_split_length_helper split length to rename split columns based on
-#' @return a dataframe where all values have been pushed left, replacing `NA`s, and all columns containing only `NA`s have been removed
+#' @return a data frame where all values have been pushed left, replacing `NA`s, and all columns containing only `NA`s have been removed
 #'
 #' @seealso \code{correct_split_distance_helper} is a helper function inside \code{correct_split_distance}
 

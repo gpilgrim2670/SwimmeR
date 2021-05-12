@@ -34,6 +34,3 @@ list_of_lists <- list(list_1, list_2)
 discard_errors(list_of_lists)
 
 }
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
-}

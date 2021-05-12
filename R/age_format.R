@@ -2,8 +2,6 @@
 #'
 #' Takes a character string (or list) representing an age as years-months (e.g. 13-06 for 13 years, 6 months) and converts it to a character value (13.5) or a list of values representing ages in years.
 #'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
-#'
 #' @importFrom purrr map_chr
 #'
 #' @param x A character vector of ages in yyy-mm format (e.g. 93-03) to be converted to years (93.25)

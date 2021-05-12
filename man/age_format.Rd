@@ -23,6 +23,3 @@ age_format(c("13-06", "25-03", NA))
 \seealso{
 \code{\link{age_format_helper}} \code{age_format} is uses \code{age_format_helper}
 }
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
-}

@@ -9,3 +9,5 @@ test_that("course_convert_DF_works", {
     1
   ),  round(61.2, 1))
 })
+
+# testthat::test_file("tests/testthat/test-Course_Convert_DF.R")

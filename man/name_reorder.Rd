@@ -31,6 +31,3 @@ verbose = TRUE
 name_reorder(c("King, Lilly", "Lilly King", NA, "Richards Ross, Sanya"))
 
 }
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
-}

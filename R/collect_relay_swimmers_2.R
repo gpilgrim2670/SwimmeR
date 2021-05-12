@@ -1,7 +1,5 @@
 #' Collects relay swimmers as a data frame within \code{swim_parse}
 #'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
-#'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr rename
 #' @importFrom dplyr bind_rows

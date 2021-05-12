@@ -3,8 +3,6 @@
 #' Used in testing links to external data, specifically inside of internal package tests.
 #' Attempts to connect to link for the length of duration (in s).  If it fails it returns \code{FALSE}
 #'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
-#'
 #' @param link_to_test a link
 #' @param duration the lowest row number
 #' @return \code{TRUE} if the link works, \code{FALSE} if it fails

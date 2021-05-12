@@ -18,6 +18,3 @@ Moves non-NA data left into NA spaces, then removes all columns that contain onl
 \seealso{
 \code{fill_left} is a helper function inside \code{lines_sort} and \code{splits_parse}
 }
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
-}

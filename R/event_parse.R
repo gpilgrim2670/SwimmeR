@@ -1,8 +1,6 @@
 #' Pulls out event labels from text
 #'
-#' Locates event labels in text of results output from \code{read_results} and their associated row numbers.  The resulting dataframe is joined back into results to include event names
-#'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
+#' Locates event labels in text of results output from \code{read_results} and their associated row numbers.  The resulting data frame is joined back into results to include event names
 #'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr lead
@@ -15,7 +13,7 @@
 #' @importFrom purrr map
 #'
 #' @param text output from \code{read_results} followed by \code{add_row_numbers}
-#' @return returns a dataframe with event names and row numbers to eventually be recombined with swimming results inside \code{swim_parse}
+#' @return returns a data frame with event names and row numbers to eventually be recombined with swimming results inside \code{swim_parse}
 
 #' @seealso \code{event_parse} is a helper function inside \code{\link{swim_parse}}
 

@@ -1,7 +1,5 @@
 #' Helper function for formatting yyy-mm ages as years
 #'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
-#'
 #' @importFrom stringr str_detect
 #' @importFrom stringr str_split_fixed
 #' @importFrom stringr str_remove

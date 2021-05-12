@@ -2,7 +2,7 @@
 % Please edit documentation in R/swim_parse_old.R
 \name{swim_parse_old}
 \alias{swim_parse_old}
-\title{Formats swimming and diving data read with \code{read_results} into a dataframe}
+\title{Formats swimming and diving data read with \code{read_results} into a data frame}
 \usage{
 swim_parse_old(
   file,
@@ -33,7 +33,7 @@ swim_parse_old(
 returns a data frame with columns \code{Name}, \code{Place}, \code{Age}, \code{Team}, \code{Prelims_Time}, \code{Finals_Time}, \code{Points}, \code{Event} & \code{DQ}.  Note all swims will have a \code{Finals_Time}, even if that time was actually swam in the prelims (i.e. a swimmer did not qualify for finals).  This is so that final results for an event can be generated from just one column.
 }
 \description{
-Takes the output of \code{read_results} and cleans it, yielding a dataframe of swimming (and diving) results.  Old version, retired in dev build on Dec 21, 2020 and release version 0.7.0
+Takes the output of \code{read_results} and cleans it, yielding a data frame of swimming (and diving) results.  Old version, retired in dev build on Dec 21, 2020 and release version 0.7.0
 }
 \examples{
 \dontrun{
@@ -52,7 +52,4 @@ swim_parse_old(read_results("inst/extdata/Texas-Florida-Indiana.pdf"),
 }
 \seealso{
 \code{swim_parse_old} must be run on the output of \code{\link{read_results}}
-}
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
 }

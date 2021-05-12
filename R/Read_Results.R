@@ -2,8 +2,6 @@
 #'
 #' Outputs list of strings to be processed by \code{swim_parse}
 #'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
-#'
 #' @importFrom stringr str_detect
 #' @importFrom rvest html_nodes
 #' @importFrom rvest html_text

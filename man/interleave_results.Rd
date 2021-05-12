@@ -7,9 +7,9 @@
 interleave_results(entries, results, type = c("individual", "relay"))
 }
 \arguments{
-\item{entries}{a dataframe containing columns for minimum and maximum row number (usually `Row_Min` and `Row_Max`).  Times or places will be interleaved into this dataframe.}
+\item{entries}{a data frame containing columns for minimum and maximum row number (usually `Row_Min` and `Row_Max`).  Times or places will be interleaved into this dataframe.}
 
-\item{results}{a dataframe containing times (or places) in column 1 (or other values to be interleaved) and row numbers in column 2 (usually `Row_Numb`).}
+\item{results}{a data frame containing times (or places) in column 1 (or other values to be interleaved) and row numbers in column 2 (usually `Row_Numb`).}
 
 \item{type}{either "individual" or "relay"}
 }

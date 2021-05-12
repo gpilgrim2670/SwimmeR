@@ -18,6 +18,3 @@ is_link_broken(link_to_test, duration = 1)
 Used in testing links to external data, specifically inside of internal package tests.
 Attempts to connect to link for the length of duration (in s).  If it fails it returns \code{FALSE}
 }
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
-}

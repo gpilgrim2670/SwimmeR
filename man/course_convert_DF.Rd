@@ -2,7 +2,7 @@
 % Please edit documentation in R/Course_Convert_DF.R
 \name{course_convert_DF}
 \alias{course_convert_DF}
-\title{Course converter, returns dataframe}
+\title{Course converter, returns data frame}
 \usage{
 course_convert_DF(time, event, course, course_to)
 }
@@ -27,7 +27,7 @@ This function returns a \code{data.frame} including columns:
 }
 }
 \description{
-Used to convert times between Long Course Meters, Short Course Meters and Short Course Yards, returns dataframe
+Used to convert times between Long Course Meters, Short Course Meters and Short Course Yards, returns data frame
 }
 \note{
 Relays are not presently supported.
@@ -40,7 +40,4 @@ course_convert_DF(time = 53.89, event = "100 Fly", course = "scm", course_to = "
 }
 \references{
 Uses the USA swimming age group method described here \url{https://support.teamunify.com/en/articles/260}
-}
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
 }

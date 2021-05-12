@@ -3,7 +3,7 @@
 \name{Swim_Parse}
 \alias{Swim_Parse}
 \alias{swim_parse}
-\title{Formats swimming and diving data read with \code{read_results} into a dataframe}
+\title{Formats swimming and diving data read with \code{read_results} into a data frame}
 \usage{
 Swim_Parse(
   file,
@@ -66,7 +66,4 @@ swim_parse(read_results("inst/extdata/Texas-Florida-Indiana.pdf"),
 }
 \seealso{
 \code{swim_parse} must be run on the output of \code{\link{read_results}}
-}
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
 }

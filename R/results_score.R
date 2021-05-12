@@ -2,8 +2,6 @@
 #'
 #' Used to add a \code{Points} column with point values for each place.  Can either score "timed finals" type meets where any athlete can get any place, or "prelims-finals", type meets, where placing is restricted by prelim performance.
 #'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
-#'
 #' @importFrom dplyr slice
 #' @importFrom dplyr ungroup
 #' @importFrom dplyr group_by

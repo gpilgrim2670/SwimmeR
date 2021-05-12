@@ -12,6 +12,3 @@ age_format_helper(x)
 \description{
 Helper function for formatting yyy-mm ages as years
 }
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
-}

@@ -1,9 +1,7 @@
 #' Find the mode (most commonly occurring) element of a list
 #'
-#' Determines which element of list appears most frequently.  Based on \code{base::which.max}, so if multiple values appear with the same frequency will return the first one.  Ignores \code{NA} values.
+#' Determines which element of list appears most frequently.  Based on \code{base::which.max()}, so if multiple values appear with the same frequency will return the first one.  Ignores \code{NA} values.
 #' In the context of swimming data is often used to clean team names, as in the Lilly King example below.
-#'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
 #' @param x A list.  \code{NA} elements will be ignored.
 #' @param type a character string of either \code{"first"} or \code{"all"} which determines behavior for ties.  Setting \code{type = "first"} (the default) will return the element that appears most often and appears first in list \code{x}.  Setting \code{type = "all"} will return all elements that appear most frequently.

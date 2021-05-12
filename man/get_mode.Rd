@@ -15,7 +15,7 @@ get_mode(x, type = "first")
 the element of \code{x} which appears most frequently.  Ties go to the lowest index, so the element which appears first.
 }
 \description{
-Determines which element of list appears most frequently.  Based on \code{base::which.max}, so if multiple values appear with the same frequency will return the first one.  Ignores \code{NA} values.
+Determines which element of list appears most frequently.  Based on \code{base::which.max()}, so if multiple values appear with the same frequency will return the first one.  Ignores \code{NA} values.
 In the context of swimming data is often used to clean team names, as in the Lilly King example below.
 }
 \examples{
@@ -35,7 +35,4 @@ Team <- c(rep("IU", 2), "Indiana", "IUWSD", "Indiana University")
 df <- data.frame(Name, Team, stringsAsFactors = FALSE)
 df$Team <- get_mode(df$Team)
 
-}
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
 }

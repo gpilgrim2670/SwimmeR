@@ -26,6 +26,3 @@ sec_format(c("1:35.93", "16:45.19", NA, "25.43"))
 \seealso{
 \code{\link{mmss_format}} \code{sec_format} is the reverse of \code{mmss_format}
 }
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
-}

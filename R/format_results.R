@@ -2,16 +2,14 @@
 #'
 #' Takes the output of \code{read_results} and, inside of \code{swim_parse}, removes "special" strings like DQ and SCR from results, replacing them with NA.  Also ensures that all athletes have a Finals_Time, by moving over Prelims_Time.  This makes later analysis much easier.
 #'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
-#'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
 #' @importFrom dplyr coalesce
 #' @importFrom dplyr case_when
 #' @importFrom dplyr na_if
 #'
-#' @param df a dataframe of results at the end of \code{swim_parse}
-#' @return returns a formatted dataframe
+#' @param df a data frame of results at the end of \code{swim_parse}
+#' @return returns a formatted data frame
 #'
 #' @export
 #'

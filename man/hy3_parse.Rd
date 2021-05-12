@@ -21,7 +21,7 @@ hy3_parse(
 \item{replacement}{a list of fixes for the strings in \code{typo}.  Here one could pass "Central High School" (one space between "Central" and "High") and "Texas" to \code{replacement} fix the issues described in \code{typo}}
 }
 \value{
-returns a dataframe with columns \code{Name}, \code{Place}, \code{Age}, \code{Team}, \code{Prelims_Time}, \code{Finals_Time}, & \code{Event}.  May also contain \code{Seed_Time}, \code{USA_ID}, and/or \code{Birthdate}.  Note all swims will have a \code{Finals_Time}, even if that time was actually swam in the prelims (i.e. a swimmer did not qualify for finals).  This is so that final results for an event can be generated from just one column.
+returns a data frame with columns \code{Name}, \code{Place}, \code{Age}, \code{Team}, \code{Prelims_Time}, \code{Finals_Time}, & \code{Event}.  May also contain \code{Seed_Time}, \code{USA_ID}, and/or \code{Birthdate}.  Note all swims will have a \code{Finals_Time}, even if that time was actually swam in the prelims (i.e. a swimmer did not qualify for finals).  This is so that final results for an event can be generated from just one column.
 }
 \description{
 Helper function used inside `swim_parse` for dealing with Hy-Tek .hy3 files.  Can have more columns than other `swim_parse` outputs, because .hy3 files can contain more data
@@ -30,7 +30,4 @@ Helper function used inside `swim_parse` for dealing with Hy-Tek .hy3 files.  Ca
 \code{parse_hy3} must be run on the output of \code{\link{read_results}}
 
 \code{parse_hy3} runs inside of \code{\link{swim_parse}}
-}
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
 }

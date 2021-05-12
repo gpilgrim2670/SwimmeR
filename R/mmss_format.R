@@ -2,9 +2,6 @@
 #'
 #' Takes a numeric item or list of numeric items representing seconds (e.g. 95.37) and converts to a character string or list of strings in swimming format ("1:35.37").
 #'
-#'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
-#'
 #' @param x A number of seconds to be converted to swimming format
 #' @return the number of seconds \code{x} converted to conventional swimming format mm:ss.hh
 #'
