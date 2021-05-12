@@ -132,4 +132,48 @@ test_that("multiple splits below 59.99 in parens and out", {
 
 })
 
+test_that("correct split distances", {
+
+  # goal here is to convert the Men's 50 Free in df_test to splitting by 25 rather than by 50
+
+  df_standard <-
+    data.frame(
+      Name = c("Lilly King", "Caeleb Dressel", "Mallory Comerford"),
+      Event = as.factor(
+        c(
+          "Women 100 Meter Breaststroke",
+          "Men 50 Yard Freestyle",
+          "Women 200 Yard Freestyle"
+        )
+      ),
+      Split_50 = c(NA, "8.48", NA),
+      Split_50 = c("29.80", "9.15", "23.90"),
+      Split_100 = c("34.33", NA, "25.52"),
+      Split_150 = c(NA, NA, "25.13"),
+      Split_200 = c(NA, NA, "25.25"),
+      stringsAsFactors = FALSE
+    )
+
+  df_test <- data.frame(
+    Name = c("Lilly King", "Caeleb Dressel", "Mallory Comerford"),
+    Event = c(
+      "Women 100 Meter Breaststroke",
+      "Men 50 Yard Freestyle",
+      "Women 200 Yard Freestyle"
+    ),
+    Split_50 = c("29.80", "8.48", "23.90"),
+    Split_100 = c("34.33", "9.15", "25.52"),
+    Split_150 = c(NA, NA, "25.13"),
+    Split_200 = c(NA, NA, "25.25"),
+    stringsAsFactors = FALSE
+  )
+
+  df_test <- df_test %>% correct_split_distance(new_split_length = 25,
+                                      events = c("Men 50 Yard Freestyle"))
+
+    expect_equivalent(df_test, df_standard)
+
+
+})
+
 # testthat::test_file("tests/testthat/test-splits.R")

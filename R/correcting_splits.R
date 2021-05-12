@@ -31,11 +31,7 @@
 
 correct_split_distance <- function(df, new_split_length, events){
 
-  # new_split_length = 25
-  # events = c("Men 50 Yard Freestyle")
-
-  # events <- c("Women 50 Yard Freestyle")
-
+  #### conditionals for parameters ####
   if(is.data.frame(df) == FALSE){
     stop("`df` must be a data frame with a column named 'Event' and at least one column beginning with 'Split_'" )
   }
@@ -56,6 +52,7 @@ correct_split_distance <- function(df, new_split_length, events){
     stop("all of the events named in `events` must appear in the data frame, in a column named 'Event'.")
   }
 
+  #### function proper ####
   df_split <- df %>%
     split(f = as.factor(.$Event)) # split df by event
 
@@ -68,11 +65,11 @@ correct_split_distance <- function(df, new_split_length, events){
     dplyr::bind_rows() # df_split back to single data frame
 
   suppressMessages( # to suppress join by message
-  df <- df %>%
-    dplyr::filter(Event %!in% events) %>% # only events that did not have splits corrected
-    dplyr::full_join(df_split) %>% # join in events that did have splits corrected
-    dplyr::mutate(Event = factor(Event, levels = event_order)) %>% # restore event order (1)
-    dplyr::arrange(Event) # restore event order (2)
+    df <- df %>%
+      dplyr::filter(Event %!in% events) %>% # only events that did not have splits corrected
+      dplyr::full_join(df_split) %>% # join in events that did have splits corrected
+      dplyr::mutate(Event = factor(Event, levels = event_order)) %>% # restore event order (1)
+      dplyr::arrange(Event) # restore event order (2)
   )
 
   df <- df %>% # orders split columns by distance (Split_25 first, Split_50)
@@ -86,3 +83,43 @@ correct_split_distance <- function(df, new_split_length, events){
 #' @rdname correct_split_distance
 #' @export
 correct_split_length <- correct_split_distance
+
+
+#' Changes lengths associated with splits to new values
+#'
+#' Useful for dealing with meets where some events are split by 50 and others by 25.
+#'
+#' @importFrom dplyr rename_with
+#' @importFrom dplyr select
+#' @importFrom stringr str_detect
+#' @importFrom stringr str_extract_all
+#'
+#' @param df_helper a data frame having some split columns (Split_50, Split_100 etc.)
+#' @param new_split_length_helper split length to rename split columns based on
+#' @return a data frame where all values have been pushed left, replacing `NA`s, and all columns containing only `NA`s have been removed
+#'
+#' @seealso \code{correct_split_distance_helper} is a helper function inside \code{correct_split_distance}
+
+
+
+correct_split_distance_helper <- function(df_helper, new_split_length_helper){
+
+#### collect names of split columns ####
+  old_split_cols <- names(df_helper)[stringr::str_detect(names(df_helper), "Split")]
+  old_split_distances <- as.numeric(stringr::str_extract_all(old_split_cols, "\\d{1,}"))
+
+  #### determine multiplier to change old split distances into new split distance
+  split_distances_multiplier <- new_split_length_helper/min(old_split_distances, na.rm = TRUE)
+
+  #### create new split columns
+  new_split_distances <- old_split_distances * split_distances_multiplier
+  new_split_cols <- paste0("Split_", new_split_distances)
+
+  #### rename columns as needed ####
+  df_helper <- df_helper %>%
+    dplyr::rename_with(~ new_split_cols[which(old_split_cols == .x)], .cols = old_split_cols) %>%
+    dplyr::select(where(~ !(all(is.na(.)) | all(. == "")))) # remove empty columns
+
+  return(df_helper)
+
+}
