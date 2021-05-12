@@ -34,6 +34,3 @@ df \%>\% correct_split_distance(
 )
 
 }
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
-}

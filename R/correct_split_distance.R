@@ -2,8 +2,6 @@
 #'
 #' Useful for dealing with meets where some events are split by 50 and others by 25.
 #'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
-#'
 #' @importFrom dplyr bind_rows
 #' @importFrom dplyr filter
 #' @importFrom dplyr full_join
