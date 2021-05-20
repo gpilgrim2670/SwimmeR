@@ -104,6 +104,17 @@ test_that("swim_parse works USA", {
   3091)
 })
 
+test_that("swim_parse works Brit ID", {
+  file <- system.file("extdata", "1500m_mixed_090220_Brit_ID.pdf", package = "SwimmeR")
+
+  df_test <- swim_parse(read_results(file), splits = TRUE, split_length = 50)
+
+  expect_equivalent(dim(df_test), c(33, 41))
+
+  expect_equal(sum(is.na(df_test)), 1, tolerance = 1e-2) # one missing split in row 31
+
+})
+
 test_that("swim_parse works list", {
 
   skip_on_cran() # due to time, risk of external resources failing
@@ -264,4 +275,4 @@ test_that("swim_parse works list", {
                     df_test)
 })
 
-# testthat::test_file("tests/testthat/test-Swim_Parse_works.R")
+# testthat::test_file("tests/testthat/test-swim_parse.R")
