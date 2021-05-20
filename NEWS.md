@@ -2,9 +2,10 @@
 * Bug fixes in S.A.M.M.S results
 * Improved testing for `course_convert` family
 * Removed `tibble` dependency from `course_convert` family and therefore from `SwimmeR` package
-* Added testing for `age_format`
-* Consolidated functions into fewer files
-* Cleaned up file names
+* Added support for British IDs in Hytek files
+* Fixed some bugs in splits
+* Various documentation and file structure updates
+
 
 # SwimmeR 0.9.0 - April 19th 2021
 * Bug fix in splits
