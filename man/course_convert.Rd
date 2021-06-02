@@ -4,7 +4,7 @@
 \alias{course_convert}
 \title{Swimming Course Convertor}
 \usage{
-course_convert(time, event, course, course_to)
+course_convert(time, event, course, course_to, verbose = FALSE)
 }
 \arguments{
 \item{time}{A time, or vector of times to convert.  Can be in either seconds
@@ -18,11 +18,17 @@ Free"}, \code{"50 Back"}, \code{"200 Breast"} etc.}
 
 \item{course_to}{The course to convert the time to as \code{"LCM"},
 \code{"SCM"} or \code{"SCY"}}
+
+\item{verbose}{If \code{TRUE} will return a data frame containing columns \itemize{ \item
+Time \item Course \item Course_To \item Event \item Time_Converted_sec
+\item Time_Converted_mmss }.  If \code{FALSE} (the default) will return only a converted time.}
 }
 \value{
 returns the \code{time} for a specified \code{event} and
   \code{course} converted to a time for the specified \code{course_to} in
-  swimming format
+  swimming format OR a data frame containing columns \itemize{ \item
+  Time \item Course \item Course_To \item Event \item Time_Converted_sec
+  \item Time_Converted_mmss } depending on the value of \code{verbose}
 }
 \description{
 Used to convert times between Long Course Meters, Short Course Meters and

@@ -26,7 +26,7 @@ Version 0.9.1
 
 ## Importing Results
 
-`SwimmeR` reads swimming results into R and outputs tidy dataframes of the results.  `SwimmeR` uses `read_results` to read in either a PDF or HTML file (like a url) and the `swim_parse` or `swim_parse_ISL` function to convert the read file to a tidy dataframe.  Reading .hy3 files is also now possible with `swim_parse`, although .hy3 functionality is still under development and quite buggy.  As of version 0.7.0 `SwimmeR` can also read S.A.M.M.S. style results.
+`SwimmeR` reads swimming results into R and outputs tidy dataframes of the results.  `SwimmeR` uses `read_results` to read in either a PDF or HTML file (like a url) and the `swim_parse` or `swim_parse_ISL` function to convert the read file to a tidy data frame.  Reading .hy3 files is also now possible with `swim_parse`, although .hy3 functionality is still under development and quite buggy.  As of version 0.7.0 `SwimmeR` can also read S.A.M.M.S. style results.
 
 `read_results` has two arguments, `file`, which is the file path to read in, and `node`, required only for HTML files, this is a CSS node where the results reside.  `node` defaults to `"pre"`, which has been correct in every instance tested thus far.
 
@@ -167,14 +167,14 @@ draw_bracket(teams = teams,
 
 ### Course conversions
 
-Additionally 'SwimmeR' also converts between the various pool sizes used in competitive swimming, namely 50m length (LCM), 25m length (SCM) and 25y length (SCY).  This is accomplished with either `convert_courses` or `convert_courses_DF`, both of which have the same basic functionality.  The difference is the `convert_courses_DF` returns a dataframe including the input variables whereas `convet_courses` only returns the converted time(s).  Both functions will take inputs in either seconds or swimming format.
+Additionally 'SwimmeR' also converts between the various pool sizes used in competitive swimming, namely 50m length (LCM), 25m length (SCM) and 25y length (SCY).  This is accomplished with `course_convert`.  The `verbose` parameter determines what `course_convert` outputs.  Setting `verbose = FALSE` (the default) returns a data frame including the input variables whereas `verbose = TRUE` only returns the converted time(s).  `course_convert` will take inputs in either seconds or swimming format.
 
 ```r
 swim <- tibble(time = c("6:17.53", "59.14", "4:14.32", "16:43.19"), course = c("LCM", "LCM", "SCY", "SCM"), course_to = c("SCY", "SCY", "SCM", "LCM"), event = c("400 Free", "100 Fly", "400 IM", "1650 Free"))
 
 course_convert(time = swim$time, course = swim$course, course_to = swim$course_to, event = swim$event)
 
-course_convert_DF(time = swim$time, course = swim$course, course_to = swim$course_to, event = swim$event)
+course_convert(time = swim$time, course = swim$course, course_to = swim$course_to, event = swim$event, verbose = TRUE)
 ```
 
 ## Getting help

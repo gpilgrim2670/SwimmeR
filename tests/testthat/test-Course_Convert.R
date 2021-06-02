@@ -23,13 +23,14 @@ test_that("course_convert_works 400-500", {
 })
 
 
-test_that("course_convert_DF_works", {
+test_that("course_convert verbose works", {
 
-  df_test <- course_convert_DF(
+  df_test <- course_convert(
     time = 53.89,
     event = "100 Fly",
     course = "SCY",
-    course_to = "LCM"
+    course_to = "LCM",
+    verbose = TRUE
   )
 
   df_standard <- data.frame(
@@ -45,13 +46,14 @@ test_that("course_convert_DF_works", {
 })
 
 
-test_that("course_convert_DF_works 200 breast", {
+test_that("course_convert verbose works 200 breast", {
 
-  df_test <- course_convert_DF(
+  df_test <- course_convert(
     time = "2:31.31",
     event = "200 Breast",
     course = "LCM",
-    course_to = "SCY"
+    course_to = "SCY",
+    verbose = TRUE
   )
 
   df_standard <- data.frame(
