@@ -9,6 +9,10 @@
 * win_devel
 * rhub
 
+## R CMD check results
+
+0 errors | 0 warnings | 0 notes
+
 # Version 0.9.0
 * name_reorder function now accepts lists and has a verbose option
 * added correct_split_distance function renaming split columns in data frames with mixed split lengths
