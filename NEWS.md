@@ -1,7 +1,7 @@
 # SwimmeR 0.10.0 - June 2nd 2021
 * CRAN release
 * deprecated `course_convert_df` in favor of `course_convert(verbose = TRUE)`
-* all changes from dev verion SwimmeR 0.9.1 to CRAN
+* all changes from dev version SwimmeR 0.9.1 to CRAN
 * Various documentation and file structure updates
 
 # SwimmeR 0.9.1 - May 12th 2021
