@@ -95,8 +95,8 @@ splits_parse <- function(text, split_len = split_length) {
                            stringr::str_detect,
                            split_string)]
 
-
-        if(length(data_1_splits) < 1){
+        # in some cases all splits are without parens
+        if (length(data_1_splits) < 1) {
           data_1_splits <- text %>%
             .[purrr::map_lgl(.,
                              stringr::str_detect,
