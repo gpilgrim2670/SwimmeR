@@ -1,6 +1,6 @@
 Package: SwimmeR
 Title: Data Import, Cleaning, and Conversions for Swimming Results
-Version: 0.9.1
+Version: 0.10.0
 Authors@R: 
     c(person(given = "Greg",
             family = "Pilgrim",

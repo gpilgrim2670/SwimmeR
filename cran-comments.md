@@ -1,3 +1,14 @@
+# Version 0.10.0
+* depreciated course_convert_df function
+* removed tibble dependency
+* improvements and bug fixes for Hytek and S.A.M.M.S. results
+
+## Test environments
+* local Windows 10 install, R 4.0.5
+* local OS X install, R 4.0.2
+* win_devel
+* rhub
+
 # Version 0.9.0
 * name_reorder function now accepts lists and has a verbose option
 * added correct_split_distance function renaming split columns in data frames with mixed split lengths

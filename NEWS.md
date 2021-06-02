@@ -1,11 +1,17 @@
+# SwimmeR 0.10.0 - June 2nd 2021
+* CRAN release
+* deprecated `course_convert_df` in favor of `course_convert(verbose = TRUE)`
+* all changes from dev verion SwimmeR 0.9.1 to CRAN
+* Various documentation and file structure updates
+
 # SwimmeR 0.9.1 - May 12th 2021
+* dev release
 * Bug fixes in S.A.M.M.S results
 * Improved testing for `course_convert` family
 * Removed `tibble` dependency from `course_convert` family and therefore from `SwimmeR` package
 * Added support for British IDs in Hytek files
 * Fixed some bugs in splits
 * Various documentation and file structure updates
-
 
 # SwimmeR 0.9.0 - April 19th 2021
 * Bug fix in splits
