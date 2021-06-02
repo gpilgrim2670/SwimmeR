@@ -186,9 +186,9 @@ course_convert <-
 #'   Time \item Course \item Course_To \item Event \item Time_Converted_sec
 #'   \item Time_Converted_mmss }
 #'
-#' @examples course_convert_DF(time = "1:35.93", event = "200 Free", course = "SCY", course_to = "LCM")
-#' course_convert_DF(time = 95.93, event = "200 Free", course = "scy", course_to = "lcm")
-#' course_convert_DF(time = 53.89, event = "100 Fly", course = "scm", course_to = "scy")
+#' @examples course_convert_df(time = "1:35.93", event = "200 Free", course = "SCY", course_to = "LCM")
+#' course_convert_df(time = 95.93, event = "200 Free", course = "scy", course_to = "lcm")
+#' course_convert_df(time = 53.89, event = "100 Fly", course = "scm", course_to = "scy")
 #'
 #' @note Relays are not presently supported.
 #' @references Uses the USA swimming age group method described here
@@ -265,3 +265,6 @@ course_convert_DF <- function(time, event, course, course_to) {
 
 }
 
+#' @rdname course_convert_DF
+#' @export
+course_convert_df <- course_convert_DF

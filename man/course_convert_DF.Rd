@@ -2,9 +2,12 @@
 % Please edit documentation in R/course_conversions.R
 \name{course_convert_DF}
 \alias{course_convert_DF}
+\alias{course_convert_df}
 \title{Course converter, returns data frame}
 \usage{
 course_convert_DF(time, event, course, course_to)
+
+course_convert_df(time, event, course, course_to)
 }
 \arguments{
 \item{time}{A time, or vector of times to convert.  Can be in either seconds
@@ -32,9 +35,9 @@ Short Course Yards, returns data frame
 Relays are not presently supported.
 }
 \examples{
-course_convert_DF(time = "1:35.93", event = "200 Free", course = "SCY", course_to = "LCM")
-course_convert_DF(time = 95.93, event = "200 Free", course = "scy", course_to = "lcm")
-course_convert_DF(time = 53.89, event = "100 Fly", course = "scm", course_to = "scy")
+course_convert_df(time = "1:35.93", event = "200 Free", course = "SCY", course_to = "LCM")
+course_convert_df(time = 95.93, event = "200 Free", course = "scy", course_to = "lcm")
+course_convert_df(time = 53.89, event = "100 Fly", course = "scm", course_to = "scy")
 
 }
 \references{
