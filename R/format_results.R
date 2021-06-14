@@ -21,6 +21,11 @@
 #'   \code{\link{add_row_numbers}}
 
 format_results <- function(df){
+
+  if("Prelims_Time" %in% names(df) == FALSE){
+    df$Prelims_Time <- "NA"
+  }
+
   df <- df %>%
     dplyr::mutate(Finals_Time = replace(Finals_Time, which(Finals_Time %in% c(
       "NT", "NS", "DQ", "SCR", "NP"
