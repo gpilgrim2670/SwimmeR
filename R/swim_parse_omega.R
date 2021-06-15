@@ -121,7 +121,7 @@ swim_parse_omega <-
       Reaction_String <- "^\\+\\s?\\d\\.\\d{3}$|^\\-\\s?\\d\\.\\d{3}$|^0\\.00$|^0\\.\\d\\d$"
       # Brit_ID_String <- "\\d{6,7}"
       # Year_String <- "19\\d\\d|20\\d\\d"
-      Record_String <- "^WR$|^AR$|^US$|^CR$"
+      Record_String <- "^WR$|^AR$|^US$|^CR$|^WJ$|^OT$"
       # Colon_String <- "\\:\\d\\d"
 
       #### clean input data ####
