@@ -16,7 +16,9 @@
 
 ### Latest Development Version from Github
 
-Version 0.10.0
+Version 0.10.2
+
+* Developing support for parsing Omega files from US Olympic Trials, 2021
 
 `devtools::install_github("gpilgrim2670/SwimmeR", build_vignettes = TRUE)`
 

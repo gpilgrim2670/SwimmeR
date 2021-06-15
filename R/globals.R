@@ -91,6 +91,10 @@ utils::globalVariables(
     "fFactor",
     "fIncre",
     "Time_Converted_sec",
-    "Time_Converted_mmss"
+    "Time_Converted_mmss",
+    "split_length_omega",
+    "Reaction_Time",
+    "Finals_Time_Sec",
+    "Split_Total"
   )
 )

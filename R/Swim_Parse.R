@@ -180,6 +180,17 @@ Swim_Parse <-
                           format_samms = format_results)
       return(data)
 
+    } else if (any(stringr::str_detect(file, "Official Timekeeping by Omega")) == TRUE) {
+
+      data <- swim_parse_omega(
+        file_omega = file,
+        avoid_omega = avoid,
+        typo_omega = typo,
+        replacement_omega = replacement,
+        splits = splits,
+        split_length_omega = split_length
+      )
+
     } else { # hytek files
 
       #### assign row numbers ####
