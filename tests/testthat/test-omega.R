@@ -95,4 +95,33 @@ test_that("100 br swim off no heat", {
 
 })
 
+
+test_that("wave 1 200 fly", {
+  file <- system.file("extdata", "Omega_Wave1_200fly_Finals_2021.pdf", package = "SwimmeR")
+
+  df_test <- swim_parse(read_results(file),
+                        splits = TRUE) %>%
+    head(2)
+
+  df_standard <- data.frame(Place = c("1", "2"),
+                            Lane = c("4", "2"),
+                            Name = c("SUN Eleanor", "THOMAS Luciana"),
+                            Team = c("NCAP", "IA"),
+                            Reaction_Time = c("0.72", "0.76"),
+                            Finals_Time = c("2:13.76", "2:15.32"),
+                            DQ = rep("0", 2),
+                            Exhibition = rep("0", 2),
+                            Event = rep("4 JUN 2021 - 7:23 PM Women's 200m Butterfly Final", 2),
+                            Split_50 = c("29.70", "30.28"),
+                            Split_100 = c("34.09", "33.80"),
+                            Split_150 = c("35.21", "35.20"),
+                            Split_200 = c("34.76", "36.04")
+  )
+
+  expect_equivalent(df_standard,
+                    df_test)
+
+})
+
+
 # testthat::test_file("tests/testthat/test-omega.R")
