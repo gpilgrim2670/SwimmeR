@@ -77,9 +77,12 @@ swim_parse_omega <-
     # file_omega <- read_results("https://www.omegatiming.com/File/00011500030103EC02FFFFFFFFFFFF01.pdf")
     # file_omega <- read_results("https://www.omegatiming.com/File/00011500030101EE01FFFFFFFFFFFF01.pdf")
     # file_omega <- read_results("https://www.omegatiming.com/File/00011500030103EC06FFFFFFFFFFFF01.pdf")
+    # file_omega <- read_results("https://www.omegatiming.com/File/00011500030201EF04FFFFFFFFFFFF01.pdf")
+    # file_omega <- read_results("https://www.omegatiming.com/File/00011500030103EC04FFFFFFFFFFFF01.pdf") # men 100br final
     # avoid_omega <- c("abcxyz")
     # typo_omega <- c("typo")
     # replacement_omega <- c("typo")
+    # split_length_omega <- 50
 
     #### assign row numbers ####
     as_lines_list_2 <- file_omega %>%
@@ -197,6 +200,7 @@ swim_parse_omega <-
       # unique(map(data_cleaned, length))
 
       #### breaks data into subsets based on how many variables it has ####
+      data_length_7 <- data_cleaned[purrr::map(data_cleaned, length) == 7]
       data_length_8 <- data_cleaned[purrr::map(data_cleaned, length) == 8]
       data_length_9 <- data_cleaned[purrr::map(data_cleaned, length) == 9]
       data_length_10 <- data_cleaned[purrr::map(data_cleaned, length) == 10]
@@ -372,10 +376,61 @@ swim_parse_omega <-
         )
       }
 
-      #### eight variables
+      #### eight variables ####
       if (length(data_length_8) > 0) {
         suppressWarnings(
           df_8 <- data_length_8 %>%
+            list_transform() %>%
+            dplyr::filter(stringr::str_detect(V1, Record_String) == FALSE) %>%
+            dplyr::na_if("") %>%
+            dplyr::mutate(Heat = case_when(
+              str_detect(V2, "^\\d{1,2}$") == TRUE &
+                stringr::str_detect(V3, "^\\d{1,2}$") ~ V2,
+              TRUE ~ "NA"
+            )) %>%
+            dplyr::mutate(Lane = case_when(
+              str_detect(V2, "^\\d{1,2}$") == TRUE &
+                stringr::str_detect(V3, "^\\d{1,2}$") == TRUE ~ V3,
+              str_detect(V2, "^\\d{1,2}$") == TRUE &
+                stringr::str_detect(V3, "^\\d{1,2}$") == FALSE ~ V2,
+              TRUE ~ "NA"
+            )) %>%
+            dplyr::mutate(Name = dplyr::case_when(stringr::str_detect(Heat, "NA") == TRUE ~ V3,
+                                                  TRUE ~ V4)) %>%
+            dplyr::mutate(Team = dplyr::case_when(stringr::str_detect(Heat, "NA") == TRUE ~ V4,
+                                                  TRUE ~ V5)) %>%
+            dplyr::mutate(Reaction_Time = dplyr::case_when(stringr::str_detect(Heat, "NA") == TRUE ~ V5,
+                                                           TRUE ~ V6)) %>%
+            dplyr::mutate(
+              Finals_Time = dplyr::case_when(
+                stringr::str_detect(Heat, "NA") == TRUE & stringr::str_detect(V6, "[1-9]\\:\\d\\d") == TRUE ~ V6,
+                stringr::str_detect(Heat, "NA") == TRUE ~ V7,
+                stringr::str_detect(V7, "[1-9]\\:\\d\\d") == TRUE  ~ V7,
+                stringr::str_detect(V8, Time_Score_Specials_String) == TRUE ~ V8,
+                TRUE ~ "NA"
+              )
+            ) %>%
+            dplyr::na_if("NA") %>%
+            dplyr::select(
+              Place = V1,
+              Heat,
+              Lane,
+              Name,
+              Team,
+              Reaction_Time,
+              Finals_Time,
+              Row_Numb = V8
+            )
+        )
+      } else {
+        df_8 <- data.frame(Row_Numb = character(),
+                           stringsAsFactors = FALSE)
+      }
+
+      #### seven variables ####
+      if (length(data_length_7) > 0) {
+        suppressWarnings(
+          df_7 <- data_length_7 %>%
             list_transform() %>%
             dplyr::filter(stringr::str_detect(V1, Record_String) == FALSE) %>%
             dplyr::na_if("") %>%
@@ -405,15 +460,14 @@ swim_parse_omega <-
               Name,
               Team,
               Reaction_Time,
-              Finals_Time = V7,
-              Row_Numb = V8
+              Finals_Time = V6,
+              Row_Numb = V7
             )
         )
       } else {
-        df_8 <- data.frame(Row_Numb = character(),
+        df_7 <- data.frame(Row_Numb = character(),
                            stringsAsFactors = FALSE)
       }
-
 
       #### DQ data ####
       #### DQ 4 ####
@@ -468,6 +522,7 @@ swim_parse_omega <-
           dplyr::bind_rows(df_10) %>%
           dplyr::bind_rows(df_9) %>%
           dplyr::bind_rows(df_8) %>%
+          dplyr::bind_rows(df_7) %>%
           dplyr::left_join(df_DQ_4) %>%
           dplyr::left_join(df_DQ_3) %>%
           dplyr::mutate(Row_Numb = as.numeric(Row_Numb)) %>%
