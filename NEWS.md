@@ -1,5 +1,6 @@
 # SwimmeR 0.10.2 - June 15th 2021
-*Adding support for Omega files from United States Olympic Trials
+* Adding support for Omega files from United States Olympic Trials
+* Age formatting has changed slightly to accommodate Australian Olympic Trials
 
 # SwimmeR 0.10.0 - June 2nd 2021
 * CRAN release

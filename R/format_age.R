@@ -31,7 +31,7 @@ age_format <- function(x) {
 #' @importFrom stringr str_split_fixed
 #' @importFrom stringr str_remove
 #'
-#' @param x A character vector of age(s) in yyy-mm format (e.g. 13-06) to be
+#' @param x A character vector of age(s) in yyyy-mm format (e.g. 13-06) to be
 #'   converted to years (13.5)
 
 
@@ -42,8 +42,14 @@ age_format_helper <- function(x) {
   if (stringr::str_detect(x, "-") == TRUE) {
     years <- as.numeric(stringr::str_split_fixed(x, "-", n = 2)[,1])
     months <- as.numeric(stringr::str_split_fixed(x, "-", n = 2)[,2])
-    if (months >= 12) stop("Months must be less than 12")
-    x <- as.character(years + round(months/12, 2))
+    if (months >= 12){
+      # some Australian results do age_in_years-YOB as 32-88 (I am 32, born 1988)
+      # but this conflicts with yyy-mm format
+      x <- as.character(years)
+    } else {
+      # x <- as.character(years + round(months/12, 2))
+      x <- as.character(years)
+    }
   } else {
     as.character(x)
   }

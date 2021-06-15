@@ -8,7 +8,7 @@
 age_format_helper(x)
 }
 \arguments{
-\item{x}{A character vector of age(s) in yyy-mm format (e.g. 13-06) to be
+\item{x}{A character vector of age(s) in yyyy-mm format (e.g. 13-06) to be
 converted to years (13.5)}
 }
 \description{
