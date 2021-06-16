@@ -726,6 +726,8 @@ swim_parse_omega <-
           dplyr::select(-Split_Total,-Finals_Time_Sec) %>%
           dplyr::mutate(dplyr::across(dplyr::starts_with("Split"), format, nsmall = 2)) %>%
           dplyr::mutate(dplyr::across(where(is.numeric), as.character)) %>%
+          dplyr::mutate(dplyr::across(where(is.character), trimws)) %>%
+          dplyr::na_if("NA") %>%
           dplyr::select(!dplyr::starts_with("Split"),
                         stringr::str_sort(names(.), numeric = TRUE)) # keep splits columns in order
 
