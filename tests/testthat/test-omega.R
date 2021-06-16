@@ -123,5 +123,24 @@ test_that("wave 1 200 fly", {
 
 })
 
+test_that("wave 1 1500m", {
+  file <- system.file("extdata", "Omega_Wave1_1500_Finals_2021.pdf", package = "SwimmeR")
+
+  df <- swim_parse(read_results(file),
+                        splits = TRUE) %>%
+    filter(Name != "NARVID Jake") # Jake has issues with his reported splits
+
+  list_test <- df %>%
+    dplyr::mutate(dplyr::across(dplyr::starts_with("Split"), sec_format)) %>%
+    mutate(Split_Total = rowSums(dplyr::across(dplyr::starts_with("Split")), na.rm = TRUE)) %>%
+    pull(Split_Total)
+
+  list_standard <- c(935.94, 936.24, 940.05, 944.30, 952.72, 954.12, 954.17, 962.61, 964.30, 965.41, 978.49)
+
+  expect_equivalent(list_standard,
+                    list_test)
+
+})
+
 
 # testthat::test_file("tests/testthat/test-omega.R")

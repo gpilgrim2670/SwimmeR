@@ -90,6 +90,7 @@ swim_parse_omega <-
     # file_omega <- read_results(system.file("extdata", "Omega_OT_100Br_Swimoff_2021.pdf", package = "SwimmeR"))
     # file_omega <- read_results("https://www.omegatiming.com/File/00011500020101EB01FFFFFFFFFFFF01.pdf")
     # file_omega <- read_results("https://www.omegatiming.com/File/00011500020102EE01FFFFFFFFFFFF01.pdf")
+    # file_omega <- read_results(system.file("extdata", "Omega_Wave1_1500_Finals_2021.pdf", package = "SwimmeR"))
     # avoid_omega <- c("abcxyz")
     # typo_omega <- c("typo")
     # replacement_omega <- c("typo")
@@ -98,7 +99,7 @@ swim_parse_omega <-
     #### assign row numbers ####
     as_lines_list_2 <- file_omega %>%
       .[purrr::map_lgl(., stringr::str_detect, "Early take-off", negate = TRUE)] %>% # removes DQ rational used in some relay DQs that messes up line spacing between relay and swimmers/splits - must happen before adding in row numbers
-      .[purrr::map_lgl(., stringr::str_detect, " \\d50m ", negate = TRUE)] %>% # removes cumulative split rows for Omega results only
+      .[purrr::map_lgl(., stringr::str_detect, " 1?\\d50m ", negate = TRUE)] %>% # removes cumulative split rows for Omega results only
       add_row_numbers() %>%
       .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid_omega)))] %>%
       stringr::str_replace_all(stats::setNames(replacement_omega, typo_omega)) %>% # replace typos with replacements
