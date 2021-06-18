@@ -1,3 +1,6 @@
+# SwimmeR 0.10.3 - June 18th 2021
+* Handling of DQs in Omega results improved
+
 # SwimmeR 0.10.2 - June 15th 2021
 * Adding support for Omega files from United States Olympic Trials
 * Age formatting has changed slightly to accommodate Australian Olympic Trials

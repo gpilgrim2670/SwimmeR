@@ -91,6 +91,7 @@ swim_parse_omega <-
     # file_omega <- read_results("https://www.omegatiming.com/File/00011500020101EB01FFFFFFFFFFFF01.pdf")
     # file_omega <- read_results("https://www.omegatiming.com/File/00011500020102EE01FFFFFFFFFFFF01.pdf")
     # file_omega <- read_results(system.file("extdata", "Omega_Wave1_1500_Finals_2021.pdf", package = "SwimmeR"))
+    # file_omega <- read_results("https://www.omegatiming.com/File/00011500030105EE02FFFFFFFFFFFF01.pdf")
     # avoid_omega <- c("abcxyz")
     # typo_omega <- c("typo")
     # replacement_omega <- c("typo")
@@ -115,7 +116,7 @@ swim_parse_omega <-
       Name_String <-
         "_?[:alpha:]+\\s?\\'?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\'\\.]*,?\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:]*\\s?[:alpha:]*\\s?[:alpha:]*\\.?,? [:alpha:]+\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\']*\\s?[:alpha:]*\\s?[:alpha:]*\\s?[:alpha:\\.]*"
       Time_Score_String <- "\\d{0,2}\\:?\\d{1,3}\\.\\d{2}"
-      Time_Score_Specials_String <- paste0("^NT$|^NP$|^DQ$|^NS$|^SCR$|^x?X?", Time_Score_String, "x?X?$")
+      Time_Score_Specials_String <- paste0("^NT$|^NP$|^DQ$|^DSQ$|^NS$|^SCR$|^x?X?", Time_Score_String, "x?X?$")
       Time_Score_Specials_String_Extract <- paste0(Time_Score_String, "|^NT$|^NP$|^DQ$|^NS$|^SCR$")
       # Age_String <- "^SR$|^JR$|^SO$|^FR$|^[:digit:]{1,3}$|^\\d{1,3}\\-\\d{2}$"
       # Para_String <- "^SB?M?\\d{1,2}$"
@@ -131,7 +132,7 @@ swim_parse_omega <-
         stringr::str_remove("^\n\\s{0,}") %>%
         # .[purrr::map(., length) > 0] %>%
         .[purrr::map(., stringr::str_length) > 50] %>% # slight speed boost from cutting down length of file
-        .[purrr::map_lgl(., stringr::str_detect, paste0(Time_Score_String,"|DQ|SCR"))] %>% # must have \\.\\d\\d because all swimming and diving times do
+        .[purrr::map_lgl(., stringr::str_detect, paste0(Time_Score_String,"|DQ|DSQ|SCR"))] %>% # must have \\.\\d\\d because all swimming and diving times do
         .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]{2,}.*[:alpha:]")] %>% # need some letters, need them to not just be a single instance of DQ etc.
         .[purrr::map_lgl(., stringr::str_detect, "r\\:\\+?\\-?\\s?\\d", negate = TRUE)] %>% # remove reaction times
         .[purrr::map_lgl(., stringr::str_detect, "^50m", negate = TRUE)] %>%  # remove British results that start with 50m for splits lines
@@ -217,6 +218,7 @@ swim_parse_omega <-
       # unique(map(data_cleaned, length))
 
       #### breaks data into subsets based on how many variables it has ####
+      data_length_6 <- data_cleaned[purrr::map(data_cleaned, length) == 6]
       data_length_7 <- data_cleaned[purrr::map(data_cleaned, length) == 7]
       data_length_8 <- data_cleaned[purrr::map(data_cleaned, length) == 8]
       data_length_9 <- data_cleaned[purrr::map(data_cleaned, length) == 9]
@@ -551,6 +553,56 @@ swim_parse_omega <-
                            stringsAsFactors = FALSE)
       }
 
+      #### six variables ####
+      if (length(data_length_6) > 0) {
+        suppressWarnings(
+          df_6 <- data_length_6 %>%
+            list_transform() %>%
+            dplyr::filter(stringr::str_detect(V1, Record_String) == FALSE) %>%
+            dplyr::na_if("") %>%
+            dplyr::mutate(Place = dplyr::case_when(stringr::str_detect(V5, "DSQ") == TRUE ~ "10000",
+                                                   TRUE ~ V1)) %>%
+            dplyr::mutate(Heat = dplyr::case_when(
+              stringr::str_detect(V2, "^\\d{1,2}$") == TRUE &
+                stringr::str_detect(V3, "^\\d{1,2}$") == TRUE &
+                stringr::str_detect(V5, "DSQ") == FALSE ~ V2,
+              stringr::str_detect(V2, "^\\d{1,2}$") == TRUE &
+                stringr::str_detect(V1, "^\\d{1,2}$") == TRUE &
+                stringr::str_detect(V5, "DSQ") == TRUE ~ V1,
+              TRUE ~ "NA"
+            )) %>%
+            dplyr::mutate(Lane = case_when(
+              str_detect(V2, "^\\d{1,2}$") == TRUE &
+                stringr::str_detect(V3, "^\\d{1,2}$") == TRUE ~ V3,
+              str_detect(V2, "^\\d{1,2}$") == TRUE &
+                stringr::str_detect(V3, "^\\d{1,2}$") == FALSE ~ V2,
+              TRUE ~ "NA"
+            )) %>%
+            dplyr::mutate(Name = dplyr::case_when(stringr::str_detect(Heat, "NA") == TRUE ~ V3,
+                                                  stringr::str_detect(V5, "DSQ") == TRUE ~ V3,
+                                                  TRUE ~ V4)) %>%
+            dplyr::mutate(Team = dplyr::case_when(stringr::str_detect(Heat, "NA") == TRUE ~ V4,
+                                                  stringr::str_detect(V5, "DSQ") == TRUE ~ V4,
+                                                  TRUE ~ V5)) %>%
+            dplyr::mutate(Reaction_Time = dplyr::case_when(stringr::str_detect(Heat, "NA") == TRUE ~ V5,
+                                                           TRUE ~ "NA")) %>%
+            dplyr::na_if("NA") %>%
+            dplyr::select(
+              Place,
+              Heat,
+              Lane,
+              Name,
+              Team,
+              Reaction_Time,
+              Finals_Time = V5,
+              Row_Numb = V6
+            )
+        )
+      } else {
+        df_6 <- data.frame(Row_Numb = character(),
+                           stringsAsFactors = FALSE)
+      }
+
       #### DQ data ####
       #### DQ 4 ####
       if (length(DQ_length_4) > 0) {
@@ -605,6 +657,7 @@ swim_parse_omega <-
           dplyr::bind_rows(df_9) %>%
           dplyr::bind_rows(df_8) %>%
           dplyr::bind_rows(df_7) %>%
+          dplyr::bind_rows(df_6) %>%
           dplyr::left_join(df_DQ_4) %>%
           dplyr::left_join(df_DQ_3) %>%
           dplyr::mutate(Row_Numb = as.numeric(Row_Numb)) %>%
@@ -625,12 +678,12 @@ swim_parse_omega <-
             Exhibition = dplyr::case_when(stringr::str_detect(Finals_Time, "x|X") == TRUE ~ 1,
                                           TRUE ~ 0),
           ) %>%
-          dplyr::mutate(DQ = dplyr::case_when(Place == 10000 &
+          dplyr::mutate(DQ = dplyr::case_when(as.numeric(Place) == 10000 &
                                                 Exhibition == 0 ~ 1, # added exhibition condition 8/27
-                                              stringr::str_detect(Finals_Time, "DQ") == TRUE ~ 1,
+                                              stringr::str_detect(Finals_Time, "DQ|DSQ") == TRUE ~ 1,
                                               is.na(DQ) ~ 0,
                                               TRUE ~ DQ)) %>%
-          na_if(10000) %>%
+          na_if(as.numeric(10000)) %>%
           dplyr::mutate(dplyr::across(
             c(Name, Team), ~ stringr::str_replace_all(., "10000", "--")
           )) %>% # remove any "10000"s added in erroneously
