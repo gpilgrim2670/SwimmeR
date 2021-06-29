@@ -1,8 +1,7 @@
 #' Collects splits within \code{swim_parse_ISL}
 #'
-#' Takes the output of \code{read_results} and, inside of \code{swim_parse_ISL}, extracts split times and associated row numbers
-#'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
+#' Takes the output of \code{read_results} and, inside of \code{swim_parse_ISL},
+#' extracts split times and associated row numbers
 #'
 #' @importFrom dplyr bind_rows
 #' @importFrom dplyr rename_at
@@ -16,10 +15,13 @@
 #' @importFrom purrr map_lgl
 #' @importFrom purrr map
 #'
-#' @param text output of \code{read_results} with tow numbers appended by \code{add_row_numbers}
-#' @return returns a dataframe with split times and row numbers
+#' @param text output of \code{read_results} with tow numbers appended by
+#'   \code{add_row_numbers}
+#' @return returns a data frame with split times and row numbers
 #'
-#' @seealso \code{splits_parse_ISL} runs inside \code{\link{swim_parse_ISL}} on the output of \code{\link{read_results}} with row numbers from \code{\link{add_row_numbers}}
+#' @seealso \code{splits_parse_ISL} runs inside \code{\link{swim_parse_ISL}} on
+#'   the output of \code{\link{read_results}} with row numbers from
+#'   \code{\link{add_row_numbers}}
 
 splits_parse_ISL <- function(text) {
 

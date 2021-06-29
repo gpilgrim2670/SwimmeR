@@ -1,6 +1,8 @@
-#' Formats swimming results from the International Swim League ('ISL') read with \code{read_results} into a data frame
+#' Formats swimming results from the International Swim League ('ISL') read with
+#' \code{read_results} into a data frame
 #'
-#' Takes the output of \code{read_results} and cleans it, yielding a data frame of 'ISL' swimming results
+#' Takes the output of \code{read_results} and cleans it, yielding a data frame
+#' of 'ISL' swimming results
 #'
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
@@ -25,7 +27,8 @@
 #'
 #' @param file output from \code{read_results}
 #' @param splits should splits be included, default is \code{FALSE}
-#' @param relay_swimmers should relay swimmers be included as separate columns, default is \code{FALSE}
+#' @param relay_swimmers should relay swimmers be included as separate columns,
+#'   default is \code{FALSE}
 #'
 #' @return returns a data frame of ISL results
 #' @examples \dontrun{
@@ -35,8 +38,8 @@
 #' splits = TRUE,
 #' relay_swimmers = TRUE)
 #'  }
-#' @seealso \code{swim_parse_ISL} must be run on the output of \code{\link{read_results}}
-#'
+#' @seealso \code{swim_parse_ISL} must be run on the output of
+#'   \code{\link{read_results}}
 
 swim_parse_ISL <-
   function(file, splits = FALSE, relay_swimmers = FALSE) {

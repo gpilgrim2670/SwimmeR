@@ -1,24 +1,30 @@
-#' Creates a bracket for tournaments involving 5 to 64 teams, single elimination
+#'Creates a bracket for tournaments involving 5 to 64 teams, single elimination
 #'
-#' Will draw a single elimination bracket for the appropriate number of teams, inserting first round byes for higher seeds as needed
+#'Will draw a single elimination bracket for the appropriate number of teams,
+#'inserting first round byes for higher seeds as needed
 #'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
+#'@export
 #'
-#' @export
+#'@importFrom stringr str_pad
+#'@importFrom stringr str_length
 #'
-#' @importFrom stringr str_pad
-#' @importFrom stringr str_length
-#'
-#' @param teams a list of teams, ordered by desired seed, to place in bracket.  Must be between 5 and 64 inclusive.  Teams must have unique names
-#' @param title bracket title
-#' @param text_size number passed to \code{cex} in plotting
-#' @param round_two a list of teams advancing to the second round (need not be in order)
-#' @param round_three a list of teams advancing to the third round (need not be in order)
-#' @param round_four a list of teams advancing to the forth round (need not be in order)
-#' @param round_five a list of teams advancing to the fifth round (need not be in order)
-#' @param round_six a list of teams advancing to the fifth round (need not be in order)
-#' @param champion the name of the overall champion team (there can be only one)
-#' @return a plot of a bracket for the teams, with results and titles as specified
+#'@param teams a list of teams, ordered by desired seed, to place in bracket.
+#'  Must be between 5 and 64 inclusive.  Teams must have unique names
+#'@param title bracket title
+#'@param text_size number passed to \code{cex} in plotting
+#'@param round_two a list of teams advancing to the second round (need not be in
+#'  order)
+#'@param round_three a list of teams advancing to the third round (need not be
+#'  in order)
+#'@param round_four a list of teams advancing to the forth round (need not be in
+#'  order)
+#'@param round_five a list of teams advancing to the fifth round (need not be in
+#'  order)
+#'@param round_six a list of teams advancing to the fifth round (need not be in
+#'  order)
+#'@param champion the name of the overall champion team (there can be only one)
+#'@return a plot of a bracket for the teams, with results and titles as
+#'  specified
 #'
 #'
 #' @examples \dontrun{
@@ -32,7 +38,9 @@
 #'              champion = champion)
 #'}
 #'
-#' @references based on \code{draw.bracket} from the seemingly now defunct \code{mRchmadness} package by Eli Shayer and Saber Powers and used per the terms of that package's GPL-2 license
+#'@references based on \code{draw.bracket} from the seemingly now defunct
+#'  \code{mRchmadness} package by Eli Shayer and Saber Powers and used per the
+#'  terms of that package's GPL-2 license
 
 draw_bracket <- function(teams,
                         title = "Championship Bracket",

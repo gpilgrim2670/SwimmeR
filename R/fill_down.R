@@ -2,8 +2,6 @@
 #'
 #' This is a base approximation of \code{tidyr::fill()}
 #'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
-#'
 #' @param x a list having some number of non-NA values
 #' @return a list where NA values have been replaced with the closest previous non-NA value
 #'

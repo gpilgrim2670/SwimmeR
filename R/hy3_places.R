@@ -2,8 +2,6 @@
 #'
 #' Used to pull prelims and finals places from .hy3 files as part of parsing them.
 #'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
-#'
 #' @importFrom dplyr mutate
 #' @importFrom stringr str_replace_all
 #' @importFrom stringr str_extract_all
@@ -14,7 +12,7 @@
 
 #' @param file an output of read_results, from an .hy3 file
 #' @param type type of times, either "prelims", "relay_prelims", "finals" or "relay_finals"
-#' @return a dataframe where column 1 is times and column 2 is row number
+#' @return a data frame where column 1 is times and column 2 is row number
 #'
 #' @seealso \code{hy3_places} is run inside of \code{\link{hy3_parse}}
 #'

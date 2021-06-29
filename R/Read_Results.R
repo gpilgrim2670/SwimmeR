@@ -1,21 +1,24 @@
-#' Reads swimming and diving results into a list of strings in preparation for parsing with \code{swim_parse}
+#' Reads swimming and diving results into a list of strings in preparation for
+#' parsing with \code{swim_parse}
 #'
 #' Outputs list of strings to be processed by \code{swim_parse}
-#'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
 #' @importFrom stringr str_detect
 #' @importFrom rvest html_nodes
 #' @importFrom rvest html_text
 #' @importFrom pdftools pdf_text
 #'
-#' @param file a .pdf or .html file (could be a url) where containing swimming results.  Must be formatted in a "normal" fashion - see vignette
-#' @param node a CSS node where html results are stored.  Required for html results.  Default is "pre", which nearly always works.
-#' @return returns a list of strings containing the information from \code{file}.  Should then be parsed with \code{swim_parse}
+#' @param file a .pdf or .html file (could be a url) where containing swimming
+#'   results.  Must be formatted in a "normal" fashion - see vignette
+#' @param node a CSS node where html results are stored.  Required for html
+#'   results.  Default is "pre", which nearly always works.
+#' @return returns a list of strings containing the information from
+#'   \code{file}.  Should then be parsed with \code{swim_parse}
 #'
 #' @examples \dontrun{read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm", node = "pre")}
 #'
-#' @seealso \code{read_results} is meant to be followed by \code{\link{swim_parse}}
+#' @seealso \code{read_results} is meant to be followed by
+#'   \code{\link{swim_parse}}
 #'
 #' @export
 

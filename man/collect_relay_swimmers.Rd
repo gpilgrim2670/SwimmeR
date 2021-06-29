@@ -4,14 +4,10 @@
 \alias{collect_relay_swimmers}
 \title{Collects relay swimmers as a data frame within \code{swim_parse}}
 \usage{
-collect_relay_swimmers(x, typo_2 = typo, replacement_2 = replacement)
+collect_relay_swimmers(x)
 }
 \arguments{
 \item{x}{output from \code{read_results} followed by \code{add_row_numbers}}
-
-\item{typo_2}{list of typos from \code{swim_parse}}
-
-\item{replacement_2}{list of replacements for typos from \code{swim_parse}}
 }
 \value{
 returns a data frame of relay swimmers and the associated performance row number
@@ -20,8 +16,5 @@ returns a data frame of relay swimmers and the associated performance row number
 Collects relay swimmers as a data frame within \code{swim_parse}
 }
 \seealso{
-\code{collect_relay_swimmers} runs inside of \code{swim_parse}
-}
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
+\code{collect_relay_swimmers_data} runs inside of \code{swim_parse}
 }

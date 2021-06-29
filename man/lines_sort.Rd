@@ -7,19 +7,22 @@
 lines_sort(x, min_row = minimum_row)
 }
 \arguments{
-\item{x}{a list of character strings including performances, with tow numbers added by \code{add_row_numbers}}
+\item{x}{a list of character strings including performances, with tow numbers
+added by \code{add_row_numbers}}
 
 \item{min_row}{the lowest row number}
 }
 \value{
-a dataframe with \code{Row_Numb} as the first column.  Other columns are performance elements, like splits or relay swimmers, both in order of occurrence left to right
+a data frame with \code{Row_Numb} as the first column.  Other columns
+  are performance elements, like splits or relay swimmers, both in order of
+  occurrence left to right
 }
 \description{
-Collects all lines, (for example containing splits or relay swimmers) associated with a particular performance (a swim) into a dataframe with the appropriate row number for that performance
+Collects all lines, (for example containing splits or relay swimmers)
+associated with a particular performance (a swim) into a data frame with the
+appropriate row number for that performance
 }
 \seealso{
-\code{lines_sort} is a helper function inside \code{splits_parse} and \code{swim_parse_ISL}
-}
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
+\code{lines_sort} is a helper function inside \code{splits_parse}
+  and \code{swim_parse_ISL}
 }

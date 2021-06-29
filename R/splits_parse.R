@@ -1,6 +1,7 @@
 #' Collects splits within \code{swim_parse}
 #'
-#' Takes the output of \code{read_results} and, inside of \code{swim_parse}, extracts split times and associated row numbers
+#' Takes the output of \code{read_results} and, inside of \code{swim_parse},
+#' extracts split times and associated row numbers
 #'
 #' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
 #'
@@ -8,6 +9,7 @@
 #' @importFrom dplyr bind_rows
 #' @importFrom dplyr rename_at
 #' @importFrom dplyr mutate_at
+#' @importFrom dplyr rename
 #' @importFrom dplyr vars
 #' @importFrom stringr str_replace_all
 #' @importFrom stringr str_remove_all
@@ -17,11 +19,15 @@
 #' @importFrom purrr map_lgl
 #' @importFrom purrr map
 #'
-#' @param text output of \code{read_results} with row numbers appended by \code{add_row_numbers}
-#' @param split_len length of pool at which splits are measured - usually 25 or 50
+#' @param text output of \code{read_results} with row numbers appended by
+#'   \code{add_row_numbers}
+#' @param split_len length of pool at which splits are measured - usually 25 or
+#'   50
 #' @return returns a dataframe with split times and row numbers
 #'
-#' @seealso \code{splits_parse} runs inside \code{\link{swim_parse}} on the output of \code{\link{read_results}} with row numbers from \code{\link{add_row_numbers}}
+#' @seealso \code{splits_parse} runs inside \code{\link{swim_parse}} on the
+#'   output of \code{\link{read_results}} with row numbers from
+#'   \code{\link{add_row_numbers}}
 
 splits_parse <- function(text, split_len = split_length) {
 
@@ -31,9 +37,10 @@ splits_parse <- function(text, split_len = split_length) {
   # text <- read_results("inst/extdata/s2-results.pdf")
   # text <- read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm")
 
-  # text <- read_results("https://data.ohiostatebuckeyes.com/livestats/m-swim/210302F001.htm") %>%
-  # text <- read_results("https://data.ohiostatebuckeyes.com/livestats/m-swim/210302P003.htm") %>%
+  # text <- read_results("https://data.ohiostatebuckeyes.com/livestats/m-swim/210302F001.htm")
   # file <- system.file("extdata", "jets08082019_067546.pdf", package = "SwimmeR")
+  # file <- "https://s3.amazonaws.com/sidearm.sites/gopack.com/documents/2021/3/20/2021_DI_Women_Final_Results.pdf"
+  # file <- "https://www.somersetasa.org/sasa/media/archive1/swimchamps2020/d7/1500m_mixed_090220.pdf"
   # text <-   read_results(file) %>%
   #   add_row_numbers()
   # split_len <- 50
@@ -46,7 +53,9 @@ splits_parse <- function(text, split_len = split_length) {
     stringr::str_replace_all(" \\:", "  ")
 
   # split_string <- "\\(\\d?\\:?\\d\\d\\.\\d\\d\\)"
-  split_string <- "\\(\\d?\\:?\\d?\\d\\.\\d\\d\\)"
+  split_string <- "\\(\\d{0,2}\\:?\\d?\\d\\.\\d\\d\\)"
+  split_string_parens <-
+    "\\(\\d{0,2}\\:?\\d\\d\\.\\d\\d\\)|\\s\\d{0,2}\\:?\\d\\d\\.\\d\\d\\s|\\s[8-9]\\.\\d{2}"
 
   row_numbs <- text %>%
     .[purrr::map_lgl(.,
@@ -56,12 +65,11 @@ splits_parse <- function(text, split_len = split_length) {
   flag <- FALSE
 
   if (length(row_numbs) == 0) { # looks for splits that don't have parenthesis around them but will also capture rows with normal times
-    split_string <-
-      "\\(\\d?\\:?\\d\\d\\.\\d\\d\\)|\\s\\d?\\:?\\d\\d\\.\\d\\d\\s|\\s[8-9]\\.\\d{2}"
+
     row_numbs <- text %>%
       .[purrr::map_lgl(.,
                        stringr::str_detect,
-                       split_string)] %>%
+                       split_string_parens)] %>%
       stringr::str_remove_all("r\\:\\+?\\s?\\d?\\d\\.\\d\\d") %>%
       .[purrr::map_lgl(., # remove rows with letters, which should take care of removing normal (non-split) times
                        stringr::str_detect,
@@ -79,21 +87,31 @@ splits_parse <- function(text, split_len = split_length) {
     text <- stringr::str_replace_all(text, "(\\d) (\\d)", "\\1  \\2")
 
     #### pull out rows containing splits, which will remove row numbers ####
-    if (flag == TRUE) { # if there's a risk of rows with letters
-      suppressWarnings(
+    if (flag == TRUE) {
+      # if there's a risk of rows with letters
+
         data_1_splits <- text %>%
           .[purrr::map_lgl(.,
                            stringr::str_detect,
-                           split_string)] %>%
+                           split_string)]
+
+        # in some cases all splits are without parens
+        if (length(data_1_splits) < 1) {
+          data_1_splits <- text %>%
+            .[purrr::map_lgl(.,
+                             stringr::str_detect,
+                             split_string_parens)]
+        }
+
+      suppressWarnings(
+        data_1_splits <- data_1_splits %>%
           stringr::str_remove_all("r\\:\\+?\\s?\\d?\\d\\.\\d\\d") %>%
           .[purrr::map_lgl(., # removes rows with letters
                            stringr::str_detect,
                            "[:alpha:]", negate = TRUE)] %>%
           stringr::str_remove_all("\n") %>%
           # stringr::str_remove_all("r\\:\\+?\\s?\\d?\\d\\.\\d\\d") %>%
-          stringr::str_extract_all(paste0(
-            "^\\s+\\d\\d\\.\\d\\d|", split_string
-          )) %>%
+          stringr::str_extract_all(paste0("^\\s+\\d\\d\\.\\d\\d|", split_string_parens)) %>%
           stringr::str_remove_all('\\"') %>%
           stringr::str_replace_all("\\(", " ") %>%
           stringr::str_replace_all("\\)", " ") %>%
@@ -101,6 +119,7 @@ splits_parse <- function(text, split_len = split_length) {
           stringr::str_remove_all(',') %>%
           trimws()
       )
+
     } else {
       suppressWarnings(
         data_1_splits <- text %>%
@@ -238,7 +257,7 @@ splits_parse <- function(text, split_len = split_length) {
 
     ### goal here is to deal with cases where there are multiple splits in parens and outside.  Want to keep only fist split outside parens
     ### and remove all others
-    ### parens are replaced with "qq" above becuase dealing with detecting parens is annoying
+    ### parens are replaced with "qq" above because dealing with detecting parens is annoying
     if(suppressWarnings(any(stringr::str_detect(data_splits, "qq"))) == TRUE) {
       data_splits <- data_splits %>%
         dplyr::mutate(dplyr::across(
@@ -252,6 +271,11 @@ splits_parse <- function(text, split_len = split_length) {
           ~ stringr::str_replace_all(., "qq", "")
         )) %>%
         fill_left()
+
+      if("V1" %in% names(data_splits) & any(stringr::str_detect(data_splits$V1, "\\.") == FALSE)){
+        data_splits <- data_splits %>%
+          dplyr::rename("Row_Numb" = V1)
+      }
     }
 
     #### rename columns V1, V2 etc. by 50 ####

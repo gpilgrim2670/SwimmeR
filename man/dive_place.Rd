@@ -7,19 +7,20 @@
 dive_place(df, max_place)
 }
 \arguments{
-\item{df}{a dataframe with results from \code{swim_parse}, including only diving results (not swimming)}
+\item{df}{a data frame with results from \code{swim_parse}, including only
+diving results (not swimming)}
 
 \item{max_place}{highest place value that scores}
 }
 \value{
-df modified so that places have been appended based on diving score
+data frame modified so that places have been appended based on diving
+  score
 }
 \description{
-Places are awarded on the basis of score, with highest score winning.  Ties are placed as ties (both athletes get 2nd etc.)
+Places are awarded on the basis of score, with highest score winning.  Ties
+are placed as ties (both athletes get 2nd etc.)
 }
 \seealso{
-\code{dive_place} is a helper function used inside of \code{results_score}
-}
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
+\code{dive_place} is a helper function used inside of
+  \code{results_score}
 }

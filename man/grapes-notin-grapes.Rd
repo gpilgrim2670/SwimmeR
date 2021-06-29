@@ -18,13 +18,11 @@ x \%!in\% y
 a `TRUE` or `FALSE`
 }
 \description{
-The opposite of `%in%`.  Returns `TRUE` if `x` is not `%in%` `y`.  Returns `FALSE` otherwise.
+The opposite of `%in%`.  Returns `TRUE` if `x` is not `%in%` `y`.  Returns
+`FALSE` otherwise.
 }
 \examples{
 "a" \%!in\% c("a", "b", "c")
 "a" \%notin\% c("b", "c")
 
-}
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
 }

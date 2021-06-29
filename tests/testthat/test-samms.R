@@ -15,7 +15,10 @@ test_that("samms_works_1", {
 
     df <- swim_parse(read_results(url_5))
 
-  expect_equal(sum(is.na(df)), 2895)
+
+    # should be 113 DQs + 54 NO SWIMS, total is 167 in the DQ column
+    expect_equal(sum(df$DQ == 1), 167)
+
   }
 })
 
@@ -38,10 +41,9 @@ test_that("samms_works_2", {
 
     df <- swim_parse(read_results(url_6))
 
-    # expect_equal(sum(is.na(df$Finals_Time)), 21)
-
-    expect_equal(sum(is.na(df$Finals_Time)) - 4, sum(df$DQ == 1)) # had problem on debian builds, likely due to pdf issues
-    # should be 21 - 4 == 17
+    expect_equal(sum(is.na(df$Finals_Time)), sum(df$DQ == 1)) # had problem on debian builds, likely due to pdf issues
+    # should be 42 DQs, 7 No Shows but one DQ (OAKM, A in the Womens 400 Free Relay is cut off by pdf tools)
+    # test is 48 total NAs in finals = 41 DQs + 7 no shows
   }
 })
 

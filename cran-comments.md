@@ -1,6 +1,38 @@
+# Version 0.10.0
+* depreciated course_convert_df function
+* removed tibble dependency
+* improvements and bug fixes for Hytek and S.A.M.M.S. results
+
+## Test environments
+* local Windows 10 install, R 4.0.5
+* local OS X install, R 4.0.2
+* win_devel
+* rhub
+
+## R CMD check results
+
+0 errors | 0 warnings | 0 notes
+
+# Version 0.9.0
+* name_reorder function now accepts lists and has a verbose option
+* added correct_split_distance function renaming split columns in data frames with mixed split lengths
+* added discard_errors function for cleaning web scrapping results and for export to JumpeR package
+* various bug fixes
+
+## Test environments
+* local Windows 10 install, R 4.0.2
+* local OS X install, R 4.0.2
+* win_devel
+* rhub
+
+## R CMD check results
+
+0 errors | 0 warnings | 0 notes
+
+
 # Version 0.8.0
 * added name_reorder function
-* aded handling of paralympic codes to swim_parse
+* added handling of paralympic codes to swim_parse
 * fixes to better align package tests with CRAN policies
 * various bug fixes
 

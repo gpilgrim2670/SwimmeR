@@ -86,6 +86,15 @@ utils::globalVariables(
     "Prelims_Place",
     "First_Name",
     "Name_2",
-    "Name_3"
+    "Name_3",
+    "where",
+    "fFactor",
+    "fIncre",
+    "Time_Converted_sec",
+    "Time_Converted_mmss",
+    "split_length_omega",
+    "Reaction_Time",
+    "Finals_Time_Sec",
+    "Split_Total"
   )
 )

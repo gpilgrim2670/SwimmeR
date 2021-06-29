@@ -1,8 +1,7 @@
 #' Adds places to swimming results
 #'
-#' Places are awarded on the basis of time, with fastest (lowest) time winning.  Ties are placed as ties (both athletes get 2nd etc.)
-#'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
+#' Places are awarded on the basis of time, with fastest (lowest) time winning.
+#' Ties are placed as ties (both athletes get 2nd etc.)
 #'
 #' @importFrom dplyr slice
 #' @importFrom dplyr ungroup
@@ -11,11 +10,14 @@
 #' @importFrom dplyr filter
 #' @importFrom dplyr arrange
 #'
-#' @param df a dataframe with results from \code{swim_parse}, including only swimming results (not diving)
+#' @param df a data frame with results from \code{swim_parse}, including only
+#'   swimming results (not diving)
 #' @param max_place highest place value that scores
-#' @return df modified so that places have been appended based on swimming time
+#' @return a data frame modified so that places have been appended based on
+#'   swimming time
 #'
-#' @seealso \code{swim_place} is a helper function used inside of \code{results_score}
+#' @seealso \code{swim_place} is a helper function used inside of
+#'   \code{results_score}
 
 swim_place <- function(df, max_place) {
   df <- df %>%

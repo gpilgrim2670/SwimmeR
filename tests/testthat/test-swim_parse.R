@@ -1,17 +1,12 @@
 
 test_that("swim_parse works", {
   file <- system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")
-  expect_match(swim_parse(
-    read_results(file),
-    typo =  c("\n",
-              # "Indiana  University",
-              ", University of"),
-    replacement = c("\n",
-                    # "Indiana University",
-                    "")
-  # )[100, 2],
-  )[102, 2], # for swim_parse_2 because scratch lines are now included
-  "Lilly King")
+
+  df <- swim_parse(
+    read_results(file)
+    )
+
+  expect_match(df[102, 2], "Lilly King") # for swim_parse post v0.6.0 because scratch lines are now included
 
 })
 
@@ -22,13 +17,7 @@ test_that("swim_parse works para", {
     system.file("extdata", "2018_jimi_flowers_PARA.pdf", package = "SwimmeR")
 
   df <- swim_parse(
-    read_results(file),
-    typo =  c("\n",
-              # "Indiana  University",
-              ", University of"),
-    replacement = c("\n",
-                    # "Indiana University",
-                    "")
+    read_results(file)
   )
 
   expect_equivalent(
@@ -70,13 +59,7 @@ test_that("swim_parse_2 works 2", {
     system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")
 
   df <- swim_parse(
-    read_results(file),
-    typo =  c("\n",
-              # "Indiana  University",
-              ", University of"),
-    replacement = c("\n",
-                    # "Indiana University",
-                    "")
+    read_results(file)
   )
 
   expect_match(df$Finals_Time[257], # for swim_parse_2 because scratch lines are now included
@@ -93,18 +76,13 @@ test_that("swim_parse_2 works 3", {
     warning("Link to external data is broken")
   } else {
 
-    expect_equivalent(sum(swim_parse(
-      read_results(
-        file
-      ),
-      typo = c("-1NORTH ROCKL"
-               # "\\s\\d{1,2}\\s{2,}"
-               ),
-      replacement = c("1-NORTH ROCKL"
-                      # "  "
-                      )
-    )[,1], na.rm = TRUE),
-    16235) # works with swim_parse_2
+    df <- swim_parse(
+      read_results(file),
+      typo = c("-1NORTH ROCKL"),
+      replacement = c("1-NORTH ROCKL")
+    )
+
+    expect_equivalent(sum(df[,1], na.rm = TRUE), 16235) # works with swim_parse_2
   }
 
 })
@@ -124,6 +102,17 @@ test_that("swim_parse works USA", {
     read_results(file)
   )[1], na.rm = TRUE),
   3091)
+})
+
+test_that("swim_parse works Brit ID", {
+  file <- system.file("extdata", "1500m_mixed_090220_Brit_ID.pdf", package = "SwimmeR")
+
+  df_test <- swim_parse(read_results(file), splits = TRUE, split_length = 50)
+
+  expect_equivalent(dim(df_test), c(33, 41))
+
+  expect_equal(sum(is.na(df_test)), 1, tolerance = 1e-2) # one missing split in row 31
+
 })
 
 test_that("swim_parse works list", {
@@ -286,4 +275,4 @@ test_that("swim_parse works list", {
                     df_test)
 })
 
-# testthat::test_file("tests/testthat/test-Swim_Parse_works.R")
+# testthat::test_file("tests/testthat/test-swim_parse.R")
