@@ -23,13 +23,16 @@
 #' @export
 
 Read_Results <- function(file, node = "pre") {
-  '%!in%' <- function(x, y)
-    ! ('%in%'(x, y))
-  if (stringr::str_detect(file, "\\.pdf$|\\.pdf\\.aspx$|\\.aspx$") == TRUE) {
+  #### testing ####
+  # file <- system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")
+
+  #### begin actual function ####
+  if (stringr::str_detect(file, "\\.pdf$|\\.aspx$") == TRUE) {
     ### PDF ###
     results <- pdftools::pdf_text(file)
     as_lines <- stringr::str_extract_all(results, "\n.*")
     as_lines_list_2 <- unlist(as_lines, recursive = FALSE)
+    as_lines_list_2 <- read_results_flag(as_lines_list_2)
 
     return(as_lines_list_2)
 
@@ -43,6 +46,7 @@ Read_Results <- function(file, node = "pre") {
       results <- rvest::html_text(html)
       as_lines <- stringr::str_extract_all(results, "\n.*")
       as_lines_list_2 <- unlist(as_lines, recursive = FALSE)
+      as_lines_list_2 <- read_results_flag(as_lines_list_2)
 
       return(as_lines_list_2)
 
@@ -50,8 +54,10 @@ Read_Results <- function(file, node = "pre") {
   } else if (stringr::str_detect(file, "\\.hy3") == TRUE) {
     ### hy3 ###
     ### add automatic unzipping?
-    results <- readr::read_delim(file, delim = "\\s\\2", col_names = FALSE)
+    results <-
+      readr::read_delim(file, delim = "\\s\\2", col_names = FALSE)
     as_lines_list_2 <- unlist(results, recursive = FALSE)
+    as_lines_list_2 <- read_results_flag(as_lines_list_2)
     row_numbs <- seq(1, length(as_lines_list_2), 1)
     as_lines_list_2 <- paste(as_lines_list_2, row_numbs, sep = "  ")
     return(as_lines_list_2)
@@ -64,3 +70,20 @@ Read_Results <- function(file, node = "pre") {
 #' @rdname Read_Results
 #' @export
 read_results <- Read_Results
+
+
+#' used to indicate that results have been read in with \code{read_results}
+#' prior to being parsed by \code{swim_parse}
+#'
+#' Used to insure that \code{read_results} has been run on a data source prior
+#' to running \code{swim_parse}
+#'
+#' @param x a list of results, line by line
+#' @return returns list x, with "read_results_flag" added as the first element
+#'   of the list
+
+
+read_results_flag <- function(x){
+  x <- c("read_results_flag", x)
+
+}

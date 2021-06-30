@@ -1,3 +1,10 @@
+test_that("read_results_flag within swim_parse", {
+  file <- system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")
+
+  expect_error(swim_parse(file), regexp = "Please run read_results on file prior to running swim_parse.")
+
+})
+
 
 test_that("swim_parse works", {
   file <- system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")
