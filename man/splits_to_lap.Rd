@@ -12,10 +12,6 @@ be formatted in a "normal" fashion - see vignette}
 
 \item{threshold}{a numeric value above which a split is taken to be
 cumulative.  Default is \code{0}}
-
-\item{messages}{should progress messages be displayed?  Default is
-\code{FALSE}.  Converting large (> ~5) events at once will take several
-minutes.}
 }
 \value{
 a data frame with all splits in lap form

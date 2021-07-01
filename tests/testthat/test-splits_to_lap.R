@@ -1,7 +1,5 @@
 test_that("cumulative splits 1500", {
 
-  skip_on_cran() # due to length of test
-
   file <-
     system.file("extdata", "2018_jimi_flowers_PARA.pdf", package = "SwimmeR")
 

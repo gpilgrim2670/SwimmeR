@@ -8,11 +8,6 @@
 #' others use cumulative splits.  This function converts cumulative splits to
 #' lap splits.
 #'
-#' @importFrom dplyr group_split
-#' @importFrom dplyr mutate
-#' @importFrom dplyr arrange
-#' @importFrom dplyr bind_rows
-#' @importFrom purrr map_df
 #' @importFrom stringr str_sort
 #' @importFrom stringr str_detect
 #'
@@ -20,14 +15,11 @@
 #'   be formatted in a "normal" fashion - see vignette
 #' @param threshold a numeric value above which a split is taken to be
 #'   cumulative.  Default is \code{0}
-#' @param messages should progress messages be displayed?  Default is
-#'   \code{FALSE}.  Converting large (> ~5) events at once will take several
-#'   minutes.
 #' @return a data frame with all splits in lap form
 #'
 #' @export
 
-splits_to_lap <- function(df, threshold = 0, messages = FALSE) {
+splits_to_lap <- function(df, threshold = 0) {
 
   #### Error Messages ####
 
@@ -39,13 +31,6 @@ splits_to_lap <- function(df, threshold = 0, messages = FALSE) {
     stop("threshold must be numeric")
   }
 
-  if(any(!is.logical(messages) & is.na(messages)) == TRUE) {
-    stop("messages must be logical, either TRUE or FALSE")
-  }
-
-
-
-
   #### testing ####
 
   # file <-
@@ -54,46 +39,25 @@ splits_to_lap <- function(df, threshold = 0, messages = FALSE) {
   # df <- swim_parse(read_results(file),
   #                  splits = TRUE)
 
-
   #### Actual Function ####
 
   #### Remove Empty Columns ####
   df <- df[, colSums(is.na(df)) != nrow(df)]
 
   #### Locate Split Columns ####
-
   split_cols <- names(df)[stringr::str_detect(names(df), "Split")]
   split_cols <- stringr::str_sort(split_cols, numeric = TRUE)
   i <- seq(1, length(split_cols) -1, 1)
 
-  #### Establish ordering over events ####
-
-  df_split <- df %>%
-    dplyr::mutate(Event = factor(Event, levels = unique(df$Event))) %>%
-    dplyr::group_split(Event)
-
-  if(length(df_split) > 5){
-    message("Correcting splits for large numbers of events can take ~1-2 minutes.  Set `messages = TRUE` to see progress.")
-  }
-
-  #### Map and Reassemble Data Frame
-
-  if(messages == TRUE){
-  df_corrected <-
-    purrr::map_df(df_split, splits_to_lap_helper_2, i = i, split_cols = split_cols, threshold = threshold)
-
-  } else {
-    suppressMessages(
-      df_corrected <-
-        purrr::map_df(df_split, splits_to_lap_helper_2, i = i, split_cols = split_cols, threshold = threshold)
-    )
-  }
-
-  df_corrected <- df_corrected %>%
-    dplyr::bind_rows() %>%
-    dplyr::arrange(Event) %>%
-    dplyr::mutate(Event = as.character(Event))
-
+  #### Run Helper Function ####
+  suppressMessages(
+    df_corrected <- df %>%
+      splits_to_lap_helper_2(
+        i = i,
+        split_cols = split_cols,
+        threshold = threshold
+      )
+  )
 
   return(df_corrected)
 }
