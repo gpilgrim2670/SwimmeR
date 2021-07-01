@@ -16,7 +16,7 @@
 
 ### Latest Development Version from Github
 
-Version 0.10.4
+Version 0.10.5
 
 * Developing support for parsing Omega files from US Olympic Trials, 2021
 

@@ -1,3 +1,7 @@
+# SwimmeR 0.10.5 - July 1st 2021
+* dev release
+* `splits_to_lap` function added for converting cumulative splits to lap format
+
 # SwimmeR 0.10.4 - June 30th 2021
 * dev release
 * More informative error message for running `swim_parse` without first running `read_results`
