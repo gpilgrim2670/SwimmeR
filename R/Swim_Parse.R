@@ -97,19 +97,19 @@ Swim_Parse <-
       stop("typo and replacement must have the same number of elements (be the same length)")
     }
 
-    if(is.logical(format_results) == FALSE) {
+    if(any(!is.logical(format_results) & is.na(format_results)) == TRUE) {
       stop("format_results must be logical, either TRUE or FALSE")
     }
 
-    if(is.logical(splits) == FALSE) {
-      stop("plits must be logical, either TRUE or FALSE")
+    if(any(!is.logical(splits) & is.na(splits)) == TRUE) {
+      stop("splits must be logical, either TRUE or FALSE")
     }
 
     if(is.numeric(split_length) == FALSE) {
       stop("split_length must be numeric, usually 50 or 25")
     }
 
-    if(is.logical(relay_swimmers) == FALSE) {
+    if(any(!is.logical(relay_swimmers) & is.na(relay_swimmers)) == TRUE) {
       stop("relay_swimmers must be logical, either TRUE or FALSE")
     }
 
