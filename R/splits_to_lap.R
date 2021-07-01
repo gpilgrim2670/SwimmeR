@@ -51,13 +51,18 @@ splits_to_lap <- function(df, threshold = 0) {
 
   #### Run Helper Function ####
   suppressMessages(
-    df_corrected <- df %>%
-      splits_to_lap_helper_combine(
-        i = i,
-        split_cols = split_cols,
-        threshold = threshold
-      )
+    df_corrected <- purrr::map(
+      i,
+      splits_to_lap_helper_recalc,
+      df = df,
+      split_cols = split_cols,
+      threshold = threshold
+    ) %>%
+      purrr::reduce(dplyr::left_join) %>%
+      unique()
   )
+
+  names(df_corrected) <- stringr::str_remove(names(df_corrected), "_new")
 
   return(df_corrected)
 }
@@ -116,39 +121,4 @@ splits_to_lap_helper_recalc <- function(df, i, split_cols = split_cols, threshol
   df <- df[, colSums(is.na(df)) != nrow(df)]
 
   return(df)
-}
-
-#' Helper function for converting cumulative splits to lap splits
-#'
-#' @importFrom dplyr select
-#' @importFrom dplyr matches
-#' @importFrom dplyr left_join
-#' @importFrom purrr map
-#' @importFrom purrr reduce
-#' @importFrom stringr str_remove
-#'
-#' @param df a data frame containing splits in cumulative format
-#' @param i list of values to iterate along
-#' @param split_cols list of columns containing splits
-#' @param threshold a numeric value above which a split is taken to be
-#'   cumulative
-#' @return a data frame with all splits in lap format
-
-splits_to_lap_helper_combine <- function(df, i, split_cols = split_cols, threshold = threshold) {
-
-  df_new <-
-    purrr::map(
-      i,
-      splits_to_lap_helper_recalc,
-      df = df,
-      split_cols = split_cols,
-      threshold = threshold
-    ) %>%
-    purrr::reduce(dplyr::left_join) %>%
-    unique()
-    # dplyr::select(-dplyr::matches("\\d$"))
-
-  names(df_new) <- stringr::str_remove(names(df_new), "_new")
-
-  return(df_new)
 }
