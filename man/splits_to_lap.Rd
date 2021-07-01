@@ -4,7 +4,7 @@
 \alias{splits_to_lap}
 \title{Converts splits from cumulative to lap format}
 \usage{
-splits_to_lap(df, threshold = 0, messages = FALSE)
+splits_to_lap(df, threshold = 0)
 }
 \arguments{
 \item{df}{a data frame containing splits in cumulative format results.  Must

@@ -52,7 +52,7 @@ splits_to_lap <- function(df, threshold = 0) {
   #### Run Helper Function ####
   suppressMessages(
     df_corrected <- df %>%
-      splits_to_lap_helper_2(
+      splits_to_lap_helper_combine(
         i = i,
         split_cols = split_cols,
         threshold = threshold
@@ -82,7 +82,7 @@ splits_to_lap <- function(df, threshold = 0) {
 #' @return a list of data frames with all splits in lap format for a particular
 #'   event, each with a single split column converted to lap format
 
-splits_to_lap_helper <- function(df, i, split_cols = split_cols, threshold = threshold) {
+splits_to_lap_helper_recalc <- function(df, i, split_cols = split_cols, threshold = threshold) {
 
   #### testing ####
 
@@ -94,25 +94,6 @@ splits_to_lap_helper <- function(df, i, split_cols = split_cols, threshold = thr
   # i <- max(i)
   #
   #### actual function ####
-
-  # df <- df[, colSums(is.na(df)) != nrow(df)]
-  #
-  # if("Split_50" %in% names(df) == FALSE){
-  #   df$Split_50 <- NA
-  # }
-  #
-  #
-  # if (length(split_cols) == sum(stringr::str_count(names(df), "Split"))) {
-  #   split_cols <- names(df)[stringr::str_detect(names(df), "Split")]
-  # } else {
-  #   split_cols <- split_cols[1:sum(stringr::str_count(names(df), "Split")) + 1]
-  # }
-  #
-  # if(length(split_cols) > 1){
-  # i <- i[1:length(split_cols) -1]
-  # } else {
-  #   i <- i[1:length(split_cols)]
-  # }
 
   split_cols_new <- paste0(split_cols, "_new")[-1]
   j <- i + 1
@@ -153,12 +134,12 @@ splits_to_lap_helper <- function(df, i, split_cols = split_cols, threshold = thr
 #'   cumulative
 #' @return a data frame with all splits in lap format
 
-splits_to_lap_helper_2 <- function(df, i, split_cols = split_cols, threshold = threshold) {
+splits_to_lap_helper_combine <- function(df, i, split_cols = split_cols, threshold = threshold) {
 
   df_new <-
     purrr::map(
       i,
-      splits_to_lap_helper,
+      splits_to_lap_helper_recalc,
       df = df,
       split_cols = split_cols,
       threshold = threshold
