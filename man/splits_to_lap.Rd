@@ -19,9 +19,25 @@ a data frame with all splits in lap form
 \description{
 Cumulative splits are when each split is the total elapsed time at a given
 distance.  For example, if an athlete swims the first 50 of a 200 yard race
-in 25.00 seconds (alp and cumulative split), and the second 50 (i.e. the 100
+in 25.00 seconds (lap and cumulative split), and the second 50 (i.e. the 100
 lap split) in 30.00 seconds the cumulative 100 split is 25.00 + 30.00 =
 55.00.  Some swimming results are reported with lap splits (preferred), but
 others use cumulative splits.  This function converts cumulative splits to
 lap splits.
+}
+\examples{
+\dontrun{
+df <- data.frame(Place = 1,
+                Name = "Sally Swimfast",
+                Team = "KVAC",
+                Event = "Womens 200 Freestyle",
+                Finals_Time = "1:58.00",
+                Split_50 = "28.00",
+                Split_100 = "59.00",
+                Split_150 = "1:31.00",
+                Split_200 = "1:58.00")
+
+df \%>\%
+ splits_to_lap
+ }
 }
