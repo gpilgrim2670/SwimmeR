@@ -97,19 +97,19 @@ Swim_Parse <-
       stop("typo and replacement must have the same number of elements (be the same length)")
     }
 
-    if(is.logical(format_results) == FALSE) {
+    if(any(!is.logical(format_results) & is.na(format_results)) == TRUE) {
       stop("format_results must be logical, either TRUE or FALSE")
     }
 
-    if(is.logical(splits) == FALSE) {
-      stop("plits must be logical, either TRUE or FALSE")
+    if(any(!is.logical(splits) & is.na(splits)) == TRUE) {
+      stop("splits must be logical, either TRUE or FALSE")
     }
 
     if(is.numeric(split_length) == FALSE) {
       stop("split_length must be numeric, usually 50 or 25")
     }
 
-    if(is.logical(relay_swimmers) == FALSE) {
+    if(any(!is.logical(relay_swimmers) & is.na(relay_swimmers)) == TRUE) {
       stop("relay_swimmers must be logical, either TRUE or FALSE")
     }
 
@@ -167,12 +167,25 @@ Swim_Parse <-
       options("age_team_warning_0.6.0" = FALSE)
     }
 
+    if(stringr::str_detect(file[1], "^read_results_flag$") == TRUE){
+
+      # remove read_results flag
+
+      file <- file[-1]
+
+    } else{
+
+      # if read_results flag isn't present post an error
+
+      stop("Please run read_results on file prior to running swim_parse.")
+    }
+
     if (stringr::str_detect(file[1], "^A107") == TRUE) { # for .hy3 files
       # file <- add_row_numbers(text = file)
       data <- hy3_parse(file = file)
       return(data)
 
-    } else if (any(stringr::str_detect(file[1:5], "S\\.A\\.M\\.M\\.S\\.|MEET SANCTION NUMBER")) == TRUE) { # for S.A.M.M.S files
+    } else if (any(stringr::str_detect(file[1:6], "S\\.A\\.M\\.M\\.S\\.|MEET SANCTION NUMBER")) == TRUE) { # for S.A.M.M.S files
       data <- samms_parse(file_samms = file,
                           avoid_samms = avoid,
                           typo_samms = typo,

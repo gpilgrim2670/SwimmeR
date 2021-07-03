@@ -1,7 +1,18 @@
+# SwimmeR 0.10.5 - July 1st 2021
+* dev release
+* `splits_to_lap` function added for converting cumulative splits to lap format
+
+# SwimmeR 0.10.4 - June 30th 2021
+* dev release
+* More informative error message for running `swim_parse` without first running `read_results`
+* Associated testing for new error message
+
 # SwimmeR 0.10.3 - June 18th 2021
+* dev release
 * Handling of DQs in Omega results improved
 
 # SwimmeR 0.10.2 - June 15th 2021
+* dev release
 * Adding support for Omega files from United States Olympic Trials
 * Age formatting has changed slightly to accommodate Australian Olympic Trials
 
@@ -21,6 +32,7 @@
 * Various documentation and file structure updates
 
 # SwimmeR 0.9.0 - April 19th 2021
+* CRAN release
 * Bug fix in splits
 * `name_reorder` now accepts lists
 * Improvements to `verbose = TRUE` setting in `name_reorder`
@@ -28,6 +40,7 @@
 * `discard_errors` function added for cleaning web scrapping results
 
 # SwimmeR 0.8.0 - March 16 2021
+* CRAN release
 * Introduces parsing of Para athlete codes inside `swim_parse`
 * Bug fixes in splits
 * Improved handling of symbols as record designations (!, $ etc.) inside `swim_parse`
@@ -36,6 +49,7 @@
 * Various documentation updates
 
 # SwimmeR 0.7.3 - March 1 2021
+* dev release
 * Fixes bugs in 25 length splits under 10.00 seconds
 * Other bug fixes for record designation
 
@@ -46,6 +60,7 @@
 * Testing fixes for Debian builds
 
 # SwimmeR 0.7.0 - January 12 2020
+* CRAN release
 * added functionality to `swim_parse` to parse S.A.M.M.S. style files
 * added functionality to `swim_parse` to prevent function from failing when no event names are detected
 * broadened event name definitions
@@ -53,25 +68,31 @@
 * major overhaul to `swim_parse` to lessen the need for `typo` and `replacement` arguments and to simplify their use
 
 # SwimmeR 0.6.0 - November 19 2020
+* CRAN release
 * added functionality to `swim_parse` to output relay swimmers
 * added functionality to `swim_parse_ISL` to output relay swimmers
 * added functionality to `swim_parse_ISL` to output splits
 
 # SwimmeR 0.5.4 - November 4 2020
+* dev release
 * added functionality to output splits to `swim_parse`, works but more testing needed
 
 # SwimmeR 0.5.3 - October 23 2020
+* dev release
 * added helper function list_transform to clean up `swim_parse` and other functions
 
 # SwimmeR 0.5.2 - October 21 2020
+* dev release
 * fixed issue regarding athletes with many names, or with punctuated names
 * fixed issue regarding the use of "*" in front of an athlete's name as a designator
 * updates to testing to reflect above
 
 # SwimmeR 0.5.1 - October 20 2020
+* CRAN release
 * fixed issue caused by a change in ISL results format
 
 # SwimmeR 0.5.0
+# CRAN release
 * added `swim_parse_ISL` function, for reading in results from the International Swimming League
 * updated vignette
 * various documentation updates
