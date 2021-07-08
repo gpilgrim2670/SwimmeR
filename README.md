@@ -16,9 +16,10 @@
 
 ### Latest Development Version from Github
 
-Version 0.10.5
+Version 0.10.6
 
 * Developing support for parsing Omega files from US Olympic Trials, 2021
+* Functions `splits_to_lap` and `splits_to_cumulative` for converting splits between lap and cumulative formats
 
 `devtools::install_github("gpilgrim2670/SwimmeR", build_vignettes = TRUE)`
 

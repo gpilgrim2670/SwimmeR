@@ -170,5 +170,74 @@ test_that("cumulative splits 1500", {
 
 })
 
-# testthat::test_file("tests/testthat/test-splits_to_lap.R")
+test_that("mixed cumulative and lap splits with threshold", {
+
+  df <- data.frame(
+    Place = 1,
+    Name = c("Lenore Lap", "Casey Cumulative"),
+    Team = rep("KVAC", 2),
+    Event = rep("Womens 200 Freestyle", 2),
+    Finals_Time = rep("1:58.00", 2),
+    Split_50 = rep("28.00", 2),
+    Split_100 = c("31.00", "59.00"),
+    Split_150 = c("30.00", "1:29.00"),
+    Split_200 = c("29.00", "1:58.00")
+  )
+
+  df_test_mixed_lap <- df %>%
+    splits_to_lap(threshold = 35)
+
+# build standard
+
+  df_standard_mixed_lap <-
+    structure(
+      list(
+        Place = c(1, 1),
+        Name = c("Lenore Lap", "Casey Cumulative"),
+        Team = c("KVAC", "KVAC"),
+        Event = c("Womens 200 Freestyle",
+                  "Womens 200 Freestyle"),
+        Finals_Time = c("1:58.00", "1:58.00"),
+        Split_50 = c("28.00", "28.00"),
+        Split_100 = c("31.00", "31.00"),
+        Split_150 = c("30.00", "30.00"),
+        Split_200 = c("29.00", "29.00")
+      ),
+      row.names = 1:2,
+      class = "data.frame"
+    )
+
+  expect_equivalent(df_test_mixed_lap, df_standard_mixed_lap)
+
+
+
+  df_test_mixed_cumulative <- df %>%
+    splits_to_cumulative(threshold = 20)
+
+  df_standard_mixed_cumulative <-
+    structure(
+      list(
+        Place = c(1, 1),
+        Name = c("Lenore Lap", "Casey Cumulative"),
+        Team = c("KVAC", "KVAC"),
+        Event = c("Womens 200 Freestyle",
+                  "Womens 200 Freestyle"),
+        Finals_Time = c("1:58.00", "1:58.00"),
+        Split_50 = c("28.00", "28.00"),
+        Split_100 = c("59.00", "59.00"),
+        Split_150 = c("1:29.00", "1:29.00"),
+        Split_200 = c("1:58.00",
+                      "1:58.00")
+      ),
+      row.names = 1:2,
+      class = "data.frame"
+    )
+
+  expect_equivalent(df_test_mixed_cumulative, df_standard_mixed_cumulative)
+
+})
+
+
+
+# testthat::test_file("tests/testthat/test-format_splits.R")
 

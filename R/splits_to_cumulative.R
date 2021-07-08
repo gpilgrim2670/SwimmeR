@@ -1,12 +1,12 @@
-#' Converts splits from cumulative to lap format
+#' Converts splits from lap to cumulative format
 #'
 #' Cumulative splits are when each split is the total elapsed time at a given
 #' distance.  For example, if an athlete swims the first 50 of a 200 yard race
 #' in 25.00 seconds (lap and cumulative split), and the second 50 (i.e. the 100
 #' lap split) in 30.00 seconds the cumulative 100 split is 25.00 + 30.00 =
 #' 55.00.  Some swimming results are reported with lap splits (preferred), but
-#' others use cumulative splits.  This function converts cumulative splits to
-#' lap splits.
+#' others use cumulative splits.  This function converts lap splits to
+#' cumulative splits.
 #'
 #' @importFrom dplyr left_join
 #' @importFrom dplyr select
@@ -17,25 +17,12 @@
 #' @importFrom stringr str_detect
 #' @importFrom stringr str_remove
 #'
-#' @param df a data frame containing results with splits in cumulative format.
-#'   Must be formatted in a "normal" SwimmeR fashion - see vignette
-#' @param threshold a numeric value below which a split is taken to be
-#'   cumulative.  Default is \code{-Inf}
+#' @param df a data frame containing results with splits in lap format.  Must
+#'   be formatted in a "normal" SwimmeR fashion - see vignette
+#' @param threshold a numeric value above which a split is taken to be
+#'   cumulative.  Default is \code{Inf}
 #' @return a data frame with all splits in lap form
 #' @examples \dontrun{
-#'df <- data.frame(Place = 1,
-#'                 Name = "Sally Swimfast",
-#'                 Team = "KVAC",
-#'                 Event = "Womens 200 Freestyle",
-#'                 Finals_Time = "1:58.00",
-#'                 Split_50 = "28.00",
-#'                 Split_100 = "59.00",
-#'                 Split_150 = "1:31.00",
-#'                 Split_200 = "1:58.00")
-#'
-#'df %>%
-#'  splits_to_lap
-#'
 #'df <- data.frame(Place = rep(1, 2),
 #'                 Name = c("Lenore Lap", "Casey Cumulative"),
 #'                 Team = rep("KVAC", 2),
@@ -51,21 +38,21 @@
 #'  # set threshold value
 #'
 #'  # not setting threshold will produce bad results by attempting to convert
-#'  # Lenore Lap's splits, which are already in lap format, into lap format
-#'  # again
+#'  # Casey Cumulative's splits, which are already in cumulative
+#'  # format, into cumulative format again
 #'
 #'  df %>%
-#'    splits_to_lap()
+#'    splits_to_cumulative()
 #'
 #'  df %>%
-#'    splits_to_lap(threshold = 35)
+#'    splits_to_cumulative(threshold = 20)
 #'
 #'  }
-#' @seealso \code{splits_to_lap} is the reverse of
-#'   \code{\link{splits_to_cumulative}}
+#' @seealso \code{splits_to_cumulative} is the reverse of
+#'   \code{\link{splits_to_lap}}
 #' @export
 
-splits_to_lap <- function(df, threshold = -Inf) {
+splits_to_cumulative <- function(df, threshold = Inf) {
 
   #### Error Messages ####
 
@@ -99,7 +86,7 @@ splits_to_lap <- function(df, threshold = -Inf) {
   suppressMessages(
     df_corrected <- purrr::map(
       i,
-      splits_to_lap_helper_recalc,
+      splits_to_cumulative_helper_recalc,
       df = df,
       split_cols = split_cols,
       threshold = threshold
@@ -113,9 +100,9 @@ splits_to_lap <- function(df, threshold = -Inf) {
   if (all(df %>%
           dplyr::select(
             dplyr::contains("Split")) %>%
-            purrr::map(.,
-                       ~ stringr::str_detect(., '\\-\\d')) %>% purrr::reduce(., `|`)
-          ) == FALSE) {
+          purrr::map(.,
+                     ~ stringr::str_detect(., '\\-\\d')) %>% purrr::reduce(., `|`)
+  ) == FALSE) {
     warning(
       "Negative split values produced.  Please check source data and/or consider setting the `threshold` parameter."
     )
@@ -124,7 +111,7 @@ splits_to_lap <- function(df, threshold = -Inf) {
   return(df_corrected)
 }
 
-#' Helper function for converting cumulative splits to lap splits
+#' Helper function for converting lap splits to cumulative splits
 #'
 #' @importFrom dplyr across
 #' @importFrom dplyr mutate
@@ -135,15 +122,16 @@ splits_to_lap <- function(df, threshold = -Inf) {
 #' @importFrom stringr str_remove
 #' @importFrom stringr str_detect
 #'
-#' @param df a data frame containing splits in cumulative format
+#' @param df a data frame containing splits in lap format
 #' @param i list of values to iterate along
 #' @param split_cols list of columns containing splits
-#' @param threshold a numeric value above which a split is taken to be
-#'   cumulative
-#' @return a list of data frames with all splits in lap format for a particular
-#'   event, each with a single split column converted to lap format
+#' @param threshold a numeric value below which a split is taken to be
+#'   lap
+#' @return a list of data frames with all splits in cumulative format for a
+#'   particular event, each with a single split column converted to cumulative
+#'   format
 
-splits_to_lap_helper_recalc <- function(df, i, split_cols = split_cols, threshold = threshold) {
+splits_to_cumulative_helper_recalc <- function(df, i, split_cols = split_cols, threshold = threshold) {
 
   #### testing ####
 
@@ -158,15 +146,20 @@ splits_to_lap_helper_recalc <- function(df, i, split_cols = split_cols, threshol
   split_cols_new <- paste0(split_cols, "_new")[-1]
   j <- i + 1
 
+  # define positions of column ranges
+  col_vars <- names(df)
+  col_start <- match(split_cols[1], col_vars)
+  col_end <- match(split_cols[j], col_vars)
+
   df <- df %>%
     dplyr::mutate(dplyr::across(dplyr::starts_with("Split"), sec_format)) %>%
     dplyr::mutate(dplyr::across(dplyr::starts_with("Split"), as.numeric)) %>%
     dplyr::mutate(!!paste0(split_cols[1], "_new") := !!as.name(split_cols[1])) %>%
-    # dplyr::rowwise() %>%
     dplyr::mutate(
       !!as.name(split_cols_new[i]) := dplyr::case_when(
         is.na(!!as.name(split_cols[j])) == FALSE &
-          !!as.name(split_cols[j]) > threshold ~ !!as.name(split_cols[j]) -!!as.name(split_cols[i]),
+          (!!as.name(split_cols[j]) - !!as.name(split_cols[i]) < threshold) ~
+          rowSums(.[, col_start:col_end]),
         TRUE ~ !!as.name(split_cols[j])
       )
     ) %>%
