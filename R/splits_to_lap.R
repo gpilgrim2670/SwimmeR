@@ -84,6 +84,8 @@ splits_to_lap <- function(df, threshold = -Inf) {
   #
   # df <- swim_parse(read_results(file),
   #                  splits = TRUE)
+  #
+  # threshold <- -Inf
 
   #### Actual Function ####
 
@@ -110,12 +112,12 @@ splits_to_lap <- function(df, threshold = -Inf) {
 
   names(df_corrected) <- stringr::str_remove(names(df_corrected), "_new")
 
-  if (all(df %>%
+  if (any(df_corrected %>%
           dplyr::select(
             dplyr::contains("Split")) %>%
             purrr::map(.,
-                       ~ stringr::str_detect(., '\\-\\d')) %>% purrr::reduce(., `|`)
-          ) == FALSE) {
+                       ~ stringr::str_detect(., '\\-\\d')) %>% purrr::reduce(., `|`), na.rm = TRUE
+          ) == TRUE) {
     warning(
       "Negative split values produced.  Please check source data and/or consider setting the `threshold` parameter."
     )
