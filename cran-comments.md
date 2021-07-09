@@ -1,3 +1,15 @@
+# Version 0.11.0
+* added splits_to_lap and splits_to_cumulative and associated testing
+* added functionality for parsing Omega results
+* improvements in age handling
+* various bug fixes, documentation updates etc.
+
+## Test environments
+* local Windows 10 install, R 4.0.5
+* local OS X install, R 4.0.2
+* win_devel
+* rhub
+
 # Version 0.10.0
 * depreciated course_convert_df function
 * removed tibble dependency

@@ -1,4 +1,8 @@
-# SwimmeR 0.10.5 - July 8th 2021
+# SwimmeR 0.11.0 - July 9th 2021
+* CRAN release
+* contains all updates since SwimmeR 0.10.0
+
+# SwimmeR 0.10.6 - July 8th 2021
 * dev release
 * `splits_to_cumulative` function added for converting lap splits to cumulative format
 
