@@ -1,6 +1,6 @@
 # SwimmeR 0.11.0 - July 9th 2021
 * CRAN release
-* contains all updates since SwimmeR 0.10.0
+* contains all dev version updates since SwimmeR 0.10.0
 
 # SwimmeR 0.10.6 - July 8th 2021
 * dev release
@@ -36,6 +36,7 @@
 * Improved testing for `course_convert` family
 * Removed `tibble` dependency from `course_convert` family and therefore from `SwimmeR` package
 * Added support for British IDs in Hytek files
+* Added `correct_split_distance` function to switch between splits by 25 and splits by 50
 * Fixed some bugs in splits
 * Various documentation and file structure updates
 
