@@ -1,4 +1,7 @@
-# SwimmeR 0.11.0 - July 9th 2021
+# SwimmeR 0.11.1 - July 14th 2021
+* Vignette changes to backdoor in NYS results
+
+# SwimmeR 0.11.0 - July 9th 2021, submitted July 14th
 * CRAN release
 * contains all dev version updates since SwimmeR 0.10.0
 

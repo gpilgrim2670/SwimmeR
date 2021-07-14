@@ -77,16 +77,21 @@ TX_FL_IN_df[102:104,]
 # Reading HTML Results
 Reading .html results is very similar to reading pdf results, but a value must be specified to `node`, containing which CSS node the `read_results` should look in for results.  Here results from the New York State 2003 Girls Championship meet will be read in, from the "pre" node.
 
-```{r read_results html, message = FALSE}
+```{r read_results html, message = FALSE, eval=FALSE}
 NYS_link <- "http://www.nyhsswim.com/Results/Girls/2003/NYS/Single.htm"
 NYS_text <- read_results(file = NYS_link, node = "pre")
+```
+
+```{r read_results html actual, message = FALSE, echo = FALSE}
+NYS_text_path <- system.file("extdata", "NYS_text.RDS", package = "SwimmeR")
+NYS_text <- readRDS(NYS_text_path)
 ```
 
 ```{r read_results html output, message = FALSE}
 NYS_text[587:598]
 ```
 
-Looking at the raw results above one will see that line 2 is a header and contains `NY State Rcd:`, showing the New York State record.  Lines of this type are a common feature in swimming results, but because they contain a recognizable swimming time, without being a result per say, they can cause problems for `swim_parse`.  Like typos these will not cause an error, but might produce nonsense rows in the resulting dataframe.  `swim_parse` deals with strings that should not be included in results with the `avoid` argument.  By default `avoid` contains a lot of common formulations of these header items under `avoid_default`.  You can create your own list of strings as pass it to `avoid`, or add to `avoid_default` via `avoid_new <- c(avoid_default, "your string here")`.  `Avoid` should also include `"r\\:"` if your results have reaction times (`avoid_default` already includes `"r\\:"`). 
+Looking at the raw results above one will see that line 2 is a header and contains `NY State Rcd:`, showing the New York State record.  Lines of this type are a common feature in swimming results, but because they contain a recognizable swimming time, without being a result per say, they can cause problems for `swim_parse`.  Like typos these will not cause an error, but might produce nonsense rows in the resulting data frame.  `swim_parse` deals with strings that should not be included in results with the `avoid` argument.  By default `avoid` contains a lot of common formulations of these header items under `avoid_default`.  You can create your own list of strings as pass it to `avoid`, or add to `avoid_default` via `avoid_new <- c(avoid_default, "your string here")`.  `Avoid` should also include `"r\\:"` if your results have reaction times (`avoid_default` already includes `"r\\:"`). 
 
 ```{r swim_parse html, message = FALSE}
 NYS_df <- swim_parse(file = NYS_text, avoid = c("NY State Rcd:"))

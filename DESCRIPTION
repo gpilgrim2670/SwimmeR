@@ -1,6 +1,6 @@
 Package: SwimmeR
 Title: Data Import, Cleaning, and Conversions for Swimming Results
-Version: 0.11.0
+Version: 0.11.1
 Authors@R: 
     c(person(given = "Greg",
             family = "Pilgrim",
@@ -10,7 +10,7 @@ Authors@R:
       person(given = "Caitlin",
              family = "Baldwin",
              role = "ctb"))
-Description: The goal for of the 'SwimmeR' package is to provide means of acquiring, and then analyzing, data from swimming (and diving) competitions.  To that end 'SwimmeR' allows results to be read in from .html sources, like 'Hy-Tek' real time results pages, '.pdf' files, 'ISL' results, and (on a development basis) '.hy3' files.  Once read in, 'SwimmeR' can convert swimming times (performances) between the computationally useful format of seconds reported to the '100ths' place (e.g. 95.37), and the conventional reporting format (1:35.37) used in the swimming community.  'SwimmeR' can also score meets in a variety of formats with user defined point values, convert times between courses ('LCM', 'SCM', 'SCY') and draw single elimination brackets, as well as providing a suite of tools for working cleaning swimming data.  This is a developmental package, not yet mature.
+Description: The goal of the 'SwimmeR' package is to provide means of acquiring, and then analyzing, data from swimming (and diving) competitions.  To that end 'SwimmeR' allows results to be read in from .html sources, like 'Hy-Tek' real time results pages, '.pdf' files, 'ISL' results, and (on a development basis) '.hy3' files.  Once read in, 'SwimmeR' can convert swimming times (performances) between the computationally useful format of seconds reported to the '100ths' place (e.g. 95.37), and the conventional reporting format (1:35.37) used in the swimming community.  'SwimmeR' can also score meets in a variety of formats with user defined point values, convert times between courses ('LCM', 'SCM', 'SCY') and draw single elimination brackets, as well as providing a suite of tools for working cleaning swimming data.  This is a developmental package, not yet mature.
 License: MIT + file LICENSE
 Imports:
     purrr,
