@@ -128,7 +128,7 @@ test_that("swim_parse works list", {
 
   # import standard
   # df_standard <- read.csv(system.file("extdata", "df_standard.csv", package = "SwimmeR"), stringsAsFactors = FALSE, colClasses=c("numeric", rep("character", 6), "numeric", "numeric", "character"))
-  df_standard <- readRDS(system.file("extdata", "df_standard.rds", package = "SwimmeR"))
+  df_standard <- readRDS(url("https://github.com/gpilgrim2670/Pilgrim_Data/blob/master/SwimmeR%20Test%20Files/df_standard.rds?raw=true"))
 
 
   # import test files

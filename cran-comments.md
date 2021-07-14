@@ -10,6 +10,10 @@
 * win_devel
 * rhub
 
+## R CMD check results
+
+0 errors | 0 warnings | 0 notes
+
 # Version 0.10.0
 * depreciated course_convert_df function
 * removed tibble dependency

@@ -161,11 +161,12 @@ Swim_Parse <-
     avoid <- unique(c(avoid, avoid_default))
 
     #### message only posts once per session ####
-    if(getOption("age_team_warning_0.6.0", TRUE)) {
-      message("Beginning with SwimmeR v0.6.0 the Grade and School output columns are renamed Age and Team respectively.  Please adjust your work flows as needed.")
-
-      options("age_team_warning_0.6.0" = FALSE)
-    }
+    ## removed in v0.11.0 7/14/21 ##
+    # if(getOption("age_team_warning_0.6.0", TRUE)) {
+    #   message("Beginning with SwimmeR v0.6.0 the Grade and School output columns are renamed Age and Team respectively.  Please adjust your work flows as needed.")
+    #
+    #   options("age_team_warning_0.6.0" = FALSE)
+    # }
 
     if(stringr::str_detect(file[1], "^read_results_flag$") == TRUE){
 

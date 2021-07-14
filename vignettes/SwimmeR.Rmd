@@ -46,7 +46,7 @@ TX_FL_IN_text[294:303]
 
 Here we see a subsection of the meet - the top three finishers in the Women's 100 Yard Breaststroke featuring Olympic gold medalist, and the `SwimmeR` package's favorite swimmer, Lilly King.
 
-The next step is to convert this data to a dataframe using `swim_parse`.  Because `swim_parse` works on text strings it is very sensitive to typos and/or nonstandard naming conventions.  "Texas-Florida-Indiana.pdf" has two examples of these potential problems.
+The next step is to convert this data to a data frame using `swim_parse`.  Because `swim_parse` works on text strings it is very sensitive to typos and/or nonstandard naming conventions.  "Texas-Florida-Indiana.pdf" has two examples of these potential problems.
 
 The first is that `Indiana University` is sometimes entered as `Indiana  University`, with two spaces between `Indiana` and `University`.  This is a problem in versions of `Swimmer` < 0.7.0 because `swim_parse` will interpret two spaces as a column separator, and will not properly capture `Indiana  University` (two spaces) as a team name.  In versions of `Swimmer` >= 0.7.0 the extra space won't cause a problem at all.
 
@@ -169,7 +169,7 @@ df %>%
   splits_to_lap(threshold = 35)
 ```
 
-Converting to cumulative, although not the prefered format, is possible as well, with `splits_to_cumulative`.
+Converting to cumulative, although not the preferred format, is possible as well with `splits_to_cumulative`.
 
 ```{r lap to cumulative, message = FALSE}
 df %>% 

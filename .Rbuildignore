@@ -7,7 +7,6 @@
 ^doc$
 ^Meta$
 ^inst/logos/logo_nobackground\.png$
-^inst/extdata/df_standard\.rds$
 ^inst/extdata/DoubleColumnPDF\.PNG$
 ^inst/extdata/2020_NI_Champs_Qualifier_UNAC\.hy3$
 ^inst/extdata/Texas-Florida-Indiana_image\.png$
