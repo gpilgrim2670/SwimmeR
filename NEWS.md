@@ -1,3 +1,6 @@
+# SwimmeR 0.11.2 - July 20th 2021
+* Bug fixes and testing updates for places as "1)"
+
 # SwimmeR 0.11.1 - July 14th 2021
 * Vignette changes to backdoor in NYS results
 

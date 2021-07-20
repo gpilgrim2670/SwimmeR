@@ -125,7 +125,8 @@ Swim_Parse <-
         "[:alpha:]r\\:",
         "\\.\\:",
         "\\d\\:\\s",
-        "\\'\\:"
+        "\\'\\:",
+        "QUALIFYING "
         # "Record",
         # "RECORD",
         # "^\\s*NYSPHSAA",
@@ -153,6 +154,7 @@ Swim_Parse <-
     # file <- read_results("https://www.somersetasa.org/sasa/media/archive1/swimchamps2020/d7/1500m_mixed_090220.pdf")
     # file <- read_results("https://www.somersetasa.org/sasa/media/archive1/swimchamps2020/d6/s11_0802.pdf")
     # file <- read_results("https://www.somersetasa.org/sasa/media/archive1/swimchamps2020/d4/s7_0102.pdf")
+    # file <- read_results("https://swimswam.com/wp-content/uploads/2018/08/2004-Division-I-NCAA-Championships-Women-results1.pdf")
     # avoid <- avoid_default
     # typo <- c("typo")
     # replacement <- c("typo")
@@ -504,7 +506,7 @@ Swim_Parse <-
         suppressWarnings(
           df_7 <- data_length_7 %>%
             list_transform() %>%
-            dplyr::mutate(Place = dplyr::case_when(stringr::str_detect(V1, "^\\d{1,3}$") == TRUE ~ V1,
+            dplyr::mutate(Place = dplyr::case_when(stringr::str_detect(V1, "^\\d{1,3}\\)?$") == TRUE ~ V1,
                                                    stringr::str_detect(V1, Brit_ID_String) == TRUE ~ "NA",
                                                    TRUE ~ "10000")) %>%
             dplyr::mutate(ID = dplyr::case_when(stringr::str_detect(V1, Brit_ID_String) == TRUE ~ V1,
@@ -599,7 +601,7 @@ Swim_Parse <-
           df_6 <- data_length_6 %>%
             list_transform() %>%
             dplyr::mutate(
-              Place = dplyr::case_when(stringr::str_detect(V1, "\\d") == TRUE ~ V1,
+              Place = dplyr::case_when(stringr::str_detect(V1, "^\\d{1,3}\\)?$") == TRUE ~ V1,
                                        TRUE ~ "10000"),
               Name = dplyr::case_when(
                 stringr::str_detect(V2, Name_String) == TRUE &
@@ -665,7 +667,7 @@ Swim_Parse <-
           df_5 <- data_length_5 %>%
             list_transform() %>%
             dplyr::mutate(
-              Place = dplyr::case_when(stringr::str_detect(V1, "\\d") == TRUE ~ V1,
+              Place = dplyr::case_when(stringr::str_detect(V1, "^\\d{1,3}\\)?$") == TRUE ~ V1,
                                        TRUE ~ "NA"),
               Name = dplyr::case_when(
                 stringr::str_detect(V1, Name_String) == TRUE &
@@ -725,7 +727,7 @@ Swim_Parse <-
             list_transform() %>%
             filter(stringr::str_detect(V1, "\\.") == FALSE) %>% # occasionally old results with DQs in the splits will end up here - this removes them
             dplyr::mutate(
-              Place = dplyr::case_when(stringr::str_detect(V1, "\\d") == TRUE ~ V1,
+              Place = dplyr::case_when(stringr::str_detect(V1, "^\\d{1,3}\\)?$") == TRUE ~ V1,
                                        TRUE ~ "10000"),
               Team = dplyr::case_when(
                 stringr::str_detect(V1, "\\d") == FALSE ~ V1,

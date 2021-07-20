@@ -16,10 +16,9 @@
 
 ### Latest Development Version from Github
 
-Version 0.10.6
+Version 0.11.2
 
-* Developing support for parsing Omega files from US Olympic Trials, 2021
-* Functions `splits_to_lap` and `splits_to_cumulative` for converting splits between lap and cumulative formats
+* Minor bug fixes and improvements over CRAN version 0.11.0
 
 `devtools::install_github("gpilgrim2670/SwimmeR", build_vignettes = TRUE)`
 

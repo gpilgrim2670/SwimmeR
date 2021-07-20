@@ -5,6 +5,52 @@ test_that("read_results_flag within swim_parse", {
 
 })
 
+test_that("places with parens '1)' etc", {
+
+  skip_on_cran() # due to risk of external resources failing
+
+  # build test df
+
+  file <- "https://swimswam.com/wp-content/uploads/2018/08/2004-Division-I-NCAA-Championships-Women-results1.pdf"
+
+  df <- file %>%
+    read_results() %>%
+    swim_parse()
+
+  df_test <- df %>%
+    filter(Name == "JOYCE, KARA LYNN")
+
+  # build standard df
+
+  df_standard <-
+    structure(
+      list(
+        Place = c(1, 1),
+        Name = c("JOYCE, KARA LYNN",
+                 "JOYCE, KARA LYNN"),
+        Age = c("FR", "FR"),
+        Team = c("GEORGIA",
+                 "GEORGIA"),
+        Prelims_Time = c("24.21", "54.40"),
+        Finals_Time = c("24.24",
+                        "53.15"),
+        DQ = c(0, 0),
+        Exhibition = c(0, 0),
+        Event = c(
+          "Event 4 WOMEN's 50 Meter Freestyle",
+          "Event 17 WOMEN's 100 Meter Freestyle"
+        )
+      ),
+      row.names = c(NA,-2L),
+      class = "data.frame"
+    )
+
+  # compare test and standard
+
+  expect_equivalent(df_test, df_standard)
+
+})
+
 
 test_that("swim_parse works", {
   file <- system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")
@@ -105,10 +151,15 @@ test_that("swim_parse works USMS", {
 
 test_that("swim_parse works USA", {
   file <- system.file("extdata", "jets08082019_067546.pdf", package = "SwimmeR")
-  expect_equivalent(sum(swim_parse(
-    read_results(file)
-  )[1], na.rm = TRUE),
-  3091)
+
+  df <- file %>%
+    read_results() %>%
+    swim_parse()
+
+  sum_df <- sum(df[1], na.rm = TRUE)
+
+  expect_equivalent(sum_df,
+  3109)
 })
 
 test_that("swim_parse works Brit ID", {
@@ -275,7 +326,7 @@ test_that("swim_parse works list", {
   # df <- dplyr::anti_join(df_standard, df_test)
 
   # to regenerate df_standard if df_test is more correct
-  # readr::write_rds(df_test, "~/SwimmeR/inst/extdata/df_standard.rds")
+  # readr::write_rds(df_test, "~/Pilgrim_Data/SwimmeR Test Files/df_standard.rds")
 
   # compare standard to test
   expect_equivalent(df_standard,

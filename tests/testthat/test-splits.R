@@ -68,15 +68,14 @@ test_that("NYS results, multiple lines of splits with different lengths, has par
 test_that("USA Swimming results, splits don't have parenthesis, some splits longer than 59.99", {
 
   file <- system.file("extdata", "jets08082019_067546.pdf", package = "SwimmeR")
-  df <- swim_parse(
-    read_results(file),
-    splits = TRUE
-  ) %>%
+  df <- file %>%
+    read_results() %>%
+    swim_parse(splits = TRUE) %>%
     splits_reform()
 
-  match_sum <- sum(df$not_matching, na.rm = TRUE) # should be 10 because 10 swimmers finished legally but did not record splits
+  match_sum <- sum(df$not_matching, na.rm = TRUE) # should be 11 because 10 swimmers and finished legally but did not record splits and 1 relay was DQ'd without splits
 
-  expect_equivalent(match_sum, 10)
+  expect_equivalent(match_sum, 11)
 
 })
 

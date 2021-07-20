@@ -47,8 +47,9 @@ event_parse <- function(text) {
       stringr::str_replace_all("\\\n", "") %>%
       stringr::str_replace_all("\\(", "") %>%
       stringr::str_replace_all("\\)", "") %>%
-      str_replace_all("\\s{2,}", " ") %>%
-      str_replace(" (\\d{1,})$", "   \\1") %>% # new 12/15 for older NCAA results
+      stringr::str_replace_all("\\s{2,}", " ") %>%
+      stringr::str_replace(" (\\d{1,})$", "   \\1") %>% # new 12/15 for older NCAA results
+      stringr::str_remove("\\sCONT$") %>%
       # stringr::str_replace(".*(?=(Wom|Men|Boy|Girl))", "") %>% # new 10/16
       trimws()
 
