@@ -1,3 +1,6 @@
+# SwimmeR 0.11.3 - July 26th 2021
+* Updates for Tokyo Olympics
+
 # SwimmeR 0.11.2 - July 20th 2021
 * Bug fixes and testing updates for places as "1)"
 

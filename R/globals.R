@@ -25,6 +25,8 @@ utils::globalVariables(
     "Place",
     "Points",
     "Row_Numb",
+    "Row_Numb_Adjusted",
+    "relay_swimmers",
     "Event",
     "read_html",
     ":=",

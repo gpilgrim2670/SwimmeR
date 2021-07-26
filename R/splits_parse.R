@@ -41,9 +41,6 @@ splits_parse <- function(text, split_len = split_length) {
   # file <- system.file("extdata", "jets08082019_067546.pdf", package = "SwimmeR")
   # file <- "https://s3.amazonaws.com/sidearm.sites/gopack.com/documents/2021/3/20/2021_DI_Women_Final_Results.pdf"
   # file <- "https://www.somersetasa.org/sasa/media/archive1/swimchamps2020/d7/1500m_mixed_090220.pdf"
-  # text <-   read_results(file) %>%
-  #   add_row_numbers()
-  # split_len <- 50
 
   #### Actual Function ####
   ### collect row numbers from rows containing splits ###

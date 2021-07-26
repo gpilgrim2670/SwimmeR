@@ -16,9 +16,9 @@
 
 ### Latest Development Version from Github
 
-Version 0.11.2
+Version 0.11.3
 
-* Minor bug fixes and improvements over CRAN version 0.11.0
+* Updates for Tokyo Olympics results
 
 `devtools::install_github("gpilgrim2670/SwimmeR", build_vignettes = TRUE)`
 

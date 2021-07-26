@@ -25,8 +25,12 @@
 event_parse <- function(text) {
   # text <- as_lines_list_2
 
+  olympics_string <- "Men.* 4?\\s?x?\\s?\\d{1,}m.*|Women.* 4?\\s?x?\\s?\\d{1,}m.*|Mixed.* 4?\\s?x?\\s?\\d{1,}m.*"
+
   event_string <-
     "Event\\:?\\s?#?\\s+\\d{1,}|EVENT\\:?\\s?#?\\s+\\d{1,}|Women.* Yard|Women.* Meter|Women.* Metre|Girls.* Yard|Girls.* Meter|Girls.* Metre|Men.* Yard|Men.* Meter|Men.* Metre|Boys.* Yard|Boys.* Meter|Boys.* Metre|Mixed.* Yard|Mixed.* Meter|Mixed.* Metre"
+
+  event_string <- paste(event_string, olympics_string, sep = "|")
 
   events <- text %>%
     .[purrr::map_lgl(.,

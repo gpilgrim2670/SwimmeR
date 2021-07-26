@@ -196,7 +196,7 @@ Swim_Parse <-
                           format_samms = format_results)
       return(data)
 
-    } else if (any(stringr::str_detect(file, "Official Timekeeping by Omega")) == TRUE) {
+    } else if (any(stringr::str_detect(file, "(Official Timekeeping by Omega)|(Report created )")) == TRUE) {
 
       data <- swim_parse_omega(
         file_omega = file,
@@ -204,8 +204,11 @@ Swim_Parse <-
         typo_omega = typo,
         replacement_omega = replacement,
         splits = splits,
-        split_length_omega = split_length
+        split_length_omega = split_length,
+        relay_swimmers_omega = relay_swimmers
       )
+
+      return(data)
 
     } else { # hytek files
 
