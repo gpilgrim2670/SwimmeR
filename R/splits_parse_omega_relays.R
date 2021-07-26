@@ -47,7 +47,7 @@ splits_parse_omega_relays <-
 
     text <- text %>%
       stringr::str_replace_all(" \\:", "  ") %>%
-      stringr::str_remove_all("\\(\\d+\\)\\s+\\d?\\:?\\d{2}\\.\\d{2}")
+      stringr::str_remove_all("\\(\\=?\\d+\\)\\s+\\d?\\:?\\d{2}\\.\\d{2}")
 
     ### collect splits
 
@@ -66,7 +66,7 @@ splits_parse_omega_relays <-
     flag <- FALSE
 
 
-    #### if there are still no valid splits return blank dataframe ####
+    #### if there are still no valid splits return blank data frame ####
     if (length(row_numbs) > 0) {
       minimum_row <- min(as.numeric(row_numbs))
       maximum_row <- as.numeric(length(text))
