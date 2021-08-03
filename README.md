@@ -16,9 +16,9 @@
 
 ### Latest Development Version from Github
 
-Version 0.11.3
+Version 0.11.4
 
-* Updates for Tokyo Olympics results
+* Further improvements for handling Tokyo Olympics results
 
 `devtools::install_github("gpilgrim2670/SwimmeR", build_vignettes = TRUE)`
 
@@ -28,7 +28,7 @@ Version 0.11.3
 
 ## Importing Results
 
-`SwimmeR` reads swimming results into R and outputs tidy dataframes of the results.  `SwimmeR` uses `read_results` to read in either a PDF or HTML file (like a url) and the `swim_parse` or `swim_parse_ISL` function to convert the read file to a tidy data frame.  Reading .hy3 files is also now possible with `swim_parse`, although .hy3 functionality is still under development and quite buggy.  As of version 0.7.0 `SwimmeR` can also read S.A.M.M.S. style results.
+`SwimmeR` reads swimming results into R and outputs tidy data frames of the results.  `SwimmeR` uses `read_results` to read in either a PDF or HTML file (like a url) and the `swim_parse` or `swim_parse_ISL` function to convert the read file to a tidy data frame.  Reading .hy3 files is also now possible with `swim_parse`, although .hy3 functionality is still under development and quite buggy.  As of version 0.7.0 `SwimmeR` can also read S.A.M.M.S. style results.
 
 `read_results` has two arguments, `file`, which is the file path to read in, and `node`, required only for HTML files, this is a CSS node where the results reside.  `node` defaults to `"pre"`, which has been correct in every instance tested thus far.
 

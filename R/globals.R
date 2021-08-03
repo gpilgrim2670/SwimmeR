@@ -55,6 +55,7 @@ utils::globalVariables(
     "Finals_Place",
     "DQ",
     "Heat",
+    "Heat_Row_Min",
     "Exhibition",
     "Time",
     "Lane",

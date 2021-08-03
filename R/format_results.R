@@ -26,12 +26,12 @@ format_results <- function(df){
     df$Prelims_Time <- "NA"
   }
 
+  specials <- c("NT", "NS", "DNS", "DQ", "DSQ", "SCR", "NP")
+
   df <- df %>%
-    dplyr::mutate(Finals_Time = replace(Finals_Time, which(Finals_Time %in% c(
-      "NT", "NS", "DQ", "DSQ", "SCR", "NP"
-    )), NA)) %>%
+    dplyr::mutate(Finals_Time = replace(Finals_Time, which(Finals_Time %in% specials), NA)) %>%
     dplyr::mutate(Prelims_Time = replace(Prelims_Time, which(
-      Prelims_Time %in% c("NT", "NS", "DQ", "DSQ", "SCR", "NP")
+      Prelims_Time %in% specials
     ), NA)) %>%
     dplyr::mutate(Switch = dplyr::case_when(
       is.na(Prelims_Time) == FALSE &

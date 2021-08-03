@@ -1,3 +1,6 @@
+# SwimmeR 0.11.4 - August 3rd 2021
+* Heat handling for Tokyo Olympics phase reports
+
 # SwimmeR 0.11.3 - July 26th 2021
 * Updates for Tokyo Olympics
 
