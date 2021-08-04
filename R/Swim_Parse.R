@@ -155,6 +155,12 @@ Swim_Parse <-
     # file <- read_results("https://www.somersetasa.org/sasa/media/archive1/swimchamps2020/d6/s11_0802.pdf")
     # file <- read_results("https://www.somersetasa.org/sasa/media/archive1/swimchamps2020/d4/s7_0102.pdf")
     # file <- read_results("https://swimswam.com/wp-content/uploads/2018/08/2004-Division-I-NCAA-Championships-Women-results1.pdf")
+    # file <- read_results("http://www.swmeets.com/Realtime/Speedo%20Champions/210803F004.htm")
+    # file <-
+    #   system.file("extdata", "2018_jimi_flowers_PARA.pdf", package = "SwimmeR") %>%
+    #   read_results()
+    # file <- "http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm" %>%
+    #   read_results()
     # avoid <- avoid_default
     # typo <- c("typo")
     # replacement <- c("typo")
@@ -245,7 +251,7 @@ Swim_Parse <-
         stringr::str_remove("^\n\\s{0,}") %>%
         # .[purrr::map(., length) > 0] %>%
         .[purrr::map(., stringr::str_length) > 50] %>% # slight speed boost from cutting down length of file
-        .[purrr::map_lgl(., stringr::str_detect, paste0(Time_Score_String,"|DQ|SCR"))] %>% # must have \\.\\d\\d because all swimming and diving times do
+        .[purrr::map_lgl(., stringr::str_detect, paste0(Time_Score_String,"|DQ|SCR|DFS"))] %>% # must have \\.\\d\\d because all swimming and diving times do
         .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]{2,}.*[:alpha:]")] %>% # need some letters, need them to not just be a single instance of DQ etc.
         .[purrr::map_lgl(., stringr::str_detect, "r\\:\\+?\\-?\\s?\\d", negate = TRUE)] %>% # remove reaction times
         .[purrr::map_lgl(., stringr::str_detect, "^50m", negate = TRUE)] %>%  # remove British results that start with 50m for splits lines
@@ -291,7 +297,11 @@ Swim_Parse <-
       #### insert double spaces where needed ####
       data_cleaned <- data_cleaned %>%
         stringr::str_replace_all("(?<=\\d)\\s+[:upper:]?\\s+(?=\\d)", "  ") %>% # letters like P or M to denote pool or meet record
-        stringr::str_replace_all("(?<=\\d) (?=[:alpha:])", "  ") %>% # mostly to split place and name
+        stringr::str_replace_all("(?<=^\\s?\\d{1,5}) (?=[:alpha:])", "  ") %>% # mostly to split place and name
+        stringr::str_replace_all("(?<=SB?M?\\d{1,2}) (?=[:alpha:])", "  ") %>% # split para classifications 1
+        stringr::str_replace_all("(?<=[:alpha:]) (?=SB?M?\\d{1,2})", "  ") %>% # split para classifications 2
+
+        # stringr::str_replace_all("(?<=\\d) (?=[:alpha:])", "  ") %>% # mostly to split place and name, also age and team name
         stringr::str_replace_all("(?<=\\d) (?=_)", "  ") %>% # mostly to split place and name, if name is preceded by "_" as a stand-in for "*"
         stringr::str_replace_all("(?<=\\d) (?=\\d)", "  ") %>% # mostly to split place team names that start with a number, like in NYS results (5-Fairport etc.)
         stringr::str_replace_all("(?<=[:alpha:]),(?=[:alpha:])", ", ") %>% # split names that don't have a space between last,first
@@ -300,6 +310,7 @@ Swim_Parse <-
 
         stringr::str_replace_all("(?<=\\)) (?=[:alpha:])", "  ") %>% # spacing between place) and names
         stringr::str_replace_all("\\((?=[:digit:])", "  \\(") %>% # spacing between (YoB) and name, for British results
+        stringr::str_replace_all(" (\\d{1,3}) ", "       \\1      ") %>% # split age and team
         stringr::str_replace_all(" FR ", "       FR      ") %>% # split age and team
         stringr::str_replace_all(" SO ", "       SO      ") %>% # split age and team
         stringr::str_replace_all(" JR ", "       JR      ") %>% # split age and team
@@ -307,6 +318,9 @@ Swim_Parse <-
         stringr::str_replace_all("(SM?B?1\\d{1})(\\d{1,2})", "\\1   \\2") %>%  # split para classification and age
         stringr::str_replace_all("(\\d{6,7})([:alpha:])", "\\1   \\2") %>%  # split Brit ID and Name
         stringr::str_replace_all(" NT ", "       NT      ") %>% # split prelim and final
+        stringr::str_replace_all(" DQ ", "       DQ      ") %>% # split prelim and final
+        stringr::str_replace_all(" DFS ", "       DFS      ") %>% # split prelim and final
+        stringr::str_replace_all(" SCR ", "       SCR      ") %>% # split prelim and final
         stringr::str_replace_all("(?<=[:alpha:])\\s{2,3}(?=[:alpha:])", " ") %>% # testing 12/21/2020 would help with typos
         stringr::str_replace_all("(?<=[:alpha:]) (?=\\d)", "  ") %>% # split name and age
         stringr::str_replace_all("(?<=[:alpha:])(\\d{1,3}\\-\\d{2})", "  \\1  ") %>% # split name and yyy-mm age
@@ -316,7 +330,8 @@ Swim_Parse <-
         # stringr::str_replace_all("NYS|AAA|AAC|SEC\\d{1,2}", "  ") %>%
         # stringr::str_replace_all("SEC\\d{1,2}", "  ") %>%  # for old NYS results
         stringr::str_replace_all("\\d{3}\\.\\d{2}\\s+(\\d{3}\\.\\d{2})\\s+\\d{3}\\.\\d{2}\\s+(\\d{3}\\.\\d{2})", "\\1  \\2") %>%  # for old NCAA results with diving scores and DDs
-        stringr::str_replace_all("(?<=\\s)S(?=B?M?\\d{1,2})", "  S") # for para classifications
+        stringr::str_replace_all("(?<=\\s)S(?=B?M?\\d{1,2})", "  S") %>%  # for para classifications
+        stringr::str_remove_all("(?<=\\d\\d\\.\\d\\d )[:upper:]{1,}") # removes AAA, AAC from after time
 
       #### splits data into variables by splitting at multiple (>= 2) spaces ####
       data_cleaned <-
