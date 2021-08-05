@@ -159,7 +159,7 @@ Swim_Parse <-
     # file <-
     #   system.file("extdata", "2018_jimi_flowers_PARA.pdf", package = "SwimmeR") %>%
     #   read_results()
-    # file <- "http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm" %>%
+    # file <- "http://www.swmeets.com/Realtime/Speedo%20Champions/210803F004.htm" %>%
     #   read_results()
     # avoid <- avoid_default
     # typo <- c("typo")
@@ -232,6 +232,9 @@ Swim_Parse <-
 
       #### Pulls out event labels from text ####
       events <- event_parse(as_lines_list_2)
+
+      #### Pulls out reaction times from text ####
+      reaction_times <- reaction_times_parse(as_lines_list_2)
 
       #### set up strings ####
       Name_String <-
@@ -900,6 +903,11 @@ Swim_Parse <-
       if("Points" %in% names(data) == FALSE){
         data$Points <- NA}
 
+      #### cleaning ####
+      if(format_results == TRUE){
+        data <- format_results(data)
+      }
+
       #### add in events based on row number ranges ####
       if(min(data$Row_Numb) < min(events$Event_Row_Min)){
         unknown_event <- data.frame(Event = "Unknown",
@@ -911,6 +919,23 @@ Swim_Parse <-
       data  <-
         transform(data, Event = events$Event[findInterval(Row_Numb, events$Event_Row_Min)]) %>%
         dplyr::na_if("Unknown")
+
+      #### add in reaction times based on row number ranges ####
+      # if(min(data$Row_Numb) < min(reaction_times$Reaction_Time_Row_Min)){
+      if(min(data$Row_Numb) < min(reaction_times$Reaction_Time_Row_Numb)){
+        unknown_reaction_time <- data.frame(Reaction_Time = "NA",
+                                            Reaction_Time_Row_Numb = min(data$Row_Numb))
+                                    # Reaction_Time_Row_Min = min(data$Row_Numb),
+                                    # Reaction_Time_Row_Max = min(reaction_times$Reaction_Time_Row_Min) - 1)
+        reaction_times <- dplyr::bind_rows(unknown_reaction_time, reaction_times)
+      }
+
+      data  <-
+        # transform(data, Reaction_Time = reaction_times$Reaction_Time[findInterval(Row_Numb, reaction_times$Reaction_Time_Row_Min)]) %>%
+        left_join(data, reaction_times, by = c("Row_Numb" = "Reaction_Time_Row_Numb")) %>%
+        dplyr::mutate(Reaction_Time = dplyr::case_when(is.na(Finals_Time) == TRUE ~ "NA",
+                                                       TRUE ~ Reaction_Time)) %>%
+        dplyr::na_if("NA")
 
       #### cleaning up final results ####
 
@@ -931,11 +956,6 @@ Swim_Parse <-
           dplyr::mutate(Points = stringr::str_remove_all(Points, " "),
                         Points = as.numeric(Points))
       )
-
-      #### cleaning ####
-      if(format_results == TRUE){
-        data <- format_results(data)
-      }
 
       #### adding relay swimmers in ####
       if (relay_swimmers == TRUE) {

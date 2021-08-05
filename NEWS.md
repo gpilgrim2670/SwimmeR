@@ -1,3 +1,6 @@
+# SwimmeR 0.11.5 - August 5th 2021
+* Reaction times for Hytek results in indivdual events
+
 # SwimmeR 0.11.4 - August 3rd 2021
 * Heat handling for Tokyo Olympics phase reports
 

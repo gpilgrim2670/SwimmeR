@@ -16,9 +16,10 @@
 
 ### Latest Development Version from Github
 
-Version 0.11.4
+Version 0.11.5
 
 * Further improvements for handling Tokyo Olympics results
+* Reaction times now included for hytek results (individual events only)
 
 `devtools::install_github("gpilgrim2670/SwimmeR", build_vignettes = TRUE)`
 

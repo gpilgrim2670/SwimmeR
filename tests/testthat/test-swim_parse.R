@@ -321,7 +321,7 @@ test_that("swim_parse works list", {
   df_test <- Parse_Map(df_test)
   # df_test_2 <- dplyr::bind_rows(df_test, .id = "source")
   df_test <- dplyr::bind_rows(df_test, .id = "source") %>%
-    dplyr::select(-source)
+    dplyr::select(-source, -Reaction_Time)
 
   # df <- dplyr::anti_join(df_standard, df_test)
 
