@@ -1,5 +1,8 @@
+# SwimmeR 0.11.6 - August 11th 2021
+* ISL season 2 bug fixes
+
 # SwimmeR 0.11.5 - August 5th 2021
-* Reaction times for Hytek results in indivdual events
+* Reaction times for Hytek results in individual events
 
 # SwimmeR 0.11.4 - August 3rd 2021
 * Heat handling for Tokyo Olympics phase reports

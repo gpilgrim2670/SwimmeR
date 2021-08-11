@@ -33,7 +33,7 @@ event_parse_ISL <- function(text){
   .[purrr::map_lgl( # new 10/16
     .,
     stringr::str_detect,
-    "Event \\d{1,}|Women .* Yard|Women .* Meter|Women.*\\d{2,4}\\s*[:alpha:]+|Girls .* Yard|Girls .* Meter|Girl.*\\d{2,4}\\s*[:alpha:]+|Men .* Yard|Men .* Meter|Men.*\\d{2,4}\\s*[:alpha:]+|Boys .* Yard|Boys .* Meter|Boy.*\\d{2,4}\\s*[:alpha:]+|Mixed .* Yard|Mixed .* Meter|Mixed.*\\d{2,4}\\s*[:alpha:]+"
+    "Event \\d{1,}|Women .* Yard|Women .* Meter|Women.*\\d{2,4}\\s*[:alpha:]+|Girls .* Yard|Girls .* Meter|Girl.*\\d{2,4}\\s*[:alpha:]+|Men .* Yard|Men .* Meter|Men.*\\d{2,4}\\s*[:alpha:]+|Boys .* Yard|Boys .* Meter|Boy.*\\d{2,4}\\s*[:alpha:]+|Mixed .* Yard|Mixed .* Meter|Mixed.*\\d{2,4}\\s*[:alpha:]+|Results Summary"
   )]
   events <- events %>%
     .[purrr::map_lgl(., stringr::str_detect, "[[:alpha:]]")] %>%

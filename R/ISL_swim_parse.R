@@ -47,6 +47,9 @@ swim_parse_ISL <-
 
     #### testing ####
     # file <- "https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_2_2020/ISL_01112020_Budapest_Match_6.pdf"
+    # file <- "https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_2_2020/ISL_18102020_Budapest_Match_2.pdf"
+    # file <- "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/ISL/Season_2_2020/ISL_05112020_Budapest_Match_8.pdf"
+    # file <- "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/ISL/Season_2_2020/ISL_24102020_Budapest_Match_3.pdf"
     # file <- read_results(file)
     # splits = TRUE
     # relay_swimmers = TRUE
@@ -74,7 +77,7 @@ swim_parse_ISL <-
       data_1 <- as_lines_list_2 %>%
         stringr::str_replace_all("\\*(\\d{1,})", replacement = "\\1") %>%  # removes * placed in front of place number in ties
         .[purrr::map(., length) > 0] %>%
-        .[purrr::map_lgl(., stringr::str_detect, "\\d\\d\\.\\d\\d|DSQ")] %>% # must have \\.\\d\\d because all swimming and diving times do
+        .[purrr::map_lgl(., stringr::str_detect, "\\d\\d\\.\\d\\d|DSQ|[:upper:]{2,}\\s[:upper:][:lower:]")] %>% # must have \\.\\d\\d because all swimming and diving times do
         .[purrr::map_lgl(., stringr::str_detect, "Reaction Time", negate = TRUE)] %>% # removes header row
         .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]{2,}")] %>% # must have at least two letters in a row
         stringr::str_remove_all("\n") %>%
@@ -84,7 +87,17 @@ swim_parse_ISL <-
         stringr::str_replace_all("\\s+Q\\s+", "   ") %>% # removes Q used to denote qualifying for skins rounds
         stringr::str_remove_all("\\=") %>% # removes the = used to denote ties
         stringr::str_remove_all("\\(\\d\\)") %>% # removes the split placing
-        stringr::str_replace_all("MUNOZ del CAMPO Lidon AQC", "MUNOZ del CAMPO Lidon   AQC") %>% # season 2 match 5 issue, would prefer general solution
+        # stringr::str_replace_all("MUNOZ del CAMPO Lidon AQC", "MUNOZ del CAMPO Lidon   AQC") %>% # season 2 match 5 issue, would prefer general solution
+        stringr::str_replace_all("(?<=[:lower:]\\s)AQC", "   AQC") %>%
+        stringr::str_replace_all("(?<=[:lower:]\\s)CAC", "   CAC") %>%
+        stringr::str_replace_all("(?<=[:lower:]\\s)ENS", "   ENS") %>%
+        stringr::str_replace_all("(?<=[:lower:]\\s)DCT", "   DCT") %>%
+        stringr::str_replace_all("(?<=[:lower:]\\s)LON", "   LON") %>%
+        stringr::str_replace_all("(?<=[:lower:]\\s)LAC", "   LAC") %>%
+        stringr::str_replace_all("(?<=[:lower:]\\s)TOK", "   TOK") %>%
+        stringr::str_replace_all("(?<=[:lower:]\\s)IRO", "   IRO") %>%
+        stringr::str_replace_all("(?<=[:lower:]\\s)NYB", "   NYB") %>%
+        stringr::str_replace_all("(?<=[:lower:]\\s)TOR", "   TOR") %>%
         trimws()
     )
 
@@ -113,20 +126,26 @@ swim_parse_ISL <-
     map(stringr::str_remove_all, "^\\+?1?\\d{1}\\.\\d{2}$") %>%  # replaces time behind times with empty strings ("")
       map(function(z){ z[!is.na(z) & z != ""]})) # removes empty strings from list# relays
     suppressWarnings(data_ind_swimmer <-
-                       data_ind_swimmer[stringr::str_detect(data_ind_swimmer, "DSQ", negate = TRUE)]) # removes DQs
+                       data_ind_swimmer[stringr::str_detect(data_ind_swimmer, "(DSQ)|(DNS)", negate = TRUE)]) # removes DQs
 
     #### relay list ####
     suppressWarnings(data_relay <-
                        data_entry[stringr::str_detect(data_entry, "[:upper:]{3}\\s-\\s[:upper:]{1,2}", negate = FALSE)] %>%
       map(stringr::str_remove_all, "^\\d{1,2}\\.\\d{2}$") %>%  # replaces time behind times with empty strings ("")
       map(function(z){ z[!is.na(z) & z != ""]})) # removes empty strings from list# relays
-    suppressWarnings(
-    data_relay <- data_relay[stringr::str_detect(data_relay, "DSQ", negate = TRUE)]) # removes DQs
+    suppressWarnings(data_relay_NoDQ <-
+                       data_relay[stringr::str_detect(data_relay, "DSQ", negate = TRUE)]) # removes DQs
+    suppressWarnings(data_relay_DQ <-
+                       data_relay[stringr::str_detect(data_relay, "DSQ")]) # collects DQs
+    data_relay_DQ <- data_relay_DQ %>%
+      map(~ c("10000", .x))
+
+    data_relay <- append(data_relay_NoDQ, data_relay_DQ)
 
 
     #### DQ swimmer list ####
     suppressWarnings(data_DSQ <-
-                       data_1[stringr::str_detect(data_1, "DSQ") == TRUE]) # pull out DQ swimmers, called DSQ by ISL
+                       data_1[stringr::str_detect(data_1, "(DSQ)|(DNS)") == TRUE]) # pull out DQ swimmers, called DSQ by ISL
 
     #### individual swimmers df ####
     if (length(data_ind_swimmer) > 0) {
@@ -222,7 +241,7 @@ swim_parse_ISL <-
 
       suppressWarnings(
       df_relay_swimmer <- df_relay_swimmer %>%
-        lines_sort(min_row = min(df_relay_swimmer$V1)) %>%
+        lines_sort(min_row = min(as.numeric(df_relay_swimmer$V1))) %>%
         dplyr::mutate(Row_Numb = as.numeric(Row_Numb) - 1) %>%
         dplyr::mutate(Row_Numb = as.character(Row_Numb)) %>%
         dplyr::rename("Relay_Swimmer_1" = V2,
@@ -261,29 +280,29 @@ swim_parse_ISL <-
       )
     }
 
-    if (length(data_DSQ_5) > 0) {
-      df_DSQ_5 <- data_DSQ_5 %>%
-        list_transform() %>%
-        dplyr::rename("Lane" = V1,
-                      "Row_Numb" = V5) %>%
-        dplyr::mutate(Name = dplyr::case_when(stringr::str_detect(V4, "DSQ") == TRUE ~ V2)) %>%
-        dplyr::mutate(Team = dplyr::case_when(stringr::str_detect(V3, "DSQ") == TRUE ~ V2,
-                                              TRUE ~ V3)) %>%
-        dplyr::mutate(
-          Time = dplyr::case_when(
-            stringr::str_detect(V3, "DSQ") == TRUE ~ V3,
-            stringr::str_detect(V4, "DSQ") == TRUE ~ V4
-          )
-        ) %>%
-        dplyr::mutate(Points = dplyr::case_when(stringr::str_detect(V3, "DSQ") == TRUE ~ V4,
-                                                TRUE ~ "NA")) %>%
-        dplyr::na_if("NA") %>%
-        dplyr::select(Lane, Name, Team, Time, Row_Numb)
-
-    } else {
-      df_DSQ_5 <- data.frame(Row_Numb = character(),
-                             stringsAsFactors = FALSE)
-    }
+    # if (length(data_DSQ_5) > 0) {
+    #   df_DSQ_5 <- data_DSQ_5 %>%
+    #     list_transform() %>%
+    #     dplyr::rename("Lane" = V1,
+    #                   "Row_Numb" = V5) %>%
+    #     dplyr::mutate(Name = dplyr::case_when(stringr::str_detect(V4, "DSQ") == TRUE ~ V2)) %>%
+    #     dplyr::mutate(Team = dplyr::case_when(stringr::str_detect(V3, "DSQ") == TRUE ~ V2,
+    #                                           TRUE ~ V3)) %>%
+    #     dplyr::mutate(
+    #       Time = dplyr::case_when(
+    #         stringr::str_detect(V3, "DSQ") == TRUE ~ V3,
+    #         stringr::str_detect(V4, "DSQ") == TRUE ~ V4
+    #       )
+    #     ) %>%
+    #     dplyr::mutate(Points = dplyr::case_when(stringr::str_detect(V3, "DSQ") == TRUE ~ V4,
+    #                                             TRUE ~ "NA")) %>%
+    #     dplyr::na_if("NA") %>%
+    #     dplyr::select(Lane, Name, Team, Time, Row_Numb)
+    #
+    # } else {
+    #   df_DSQ_5 <- data.frame(Row_Numb = character(),
+    #                          stringsAsFactors = FALSE)
+    # }
 
     if (length(data_DSQ_6) > 0) {
         df_DSQ_6 <- data_DSQ_6 %>%
@@ -304,17 +323,18 @@ swim_parse_ISL <-
       )
     }
 
-    #### Join up relay and relay swimmers dataframes ####
+    #### Join up relay and relay swimmers data frames ####
     df_relay <- dplyr::left_join(df_relay, df_relay_swimmer)
 
-    #### Rejoin dataframes from each number of variables ####
+    #### Rejoin data frames from each number of variables ####
     suppressWarnings(
       data <- dplyr::bind_rows(df_ind_swimmer, df_relay) %>%
         dplyr::bind_rows(df_DSQ_4) %>%
-        dplyr::bind_rows(df_DSQ_5) %>%
+        # dplyr::bind_rows(df_DSQ_5) %>%
         dplyr::bind_rows(df_DSQ_6) %>%
         dplyr::mutate(Row_Numb = as.numeric(Row_Numb)) %>%
         dplyr::arrange(Row_Numb) %>%
+        dplyr::na_if("10000") %>%
         dplyr::mutate(
           Place = as.numeric(Place),
           Place = dplyr::case_when(
@@ -332,6 +352,9 @@ swim_parse_ISL <-
     data  <-
       transform(data, Event = events$Event[findInterval(Row_Numb, events$Event_Row_Min)])
 
+    data <- data %>%
+      filter(Event != "Results Summary")
+
     #### cleaning up final results ####
     suppressWarnings(
       data <- data %>%
@@ -340,6 +363,7 @@ swim_parse_ISL <-
                                                 Points != "-" ~ Points)) %>%
         ### deal with DQs ###
         dplyr::mutate(DQ = case_when(Time == "DSQ" ~ 1,
+                                     Time == "DNS" ~ 1,
                                      TRUE ~ 0)) %>%
         dplyr::na_if("DSQ") %>%
         ### clean up relay names ###
@@ -358,6 +382,8 @@ swim_parse_ISL <-
     if(relay_swimmers == TRUE){
     data <- data %>%
       dplyr::select(Row_Numb, Place, Lane, Name, Team, Time, Event, Points, DQ, Relay_Swimmer_1, Relay_Swimmer_2, Relay_Swimmer_3, Relay_Swimmer_4)
+    # data <- data %>%
+    #   filter(is.na(Relay_Swimmer_1) & str_detect(Event, "\\dx\\d"))
     } else {
       data <- data %>%
         dplyr::select(Row_Numb, Place, Lane, Name, Team, Time, Event, Points, DQ)
