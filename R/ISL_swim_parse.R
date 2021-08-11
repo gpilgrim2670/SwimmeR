@@ -50,6 +50,7 @@ swim_parse_ISL <-
     # file <- "https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_2_2020/ISL_18102020_Budapest_Match_2.pdf"
     # file <- "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/ISL/Season_2_2020/ISL_05112020_Budapest_Match_8.pdf"
     # file <- "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/ISL/Season_2_2020/ISL_24102020_Budapest_Match_3.pdf"
+    # file <- "https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_1_2019/ISL_16112019_CollegePark_Day_1.pdf"
     # file <- read_results(file)
     # splits = TRUE
     # relay_swimmers = TRUE
@@ -262,47 +263,47 @@ swim_parse_ISL <-
     data_DSQ_5 <- data_DSQ[purrr::map(data_DSQ, length) == 5]
     data_DSQ_6 <- data_DSQ[purrr::map(data_DSQ, length) == 6]
 
-    if (length(data_DSQ_4) > 0) {
-        df_DSQ_4 <- data_DSQ_4 %>%
-          list_transform() %>%
-            dplyr::mutate(Points = NA) %>%
-            dplyr::rename(
-              "Lane" = V1,
-              "Team" = V2,
-              "Time" = V3,
-              "Row_Numb" = V4
-            )
-
-    } else {
-      df_DSQ_4 <- data.frame(
-        Row_Numb = character(),
-        stringsAsFactors = FALSE
-      )
-    }
-
-    # if (length(data_DSQ_5) > 0) {
-    #   df_DSQ_5 <- data_DSQ_5 %>%
-    #     list_transform() %>%
-    #     dplyr::rename("Lane" = V1,
-    #                   "Row_Numb" = V5) %>%
-    #     dplyr::mutate(Name = dplyr::case_when(stringr::str_detect(V4, "DSQ") == TRUE ~ V2)) %>%
-    #     dplyr::mutate(Team = dplyr::case_when(stringr::str_detect(V3, "DSQ") == TRUE ~ V2,
-    #                                           TRUE ~ V3)) %>%
-    #     dplyr::mutate(
-    #       Time = dplyr::case_when(
-    #         stringr::str_detect(V3, "DSQ") == TRUE ~ V3,
-    #         stringr::str_detect(V4, "DSQ") == TRUE ~ V4
-    #       )
-    #     ) %>%
-    #     dplyr::mutate(Points = dplyr::case_when(stringr::str_detect(V3, "DSQ") == TRUE ~ V4,
-    #                                             TRUE ~ "NA")) %>%
-    #     dplyr::na_if("NA") %>%
-    #     dplyr::select(Lane, Name, Team, Time, Row_Numb)
+    # if (length(data_DSQ_4) > 0) {
+    #     df_DSQ_4 <- data_DSQ_4 %>%
+    #       list_transform() %>%
+    #         dplyr::mutate(Points = NA) %>%
+    #         dplyr::rename(
+    #           "Lane" = V1,
+    #           "Team" = V2,
+    #           "Time" = V3,
+    #           "Row_Numb" = V4
+    #         )
     #
     # } else {
-    #   df_DSQ_5 <- data.frame(Row_Numb = character(),
-    #                          stringsAsFactors = FALSE)
+    #   df_DSQ_4 <- data.frame(
+    #     Row_Numb = character(),
+    #     stringsAsFactors = FALSE
+    #   )
     # }
+
+    if (length(data_DSQ_5) > 0) {
+      df_DSQ_5 <- data_DSQ_5 %>%
+        list_transform() %>%
+        dplyr::rename("Lane" = V1,
+                      "Row_Numb" = V5) %>%
+        dplyr::mutate(Name = dplyr::case_when(stringr::str_detect(V4, "DSQ") == TRUE ~ V2)) %>%
+        dplyr::mutate(Team = dplyr::case_when(stringr::str_detect(V3, "DSQ") == TRUE ~ V2,
+                                              TRUE ~ V3)) %>%
+        dplyr::mutate(
+          Time = dplyr::case_when(
+            stringr::str_detect(V3, "DSQ") == TRUE ~ V3,
+            stringr::str_detect(V4, "DSQ") == TRUE ~ V4
+          )
+        ) %>%
+        dplyr::mutate(Points = dplyr::case_when(stringr::str_detect(V3, "DSQ") == TRUE ~ V4,
+                                                TRUE ~ "NA")) %>%
+        dplyr::na_if("NA") %>%
+        dplyr::select(Lane, Name, Team, Time, Row_Numb)
+
+    } else {
+      df_DSQ_5 <- data.frame(Row_Numb = character(),
+                             stringsAsFactors = FALSE)
+    }
 
     if (length(data_DSQ_6) > 0) {
         df_DSQ_6 <- data_DSQ_6 %>%
@@ -329,12 +330,13 @@ swim_parse_ISL <-
     #### Rejoin data frames from each number of variables ####
     suppressWarnings(
       data <- dplyr::bind_rows(df_ind_swimmer, df_relay) %>%
-        dplyr::bind_rows(df_DSQ_4) %>%
-        # dplyr::bind_rows(df_DSQ_5) %>%
+        # dplyr::bind_rows(df_DSQ_4) %>%
+        dplyr::bind_rows(df_DSQ_5) %>%
         dplyr::bind_rows(df_DSQ_6) %>%
         dplyr::mutate(Row_Numb = as.numeric(Row_Numb)) %>%
         dplyr::arrange(Row_Numb) %>%
         dplyr::na_if("10000") %>%
+        unique() %>%
         dplyr::mutate(
           Place = as.numeric(Place),
           Place = dplyr::case_when(
@@ -383,7 +385,7 @@ swim_parse_ISL <-
     data <- data %>%
       dplyr::select(Row_Numb, Place, Lane, Name, Team, Time, Event, Points, DQ, Relay_Swimmer_1, Relay_Swimmer_2, Relay_Swimmer_3, Relay_Swimmer_4)
     # data <- data %>%
-    #   filter(is.na(Relay_Swimmer_1) & str_detect(Event, "\\dx\\d"))
+    #   filter(is.na(Relay_Swimmer_1) & str_detect(Event, "\\d\\s?x\\s?\\d"))
     } else {
       data <- data %>%
         dplyr::select(Row_Numb, Place, Lane, Name, Team, Time, Event, Points, DQ)

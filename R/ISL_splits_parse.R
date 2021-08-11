@@ -25,6 +25,12 @@
 
 splits_parse_ISL <- function(text) {
 
+  ### testing ###
+  # file <- "https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_1_2019/ISL_16112019_CollegePark_Day_1.pdf"
+  # file <- read_results(file)
+  # text <- add_row_numbers(text = file)
+
+
   ### define strings ###
   split_string <- "\\s\\d\\d\\.\\d\\d\\s"
 
@@ -112,12 +118,12 @@ splits_parse_ISL <- function(text) {
     .[purrr::map_lgl(.,
                      stringr::str_detect,
                      split_string)] %>%
-    .[purrr::map_lgl(., # remove rows with letters, which should take care of removing normal (non-split) times
+    .[purrr::map_lgl(., # include rows with letters, which should take care of removing normal (non-split) times
                      stringr::str_detect,
                      "[:alpha:]")] %>%
     .[purrr::map_lgl(., # remove rows with letters, which should take care of removing normal (non-split) times
                      stringr::str_detect,
-                     "^\n\\s*\\d", negate = TRUE)] %>%
+                     "^\n\\s*\\=?\\d", negate = TRUE)] %>%
     stringr::str_extract_all("\\d{1,}$")
 
   #### pull out rows containing splits, which will also remove row numbers ####
@@ -131,14 +137,16 @@ splits_parse_ISL <- function(text) {
                        "[:alpha:]")] %>%
       .[purrr::map_lgl(., # remove rows that start with a place because relay swimmer rows don't
                        stringr::str_detect,
-                       "^\n\\s+\\d", negate = TRUE)] %>%
+                       "^\n\\s*\\=?\\d", negate = TRUE)] %>%
       stringr::str_remove_all("\n") %>%
       stringr::str_remove_all("(?<=\\)) [\\d|\\.\\:]+") %>%
       stringr::str_extract_all("\\d?\\:?\\d\\d\\.\\d\\d") %>%
+
       stringr::str_remove_all('\\"') %>%
       stringr::str_replace_all("\\(", " ") %>%
       stringr::str_replace_all("\\)", " ") %>%
       stringr::str_remove_all("c") %>%
+      stringr::str_replace_all("harater 0 ", "00.00, 00.00") %>%
       stringr::str_remove_all(',') %>%
       stringr::str_replace_all(" ", "  ") %>%
       .[purrr::map_lgl(., # remove rows with letters, which should take care of removing normal (non-split) times
@@ -184,6 +192,9 @@ splits_parse_ISL <- function(text) {
   } else { # if there are no rows with valid splits return blank dataframe
     data_splits <- data.frame(Row_Numb = as.numeric())
   }
+
+  data_splits <- data_splits %>%
+    dplyr::na_if("00.00")
 
   return(data_splits)
 }
