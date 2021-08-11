@@ -22,6 +22,8 @@ collect_relay_swimmers_omega <- function(x){
   #   read_results() %>%
   #   add_row_numbers()
 
+  # x <- as_lines_list_2
+
   relay_swimmer_string <- "^\n\\s*[:alpha:]"
   record_string <- "\n\\s+WR\\s|\n\\s+OR\\s"
 
@@ -69,17 +71,43 @@ collect_relay_swimmers_omega <- function(x){
     relay_swimmers_data <- data_1_relay_swimmer[purrr::map(data_1_relay_swimmer, length) == 2] %>%
       list_transform()
 
+    if(length(relay_swimmers_data) < 1){
+      relay_swimmers_data <- data_1_relay_swimmer[purrr::map(data_1_relay_swimmer, length) == 3] %>%
+        list_transform()
+
+    }
+
+
     relay_swimmers_data <- relay_swimmers_data %>%
       lines_sort(min_row = min(as.numeric(relay_swimmers_data$V1) - 2)) %>%
-      dplyr::mutate(Row_Numb = as.numeric(Row_Numb)) %>%   # make row number of relay match row number of performance
-      dplyr::select(
-        "Relay_Swimmer_1" = V2,
-        "Relay_Swimmer_2" = V3,
-        "Relay_Swimmer_3" = V4,
-        "Relay_Swimmer_4" = V5,
-        Row_Numb
-      ) %>%
-      dplyr::na_if("NA")
+      dplyr::mutate(Row_Numb = as.numeric(Row_Numb))  # make row number of relay match row number of performance
+
+    if(length(relay_swimmers_data) == 5){
+      relay_swimmers_data <- relay_swimmers_data %>%
+        dplyr::select(
+          "Relay_Swimmer_1" = V2,
+          "Relay_Swimmer_2" = V3,
+          "Relay_Swimmer_3" = V4,
+          "Relay_Swimmer_4" = V5,
+          Row_Numb
+        ) %>%
+        dplyr::na_if("NA")
+
+    } else if(length(relay_swimmers_data) == 9) {
+      relay_swimmers_data <- relay_swimmers_data %>%
+        dplyr::select(
+          "Relay_Swimmer_1" = V2,
+          "Relay_Swimmer_1_Gender" = V3,
+          "Relay_Swimmer_2" = V4,
+          "Relay_Swimmer_2_Gender" = V5,
+          "Relay_Swimmer_3" = V6,
+          "Relay_Swimmer_3_Gender" = V7,
+          "Relay_Swimmer_4" = V8,
+          "Relay_Swimmer_5_Gender" = V9,
+          Row_Numb
+        ) %>%
+        dplyr::na_if("NA")
+    }
 
   } else {
     relay_swimmers_data <- data.frame(Row_Numb = as.numeric())

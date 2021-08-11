@@ -103,6 +103,10 @@ swim_parse_omega <-
     # file_omega <- read_results(system.file("extdata", "Omega_OT_400IM_Prelims_2021.pdf", package = "SwimmeR"))
     # file_omega <- read_results("https://olympics.com/tokyo-2020/olympic-games/resOG2020-/pdf/OG2020-/SWM/OG2020-_SWM_C73A2_SWMM400MIM------------HEAT--------.pdf")
     # file_omega <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Tokyo2020/OG2020-_SWM_C73A2_SWMM100MBF------------SFNL--------.pdf")
+    # file_omega <- read_results("https://olympics.com/tokyo-2020/olympic-games/resOG2020-/pdf/OG2020-/SWM/OG2020-_SWM_C73B1_SWMM4X200MFR----------FNL-000100--.pdf")
+    # file_omega <- read_results("https://olympics.com/tokyo-2020/olympic-games/resOG2020-/pdf/OG2020-/SWM/OG2020-_SWM_C73A1_SWMM100MFR------------FNL-000100--.pdf")
+    # file_omega <- read_results("https://olympics.com/tokyo-2020/olympic-games/resOG2020-/pdf/OG2020-/SWM/OG2020-_SWM_C73A1_SWMM200MFR------------FNL-000100--.pdf")
+    # file_omega <- read_results("https://olympics.com/tokyo-2020/olympic-games/resOG2020-/pdf/OG2020-/SWM/OG2020-_SWM_C73B1_SWMX4X100MMD----------FNL-000100--.pdf")
     # avoid_omega <- c("abcxyz")
     # typo_omega <- c("typo")
     # replacement_omega <- c("typo")
@@ -153,6 +157,7 @@ swim_parse_omega <-
         .[purrr::map_lgl(., stringr::str_detect, "r\\:\\+?\\-?\\s?\\d", negate = TRUE)] %>% # remove reaction times
         .[purrr::map_lgl(., stringr::str_detect, "^50m", negate = TRUE)] %>%  # remove British results that start with 50m for splits lines
         .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]{2,} Record", negate = TRUE)] %>%  # remove legend contents that will be included if their are DQs, DNS etc.
+        .[!dplyr::between(purrr::map_int(., stringr::str_count, "\\.|\\("), 5.1, 7.9)] %>%  # keeps relay swimmers + splits from 4x200 races from getting in
         # .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]\\:", negate = TRUE)] %>% # remove records
         # .[purrr::map_dbl(., stringr::str_count, "\\d\\)") < 2] %>%  # remove inline splits from older style hy-tek results circa 2005
         # .[purrr::map_lgl(., stringr::str_detect, " \\:\\d", negate = TRUE)] %>% # remove other inline splits from older style hy-tek results circa 2005

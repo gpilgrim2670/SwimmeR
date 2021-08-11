@@ -1,3 +1,6 @@
+# SwimmeR 0.11.7 - August 11th 2021
+* Tokyo bug fixes re: Mixed and 4x200 relays
+
 # SwimmeR 0.11.6 - August 11th 2021
 * ISL season 2 bug fixes
 
