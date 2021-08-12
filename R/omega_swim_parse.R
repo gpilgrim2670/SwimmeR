@@ -107,6 +107,9 @@ swim_parse_omega <-
     # file_omega <- read_results("https://olympics.com/tokyo-2020/olympic-games/resOG2020-/pdf/OG2020-/SWM/OG2020-_SWM_C73A1_SWMM100MFR------------FNL-000100--.pdf")
     # file_omega <- read_results("https://olympics.com/tokyo-2020/olympic-games/resOG2020-/pdf/OG2020-/SWM/OG2020-_SWM_C73A1_SWMM200MFR------------FNL-000100--.pdf")
     # file_omega <- read_results("https://olympics.com/tokyo-2020/olympic-games/resOG2020-/pdf/OG2020-/SWM/OG2020-_SWM_C73B1_SWMX4X100MMD----------FNL-000100--.pdf")
+    # file_omega <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Tokyo2020/SWMW4X200MFR_HEAT.pdf")
+    # file_omega <- read_results("https://olympics.com/tokyo-2020/olympic-games/resOG2020-/pdf/OG2020-/SWM/OG2020-_SWM_C73A1_SWMM400MIM------------FNL-000100--.pdf")
+    # file_omega <- read_results("https://olympics.com/tokyo-2020/olympic-games/resOG2020-/pdf/OG2020-/SWM/OG2020-_SWM_C73A1_SWMM100MFR------------FNL-000100--.pdf")
     # avoid_omega <- c("abcxyz")
     # typo_omega <- c("typo")
     # replacement_omega <- c("typo")
@@ -138,13 +141,9 @@ swim_parse_omega <-
       Time_Score_String <- "\\d{0,2}\\:?\\d{1,3}\\.\\d{2}"
       Time_Score_Specials_String <- paste0("^NT$|^NP$|^DQ$|^DSQ$|^D?NS$|^SCR$|^x?X?", Time_Score_String, "x?X?$")
       Time_Score_Specials_String_Extract <- paste0(Time_Score_String, "|^NT$|^NP$|^DQ$|^NS$|^SCR$")
-      # Age_String <- "^SR$|^JR$|^SO$|^FR$|^[:digit:]{1,3}$|^\\d{1,3}\\-\\d{2}$"
-      # Para_String <- "^SB?M?\\d{1,2}$"
+      Para_String <- "^SB?M?\\d{1,2}$"
       Reaction_String <- "^\\+\\s?\\d\\.\\d{3}$|^\\-\\s?\\d\\.\\d{3}$|^0\\.00$|^0\\.\\d\\d$"
-      # Brit_ID_String <- "\\d{6,7}"
-      # Year_String <- "19\\d\\d|20\\d\\d"
       Record_String <- "^\\=?WR$|^\\=?AR$|^\\=?US$|^\\=?CR$|^\\=?WJ$|^\\=?OT$|^\\=?OR$|^\\=?[:upper:]R$"
-      # Colon_String <- "\\:\\d\\d"
 
       #### clean input data ####
 
@@ -156,6 +155,7 @@ swim_parse_omega <-
         .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]{2,} Record", negate = TRUE)] %>%  # remove legend contents that will be included if their are DQs, DNS etc. Omega
         stringr::str_replace_all("([:alpha:])\\. ", "\\1 ") %>% # remove periods from athlete names Omega
         .[!dplyr::between(purrr::map_int(., stringr::str_count, "\\.|\\("), 5.1, 7.9)] %>%  # keeps relay swimmers + splits from 4x200 races from getting in Omega
+        .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]\\s+\\-\\d\\.\\d{2}\\s+\\d{1,}$", negate = TRUE)] %>%
         stringr::str_replace_all("( [:upper:]{2},\\s)*\\s?(?<![:upper:])[:upper:]{2}\\.?\\s(?=\\s{1,}\\d{1,}$)", "  ") %>% # remove record strings like OR, OC but miss DNS, DSQ etc.
         stringr::str_replace_all("\\s?[&%]\\s?", " ") %>% # added 8/21 for removing "&" and "%" as record designator
 
@@ -754,8 +754,8 @@ swim_parse_omega <-
           dplyr::bind_rows(df_7) %>%
           dplyr::bind_rows(df_6) %>%
           dplyr::bind_rows(df_5) %>%
-          dplyr::left_join(df_DQ_4) %>%
-          dplyr::left_join(df_DQ_3) %>%
+          dplyr::full_join(df_DQ_4) %>%
+          dplyr::full_join(df_DQ_3) %>%
           dplyr::mutate(Row_Numb = as.numeric(Row_Numb)) %>%
           dplyr::arrange(Row_Numb)
       )

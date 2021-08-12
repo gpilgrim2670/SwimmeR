@@ -26,6 +26,7 @@ collect_relay_swimmers_omega <- function(x){
 
   relay_swimmer_string <- "^\n\\s*[:alpha:]"
   record_string <- "\n\\s+WR\\s|\n\\s+OR\\s"
+  header_string <- "Record\\s+Split"
 
   row_numbs_relay_swimmer <- x %>%
     .[purrr::map_lgl(.,
@@ -34,12 +35,18 @@ collect_relay_swimmers_omega <- function(x){
     .[purrr::map_lgl(.,
                      stringr::str_detect,
                      "[:alpha:][A-Za-z\\s]*")] %>%
+    # .[purrr::map_lgl(.,
+    #                  stringr::str_detect,
+    #                  "\\d{2}\\.\\d{2}")] %>%
     .[purrr::map_lgl(.,
-                     stringr::str_detect,
-                     "\\d{2}\\.\\d{2}")] %>%
+                      stringr::str_detect,
+                      "[:upper:]\\s[:upper:]")] %>%
     .[!purrr::map_lgl(.,
                      stringr::str_detect,
                      record_string)] %>%
+    .[!purrr::map_lgl(.,
+                      stringr::str_detect,
+                      header_string)] %>%
     stringr::str_extract_all("\\d{1,}$")
 
   if (length(row_numbs_relay_swimmer) > 0) {
@@ -50,11 +57,15 @@ collect_relay_swimmers_omega <- function(x){
         .[purrr::map_lgl(.,
                          stringr::str_detect,
                          relay_swimmer_string)] %>%
+        # .[purrr::map_lgl(.,
+        #                  stringr::str_detect,
+        #                  "\\d{2}\\.\\d{2}")] %>%
         .[purrr::map_lgl(.,
                          stringr::str_detect,
-                         "\\d{2}\\.\\d{2}")] %>%
+                         "[:upper:]\\s[:upper:]")] %>%
         stringr::str_remove_all("\n") %>%
-        stringr::str_extract_all("[:alpha:][A-Za-z\\s]*") %>%
+        stringr::str_extract_all("[:alpha:][A-Za-z\\s([:alpha:]\\-[:alpha:])([:alpha:]\\'[:alpha:])]*") %>%
+        stringr::str_remove_all("\\s{2,}\\-") %>%
         .[lengths(.) == 1] %>%
         .[purrr::map_lgl(.,
                          stringr::str_detect,
