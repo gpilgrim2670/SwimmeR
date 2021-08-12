@@ -4,6 +4,7 @@
 #' @importFrom dplyr rename
 #' @importFrom dplyr select
 #' @importFrom dplyr na_if
+#' @importFrom dplyr filter
 #' @importFrom stringr str_extract_all
 #' @importFrom stringr str_split
 #' @importFrom stringr str_detect
@@ -25,8 +26,8 @@ collect_relay_swimmers_omega <- function(x){
   # x <- as_lines_list_2
 
   relay_swimmer_string <- "^\n\\s*[:alpha:]"
-  record_string <- "\n\\s+WR\\s|\n\\s+OR\\s"
-  header_string <- "Record\\s+Split"
+  record_string <- "\n\\s+[:upper:]R\\s|\n\\s+US\\s|[:upper:][:alpha:]+ Record"
+  header_string <- "Record\\s+Split|Record\\s+Name|Reaction\\sTime"
 
   row_numbs_relay_swimmer <- x %>%
     .[purrr::map_lgl(.,
@@ -47,6 +48,9 @@ collect_relay_swimmers_omega <- function(x){
     .[!purrr::map_lgl(.,
                       stringr::str_detect,
                       header_string)] %>%
+    .[!purrr::map_lgl(.,
+                      stringr::str_detect,
+                      record_string)] %>%
     stringr::str_extract_all("\\d{1,}$")
 
   if (length(row_numbs_relay_swimmer) > 0) {
@@ -121,6 +125,19 @@ collect_relay_swimmers_omega <- function(x){
     }
 
   } else {
+    relay_swimmers_data <- data.frame(Row_Numb = as.numeric())
+  }
+
+  #### clean up ####
+
+  if("V2" %in% names(relay_swimmers_data)){
+  relay_swimmers_data <- relay_swimmers_data %>%
+    dplyr::filter(stringr::str_detect(V2, " DSQ ") == FALSE) %>%
+    dplyr::filter(stringr::str_detect(V2, " RECORD$") == FALSE) %>%
+    dplyr::filter(stringr::str_detect(V2, " US Open Records ") == FALSE)
+  }
+
+  if(nrow(relay_swimmers_data) < 1){
     relay_swimmers_data <- data.frame(Row_Numb = as.numeric())
   }
 

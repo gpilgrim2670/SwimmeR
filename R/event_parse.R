@@ -25,18 +25,22 @@
 event_parse <- function(text) {
   # text <- as_lines_list_2
 
+  omega_headers_string <- "Records Set"
+
   olympics_string <- "Men.* 4?\\s?x?\\s?\\d{1,}m.*|Women.* 4?\\s?x?\\s?\\d{1,}m.*|Mixed.* 4?\\s?x?\\s?\\d{1,}m.*"
 
   event_string <-
     "Event\\:?\\s?#?\\s+\\d{1,}|EVENT\\:?\\s?#?\\s+\\d{1,}|Women.* Yard|Women.* Meter|Women.* Metre|Girls.* Yard|Girls.* Meter|Girls.* Metre|Men.* Yard|Men.* Meter|Men.* Metre|Boys.* Yard|Boys.* Meter|Boys.* Metre|Mixed.* Yard|Mixed.* Meter|Mixed.* Metre"
 
-  event_string <- paste(event_string, olympics_string, sep = "|")
+  event_string <- paste(event_string, olympics_string, omega_headers_string, sep = "|")
 
   events <- text %>%
     .[purrr::map_lgl(.,
                      stringr::str_detect,
                      event_string)] %>% # new 12/15 for older NCAA results
-    .[purrr::map_lgl(., ~ !any(stringr::str_detect(., "\\.\\.\\.")))] # removes subheaders like in OT results "Semi-Finals ... (women...)" etc.
+    .[purrr::map_lgl(., ~ !any(stringr::str_detect(., "\\.\\.\\.")))] %>%  # removes subheaders like in OT results "Semi-Finals ... (women...)" etc.
+    .[purrr::map_lgl(., stringr::str_detect, "\\d{2}\\.\\d{2}", negate = TRUE)] %>%
+    .[purrr::map_lgl(., stringr::str_detect, "\\d{2} [:upper:]{3} \\d{4} GOLD", negate = TRUE)]
 
   if (length(events) > 0) {
     #if event names are recognized clean them up and determine row ranges

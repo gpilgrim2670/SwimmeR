@@ -4,7 +4,8 @@ test_that("Men 400 IM prelims", {
 
   df_test <- file %>%
     read_results() %>%
-    swim_parse(splits = TRUE) %>%
+    swim_parse(splits = TRUE,
+               relay_swimmers = TRUE) %>%
     head(2)
 
   df_standard <- data.frame(
@@ -33,17 +34,103 @@ test_that("Men 400 IM prelims", {
 
 })
 
+test_that("Women 200 fly prelims, need to not remove swimmers for decimal counting", {
+  file <-
+    "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Omega/Omega_OT_Wave1_W200Fl_Heats_2021.pdf"
+
+  df_test <- file %>%
+    read_results() %>%
+    swim_parse(splits = TRUE,
+               relay_swimmers = TRUE) %>%
+    head(3)
+
+  df_standard <-
+    structure(
+      list(
+        Place = c("1", "2", "3"),
+        Heat = c("4", "2", "4"),
+        Lane = c("6", "5", "7"),
+        Name = c("MASSEY Alex", "STICKLEN Emma",
+                 "CULLEN Casey"),
+        Team = c("NAC", "KATY", "PWAC"),
+        Reaction_Time = c("0.73",
+                          "0.72", "0.71"),
+        Finals_Time = c("2:13.01", "2:13.20", "2:13.76"),
+        DQ = c("0", "0", "0"),
+        Exhibition = c("0", "0", "0"),
+        Event = c(
+          "AM Women's 200m Butterfly Heats",
+          "AM Women's 200m Butterfly Heats",
+          "AM Women's 200m Butterfly Heats"
+        ),
+        Split_50 = c("29.83", "29.46", "30.67"),
+        Split_100 = c("33.41",
+                      "33.20", "33.96"),
+        Split_150 = c("33.99", "34.93", "34.27"),
+        Split_200 = c("35.78", "35.61", "34.86")
+      ),
+      row.names = c(NA,
+                    3L),
+      class = "data.frame"
+    )
+
+  expect_equivalent(df_standard,
+                    df_test)
+
+})
+
+test_that("US OT 2021 Wave I Men 100 Free Heats", {
+  file <-
+    "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Omega/Omega_OT_Wave1_M100Fr_Heats_2021.pdf"
+
+  df_test <- file %>%
+    read_results() %>%
+    swim_parse(splits = TRUE,
+               relay_swimmers = TRUE) %>%
+    head(2)
+
+  df_standard <-
+    structure(
+      list(
+        Place = c("1", "2"),
+        Heat = c("3", "4"),
+        Lane = c("5",
+                 "3"),
+        Name = c("BENSON Andrew", "MILLER Luke"),
+        Team = c("WA",
+                 "EA"),
+        Reaction_Time = c("0.62", "0.62"),
+        Finals_Time = c("50.10",
+                        "50.13"),
+        DQ = c("0", "0"),
+        Exhibition = c("0", "0"),
+        Event = c("AM Men's 100m Freestyle Heats",
+                  "AM Men's 100m Freestyle Heats"),
+        Split_50 = c("23.58", "24.22"),
+        Split_100 = c("26.52", "25.91")
+      ),
+      row.names = 1:2,
+      class = "data.frame"
+    )
+
+  expect_equivalent(df_standard,
+                    df_test)
+
+})
+
 test_that("Women 400m finals", {
   file <-
     system.file("extdata", "Omega_OT_400m_Finals_2021.pdf", package = "SwimmeR")
 
   df_test <- file %>%
     read_results() %>%
-    swim_parse(splits = TRUE) %>%
+    swim_parse(splits = TRUE,
+               relay_swimmers = TRUE) %>%
     head(2)
 
   df_standard <- data.frame(
     Place = c("1", "2"),
+    Heat = rep("Final", 2),
     Lane = c("4", "5"),
     Name = c("LEDECKY Katie", "MADDEN Paige"),
     Team = c("NCAP", "UVA"),
@@ -77,6 +164,7 @@ test_that("100 br swim off no heat", {
 
   df_standard <- data.frame(
     Place = c("1", "2"),
+    Heat = rep("Heats", 2),
     Lane = c("4", "5"),
     Name = c("TYBUR Jonathan", "MASON Mitch"),
     Team = c("GSC-FL", "LSU"),
@@ -106,6 +194,7 @@ test_that("wave 1 200 fly", {
 
   df_standard <- data.frame(
     Place = c("1", "2"),
+    Heat = rep("Final", 2),
     Lane = c("4", "2"),
     Name = c("SUN Eleanor", "THOMAS Luciana"),
     Team = c("NCAP", "IA"),
@@ -172,6 +261,7 @@ test_that("Tokyo 2020 Men 400IM Heat 1", {
     structure(
       list(
         Place = c("1", "2", "3", "4", "4", "6", "7", "8"),
+        Heat = rep("Final", 8),
         Lane = c("3", "7", "4", "6", "8", "1", "5", "2"),
         Name = c(
           "KALISZ Chase",
@@ -475,53 +565,53 @@ test_that("Tokyo 2020 Women 100 Breast Heats, with DNS", {
           "8"
         ),
         Heat = c(
-          "1",
-          "1",
-          "1",
-          "1",
-          "1",
-          "1",
-          "1",
-          "2",
-          "2",
-          "2",
-          "2",
-          "2",
-          "2",
-          "2",
-          "2",
-          "3",
-          "3",
-          "3",
-          "3",
-          "3",
-          "3",
-          "3",
-          "3",
-          "4",
-          "4",
-          "4",
-          "4",
-          "4",
-          "4",
-          "4",
-          "4",
-          "5",
-          "5",
-          "5",
-          "5",
-          "5",
-          "5",
-          "5",
-          "5",
-          "6",
-          "6",
-          "6",
-          "6",
-          "6",
-          "6",
-          "6",
-          "6"
+          "Heat_1",
+          "Heat_1",
+          "Heat_1",
+          "Heat_1",
+          "Heat_1",
+          "Heat_1",
+          "Heat_1",
+          "Heat_2",
+          "Heat_2",
+          "Heat_2",
+          "Heat_2",
+          "Heat_2",
+          "Heat_2",
+          "Heat_2",
+          "Heat_2",
+          "Heat_3",
+          "Heat_3",
+          "Heat_3",
+          "Heat_3",
+          "Heat_3",
+          "Heat_3",
+          "Heat_3",
+          "Heat_3",
+          "Heat_4",
+          "Heat_4",
+          "Heat_4",
+          "Heat_4",
+          "Heat_4",
+          "Heat_4",
+          "Heat_4",
+          "Heat_4",
+          "Heat_5",
+          "Heat_5",
+          "Heat_5",
+          "Heat_5",
+          "Heat_5",
+          "Heat_5",
+          "Heat_5",
+          "Heat_5",
+          "Heat_6",
+          "Heat_6",
+          "Heat_6",
+          "Heat_6",
+          "Heat_6",
+          "Heat_6",
+          "Heat_6",
+          "Heat_6"
         ),
         Lane = c(
           "3",
@@ -1279,6 +1369,7 @@ test_that("Tokyo 2020 Women 400MR Finals, with record issues", {
     structure(
       list(
         Place = c("1", "2", "3", "4", "5", "6", "7", "8"),
+        Heat = rep("Final", 8),
         Lane = c("3", "5", "4", "8", "2", "6", "1", "7"),
         Team = c(
           "AUS - Australia",
@@ -1458,6 +1549,7 @@ test_that("Tokyo 2020 Mixed 4x100MR Finals, relay swimmer gender", {
     structure(
       list(
         Place = c("1", "2", "3", "4", "5", "6", "7", "8"),
+        Heat = rep("Final", 8),
         Lane = c("4", "3", "6", "2", "5", "7", "1", "8"),
         Team = c(
           "GBR - Great Britain",
@@ -1646,6 +1738,7 @@ test_that("Tokyo 2020 Men 200FR Finals, need to capture swims", {
     structure(
       list(
         Place = c("1", "2", "3", "4", "5", "6", "7", "8"),
+        Heat = rep("Final", 8),
         Lane = c("6", "4", "8", "1", "2", "5", "7", "3"),
         Name = c(
           "DEAN Tom",
@@ -1749,6 +1842,7 @@ test_that("Tokyo 2020 Men 4x200FR Finals, need to not capture splits as swims",
               structure(
                 list(
                   Place = c("1", "2", "3", "4", "5", "6", "7", "8"),
+                  Heat = rep("Final", 8),
                   Lane = c("4", "6", "5", "2", "3", "7", "1", "8"),
                   Team = c(
                     "GBR - Great Britain",
@@ -2027,22 +2121,22 @@ test_that("Tokyo 2020 Women 4x200FR Heats, relay swimmers with punctuation in na
                     "2"
                   ),
                   Heat = c(
-                    "1",
-                    "1",
-                    "1",
-                    "1",
-                    "1",
-                    "1",
-                    "1",
-                    "1",
-                    "2",
-                    "2",
-                    "2",
-                    "2",
-                    "2",
-                    "2",
-                    "2",
-                    "2"
+                    "Heat_1",
+                    "Heat_1",
+                    "Heat_1",
+                    "Heat_1",
+                    "Heat_1",
+                    "Heat_1",
+                    "Heat_1",
+                    "Heat_1",
+                    "Heat_2",
+                    "Heat_2",
+                    "Heat_2",
+                    "Heat_2",
+                    "Heat_2",
+                    "Heat_2",
+                    "Heat_2",
+                    "Heat_2"
                   ),
                   Lane = c(
                     "4",
@@ -2522,5 +2616,82 @@ test_that("Tokyo 2020 Women 4x200FR Heats, relay swimmers with punctuation in na
                               df_test)
 
           })
+
+test_that("Tokyo Men 50 Free Final, need to not pull out relay swimmers",
+          {
+            skip_on_cran()
+
+            file <-
+              "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Tokyo2020/SWMM50MFR_FNL.pdf"
+
+            df_test <- file %>%
+              read_results() %>%
+              swim_parse(splits = TRUE,
+                         relay_swimmers = TRUE)
+
+            df_standard <-
+              structure(
+                list(
+                  Place = c("1", "2", "3", "4", "5", "5", "7", "8"),
+                  Heat = rep("Final", 8),
+                  Lane = c("4", "5", "3", "7", "2", "6", "1", "8"),
+                  Name = c(
+                    "DRESSEL Caeleb",
+                    "MANAUDOU Florent",
+                    "FRATUS Bruno",
+                    "ANDREW Michael",
+                    "PROUD Benjamin",
+                    "GKOLOMEEV Kristian",
+                    "ZAZZERI Lorenzo",
+                    "de BOER Thom"
+                  ),
+                  Team = c("USA",
+                           "FRA", "BRA", "USA", "GBR", "GRE", "ITA", "NED"),
+                  Reaction_Time = c("0.63",
+                                    "0.61", "0.64", "0.66", "0.58", "0.63", "0.61", "0.63"),
+                  Finals_Time = c(
+                    "21.07",
+                    "21.55",
+                    "21.57",
+                    "21.60",
+                    "21.72",
+                    "21.72",
+                    "21.78",
+                    "21.79"
+                  ),
+                  DQ = c("0", "0", "0", "0", "0", "0", "0", "0"),
+                  Exhibition = c("0",
+                                 "0", "0", "0", "0", "0", "0", "0"),
+                  Event = c(
+                    "Men's 50m Freestyle",
+                    "Men's 50m Freestyle",
+                    "Men's 50m Freestyle",
+                    "Men's 50m Freestyle",
+                    "Men's 50m Freestyle",
+                    "Men's 50m Freestyle",
+                    "Men's 50m Freestyle",
+                    "Men's 50m Freestyle"
+                  ),
+                  Split_50 = c(
+                    "21.07",
+                    "21.55",
+                    "21.57",
+                    "21.60",
+                    "21.72",
+                    "21.72",
+                    "21.78",
+                    "21.79"
+                  )
+                ),
+                row.names = c(NA,-8L),
+                class = "data.frame"
+              )
+
+
+            expect_equivalent(df_standard,
+                              df_test)
+
+          })
+
 
 # testthat::test_file("tests/testthat/test-omega.R")

@@ -21,9 +21,16 @@
 #'   \code{\link{swim_parse_omega}}
 
 heat_parse_omega <- function(text) {
+  # file <-
+  #   system.file("extdata", "Omega_OT_400m_Finals_2021.pdf", package = "SwimmeR")
+  #
+  # text <- file %>%
+  #   read_results() %>%
+  #   add_row_numbers()
+  #
   # text <- as_lines_list_2
 
-  heat_string <- "Heat\\s\\d{1,}\\sof\\s\\d{1,}|Semifinal\\s\\d{1,}"
+  heat_string <- "Heat\\s\\d{1,}\\sof\\s\\d{1,}|Semifinal\\s+\\d{1,}|Final|Heats(?![:alpha:])"
 
   heats <- text %>%
     .[purrr::map_lgl(.,
@@ -32,11 +39,18 @@ heat_parse_omega <- function(text) {
 
   if (length(heats) > 0) {
     # if heat names are recognized clean them up and determine row ranges
+    heat_rows <- heats %>%
+      stringr::str_extract("\\d{1,}$")
+
     heats <- heats %>%
-      stringr::str_remove("\\\nHeat\\s") %>%
+      stringr::str_extract(heat_string) %>%
+      stringr::str_remove("\\\nHeat?\\s") %>%
       stringr::str_remove("\\sof\\s\\d{1,}") %>%
-      stringr::str_replace("Semifinal\\s", "Semi_") %>%
+      stringr::str_replace("Semifinal\\s+", "Semi_") %>%
+      stringr::str_replace("Heat\\s+", "Heat_") %>%
       trimws()
+
+    heats <- paste(heats, heat_rows, sep = "   ")
 
     heats <-
       unlist(purrr::map(heats, stringr::str_split, "\\s{2,}"),

@@ -46,8 +46,11 @@ splits_parse <- function(text, split_len = split_length) {
   ### collect row numbers from rows containing splits ###
   ### define strings ###
 
+  # text <- as_lines_list_2
   text <- text %>%
-    stringr::str_replace_all(" \\:", "  ")
+    stringr::str_replace_all(" \\:", "  ") %>%
+    stringr::str_remove_all(" [:upper:]R\\,?") %>%
+    stringr::str_remove_all(" US\\,?")
 
   # split_string <- "\\(\\d?\\:?\\d\\d\\.\\d\\d\\)"
   split_string <- "\\(\\d{0,2}\\:?\\d?\\d\\.\\d\\d\\)"

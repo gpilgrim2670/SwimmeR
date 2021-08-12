@@ -110,6 +110,13 @@ swim_parse_omega <-
     # file_omega <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Tokyo2020/SWMW4X200MFR_HEAT.pdf")
     # file_omega <- read_results("https://olympics.com/tokyo-2020/olympic-games/resOG2020-/pdf/OG2020-/SWM/OG2020-_SWM_C73A1_SWMM400MIM------------FNL-000100--.pdf")
     # file_omega <- read_results("https://olympics.com/tokyo-2020/olympic-games/resOG2020-/pdf/OG2020-/SWM/OG2020-_SWM_C73A1_SWMM100MFR------------FNL-000100--.pdf")
+    # file_omega <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Tokyo2020/SWMM50MFR_FNL.pdf")
+    # file_omega <- read_results("https://www.omegatiming.com/File/00011500020101EC01FFFFFFFFFFFF01.pdf")
+    # file_omega <- read_results("https://www.omegatiming.com/File/00011500020205EF01FFFFFFFFFFFF01.pdf")
+    # file_omega <- read_results("https://www.omegatiming.com/File/00011500020204EE01FFFFFFFFFFFF01.pdf")
+    # file_omega <- read_results("https://www.omegatiming.com/File/0001150003FFFFFFFFFFFFFFFFFFFF22.pdf")
+    # file_omega <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Omega/Omega_OT_Wave2_FullResults_2021.pdf")
+    # file_omega <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Tokyo2020/SWMM100MBF_SFNL.pdf")
     # avoid_omega <- c("abcxyz")
     # typo_omega <- c("typo")
     # replacement_omega <- c("typo")
@@ -144,6 +151,8 @@ swim_parse_omega <-
       Para_String <- "^SB?M?\\d{1,2}$"
       Reaction_String <- "^\\+\\s?\\d\\.\\d{3}$|^\\-\\s?\\d\\.\\d{3}$|^0\\.00$|^0\\.\\d\\d$"
       Record_String <- "^\\=?WR$|^\\=?AR$|^\\=?US$|^\\=?CR$|^\\=?WJ$|^\\=?OT$|^\\=?OR$|^\\=?[:upper:]R$"
+      Header_string <- "\\sDisqualified\\s|\\sReaction\\sTime\\s"
+      Heat_String <- "Heat\\s\\d{1,}\\sof\\s\\d{1,}|Semifinal\\s+\\d{1,}|Final|(Heats?)(?![:alpha:])"
 
       #### clean input data ####
 
@@ -153,9 +162,13 @@ swim_parse_omega <-
         .[purrr::map_lgl(., stringr::str_detect, paste0(Time_Score_String,"|DS?Q|SCR|D?NS"))] %>% # must have \\.\\d\\d because all swimming and diving times do
         .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]{2,}.*[:alpha:]")] %>% # need some letters, need them to not just be a single instance of DQ etc.
         .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]{2,} Record", negate = TRUE)] %>%  # remove legend contents that will be included if their are DQs, DNS etc. Omega
+        .[purrr::map_lgl(., stringr::str_detect, "[:alpha:] DSQ [:alpha:]", negate = TRUE)] %>% # omega Wave II removes notes from when a DSQ is overturned
+        .[purrr::map_lgl(., stringr::str_detect, "\\d{2} [:upper:]{3} \\d{4} GOLD", negate = TRUE)] %>%  # omega remove medalist results from the end of Wave II 2021 OTs
+        .[purrr::map_lgl(., stringr::str_detect, Heat_String, negate = TRUE)] %>% # omega removes weird formatting issue where results and heat labels are connected
         stringr::str_replace_all("([:alpha:])\\. ", "\\1 ") %>% # remove periods from athlete names Omega
-        .[!dplyr::between(purrr::map_int(., stringr::str_count, "\\.|\\("), 5.1, 7.9)] %>%  # keeps relay swimmers + splits from 4x200 races from getting in Omega
+        .[!dplyr::between(purrr::map_int(., stringr::str_count, "\\.|\\("), 6.1, 7.9)] %>%  # keeps relay swimmers + splits from 4x200 races from getting in Omega
         .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]\\s+\\-\\d\\.\\d{2}\\s+\\d{1,}$", negate = TRUE)] %>%
+        .[purrr::map_lgl(., stringr::str_detect, Header_string, negate = TRUE)] %>%
         stringr::str_replace_all("( [:upper:]{2},\\s)*\\s?(?<![:upper:])[:upper:]{2}\\.?\\s(?=\\s{1,}\\d{1,}$)", "  ") %>% # remove record strings like OR, OC but miss DNS, DSQ etc.
         stringr::str_replace_all("\\s?[&%]\\s?", " ") %>% # added 8/21 for removing "&" and "%" as record designator
 
@@ -191,6 +204,7 @@ swim_parse_omega <-
       #### insert double spaces where needed ####
       data_cleaned <- data_cleaned %>%
         stringr::str_replace_all("(?<=\\d)\\s+[:upper:]?\\s+(?=\\d)", "  ") %>% # letters like P or M to denote pool or meet record
+        stringr::str_replace_all(" \\=[:upper:]R\\,?", "  ") %>% # omega remove record designators like =AR
         stringr::str_replace_all("(?<=\\d) (?=[:alpha:])", "  ") %>% # mostly to split place and name
         stringr::str_replace_all("(?<=\\d) (?=_)", "  ") %>% # mostly to split place and name, if name is preceded by "_" as a stand-in for "*"
         stringr::str_replace_all("(?<=\\d) (?=\\d)", "  ") %>% # mostly to split place team names that start with a number, like in NYS results (5-Fairport etc.)
@@ -292,6 +306,7 @@ swim_parse_omega <-
           df_11 <- data_length_11 %>%
             list_transform() %>%
             dplyr::filter(stringr::str_detect(V1, Record_String) == FALSE) %>%
+            dplyr::filter(stringr::str_detect(V10, "Championship") == FALSE) %>%
             dplyr::na_if("") %>%
             dplyr::mutate(Heat = case_when(
               str_detect(V2, "^\\d{1,2}$") == TRUE &
@@ -345,6 +360,8 @@ swim_parse_omega <-
           df_10 <- data_length_10 %>%
             list_transform() %>%
             dplyr::filter(stringr::str_detect(V1, Record_String) == FALSE) %>%
+            dplyr::filter(stringr::str_detect(V1, "en") == FALSE) %>% # remove Women's Men's etc.
+            dplyr::filter(stringr::str_detect(V9, "Championship") == FALSE) %>%
             dplyr::na_if("") %>%
             dplyr::mutate(Heat = case_when(
               str_detect(V2, "^\\d{1,2}$") == TRUE &
@@ -401,6 +418,7 @@ swim_parse_omega <-
           df_9 <- data_length_9 %>%
             list_transform() %>%
             dplyr::filter(stringr::str_detect(V1, Record_String) == FALSE) %>%
+            dplyr::filter(stringr::str_detect(V1, "en") == FALSE) %>% # remove Women's Men's etc.
             dplyr::na_if("") %>%
             dplyr::mutate(Heat = case_when(
               str_detect(V2, "^\\d{1,2}$") == TRUE &
@@ -456,6 +474,7 @@ swim_parse_omega <-
           df_8 <- data_length_8 %>%
             list_transform() %>%
             dplyr::filter(stringr::str_detect(V1, Record_String) == FALSE) %>%
+            dplyr::filter(stringr::str_detect(V1, "en") == FALSE) %>% # remove Women's Men's etc.
             dplyr::na_if("") %>%
             dplyr::mutate(Heat = case_when(
               str_detect(V2, "^\\d{1,2}$") == TRUE &
@@ -475,16 +494,27 @@ swim_parse_omega <-
                                                   TRUE ~ V4)) %>%
             dplyr::mutate(Team = dplyr::case_when(stringr::str_detect(Heat, "NA") == TRUE ~ V4,
                                                   TRUE ~ V5)) %>%
-            dplyr::mutate(Reaction_Time = dplyr::case_when(stringr::str_detect(Heat, "NA") == TRUE ~ V5,
-                                                           TRUE ~ V6)) %>%
+            dplyr::mutate(
+              Reaction_Time = dplyr::case_when(
+                stringr::str_detect(Heat, "NA") == TRUE &
+                  stringr::str_detect(V5, "^\\d\\.\\d\\d") == TRUE ~ V5,
+                stringr::str_detect(V6, "^\\d\\.\\d\\d") == TRUE &
+                  str_detect(V5, "\\d\\d\\.\\d\\d") == FALSE ~ V6,
+                TRUE ~ "NA"
+              )
+            ) %>%
+            # filter(Name == "NUNAN Amanda")
             dplyr::mutate(
               Finals_Time = dplyr::case_when(
                 stringr::str_detect(Heat, "NA") == TRUE &
                   stringr::str_detect(V5, Reaction_String) == TRUE &
                   stringr::str_detect(V6, Time_Score_Specials_String) == TRUE &
-                  stringr::str_detect(V7, "^[0-2]\\.\\d\\d$") == TRUE ~ V6,
+                  stringr::str_detect(V7, "^\\d\\d?\\.\\d\\d$") == TRUE ~ V6,
                 stringr::str_detect(Heat, "NA") == TRUE &
                   stringr::str_detect(V6, "[1-9]\\:\\d\\d") == TRUE ~ V6,
+                stringr::str_detect(Heat, "NA") == FALSE &
+                  stringr::str_detect(V6, "[1-9]\\:\\d\\d") == TRUE &
+                  stringr::str_detect(V7, "^\\d?\\d\\.\\d\\d") == TRUE ~ V6,
                 stringr::str_detect(Heat, "NA") == TRUE ~ V7,
                 stringr::str_detect(V7, "[1-9]\\:\\d\\d") == TRUE  ~ V7,
                 stringr::str_detect(V6, Reaction_String) == TRUE &
@@ -533,8 +563,23 @@ swim_parse_omega <-
                                                   TRUE ~ V4)) %>%
             dplyr::mutate(Team = dplyr::case_when(stringr::str_detect(Heat, "NA") == TRUE ~ V4,
                                                   TRUE ~ V5)) %>%
-            dplyr::mutate(Reaction_Time = dplyr::case_when(stringr::str_detect(Heat, "NA") == TRUE ~ V5,
-                                                           TRUE ~ V6)) %>%
+            dplyr::mutate(
+              Reaction_Time = dplyr::case_when(
+                stringr::str_detect(Heat, "NA") == TRUE &
+                  stringr::str_detect(V5, "^\\d\\.\\d\\d") == TRUE ~ V5,
+                stringr::str_detect(V6, "^\\d\\.\\d\\d") == TRUE &
+                  str_detect(V5, "\\d\\d\\.\\d\\d") == FALSE ~ V6,
+                TRUE ~ "NA"
+              )
+            ) %>%
+            dplyr::mutate(
+              Finals_Time = dplyr::case_when(
+                stringr::str_detect(V5, Time_Score_Specials_String) == TRUE &
+                  stringr::str_detect(Reaction_Time, V5) == FALSE ~ V5,
+                stringr::str_detect(V6, Time_Score_Specials_String) == TRUE ~ V6,
+                TRUE ~ "NA"
+              )
+            ) %>%
             dplyr::na_if("NA") %>%
             dplyr::select(
               Place = V1,
@@ -543,7 +588,7 @@ swim_parse_omega <-
               Name,
               Team,
               Reaction_Time,
-              Finals_Time = V6,
+              Finals_Time,
               Row_Numb = V7
             )
         )
@@ -560,17 +605,17 @@ swim_parse_omega <-
             dplyr::filter(stringr::str_detect(V1, Record_String) == FALSE) %>%
             dplyr::na_if("") %>%
             dplyr::mutate(
-              Place = dplyr::case_when(stringr::str_detect(V5, "DSQ") == TRUE ~ "10000",
+              Place = dplyr::case_when(stringr::str_detect(V5, "DSQ|DNS") == TRUE ~ "10000",
                                        TRUE ~ V1)
             ) %>%
             dplyr::mutate(
               Heat = dplyr::case_when(
                 stringr::str_detect(V2, "^\\d{1,2}$") == TRUE &
                   stringr::str_detect(V3, "^\\d{1,2}$") == TRUE &
-                  stringr::str_detect(V5, "DSQ") == FALSE ~ V2,
+                  stringr::str_detect(V5, "DSQ|DNS") == FALSE ~ V2,
                 stringr::str_detect(V2, "^\\d{1,2}$") == TRUE &
                   stringr::str_detect(V1, "^\\d{1,2}$") == TRUE &
-                  stringr::str_detect(V5, "DSQ") == TRUE ~ V1,
+                  stringr::str_detect(V5, "DSQ|DNS") == TRUE ~ V1,
                 TRUE ~ "NA"
               )
             ) %>%
@@ -587,7 +632,7 @@ swim_parse_omega <-
               Name = dplyr::case_when(
                 stringr::str_detect(V4, "\\d\\:\\d{2}\\.\\d{2}") == TRUE ~ "NA",
                 stringr::str_detect(Heat, "NA") == TRUE ~ V3,
-                stringr::str_detect(V5, "DSQ") == TRUE ~ V3,
+                stringr::str_detect(V5, "DSQ|DNS") == TRUE ~ V3,
                 TRUE ~ V4
               )
             ) %>%
@@ -595,12 +640,13 @@ swim_parse_omega <-
               Team = dplyr::case_when(
                 stringr::str_detect(V4, "\\d\\:\\d{2}\\.\\d{2}") == TRUE ~ V3,
                 stringr::str_detect(Heat, "NA") == TRUE ~ V4,
-                stringr::str_detect(V5, "DSQ") == TRUE ~ V4,
+                stringr::str_detect(V5, "DSQ|DNS") == TRUE ~ V4,
                 TRUE ~ V5
               )
             ) %>%
             dplyr::mutate(
-              Reaction_Time = dplyr::case_when(stringr::str_detect(Heat, "NA") == TRUE ~ V5,
+              Reaction_Time = dplyr::case_when(stringr::str_detect(Heat, "NA") == TRUE &
+                                                 stringr::str_detect(V5, "\\d\\.\\d\\d") == TRUE ~ V5,
                                                TRUE ~ "NA")
             ) %>%
             dplyr::mutate(
@@ -643,7 +689,7 @@ swim_parse_omega <-
               Heat = dplyr::case_when(
                 stringr::str_detect(V2, "^\\d{1,2}$") == TRUE &
                   stringr::str_detect(V3, "^\\d{1,2}$") == TRUE &
-                  stringr::str_detect(V5, "DSQ") == FALSE ~ V2,
+                  stringr::str_detect(V5, "DSQ|DNS") == FALSE ~ V2,
                 stringr::str_detect(V2, "^\\d{1,2}$") == TRUE &
                   stringr::str_detect(V1, "^\\d{1,2}$") == TRUE &
                   stringr::str_detect(V4, "DSQ") == TRUE ~ V1,
@@ -666,7 +712,7 @@ swim_parse_omega <-
                   stringr::str_detect(V4, Time_Score_Specials_String) == TRUE ~ V2,
                 stringr::str_detect(V4, Time_Score_Specials_String) == TRUE ~ "NA",
                 stringr::str_detect(Heat, "NA") == TRUE ~ V3,
-                stringr::str_detect(V5, "DSQ") == TRUE ~ V3,
+                stringr::str_detect(V5, "DSQ|DNS") == TRUE ~ V3,
                 TRUE ~ V4
               )
             ) %>%
@@ -674,7 +720,7 @@ swim_parse_omega <-
               Team = dplyr::case_when(
                 stringr::str_detect(V4, Time_Score_Specials_String) == TRUE ~ V3,
                 stringr::str_detect(Heat, "NA") == TRUE ~ V4,
-                stringr::str_detect(V5, "DSQ") == TRUE ~ V4,
+                stringr::str_detect(V5, "DSQ|DNS") == TRUE ~ V4,
                 TRUE ~ V5
               )
             ) %>%
@@ -844,7 +890,8 @@ swim_parse_omega <-
             Place = dplyr::case_when(is.na(Place) == TRUE &
                                        DQ == 0 ~ dplyr::lag(Place) + 1,
                                      TRUE ~ Place)
-          )
+          ) %>%
+          dplyr::na_if("NA")
       )
 
       #### cleaning ####
@@ -964,7 +1011,7 @@ swim_parse_omega <-
           dplyr::select(Place, dplyr::everything())
       }
 
-      if("Place" %in% names(data) & "Heat" %in% names(data)){
+      if(all("Place" %in% names(data), "Heat" %in% names(data))){
         data <- data %>%
           dplyr::select(Place, Heat, dplyr::everything())
       }
