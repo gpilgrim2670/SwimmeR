@@ -117,6 +117,7 @@ swim_parse_omega <-
     # file_omega <- read_results("https://www.omegatiming.com/File/0001150003FFFFFFFFFFFFFFFFFFFF22.pdf")
     # file_omega <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Omega/Omega_OT_Wave2_FullResults_2021.pdf")
     # file_omega <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Tokyo2020/SWMM100MBF_SFNL.pdf")
+    # file_omega <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Omega/Omega_OT_Wave2_W400Fr_Heats_2021.pdf")
     # avoid_omega <- c("abcxyz")
     # typo_omega <- c("typo")
     # replacement_omega <- c("typo")
@@ -509,12 +510,12 @@ swim_parse_omega <-
                 stringr::str_detect(Heat, "NA") == TRUE &
                   stringr::str_detect(V5, Reaction_String) == TRUE &
                   stringr::str_detect(V6, Time_Score_Specials_String) == TRUE &
-                  stringr::str_detect(V7, "^\\d\\d?\\.\\d\\d$") == TRUE ~ V6,
-                stringr::str_detect(Heat, "NA") == TRUE &
-                  stringr::str_detect(V6, "[1-9]\\:\\d\\d") == TRUE ~ V6,
+                  stringr::str_detect(V7, "^\\d\\d?\\.\\d\\d$") == TRUE &
+                  (sec_format(V7) < sec_format(V6)) == TRUE ~ V6,
                 stringr::str_detect(Heat, "NA") == FALSE &
                   stringr::str_detect(V6, "[1-9]\\:\\d\\d") == TRUE &
-                  stringr::str_detect(V7, "^\\d?\\d\\.\\d\\d") == TRUE ~ V6,
+                  stringr::str_detect(V7, "^\\d?\\d\\.\\d\\d") == TRUE &
+                  (sec_format(V7) < sec_format(V6)) == TRUE ~ V6,
                 stringr::str_detect(Heat, "NA") == TRUE ~ V7,
                 stringr::str_detect(V7, "[1-9]\\:\\d\\d") == TRUE  ~ V7,
                 stringr::str_detect(V6, Reaction_String) == TRUE &

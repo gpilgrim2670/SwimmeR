@@ -34,7 +34,73 @@ test_that("Men 400 IM prelims", {
 
 })
 
+test_that("2021 US OT Wave 2 Women 400 Free Heats, swimmers without reaction times", {
+
+  skip_on_cran()
+
+  file <-
+    "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Omega/Omega_OT_Wave2_W400Fr_Heats_2021.pdf"
+
+  df_test <- file %>%
+    read_results() %>%
+    swim_parse(splits = TRUE,
+               relay_swimmers = TRUE) %>%
+    filter(Name %in% c("LEDECKY Katie", "NUNAN Amanda", "KILGALLON Abigail", "TWICHELL Ashley"))
+
+  df_standard <-
+    structure(
+      list(
+        Place = c("1", "8", "37", "46"),
+        Heat = c("6",
+                 "6", "2", "1"),
+        Lane = c("4", "3", "6", "8"),
+        Name = c(
+          "LEDECKY Katie",
+          "TWICHELL Ashley",
+          "NUNAN Amanda",
+          "KILGALLON Abigail"
+        ),
+        Team = c("NCAP",
+                 "TAC-NC", "TNAQ", "UOFM"),
+        Reaction_Time = c("0.70", "0.77",
+                          NA, NA),
+        Finals_Time = c("4:03.07", "4:10.51", "4:17.58", "4:23.32"),
+        DQ = c("0", "0", "0", "0"),
+        Exhibition = c("0", "0", "0",
+                       "0"),
+        Event = c(
+          "AM Women's 400m Freestyle Heats",
+          "AM Women's 400m Freestyle Heats",
+          "AM Women's 400m Freestyle Heats",
+          "AM Women's 400m Freestyle Heats"
+        ),
+        Split_50 = c("28.10", "29.38", "30.15", "30.96"),
+        Split_100 = c("30.11",
+                      "31.14", "31.99", "32.38"),
+        Split_150 = c("30.59", "31.39", "32.53",
+                      "33.15"),
+        Split_200 = c("30.74", "31.51", "32.79", "32.77"),
+        Split_250 = c("30.82", "31.79", "32.72", "33.09"),
+        Split_300 = c("30.98",
+                      "31.98", "32.67", "33.54"),
+        Split_350 = c("31.13", "32.23",
+                      "32.94", "33.86"),
+        Split_400 = c("30.60", "31.09", "31.79",
+                      "33.57")
+      ),
+      row.names = c(NA,-4L),
+      class = "data.frame"
+    )
+
+  expect_equivalent(df_standard,
+                    df_test)
+
+})
+
 test_that("Women 200 fly prelims, need to not remove swimmers for decimal counting", {
+
+  skip_on_cran()
+
   file <-
     "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Omega/Omega_OT_Wave1_W200Fl_Heats_2021.pdf"
 
@@ -80,6 +146,9 @@ test_that("Women 200 fly prelims, need to not remove swimmers for decimal counti
 })
 
 test_that("US OT 2021 Wave I Men 100 Free Heats", {
+
+  skip_on_cran()
+
   file <-
     "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Omega/Omega_OT_Wave1_M100Fr_Heats_2021.pdf"
 
