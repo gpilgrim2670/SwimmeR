@@ -16,7 +16,7 @@
 
 ### Latest Development Version from Github
 
-Version 0.11.7
+Version 0.12.0
 
 * ISL season 2 bug fixes
 * Further improvements for handling Tokyo Olympics results

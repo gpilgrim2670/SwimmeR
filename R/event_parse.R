@@ -65,7 +65,7 @@ event_parse <- function(text) {
       unlist(purrr::map(events, stringr::str_split, "\\s{2,}"),
              recursive = FALSE)
 
-    # dataframe for events with names and row number ranges
+    # data frame for events with names and row number ranges
     events <- events %>%
       list_transform() %>%
       dplyr::mutate(
@@ -76,7 +76,7 @@ event_parse <- function(text) {
         V2 = NULL
       )
   } else{
-    # if no event names are recognized deploy dummy dataframe with event name "unknown" and post warning
+    # if no event names are recognized deploy dummy data frame with event name "unknown" and post warning
     events <- data.frame(
       Event = "Unknown",
       Event_Row_Min = 1,

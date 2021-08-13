@@ -1,3 +1,7 @@
+# SwimmeR 0.12.0 - August 13th 2021
+* CRAN release
+* contains all dev version updates since SwimmeR 0.11.0
+
 # SwimmeR 0.11.7 - August 11th 2021
 * Tokyo bug fixes re: Mixed and 4x200 relays
 

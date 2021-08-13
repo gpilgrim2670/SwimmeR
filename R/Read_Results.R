@@ -7,6 +7,7 @@
 #' @importFrom rvest html_nodes
 #' @importFrom rvest html_text
 #' @importFrom pdftools pdf_text
+#' @importFrom readr read_delim
 #'
 #' @param file a .pdf or .html file (could be a url) where containing swimming
 #'   results.  Must be formatted in a "normal" fashion - see vignette
