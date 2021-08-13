@@ -185,6 +185,6 @@ course_convert(time = swim$time, course = swim$course, course_to = swim$course_t
 
 I do a lot of demos on how to use `SwimmeR` at my blog [Swimming + Data Science](https://pilgrim.netlify.app/).
 
-`SwimmeR` also has a vignette.  Call `vignette("SwimmeR")`.  If you download from github don't forget to set `build_vignettes = TRUE`.
+`SwimmeR` also has a vignette.  Call `vignette("SwimmeR")`.  If you download from Github don't forget to set `build_vignettes = TRUE`.
 
-If you find bug, please provide a minimal reproducible example at [github](https://github.com/gpilgrim2670/SwimmeR).
+If you find bug, please provide a minimal reproducible example at [Github](https://github.com/gpilgrim2670/SwimmeR).
