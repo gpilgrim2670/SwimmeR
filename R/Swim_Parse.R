@@ -1422,7 +1422,10 @@ Swim_Parse <-
       splits_df <- splits_parse(as_lines_list_2, split_len = split_length)
 
       data <- data %>%
+        mutate(Row_Numb = case_when(stringr::str_detect(Event, "Relay") == TRUE ~ Row_Numb + 1,
+                                    TRUE ~ Row_Numb)) %>%
         dplyr::left_join(splits_df, by = 'Row_Numb')
+        # dplyr::left_join(splits_df, by = c("Row_Numb" = "Row_Numb_Relay"))
 
       ### remove empty columns (all values are NA) ###
       data <- Filter(function(x)!all(is.na(x)), data)
@@ -1435,6 +1438,7 @@ Swim_Parse <-
     }
 
     data$Row_Numb <- NULL
+    data$Row_Numb_Relay <- NULL
 
       return(data)
 

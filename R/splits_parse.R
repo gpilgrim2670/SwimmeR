@@ -28,7 +28,9 @@ splits_parse <- function(text, split_len = split_length) {
   # text <- read_results("inst/extdata/11102019roc.pdf")
   # text <- read_results("inst/extdata/s2-results.pdf")
   # text <- read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm")
+  #
   # text <- add_row_numbers(text)
+  # split_len <- 50
 
   ### collect row numbers from rows containing splits ###
 
@@ -127,6 +129,11 @@ splits_parse <- function(text, split_len = split_length) {
     data_length_10 <- data_1[purrr::map(data_1, length) == 10]
 
     #### transform all lists to dataframes ####
+
+    # if_transform <- function(x){
+    #   ifelse(length(x) > 0, list_transform(x), )
+    # }
+
     if (length(data_length_10) > 0) {
       df_10 <- data_length_10 %>%
         list_transform()
@@ -210,8 +217,7 @@ splits_parse <- function(text, split_len = split_length) {
     #### rename columns V1, V2 etc. by 50 ####
     old_names <- names(data)[grep("^V", names(data))]
     new_names <-
-      # paste("Split", seq(1, length(names(data)) - 1) * 50, sep = "_")
-      paste("Split", seq(1, length(names(data)) - 1) * split_len, sep = "_")
+      paste("Split", seq(1, length(names(data)) - 1) * 50, sep = "_")
 
     data <- data %>%
       dplyr::rename_at(dplyr::vars(old_names), ~ new_names)
