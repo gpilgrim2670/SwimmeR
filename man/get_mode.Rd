@@ -9,14 +9,22 @@ get_mode(x, type = "first")
 \arguments{
 \item{x}{A list.  \code{NA} elements will be ignored.}
 
-\item{type}{a character string of either \code{"first"} or \code{"all"} which determines behavior for ties.  Setting \code{type = "first"} (the default) will return the element that appears most often and appears first in list \code{x}.  Setting \code{type = "all"} will return all elements that appear most frequently.}
+\item{type}{a character string of either \code{"first"} or \code{"all"} which
+determines behavior for ties.  Setting \code{type = "first"} (the default)
+will return the element that appears most often and appears first in list
+\code{x}.  Setting \code{type = "all"} will return all elements that appear
+most frequently.}
 }
 \value{
-the element of \code{x} which appears most frequently.  Ties go to the lowest index, so the element which appears first.
+the element of \code{x} which appears most frequently.  Ties go to
+  the lowest index, so the element which appears first.
 }
 \description{
-Determines which element of list appears most frequently.  Based on \code{base::which.max}, so if multiple values appear with the same frequency will return the first one.  Ignores \code{NA} values.
-In the context of swimming data is often used to clean team names, as in the Lilly King example below.
+Determines which element of list appears most frequently.  Based on
+\code{base::which.max()}, so if multiple values appear with the same
+frequency will return the first one.  Ignores \code{NA} values. In the
+context of swimming data is often used to clean team names, as in the Lilly
+King example below.
 }
 \examples{
 a <- c("a", "a", "b", "c")
@@ -35,7 +43,4 @@ Team <- c(rep("IU", 2), "Indiana", "IUWSD", "Indiana University")
 df <- data.frame(Name, Team, stringsAsFactors = FALSE)
 df$Team <- get_mode(df$Team)
 
-}
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
 }

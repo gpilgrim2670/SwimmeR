@@ -1,8 +1,7 @@
 #' Adds places to diving results
 #'
-#' Places are awarded on the basis of score, with highest score winning.  Ties are placed as ties (both athletes get 2nd etc.)
-#'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
+#' Places are awarded on the basis of score, with highest score winning.  Ties
+#' are placed as ties (both athletes get 2nd etc.)
 #'
 #' @importFrom stringr str_detect
 #' @importFrom stringr str_to_lower
@@ -13,11 +12,14 @@
 #' @importFrom dplyr filter
 #' @importFrom dplyr desc
 #'
-#' @param df a dataframe with results from \code{swim_parse}, including only diving results (not swimming)
+#' @param df a data frame with results from \code{swim_parse}, including only
+#'   diving results (not swimming)
 #' @param max_place highest place value that scores
-#' @return df modified so that places have been appended based on diving score
+#' @return data frame modified so that places have been appended based on diving
+#'   score
 #'
-#' @seealso \code{dive_place} is a helper function used inside of \code{results_score}
+#' @seealso \code{dive_place} is a helper function used inside of
+#'   \code{results_score}
 
 
 dive_place <- function(df, max_place) {

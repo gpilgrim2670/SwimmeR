@@ -12,15 +12,14 @@ fold(x, block.size = 1)
 \item{block.size}{the size of groups in which to block the data}
 }
 \value{
-a new vector in the following order: first block, last block,
-  second block, second-to-last block, ...
+a new vector in the following order: first block, last block, second
+  block, second-to-last block, ...
 }
 \description{
 Fold a vector onto itself
 }
 \references{
-from the seemingly now defunct \code{mRchmadness} package by Eli Shayer and Saber Powers and used per the terms of that package's GPL-2 license
-}
-\author{
-sspowers
+from the seemingly now defunct \code{mRchmadness} package by Eli
+  Shayer and Saber Powers and used per the terms of that package's GPL-2
+  license
 }

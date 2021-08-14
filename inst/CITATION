@@ -1,0 +1,13 @@
+citHeader("To cite SwimmeR in publications use:")
+
+citEntry(
+  entry    = "manual",
+  title    = "{SwimmeR}: {P}ackage for working with Swimming Data",
+  author   = "Gregory A. Pilgrim",
+  year     = "2019",
+  url      = "https://github.com/gpilgrim2670/SwimmeR",
+  textVersion = paste("Pilgrim, Gregory A. (2019).",
+        "SwimmeR: Package for working with swimming data.",
+        "https://github.com/gpilgrim2670/SwimmeR")
+  )
+

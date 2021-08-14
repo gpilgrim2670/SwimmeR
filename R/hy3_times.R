@@ -2,8 +2,6 @@
 #'
 #' Used to pull prelims and finals times from .hy3 files as part of parsing them.
 #'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
-#'
 #' @importFrom dplyr mutate
 #' @importFrom stringr str_replace_all
 #' @importFrom stringr str_extract_all
@@ -14,9 +12,9 @@
 
 #' @param file an output of read_results, from an .hy3 file
 #' @param type type of times, either "prelims", "relay_prelims", "finals" or "relay_finals"
-#' @return a dataframe where column 1 is times and column 2 is row number
+#' @return a data frame where column 1 is times and column 2 is row number
 #'
-#' @seealso \code{hy3_times} is run inside of \code{\link{parse_hy3}}
+#' @seealso \code{hy3_times} is run inside of \code{\link{hy3_parse}}
 #'
 
 hy3_times <-
@@ -31,6 +29,7 @@ hy3_times <-
         "Prelims_Time",
         "Finals_Time",
         "Finals_Time")
+
     codes_df <- data.frame(
       codes = codes,
       time_types = time_types,
@@ -58,10 +57,11 @@ hy3_times <-
       unlist()
 
     times <- times %>%
-      purrr::map(tail,-1) %>% # remove first column, which has hytek codes
+      purrr::map(tail, -1) %>% # remove first column, which has hytek codes
       purrr::map(head, 1) # only want new first column, which has times
 
-    if(length(times) == 0){ # if there are no times, like in meets that don't have prelims, this will make a dummy list
+    if (length(times) == 0) {
+      # if there are no times, like in meets that don't have prelims, this will make a dummy list
       times <- rep(NA, length(times_rows))
     }
 
@@ -73,7 +73,7 @@ hy3_times <-
     # times <- times %>%
     # dplyr::mutate(DQ = case_when(str_detect((!!as.name(name)), "Q") == TRUE ~ 1,
     #                              TRUE ~ 0),
-      # (!! name) := stringr::str_remove((!!as.name(name)), "[:alpha:]$"))
+    # (!! name) := stringr::str_remove((!!as.name(name)), "[:alpha:]$"))
 
     return(times)
   }

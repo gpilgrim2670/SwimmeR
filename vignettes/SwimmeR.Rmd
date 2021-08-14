@@ -16,103 +16,233 @@ knitr::opts_chunk$set(
 
 ```{r setup, message = FALSE}
 library(SwimmeR)
-library(rvest)
 library(dplyr)
-library(ggplot2)
-library(scales)
 ```
 
 `SwimmeR` was developed to work with results from swimming competitions.  Results are often shared as web pages (.html) or PDF documents, which are nice to read, but make data difficult to access.
 
-`SwimmeR` solves this problem by importing & cleaning .html and .pdf files containing swimming results, and returns a tidy dataframe.
+`SwimmeR` solves this problem by importing & cleaning .html and .pdf files containing swimming results, and returns a tidy data frame.
 
-Importing is performed by `read_results` which takes as an argument a file path as `file` and a `node` (for .html only).
+Importing is performed by `read_results` which takes as an argument a file path as `file` and a `node` (for .html only, defaults to '`"pre"`).
 
 In addition to this vignette I do a lot of demos on how to use `SwimmeR` at my blog [Swimming + Data Science](https://pilgrim.netlify.app/).
 
+*******
+
 # Reading PDF Results
-*ISL results are handled differently, see ISL section below*
+**ISL results are handled differently, see ISL section below**
+
 `SwimmeR` includes Texas-Florida-Indiana.pdf, results from a tri-meet between the three schools.  It can be read in as such:
 
 ```{r read_results, message = FALSE}
-file_path <- system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")
+TX_FL_IN_path <- system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")
 
-file_read <- read_results(file = file_path)
+TX_FL_IN_text <- read_results(file = TX_FL_IN_path)
 ```
 
 ```{r read_results output, message = FALSE}
-file_read[294:303]
+TX_FL_IN_text[294:303]
 ```
 
 Here we see a subsection of the meet - the top three finishers in the Women's 100 Yard Breaststroke featuring Olympic gold medalist, and the `SwimmeR` package's favorite swimmer, Lilly King.
 
-The next step is to convert this data to a dataframe using `swim_parse`.  Because `swim_parse` works on text strings it is very sensitive to typos and/or nonstandard naming conventions.  "Texas-Florida-Indiana.pdf" has two examples of these potential problems.
+The next step is to convert this data to a data frame using `swim_parse`.  Because `swim_parse` works on text strings it is very sensitive to typos and/or nonstandard naming conventions.  "Texas-Florida-Indiana.pdf" has two examples of these potential problems.
 
-The first is that `Indiana University` is sometimes entered as `Indiana  University`, with two spaces between `Indiana` and `University`.  This is a problem because `swim_parse` will interpret two spaces as a column separator, and will not properly capture `Indiana  University` (two spaces) as a team name.
+The first is that `Indiana University` is sometimes entered as `Indiana  University`, with two spaces between `Indiana` and `University`.  This is a problem in versions of `Swimmer` < 0.7.0 because `swim_parse` will interpret two spaces as a column separator, and will not properly capture `Indiana  University` (two spaces) as a team name.  In versions of `Swimmer` >= 0.7.0 the extra space won't cause a problem at all.
 
-The second issue is that `Texas` and `Florida` are styled as `Texas, University of` and `Florida, University of` which will cause `swim_parse` to interpret them as `Lastname, Firstname`.
+The second issue is that `Texas` and `Florida` are styled as `Texas, University of` and `Florida, University of` which I personally disapprove of.  It won't cause any issues in `SwimmeR` versions >= 0.7.0, but will in earlier versions.
 
 Both of these issues can be fixed with the `typo` and `replacement` arguments to `swim_parse`.  Elements of `typo` will be replaced by the element of `replacement` with which they share an index, so all instances of the first element of `typo` will be replaced by the first element of `replacement` etc. etc.  Not specifying `typo` or `replacement` will not produce an error, but might negatively impact the results.  If your results look strange, or are missing values, look for typos related to those swims.
 
-There is a third argument to `swim_parse`, called `avoid`, which will be addressed in the section on reading in html results below.
+There is a another argument to `swim_parse`, called `avoid`, which will be addressed in the section on reading in html results below.
 
 ```{r swim_parse, message = FALSE}
-df <-
+TX_FL_IN_df <-
   swim_parse(
-    file = file_read,
-    typo = c("Indiana  University", ", University of"),
-    replacement = c("Indiana University", "")
+    file = TX_FL_IN_text,
+    typo = c("Indiana  University", ", University of"), # not required in versions >= 0.7.0
+    replacement = c("Indiana University", "") # not required in versions >= 0.7.0
   )
 ```
 
-Here are those same Women's 100 Breaststroke results, as a dataframe in tidy format:
+Here are those same Women's 100 Breaststroke results, as a data frame in tidy format:
 ```{r Swim Parse output, message = FALSE}
-df[100:102,]
+TX_FL_IN_df[102:104,]
 ```
-*Please note that `SwimmeR` does not capture split times.*
+
+\
+
+************
 
 # Reading HTML Results
-Reading html results is very similar to reading pdf results, but a value must be specified to `node`, containing which CSS node the `read_results` should look in for results.  Here results from the New York State 2003 Girls Championship meet will be read in, from the "pre" node.
+Reading .html results is very similar to reading pdf results, but a value must be specified to `node`, containing which CSS node the `read_results` should look in for results.  Here results from the New York State 2003 Girls Championship meet will be read in, from the "pre" node.
 
-```{r read_results html, message = FALSE}
-url <- "http://www.nyhsswim.com/Results/Girls/2003/NYS/Single.htm"
-url_read <- read_results(file = url, node = "pre")
+```{r read_results html, message = FALSE, eval=FALSE}
+NYS_link <- "http://www.nyhsswim.com/Results/Girls/2003/NYS/Single.htm"
+NYS_text <- read_results(file = NYS_link, node = "pre")
+```
+
+```{r read_results html actual, message = FALSE, echo = FALSE}
+NYS_text_path <- system.file("extdata", "NYS_text.RDS", package = "SwimmeR")
+NYS_text <- readRDS(NYS_text_path)
 ```
 
 ```{r read_results html output, message = FALSE}
-url_read[587:598]
+NYS_text[587:598]
 ```
 
-Looking at the raw results above one will see that line 2 is a header and contains `NY State Rcd:`, showing the New York State record.  Lines of this type are a common feature in swimming results, but because they contain a recognizable swimming time, without being a result per say, they can cause problems for `swim_parse`.  Like typos these will not cause an error, but might produce nonsense rows in the resulting dataframe.  `swim_parse` deals with strings that should not be included in results with the `avoid` argument.  By default `avoid` contains a lot of common formulations of these header items under `avoid_default`.  You can create your own list of strings as pass it to `avoid`, or add to `avoid_default` via `avoid_new <- c(avoid_default, "your string here")`.  `Avoid` should also include `"r\\:"` if your results have reaction times (`avoid_default` already includes `"r\\:"`). 
+Looking at the raw results above one will see that line 2 is a header and contains `NY State Rcd:`, showing the New York State record.  Lines of this type are a common feature in swimming results, but because they contain a recognizable swimming time, without being a result per say, they can cause problems for `swim_parse`.  Like typos these will not cause an error, but might produce nonsense rows in the resulting data frame.  `swim_parse` deals with strings that should not be included in results with the `avoid` argument.  By default `avoid` contains a lot of common formulations of these header items under `avoid_default`.  You can create your own list of strings as pass it to `avoid`, or add to `avoid_default` via `avoid_new <- c(avoid_default, "your string here")`.  `Avoid` should also include `"r\\:"` if your results have reaction times (`avoid_default` already includes `"r\\:"`). 
 
 ```{r swim_parse html, message = FALSE}
-df_1 <- swim_parse(file = url_read, avoid = c("NY State Rcd:"))
+NYS_df <- swim_parse(file = NYS_text, avoid = c("NY State Rcd:"))
 ```
 
 ```{r swim_parse html output, message = FALSE}
-df_1[358:360,]
+NYS_df[358:360,]
 ```
+\
+
+***********
+
+# Splits
+By setting `splits = TRUE` inside `swim_parse` one can read in split times.  Splits will then be read in as either 50 splits (the default), or 25 splits, depending on the value provided to `split_length`.  Let's look at those same Texas/Florida/Indiana Results again.
+
+```{r splits output, message = FALSE}
+TX_FL_IN_df_splits <-
+  swim_parse(
+    read_results(TX_FL_IN_path),
+    # typo = c("Indiana  University", ", University of"), # not required in versions >= 0.7.0
+    # replacement = c("Indiana University", ""), # not required in versions >= 0.7.0
+    splits = TRUE,
+    split_length = 50
+  )
+
+TX_FL_IN_df_splits[100:102,]
+```
+We can now see split times for the 50 and 100 walls, plus more split columns that are filled in for the longer races.
+
+Care is needed however, because split times are handled inconsistently in source data.  For example in [these results](https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/SwimmeR%20Demo%20Files/Results_IU_UL.pdf), from a meet between Indiana and Louisville splits are sometimes by 25:
+
+![](https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/SwimmeR%20Demo%20Files/Lilly_King_100BR_25_Split.PNG){width=80%}
+
+and sometimes by 50 - within the same meet.
+
+![](https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/SwimmeR%20Demo%20Files/Lilly_King_200BR_50_Split.PNG){width=80%}
+
+Another example, in [these 2017 Junior National results](https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/SwimmeR%20Demo%20Files/7th-snsc-scm-2017-full-results.pdf) from Singapore, the 1500m splits are by 25 for the first 800m, and then the last split is for the final 700m of the race.
+
+![](https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/SwimmeR%20Demo%20Files/700_Split.PNG){width=80%}
+
+Relays are also traditionally handled differently, with splits summing for individual athletes.  In the [2018 Big Ten championship results](https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/SwimmeR%20Demo%20Files/BigTen_WSWIM_2018.pdf) Lilly King does not split a 25.84 on the second 25 of the breaststroke leg of Indiana's 200 medley relay, rather 25.84 was her time for the entire 50 yard breaststroke leg.
+
+![](https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/SwimmeR%20Demo%20Files/Lilly_King_200MR_25_Split_NonCumulative.PNG){width=80%}
+
+Just be forewarned - splits, even within the same meet, will often require some after-import attention and swimming-specific knowledge to clean.
+
+## Formatting Splits
+
+The preferred format for splits is "lap" format, where each split is the duration of a single lap (or length) of the pool.  Splits are sometimes also presented in cumulative format, where each split is the total time elapsed at a particular point in the race.  For example consider this data frame, containing two swimmers swimming the exact same times and splits, but with one in lap format and the other in cumulative format.
+
+```{r splits mixed, message = FALSE}
+df <- data.frame(
+  Place = 1,
+  Name = c("Lenore Lap", "Casey Cumulative"),
+  Team = rep("KVAC", 2),
+  Event = rep("Womens 200 Freestyle", 2),
+  Finals_Time = rep("1:58.00", 2),
+  Split_50 = rep("28.00", 2),
+  Split_100 = c("31.00", "59.00"),
+  Split_150 = c("30.00", "1:29.00"),
+  Split_200 = c("29.00", "1:58.00")
+)
+
+df
+```
+
+Cumulative splits can be converted to lap splits with the `split_to_lap` function.
+
+```{r cumulative to lap, message = FALSE}
+df %>% 
+  filter(Name == "Casey Cumulative") %>% 
+  splits_to_lap()
+```
+
+Splits that are already in lap format can be avoided using the `threshold` parameter in `splits_to_lap`.  The value is `threshold` is effectively a maximum lap split value.  If no swimmer in the data frame will swim a split slower (i.e. greater than) `35.00` then `35.00` makes a good `threshold` value.  Failing to set `threshold` in data frames containing both lap and cumulative split times will result in nonsensical splits and warnings from `SwimmeR`.
+
+```{r cumulative to lap mixed, message = FALSE}
+df %>% 
+  splits_to_lap(threshold = 35)
+```
+
+Converting to cumulative, although not the preferred format, is possible as well with `splits_to_cumulative`.
+
+```{r lap to cumulative, message = FALSE}
+df %>% 
+  filter(Name == "Lenore Lap") %>% 
+  splits_to_cumulative()
+```
+
+Similarly, setting `threshold` allows the exclusion of splits that are already in cumulative format.  Here `threshold` is a minimum split value.
+
+```{r lap to lap cumulative, message = FALSE}
+df %>% 
+  splits_to_cumulative(threshold = 20)
+```
+
+\
+
+*********
+
+# Relay Swimmers
+The final argument to `swim_parse` is `relay_swimmers`, which defaults to `FALSE`.  Setting `relay_swimmers = TRUE` will cause `swim_parse` to read in the names of relay swimmers for each relay, and add them to the normal `swim_parse` output as columns.  I don't love this, because the result is having individual swimmers as rows, and relay swimmers as columns (because relay swimmers are associated with their particular relay).  This is not very tidy, and `SwimmeR` strives to be tidy.  Still, the functionality does exist.
+
+```{r relay swimmers output, message = FALSE}
+TX_FL_IN_df_relay_swimmers <-
+  swim_parse(
+    read_results(TX_FL_IN_path),
+    # typo = c("Indiana  University", ", University of"), # not required in versions >= 0.7.0
+    # replacement = c("Indiana University", ""), # not required in versions >= 0.7.0
+    relay_swimmers = TRUE
+  )
+
+TX_FL_IN_df_relay_swimmers[1:3,]
+```
+
+It is of course also possible to read in both splits and relay swimmers, by setting both of the relevant arguments to `TRUE`.
+
+\
+
+************
 
 # Reading ISL Results
-International Swimming League results are technically .pdf files, but they're formatted very differently, so they have their own special function, `swim_parse_ISL`.  Handling of ISL results is otherwise the same, with the file first going to `read_results` and then to `swim_parse_ISL`, returning a dataframe.
-
-```{r swim_parse_ISL, message = FALSE}
-url <- "https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/ISL_2019_CollegePark_Day_1.pdf"
-url_read <- read_results(url)
-df_ISL <- swim_parse_ISL(file = url_read)
-```
+International Swimming League results are technically .pdf files, but they're formatted very differently, so they have their own special function, `swim_parse_ISL`.  Handling of ISL results is otherwise the same, with the file first going to `read_results` and then to `swim_parse_ISL`, returning a data frame.
 
 The `SwimmeR` package's favorite swimmer, Lilly King, is involved in the ISL.  Let's see what she got up to at this particular meet.
 
-```{r swim_parse_ISL output, message = FALSE}
-df_ISL[which(df$Name == "KING Lilly"),]
+```{r swim_parse_ISL, message = FALSE}
+file_url <-
+  "https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_1_2019/ISL_16112019_CollegePark_Day_1.pdf"
+
+if (SwimmeR:::is_link_broken(file_url) == TRUE) {
+  warning("External data unavailable")
+} else {
+  file_read <- read_results(file_url)
+  df_ISL <- swim_parse_ISL(file = file_read)
+  df_ISL[which(df_ISL$Name == "KING Lilly"), ]
+  
+}
 ```
 
-Two first place finishes for Ms. King - very nice!  Otherwise all the normal information is here, place, time, team, event etc.  Beginning in the 2020 season ISL starts reporting points in their results, which `swim_parse_ISL` will also read.  At this moment `swim_parse_ISL` does not capture relay swimmers (only the overall relay team), although that function may be added to a future version.
+
+Two first place finishes for Ms. King - very nice!  Otherwise all the normal information is here, place, time, team, event etc.  Beginning in the 2020 season ISL starts reporting points in their results, which `swim_parse_ISL` will also read.  `swim_parse_ISL` also handles splits and relay swimmers via the arguments `splits` and `relay_swimmers`.  All ISL meets thus far have splits at the 50 walls, so there is no `split_length` argument.  Otherwise splits and relay swimmers are handled exactly the same way as `swim_parse`, detailed above.
+
+\
+
+************
 
 # Formatting Swimming Times
 
-Once results are captured in R as tidy dataframes the real fun can begin - but there's another problem.  Times in swimming are recorded as minutes:seconds.hundredth.  This is fine when a time is less than a minute, because `59.99` can be of class `numeric` in R, but times greater than or equal to a minute `1:00.00` are stuck as class `character`.  `SwimmeR` provides two functions, `sec_format` and `mmss_format` to convert between times as seconds (for doing math), and times as minutes:seconds.hundredths, for swimming-specific display.
+Once results are captured in R as tidy data frames the real fun can begin - but there's another problem.  Times in swimming are recorded as minutes:seconds.hundredth.  This is fine when a time is less than a minute, because `59.99` can be of class `numeric` in R, but times greater than or equal to a minute `1:00.00` are stuck as class `character`.  `SwimmeR` provides two functions, `sec_format` and `mmss_format` to convert between times as seconds (for doing math), and times as minutes:seconds.hundredths, for swimming-specific display.
 
 ```{r formatting times}
 data(King200Breast)
@@ -130,6 +260,16 @@ King200Breast
 
 This is useful for comparing times, or plotting
 ```{r formatted times plot, fig.height = 5, fig.width = 7}
+plot(King200Breast$Date, King200Breast$Time_sec, axes = FALSE, ann = FALSE)
+axis(1, at = c(16800, 17200, 17600, 18000), labels = c(2016, 2017, 2018, 2019))
+axis(2, at = c(125, 130, 135, 140), labels = mmss_format(c(125, 130, 135, 140)), las = 1)
+par(mar = c(5,7,4,2) + 0.3)
+
+```
+
+The same thing can be done in `ggplot`.
+
+```{r formatted times ggplot, eval = FALSE}
 King200Breast %>% 
   ggplot(aes(x = Date, y = Time_sec)) +
   geom_point() +
@@ -138,6 +278,9 @@ King200Breast %>%
   labs(y= "Time",
        title = "Lilly King NCAA 200 Breaststroke")
 ```
+\
+
+*************
 
 # Using `get_mode` to clean swimming data
 
@@ -159,21 +302,26 @@ df <- df %>%
 df
 ```
 
+\
+
+**********
+
 # Drawing brackets
 To aid in making single elimination brackets for tournaments and shoot-outs `SwimmeR` has `draw_bracket`. Any number of teams between 5 and 64 can be used, with byes automatically assigned to higher seeds.
-```{r brackets 1}
+```{r brackets 1, fig.dim = c(8, 5)}
 teams <- c("red", "orange", "yellow", "green", "blue", "indigo", "violet")
 draw_bracket(teams = teams)
 ```
+
 Now add the results of round two:
-```{r brackets 2}
+```{r brackets 2, fig.dim = c(8, 5)}
 round_two <- c("red", "yellow", "blue", "indigo")
 draw_bracket(teams = teams,
              round_two = round_two)
 ```
 
 And round three:
-```{r brackets 3}
+```{r brackets 3, fig.dim = c(8, 5)}
 round_three <- c("red", "blue")
 draw_bracket(teams = teams,
              round_two = round_two,
@@ -181,7 +329,7 @@ draw_bracket(teams = teams,
 ```
 
 And crown the champion:
-```{r brackets champion}
+```{r brackets champion, fig.dim = c(8, 5)}
 champion <- "red"
 draw_bracket(teams = teams,
              round_two = round_two,

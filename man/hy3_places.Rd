@@ -15,14 +15,11 @@ hy3_places(
 \item{type}{type of times, either "prelims", "relay_prelims", "finals" or "relay_finals"}
 }
 \value{
-a dataframe where column 1 is times and column 2 is row number
+a data frame where column 1 is times and column 2 is row number
 }
 \description{
 Used to pull prelims and finals places from .hy3 files as part of parsing them.
 }
 \seealso{
-\code{hy3_places} is run inside of \code{\link{parse_hy3}}
-}
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
+\code{hy3_places} is run inside of \code{\link{hy3_parse}}
 }

@@ -10,10 +10,13 @@ mmss_format(x)
 \item{x}{A number of seconds to be converted to swimming format}
 }
 \value{
-the number of seconds \code{x} converted to conventional swimming format mm:ss.hh
+the number of seconds \code{x} converted to conventional swimming
+  format mm:ss.hh
 }
 \description{
-Takes a numeric item or list of numeric items representing seconds (e.g. 95.37) and converts to a character string or list of strings in swimming format ("1:35.37").
+Takes a numeric item or list of numeric items representing seconds (e.g.
+95.37) and converts to a character string or list of strings in swimming
+format ("1:35.37").
 }
 \examples{
 mmss_format(95.37)
@@ -23,8 +26,6 @@ mmss_format(c(95.37, 200.95, 59.47, NA))
 
 }
 \seealso{
-\code{\link{sec_format}} \code{mmss_format} is the reverse of \code{sec_format}
-}
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
+\code{\link{sec_format}} \code{mmss_format} is the reverse of
+  \code{sec_format}
 }

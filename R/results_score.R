@@ -1,8 +1,9 @@
 #' Scores a swim meet
 #'
-#' Used to add a \code{Points} column with point values for each place.  Can either score "timed finals" type meets where any athlete can get any place, or "prelims-finals", type meets, where placing is restricted by prelim performance.
-#'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
+#' Used to add a \code{Points} column with point values for each place.  Can
+#' either score "timed finals" type meets where any athlete can get any place,
+#' or "prelims-finals", type meets, where placing is restricted by prelim
+#' performance.
 #'
 #' @importFrom dplyr slice
 #' @importFrom dplyr ungroup
@@ -21,9 +22,12 @@
 #'
 #' @param results an output from \code{swim_parse}
 #' @param events list of events
-#' @param meet_type how to score based on \code{timed_finals}, where any place is possible, or \code{prelims_finals} where athletes are locked into heats for scoring purposes
+#' @param meet_type how to score based on \code{timed_finals}, where any place
+#'   is possible, or \code{prelims_finals} where athletes are locked into heats
+#'   for scoring purposes
 #' @param lanes number of lanes in to the pool, for purposes of heat
-#' @param scoring_heats number of heats which score (if 1 only A final scores, if 2 A and B final score etc.)
+#' @param scoring_heats number of heats which score (if 1 only A final scores,
+#'   if 2 A and B final score etc.)
 #' @param point_values a list of point values for each scoring place
 #'
 #' @return results with point values in a column called \code{Points}
@@ -61,8 +65,8 @@
 #'     stringr::str_detect(Event, "Time Trial") == FALSE,
 #'     stringr::str_detect(Event, "Swim-off") == FALSE
 #'   ) %>%
-#'   dplyr::mutate(School = dplyr::case_when(School == "Wisconsin, Madi" ~ "Wisconsin",
-#'                                           TRUE ~ School))
+#'   dplyr::mutate(Team = dplyr::case_when(Team == "Wisconsin, Madi" ~ "Wisconsin",
+#'                                           TRUE ~ Team))
 #'
 #' # begin results_score portion
 #' df <- BigTen %>%
@@ -89,7 +93,6 @@ results_score <-
 
     max_place <- length(point_values)
 
-    # point_values = c(20, 17, 16, 15, 14, 13, 12, 11, 9, 7, 6, 5, 4, 3, 2, 1)
     # add 0 to list of point values
     point_values <- sort(point_values, decreasing = TRUE)
     point_values <- c(point_values, 0)
@@ -111,7 +114,7 @@ results_score <-
 
     ind_results <- results %>%
       dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "relay") == FALSE) %>%
-      dplyr::distinct(Event, Name, School, .keep_all = TRUE) %>%
+      dplyr::distinct(Event, Name, Team, .keep_all = TRUE) %>%
       unique()
 
     relay_results <- results %>%
@@ -133,7 +136,7 @@ results_score <-
       if (any(stringr::str_detect(stringr::str_to_lower(results$Event), "relay"))) {
         relay_results <- results %>%
           dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "relay") == TRUE) %>% # only want relays
-          dplyr::group_by(Event, School) %>%
+          dplyr::group_by(Event, Team) %>%
           swim_place(max_place = max_place)
 
       } else {
@@ -185,7 +188,7 @@ results_score <-
         if (any(stringr::str_detect(stringr::str_to_lower(results$Event), "relay"))) {
           relay_results <- results %>%
             dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "relay") == TRUE) %>% # only want relays
-            dplyr::group_by(Event, School) %>%
+            dplyr::group_by(Event, Team) %>%
             swim_place(max_place = max_place) %>%
             dplyr::mutate(Heat = 1)
 
@@ -237,13 +240,13 @@ results_score <-
         if (any(stringr::str_detect(stringr::str_to_lower(results$Event), "relay"))) {
           relay_results_1 <- results_1 %>%
             dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "relay") == TRUE) %>% # only want relays
-            dplyr::group_by(Event, School) %>%
+            dplyr::group_by(Event, Team) %>%
             swim_place(max_place = max_place) %>%
             dplyr::mutate(Heat = 1)
 
           relay_results_2 <- results_2 %>%
             dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "relay") == TRUE) %>% # only want relays
-            dplyr::group_by(Event, School) %>%
+            dplyr::group_by(Event, Team) %>%
             swim_place(max_place = max_place) %>%
             dplyr::mutate(Place = Place + lanes) %>%
             dplyr::mutate(Heat = 2)
@@ -339,20 +342,20 @@ results_score <-
         if (any(stringr::str_detect(stringr::str_to_lower(results$Event), "relay"))) {
           relay_results_1 <- results_1 %>%
             dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "relay") == TRUE) %>% # only want relays
-            dplyr::group_by(Event, School) %>%
+            dplyr::group_by(Event, Team) %>%
             swim_place(max_place = max_place) %>%
             dplyr::mutate(Heat = 1)
 
           relay_results_2 <- results_2 %>%
             dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "relay") == TRUE) %>% # only want relays
-            dplyr::group_by(Event, School) %>%
+            dplyr::group_by(Event, Team) %>%
             swim_place(max_place = max_place) %>%
             dplyr::mutate(Place = Place + lanes) %>%
             dplyr::mutate(Heat = 2)
 
           relay_results_3 <- results_3 %>%
             dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "relay") == TRUE) %>% # only want relays
-            dplyr::group_by(Event, School) %>%
+            dplyr::group_by(Event, Team) %>%
             swim_place(max_place = max_place) %>%
             dplyr::mutate(Place = Place + (2 * lanes)) %>%
             dplyr::mutate(Heat = 3)

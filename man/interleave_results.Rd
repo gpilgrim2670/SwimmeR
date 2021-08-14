@@ -7,21 +7,24 @@
 interleave_results(entries, results, type = c("individual", "relay"))
 }
 \arguments{
-\item{entries}{a dataframe containing columns for minimum and maximum row number (usually `Row_Min` and `Row_Max`).  Times or places will be interleaved into this dataframe.}
+\item{entries}{a data frame containing columns for minimum and maximum row
+number (usually `Row_Min` and `Row_Max`).  Times or places will be
+interleaved into this data frame.}
 
-\item{results}{a dataframe containing times (or places) in column 1 (or other values to be interleaved) and row numbers in column 2 (usually `Row_Numb`).}
+\item{results}{a data frame containing times (or places) in column 1 (or
+other values to be interleaved) and row numbers in column 2 (usually
+`Row_Numb`).}
 
 \item{type}{either "individual" or "relay"}
 }
 \value{
-a modified version of `entries` with values from `results` interleaved on the basis of row number
+a modified version of `entries` with values from `results`
+  interleaved on the basis of row number
 }
 \description{
 Interleaves times or places based on row number ranges.
 }
 \seealso{
-\code{interleave_results} is a helper function used in \code{\link{parse_hy3}}
-}
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
+\code{interleave_results} is a helper function used in
+  \code{\link{hy3_parse}}
 }

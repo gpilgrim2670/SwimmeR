@@ -7,18 +7,23 @@
 splits_parse(text, split_len = split_length)
 }
 \arguments{
-\item{text}{output of \code{read_results} with tow numbers appended by \code{add_row_numbers}}
+\item{text}{output of \code{read_results} with row numbers appended by
+\code{add_row_numbers}}
 
-\item{split_len}{length at which splits are measured}
+\item{split_len}{length of pool at which splits are measured - usually 25 or
+50}
 }
 \value{
 returns a dataframe with split times and row numbers
 }
 \description{
-Takes the output of \code{read_results} and, inside of \code{swim_parse}, extracts split times and associated row numbers
+Takes the output of \code{read_results} and, inside of \code{swim_parse},
+extracts split times and associated row numbers
 }
 \seealso{
-\code{splits_parse} runs inside \code{\link{swim_parse}} on the output of \code{\link{read_results}} with row numbers from \code{\link{add_row_numbers}}
+\code{splits_parse} runs inside \code{\link{swim_parse}} on the
+  output of \code{\link{read_results}} with row numbers from
+  \code{\link{add_row_numbers}}
 }
 \author{
 Greg Pilgrim \email{gpilgrim2670@gmail.com}

@@ -1,5 +1,116 @@
-# Version 0.5.1
-* fixed breaking issue caused by change in International Swimming League result reporting format between version 0.5.0 and now.
+# Version 0.12.0
+* much improved functionality for parsing Omega results
+* testing built for Tokyo 2020 results
+* Now capturing reaction times for individual events in Hytek results
+* various bug fixes, documentation updates etc.
+
+## Test environments
+* local Windows 10 install, R 4.0.5
+* local OS X install, R 4.0.2
+* win_devel
+* rhub
+
+## R CMD check results
+
+0 errors | 0 warnings | 0 notes
+
+# Version 0.11.0
+* added splits_to_lap and splits_to_cumulative and associated testing
+* added functionality for parsing Omega results
+* improvements in age handling
+* various bug fixes, documentation updates etc.
+
+## Test environments
+* local Windows 10 install, R 4.0.5
+* local OS X install, R 4.0.2
+* win_devel
+* rhub
+
+## R CMD check results
+
+0 errors | 0 warnings | 0 notes
+
+# Version 0.10.0
+* depreciated course_convert_df function
+* removed tibble dependency
+* improvements and bug fixes for Hytek and S.A.M.M.S. results
+
+## Test environments
+* local Windows 10 install, R 4.0.5
+* local OS X install, R 4.0.2
+* win_devel
+* rhub
+
+## R CMD check results
+
+0 errors | 0 warnings | 0 notes
+
+# Version 0.9.0
+* name_reorder function now accepts lists and has a verbose option
+* added correct_split_distance function renaming split columns in data frames with mixed split lengths
+* added discard_errors function for cleaning web scrapping results and for export to JumpeR package
+* various bug fixes
+
+## Test environments
+* local Windows 10 install, R 4.0.2
+* local OS X install, R 4.0.2
+* win_devel
+* rhub
+
+## R CMD check results
+
+0 errors | 0 warnings | 0 notes
+
+
+# Version 0.8.0
+* added name_reorder function
+* added handling of paralympic codes to swim_parse
+* fixes to better align package tests with CRAN policies
+* various bug fixes
+
+## Test environments
+* local Windows 10 install, R 4.0.2
+* local OS X install, R 4.0.2
+* win_devel
+
+## R CMD check results
+
+0 errors | 0 warnings | 0 notes
+
+
+# Version 0.7.2
+* addressed testing issues for Debian builds which I think are related to debian/pdftools/poppler issues that are beyond my control
+
+## Test environments
+* local Windows 10 install, R 4.0.2
+* local OS X install, R 4.0.2
+* win_devel
+* rhub debian-clang-devel
+
+# Version 0.7.1
+* addressed testing issues for Debian builds
+
+## Test environments
+* local Windows 10 install, R 4.0.2
+* local OS X install, R 4.0.2
+* win_devel
+
+# Version 0.7.0
+* added functionality for reading S.A.M.M.S. style results
+* improvements and simplifications to use of swim_parse function
+* various bug fixes 
+
+## Test environments
+* local Windows 10 install, R 4.0.2
+* local OS X install, R 4.0.2
+* win_devel
+
+# Version 0.6.0
+* added functionality for reading splits and relay swimmers to swim_parse and swim_parse_ISL
+* added fixes to make calls to web resources fail more gracefully
+* updates to vignette and documentation
+* various bug fixes
+* significant updates to improve testing coverage
 
 ## Test environments
 * local Windows 10 install, R 4.0.2

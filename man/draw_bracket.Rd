@@ -17,29 +17,37 @@ draw_bracket(
 )
 }
 \arguments{
-\item{teams}{a list of teams, ordered by desired seed, to place in bracket.  Must be between 5 and 64 inclusive.  Teams must have unique names}
+\item{teams}{a list of teams, ordered by desired seed, to place in bracket.
+Must be between 5 and 64 inclusive.  Teams must have unique names}
 
 \item{title}{bracket title}
 
 \item{text_size}{number passed to \code{cex} in plotting}
 
-\item{round_two}{a list of teams advancing to the second round (need not be in order)}
+\item{round_two}{a list of teams advancing to the second round (need not be in
+order)}
 
-\item{round_three}{a list of teams advancing to the third round (need not be in order)}
+\item{round_three}{a list of teams advancing to the third round (need not be
+in order)}
 
-\item{round_four}{a list of teams advancing to the forth round (need not be in order)}
+\item{round_four}{a list of teams advancing to the forth round (need not be in
+order)}
 
-\item{round_five}{a list of teams advancing to the fifth round (need not be in order)}
+\item{round_five}{a list of teams advancing to the fifth round (need not be in
+order)}
 
-\item{round_six}{a list of teams advancing to the fifth round (need not be in order)}
+\item{round_six}{a list of teams advancing to the fifth round (need not be in
+order)}
 
 \item{champion}{the name of the overall champion team (there can be only one)}
 }
 \value{
-a plot of a bracket for the teams, with results and titles as specified
+a plot of a bracket for the teams, with results and titles as
+ specified
 }
 \description{
-Will draw a single elimination bracket for the appropriate number of teams, inserting first round byes for higher seeds as needed
+Will draw a single elimination bracket for the appropriate number of teams,
+inserting first round byes for higher seeds as needed
 }
 \examples{
 \dontrun{
@@ -55,8 +63,7 @@ draw_bracket(teams = teams,
 
 }
 \references{
-based on \code{draw.bracket} from the seemingly now defunct \code{mRchmadness} package by Eli Shayer and Saber Powers and used per the terms of that package's GPL-2 license
-}
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
+based on \code{draw.bracket} from the seemingly now defunct
+ \code{mRchmadness} package by Eli Shayer and Saber Powers and used per the
+ terms of that package's GPL-2 license
 }

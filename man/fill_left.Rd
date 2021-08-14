@@ -2,22 +2,22 @@
 % Please edit documentation in R/fill_left.R
 \name{fill_left}
 \alias{fill_left}
-\title{Shifts non-NA values to left in dataframe}
+\title{Shifts non-NA values to left in data frame}
 \usage{
 fill_left(df)
 }
 \arguments{
-\item{df}{a dataframe having some NA values}
+\item{df}{a data frame having some `NA` values}
 }
 \value{
-a dataframe where all values have been pushed left, replacing NAs, and all columns containing only NAs have been removed
+a data frame where all values have been pushed left, replacing `NA`s,
+  and all columns containing only `NA`s have been removed
 }
 \description{
-Moves non-NA data left into NA spaces, then removes all columns that contain only NA values
+Moves non-NA data left into NA spaces, then removes all columns that contain
+only NA values
 }
 \seealso{
-\code{fill_left} is a helper function
-}
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
+\code{fill_left} is a helper function inside \code{lines_sort} and
+  \code{splits_parse}
 }
