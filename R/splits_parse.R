@@ -37,11 +37,6 @@ splits_parse <- function(text, split_len = split_length) {
   # text <- read_results("inst/extdata/s2-results.pdf")
   # text <- read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm")
 
-  #
-  # text <- add_row_numbers(text)
-  # split_len <- 50
-
-
   # text <- read_results("https://data.ohiostatebuckeyes.com/livestats/m-swim/210302F001.htm")
   # file <- system.file("extdata", "jets08082019_067546.pdf", package = "SwimmeR")
   # file <- "https://s3.amazonaws.com/sidearm.sites/gopack.com/documents/2021/3/20/2021_DI_Women_Final_Results.pdf"
@@ -51,11 +46,8 @@ splits_parse <- function(text, split_len = split_length) {
   ### collect row numbers from rows containing splits ###
   ### define strings ###
 
-  # text <- as_lines_list_2
   text <- text %>%
-    stringr::str_replace_all(" \\:", "  ") %>%
-    stringr::str_remove_all(" [:upper:]R\\,?") %>%
-    stringr::str_remove_all(" US\\,?")
+    stringr::str_replace_all(" \\:", "  ")
 
   # split_string <- "\\(\\d?\\:?\\d\\d\\.\\d\\d\\)"
   split_string <- "\\(\\d{0,2}\\:?\\d?\\d\\.\\d\\d\\)"
@@ -95,18 +87,18 @@ splits_parse <- function(text, split_len = split_length) {
     if (flag == TRUE) {
       # if there's a risk of rows with letters
 
+      data_1_splits <- text %>%
+        .[purrr::map_lgl(.,
+                         stringr::str_detect,
+                         split_string)]
+
+      # in some cases all splits are without parens
+      if (length(data_1_splits) < 1) {
         data_1_splits <- text %>%
           .[purrr::map_lgl(.,
                            stringr::str_detect,
-                           split_string)]
-
-        # in some cases all splits are without parens
-        if (length(data_1_splits) < 1) {
-          data_1_splits <- text %>%
-            .[purrr::map_lgl(.,
-                             stringr::str_detect,
-                             split_string_parens)]
-        }
+                           split_string_parens)]
+      }
 
       suppressWarnings(
         data_1_splits <- data_1_splits %>%
@@ -169,13 +161,12 @@ splits_parse <- function(text, split_len = split_length) {
     data_splits_length_10 <- data_1_splits[purrr::map(data_1_splits, length) == 10]
 
     #### transform all lists to dataframes ####
-
-    if (length(data_length_10) > 0) {
-      df_10 <- data_length_10 %>%
+    if (length(data_splits_length_10) > 0) {
+      df_10_splits <- data_splits_length_10 %>%
         list_transform()
     } else {
       df_10_splits <- data.frame(Row_Numb = character(),
-                          stringsAsFactors = FALSE)
+                                 stringsAsFactors = FALSE)
     }
 
     if (length(data_splits_length_9) > 0) {
@@ -183,7 +174,7 @@ splits_parse <- function(text, split_len = split_length) {
         list_transform()
     } else {
       df_9_splits <- data.frame(Row_Numb = character(),
-                         stringsAsFactors = FALSE)
+                                stringsAsFactors = FALSE)
     }
 
     if (length(data_splits_length_8) > 0) {
@@ -191,7 +182,7 @@ splits_parse <- function(text, split_len = split_length) {
         list_transform()
     } else {
       df_8_splits <- data.frame(Row_Numb = character(),
-                         stringsAsFactors = FALSE)
+                                stringsAsFactors = FALSE)
     }
 
     if (length(data_splits_length_7) > 0) {
@@ -199,7 +190,7 @@ splits_parse <- function(text, split_len = split_length) {
         list_transform()
     } else {
       df_7_splits <- data.frame(Row_Numb = character(),
-                         stringsAsFactors = FALSE)
+                                stringsAsFactors = FALSE)
     }
 
     if (length(data_splits_length_6) > 0) {
@@ -207,7 +198,7 @@ splits_parse <- function(text, split_len = split_length) {
         list_transform()
     } else {
       df_6_splits <- data.frame(Row_Numb = character(),
-                         stringsAsFactors = FALSE)
+                                stringsAsFactors = FALSE)
     }
 
     if (length(data_splits_length_5) > 0) {
@@ -215,7 +206,7 @@ splits_parse <- function(text, split_len = split_length) {
         list_transform()
     } else {
       df_5_splits <- data.frame(Row_Numb = character(),
-                         stringsAsFactors = FALSE)
+                                stringsAsFactors = FALSE)
     }
 
     if (length(data_splits_length_4) > 0) {
@@ -223,7 +214,7 @@ splits_parse <- function(text, split_len = split_length) {
         list_transform()
     } else {
       df_4_splits <- data.frame(Row_Numb = character(),
-                         stringsAsFactors = FALSE)
+                                stringsAsFactors = FALSE)
     }
 
     if (length(data_splits_length_3) > 0) {
@@ -231,7 +222,7 @@ splits_parse <- function(text, split_len = split_length) {
         list_transform()
     } else {
       df_3_splits <- data.frame(Row_Numb = character(),
-                         stringsAsFactors = FALSE)
+                                stringsAsFactors = FALSE)
     }
 
     if (length(data_splits_length_2) > 0) {
@@ -239,7 +230,7 @@ splits_parse <- function(text, split_len = split_length) {
         list_transform()
     } else {
       df_2_splits <- data.frame(Row_Numb = character(),
-                         stringsAsFactors = FALSE)
+                                stringsAsFactors = FALSE)
     }
 
     #### bind up results ####
@@ -298,4 +289,3 @@ splits_parse <- function(text, split_len = split_length) {
   return(data_splits)
 
 }
-

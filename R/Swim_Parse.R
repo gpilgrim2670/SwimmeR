@@ -925,8 +925,8 @@ Swim_Parse <-
       if(min(data$Row_Numb) < min(reaction_times$Reaction_Time_Row_Numb)){
         unknown_reaction_time <- data.frame(Reaction_Time = "NA",
                                             Reaction_Time_Row_Numb = min(data$Row_Numb))
-                                    # Reaction_Time_Row_Min = min(data$Row_Numb),
-                                    # Reaction_Time_Row_Max = min(reaction_times$Reaction_Time_Row_Min) - 1)
+        # Reaction_Time_Row_Min = min(data$Row_Numb),
+        # Reaction_Time_Row_Max = min(reaction_times$Reaction_Time_Row_Min) - 1)
         reaction_times <- dplyr::bind_rows(unknown_reaction_time, reaction_times)
       }
 
@@ -984,12 +984,6 @@ Swim_Parse <-
         data <- data %>%
           dplyr::left_join(splits_df, by = c("Row_Numb" = "Row_Numb_Adjusted")) %>%
           dplyr::select(!dplyr::starts_with("Split"), stringr::str_sort(names(.), numeric = TRUE)) # keep splits columns in order
-
-      data <- data %>%
-        mutate(Row_Numb = case_when(stringr::str_detect(Event, "Relay") == TRUE ~ Row_Numb + 1,
-                                    TRUE ~ Row_Numb)) %>%
-        dplyr::left_join(splits_df, by = 'Row_Numb')
-        # dplyr::left_join(splits_df, by = c("Row_Numb" = "Row_Numb_Relay"))
 
       }
 
