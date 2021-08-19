@@ -195,7 +195,7 @@ Swim_Parse <-
       return(data)
 
     } else if (any(stringr::str_detect(file[1:6], "S\\.A\\.M\\.M\\.S\\.|MEET SANCTION NUMBER")) == TRUE) { # for S.A.M.M.S files
-      data <- samms_parse(file_samms = file,
+      data <- swim_parse_samms(file_samms = file,
                           avoid_samms = avoid,
                           typo_samms = typo,
                           replacement_samms = replacement,

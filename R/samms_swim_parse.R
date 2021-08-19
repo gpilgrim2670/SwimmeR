@@ -53,7 +53,7 @@
 #' @seealso \code{swim_parse} must be run on the output of
 #'   \code{\link{read_results}}
 
-samms_parse <-
+swim_parse_samms <-
   function(file_samms,
            avoid_samms = avoid,
            typo_samms = typo,
