@@ -147,24 +147,6 @@ Swim_Parse <-
     #### define avoid_minimal ####
     avoid_minimal <- c("^\\s{1,}r\\:")
 
-    #### testing ####
-    # file <- read_results("https://data.ohiostatebuckeyes.com/livestats/m-swim/210302F001.htm")
-    # file <- read_results(system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR"))
-
-    # file <- read_results("https://www.somersetasa.org/sasa/media/archive1/swimchamps2020/d7/1500m_mixed_090220.pdf")
-    # file <- read_results("https://www.somersetasa.org/sasa/media/archive1/swimchamps2020/d6/s11_0802.pdf")
-    # file <- read_results("https://www.somersetasa.org/sasa/media/archive1/swimchamps2020/d4/s7_0102.pdf")
-    # file <- read_results("https://swimswam.com/wp-content/uploads/2018/08/2004-Division-I-NCAA-Championships-Women-results1.pdf")
-    # file <- read_results("http://www.swmeets.com/Realtime/Speedo%20Champions/210803F004.htm")
-    # file <-
-    #   system.file("extdata", "2018_jimi_flowers_PARA.pdf", package = "SwimmeR") %>%
-    #   read_results()
-    # file <- "http://www.swmeets.com/Realtime/Speedo%20Champions/210803F004.htm" %>%
-    #   read_results()
-    # avoid <- avoid_default
-    # typo <- c("typo")
-    # replacement <- c("typo")
-
     #### combine avoid and avoid_default
     avoid <- unique(c(avoid, avoid_default))
 

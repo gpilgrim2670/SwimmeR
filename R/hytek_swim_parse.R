@@ -77,6 +77,43 @@ swim_parse_hytek <-
            relay_swimmers_hytek = relay_swimmers) {
 
 
+    #### testing ####
+    # file_hytek <- read_results("https://data.ohiostatebuckeyes.com/livestats/m-swim/210302F001.htm")
+    # file_hytek <- read_results(system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR"))
+
+    # file_hytek <- read_results("https://www.somersetasa.org/sasa/media/archive1/swimchamps2020/d7/1500m_mixed_090220.pdf")
+    # file_hytek <- read_results("https://www.somersetasa.org/sasa/media/archive1/swimchamps2020/d6/s11_0802.pdf")
+    # file_hytek <- read_results("https://www.somersetasa.org/sasa/media/archive1/swimchamps2020/d4/s7_0102.pdf")
+    # file_hytek <- read_results("https://swimswam.com/wp-content/uploads/2018/08/2004-Division-I-NCAA-Championships-Women-results1.pdf")
+    # file_hytek <- read_results("http://www.swmeets.com/Realtime/Speedo%20Champions/210803F004.htm")
+    # file_hytek <-
+    #   system.file("extdata", "2018_jimi_flowers_PARA.pdf", package = "SwimmeR") %>%
+    #   read_results()
+    # file_hytek <- "http://www.swmeets.com/Realtime/Speedo%20Champions/210803F004.htm" %>%
+    #   read_results()
+    # avoid_hytek <- (    avoid_default <-
+    # c(
+    #   # "[:upper:]\\:",
+    #   "[A-S]\\:",
+    #   # to allow EVENT:
+    #   "[U-Z]\\:",
+    #   # to allow EVENT:
+    #   "[A-MO-Z]T\\:",
+    #   # to allow EVENT:
+    #   "[a-q]\\:",
+    #   # want to make sure to include r: for reaction times in splits lines
+    #   "[s-z]\\:",
+    #   # want to make sure to include r: for reaction times in splits lines
+    #   "[:alpha:]r\\:",
+    #   "\\.\\:",
+    #   "\\d\\:\\s",
+    #   "\\'\\:",
+    #   "QUALIFYING "
+    # ))
+    # typo_avoid_hytek <- c("typo")
+    # replacement_hytek <- c("typo")
+
+
     as_lines_list_2 <- file_hytek %>%
       .[purrr::map_lgl(., stringr::str_detect, "Early take-off", negate = TRUE)] %>% # removes DQ rational used in some relay DQs that messes up line spacing between relay and swimmers/splits - must happen before adding in row numbers
       add_row_numbers() %>%
