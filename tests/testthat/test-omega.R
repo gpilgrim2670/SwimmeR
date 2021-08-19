@@ -1890,6 +1890,7 @@ test_that("Tokyo 2020 Men 200FR Finals, need to capture swims", {
       row.names = c(NA, -8L),
       class = "data.frame"
     )
+
   expect_equivalent(df_standard,
                     df_test)
 
@@ -2151,6 +2152,7 @@ test_that("Tokyo 2020 Men 4x200FR Finals, need to not capture splits as swims",
                 row.names = c(NA, -8L),
                 class = "data.frame"
               )
+
             expect_equivalent(df_standard,
                               df_test)
 

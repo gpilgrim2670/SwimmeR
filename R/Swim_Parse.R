@@ -198,6 +198,19 @@ Swim_Parse <-
 
       return(data)
 
+    } else if ((any(stringr::str_detect(file, "Splash Meet Manager")))) {
+      data <- swim_parse_splash(
+        file_splash = file,
+        avoid_splash = avoid,
+        typo_splash = typo,
+        replacement_splash = replacement,
+        splits = splits,
+        split_length_splash = split_length,
+        relay_swimmers_splash = relay_swimmers
+      )
+
+      return(data)
+
     } else { # hytek files
 
       data <- swim_parse_hytek(

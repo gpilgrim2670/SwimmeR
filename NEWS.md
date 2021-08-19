@@ -1,3 +1,6 @@
+# SwimmeR 0.12.1 - August 19th 2021
+* Initial work in Splash Meet Manager/Swimming Federation of India results
+
 # SwimmeR 0.12.0 - August 13th 2021
 * CRAN release
 * contains all dev version updates since SwimmeR 0.11.0
