@@ -1,5 +1,5 @@
-#' Formats swimming and diving data read with \code{read_results} into a data
-#' frame
+#' Formats Omega style swimming and diving data read with \code{read_results}
+#' into a data frame
 #'
 #' Takes the output of \code{read_results} and cleans it, yielding a data frame
 #' of swimming (and diving) results
