@@ -3,7 +3,7 @@ test_that("Glenmark Senior Nationals 2019 whole meet", {
   skip_on_cran()
 
   file <-
-    "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/India%20Swimming%20Federation/Glenmark_Senior_Nationals_2019.pdf"
+    "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Splash/Glenmark_Senior_Nationals_2019.pdf"
 
   df_test <- file %>%
     read_results() %>%
@@ -316,3 +316,21 @@ test_that("Glenmark Senior Nationals 2019 whole meet", {
   expect_equivalent(df_test, df_standard)
 
 })
+
+# test_that("Glenmark Senior Nationals 2019 whole meet", {
+#
+#   skip_on_cran()
+#
+#   file <-
+#     "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Splash/Khelo_India_Youth_Games_2020.pdf"
+#
+#   df_test <- file %>%
+#     read_results() %>%
+#     swim_parse() %>%
+#     select(-Event)
+#
+#   df_standard <-
+#
+#   expect_equivalent(df_test, df_standard)
+#
+# })

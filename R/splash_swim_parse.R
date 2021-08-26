@@ -78,8 +78,10 @@ swim_parse_splash <-
     #### Testing ####
     # file_splash <-
     #   read_results(
-    #     "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/India%20Swimming%20Federation/Glenmark_Senior_Nationals_2019.pdf"
+    #     "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Splash/Glenmark_Senior_Nationals_2019.pdf"
     #   )
+    # file_splash <- "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Splash/Khelo_India_Youth_Games_2020.pdf" %>%
+    #   read_results()
     # avoid_splash <- c("abcxyz")
     # typo_splash <- c("typo")
     # replacement_splash <- c("typo")
@@ -125,10 +127,14 @@ swim_parse_splash <-
                        paste0(Record_String, "|Splash Meet Manager"),
                        negate = TRUE)] %>%
       .[purrr::map_lgl(., stringr::str_detect, "\\dm\\:", negate = TRUE)] %>%
-      .[purrr::map_lgl(., stringr::str_detect, "^\\d+|^DSQ")] %>%
+      # .[purrr::map_lgl(., stringr::str_detect, "^\\d+|^DSQ")] %>%
+      .[purrr::map_lgl(., stringr::str_detect, "\\d\\.\\d{2}\\s+[:alpha:]", negate = TRUE)] %>%
       stringr::str_replace_all("(?<=\\d\\.) (?=[:alpha:])", "  ") %>% # split places (1.) and names
       stringr::str_replace_all("(?<=\\d) (?=\\d)", "  ") %>% # split times and scores
       trimws()
+
+    data_cleaned <- data_cleaned %>%
+      str_replace("^([:alpha:])", "999\\.  \\1") # splash for dealing with ties
 
     #### splits data into variables by splitting at multiple (>= 2) spaces ####
     data_cleaned <-
@@ -327,8 +333,10 @@ swim_parse_splash <-
     data <- data %>%
       dplyr::mutate(DQ = dplyr::case_when(stringr::str_detect(Place, "DSQ") == TRUE ~ 1,
                                           TRUE ~ 0)) %>%
-      mutate(Place = str_remove(Place, "\\.")) %>%
-      mutate(Place = dplyr::case_when(stringr::str_detect(Place, "DSQ") == TRUE ~ "Unknown",
+      dplyr::mutate(Place = str_remove(Place, "\\.")) %>%
+      dplyr::mutate(Place = dplyr::case_when(stringr::str_detect(Place, "DSQ") == TRUE ~ "Unknown",
+                                      TRUE ~ Place)) %>%
+      dplyr::mutate(Place = dplyr::case_when(stringr::str_detect(Place, "999") == TRUE ~ dplyr::lag(Place),
                                       TRUE ~ Place))
 
     data <- data %>%
