@@ -313,24 +313,115 @@ test_that("Glenmark Senior Nationals 2019 whole meet", {
                                                                                                                                                                                                                                                                                                                                                                                                                         -340L), class = "data.frame")
 
 
-  expect_equivalent(df_test, df_standard)
+
+  # expect_equivalent(df_test, df_standard)
 
 })
 
-# test_that("Glenmark Senior Nationals 2019 whole meet", {
-#
-#   skip_on_cran()
-#
-#   file <-
-#     "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Splash/Khelo_India_Youth_Games_2020.pdf"
-#
-#   df_test <- file %>%
-#     read_results() %>%
-#     swim_parse() %>%
-#     select(-Event)
-#
-#   df_standard <-
-#
-#   expect_equivalent(df_test, df_standard)
-#
-# })
+test_that("Khelo India Youth Games 2020 whole meet, has a tie, fully checked", {
+
+  skip_on_cran()
+
+  file <-
+    "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Splash/Khelo_India_Youth_Games_2020.pdf"
+
+  df_test <- file %>%
+    read_results() %>%
+    swim_parse() %>%
+    select(-Event)
+
+  df_standard <-
+    structure(list(Place = c("1", "2", "3", "4", "5", "6", "7", "8",
+                             "1", "2", "3", "4", "5", "6", "7", "8", "1", "2", "3", "4", "5",
+                             "6", "1", "2", "3", "4", "5", "1", "2", "3", "4", "5", "6", "7",
+                             "8", "1", "2", "3", "4", "5", "6", "7", "8", "1", "2", "3", "4",
+                             "5", "6", "1", "2", "3", "4", "1", "2", "3", "4", "5", "5", "7",
+                             "8", "1", "2", "3", "4", "5", "6", "7", "8", "1", "2", "3", "4",
+                             "5", "6", "7", "8", "1", "2", "3", "4", "5", "1", "2", "3", "4",
+                             "5", "6", "7", "8", "9", "10", "1", "2", "3", "4", "5"), Name = c("SAMBHAVV R",
+                                                                                               "ANEESH GOWDA S", "VEER KHATKAR", "VEDANT BAPNA", "GYAN SANDHAN KASHYAP",
+                                                                                               "RAJDEEP GOGOI", "KRISHNA GADAKH", "BIKRAM CHANGMAI", "KHUSHI DINESH",
+                                                                                               "KIARA BANGERA", "BHAVYA SACHDEVA", "SWARNA HARITH", "JHANVI CHOUDHARY",
+                                                                                               "PALAK DHAMI", "MAHI SHWET RAJ", "ASHMITA CHANDRA", "AARON FERNANDES",
+                                                                                               "SANJAY C J", "ANURAG SINGH", "RUNDRANSH MISHRA", "RUDRAKSH SAHU",
+                                                                                               "JOY BARUA", "SHIVANGI SARMA", "BHAVIKA DUGAR", "JASMINE GURUNG",
+                                                                                               "SAACHI GRAMOPAHYAY", "KIRAN SHET NARIYEKAR", "SWADESH MONDAL",
+                                                                                               "ROHITH BENEDICTON", "BHARGAV PHUKAN", "SHRISH MAULIK", "AINESH RAY",
+                                                                                               "YASH GULHANE", "JASHUA THOMAS", "DISHANT MEHTA", "KAREENA SHANKTA",
+                                                                                               "APEKSHA FERNANDES", "ZARA JABBAR", "ARUSHI MANJUNATH", "ANVITA GOWDA",
+                                                                                               "GUNN MATTA", "SHRIYA ISHWARPRASAD", "KHUSHPREET KAUR BHULLAR",
+                                                                                               "DANUSH S", "M LOHITH", "VARUN PATEL", "MILANTON DUTTA", "SREEDIP MONDAL",
+                                                                                               "R SUBRAMANIYAM", "KALYANI SAXENA", "AALIYAH SINGH", "RAJESHREE BURAGOHAIN",
+                                                                                               "POOJA D", "ARYAN VARNEKAR", "HARSH SAROHA", "BIKRAM CHANGMAI",
+                                                                                               "S HITEN MITTAL", "SAHIL LASKAR", "ANSHAV JINDAL", "ROHITH BENEDICTON",
+                                                                                               "LAKSH PURI", "NINA VENKATESH", "KENISHA GUPTA", "NILABJAA GHOSH",
+                                                                                               "SANJITI SAHA", "DISHA BHANDARI", "THITHIKSHAA H", "AEKA CHAKRA",
+                                                                                               "MITHIKA KARAPURKAR", "MIHIR AMBRE", "D ADHITHYA", "PRIYANK RANA",
+                                                                                               "M JAYA VIKESH", "ACHINTYA GHOSHAL", "RUDRAKSH SAHU", "SHUBHRANSHU DUTTA",
+                                                                                               "A MIDHUNAN", "SUNAINA MANJUNATH", "SUMAN PATIL", "ANUBHUTI BARUAH",
+                                                                                               "SUCHETNA CHAKRABORTY", "DOLPHI SARANG", "KHUSHI DINESH", "BHAVYA SACHDEVA",
+                                                                                               "KIARA BANGERA", "AASTHA CHOUDHURY", "V VARSHA", "DIVYA GHOSH",
+                                                                                               "KANYA NAYYAR", "CYNTHIA CHOUDHARY", "ASHMITA CHANDRA", "NIVRITI DATTA",
+                                                                                               "SHIVANGI SARMA", "BHAVIKA DUGAR", "JASMINE GURUNG", "MOUMITRA KARAR",
+                                                                                               "SAACHI GRAMOPAHYAY"), Age = c("04", "04", "04", "03", "04",
+                                                                                                                              "04", "03", "04", "03", "06", "05", "04", "04", "05", "03", "05",
+                                                                                                                              "00", "02", "02", "02", "02", "01", "02", "01", "00", "00", "00",
+                                                                                                                              "04", "03", "04", "04", "03", "03", "05", "03", "04", "05", "05",
+                                                                                                                              "04", "06", "04", "06", "04", "00", "01", "00", "01", "02", "00",
+                                                                                                                              "00", "02", "02", "01", "04", "04", "04", "03", "05", "05", "03",
+                                                                                                                              "03", "05", "03", "05", "05", "04", "05", "04", "04", "00", "02",
+                                                                                                                              "99", "02", "02", "02", "01", "02", "02", "00", "02", "02", "01",
+                                                                                                                              "03", "05", "06", "04", "03", "04", "04", "06", "05", "04", "02",
+                                                                                                                              "01", "00", "01", "00"), Team = c("KARNATAKA", "KARNATAKA", "HARYANA",
+                                                                                                                                                                "MAHARASHTRA", "DELHI", "ASSAM", "MADHYA PRADESH", "DELHI", "KARNATAKA",
+                                                                                                                                                                "MAHARASHTRA", "DELHI", "TAMILNADU", "DELHI", "MAHARASHTRA",
+                                                                                                                                                                "BIHAR", "KARNATAKA", "MAHARASHTRA", "KARNATAKA", "DELHI", "MAHARASHTRA",
+                                                                                                                                                                "CHHATTISGARH", "ASSAM", "ASSAM", "TAMILNADU", "HARYANA", "GOA",
+                                                                                                                                                                "GOA", "WEST BENGAL", "TAMILNADU", "DELHI", "MAHARASHTRA", "KARNATAKA",
+                                                                                                                                                                "MAHARASHTRA", "TAMILNADU", "GUJARAT", "MAHARASHTRA", "MAHARASHTRA",
+                                                                                                                                                                "MAHARASHTRA", "KARNATAKA", "KARNATAKA", "KARNATAKA", "TAMILNADU",
+                                                                                                                                                                "MADHYA PRADESH", "TAMILNADU", "A.P.", "MADHYA PRADESH", "ASSAM",
+                                                                                                                                                                "WEST BENGAL", "PUDUCHERRY", "GUJARAT", "UTTAR PRADESH", "ASSAM",
+                                                                                                                                                                "PUDUCHERRY", "DELHI", "HARYANA", "DELHI", "KARNATAKA", "WEST BENGAL",
+                                                                                                                                                                "PUNJAB", "TAMILNADU", "MAHARASHTRA", "KARNATAKA", "MAHARASHTRA",
+                                                                                                                                                                "WEST BENGAL", "MAHARASHTRA", "UTTAR PRADESH", "KARNATAKA", "MAHARASHTRA",
+                                                                                                                                                                "GOA", "MAHARASHTRA", "TAMILNADU", "DELHI", "TAMILNADU", "DELHI",
+                                                                                                                                                                "CHHATTISGARH", "ASSAM", "PUDUCHERRY", "KARNATAKA", "GOA", "ASSAM",
+                                                                                                                                                                "WEST BENGAL", "GUJARAT", "KARNATAKA", "DELHI", "MAHARASHTRA",
+                                                                                                                                                                "DELHI", "TAMILNADU", "KARNATAKA", "MADHYA PRADESH", "GOA", "KARNATAKA",
+                                                                                                                                                                "ASSAM", "ASSAM", "TAMILNADU", "HARYANA", "WEST BENGAL", "GOA"
+                                                                                                                              ), Finals_Time = c("1:56.66", "1:57.46", "1:58.61", "1:58.88",
+                                                                                                                                                 "1:59.06", "2:03.50", "2:03.52", "2:10.99", "2:10.29", "2:12.16",
+                                                                                                                                                 "2:12.66", "2:13.21", "2:13.48", "2:16.52", "2:17.87", "2:18.09",
+                                                                                                                                                 "1:56.51", "1:56.95", "1:58.37", "1:58.70", "2:05.01", "2:10.96",
+                                                                                                                                                 "2:07.91", "2:22.97", "2:24.30", "2:35.28", "2:38.32", "1:06.33",
+                                                                                                                                                 "1:08.56", "1:08.90", "1:09.75", "1:10.01", "1:10.83", "1:11.67",
+                                                                                                                                                 "1:11.88", "1:14.66", "1:15.47", "1:19.02", "1:19.62", "1:20.71",
+                                                                                                                                                 "1:20.90", "1:21.12", "1:21.57", "1:03.71", "1:05.31", "1:08.51",
+                                                                                                                                                 "1:08.91", "1:10.24", "1:22.15", "1:20.25", "1:22.18", "1:30.76",
+                                                                                                                                                 "1:57.40", "25.70", "25.88", "25.92", "26.19", "26.75", "26.75",
+                                                                                                                                                 "26.95", "27.21", "28.58", "28.96", "30.01", "30.46", "30.64",
+                                                                                                                                                 "31.08", "31.15", "31.31", "25.00", "26.03", "26.46", "26.64",
+                                                                                                                                                 "26.96", "26.97", "27.43", "33.34", "30.78", "31.07", "31.11",
+                                                                                                                                                 "31.22", "31.33", "9:26.19", "9:30.06", "9:36.02", "9:44.29",
+                                                                                                                                                 "9:49.70", "9:53.19", "9:57.08", "10:05.72", "10:19.83", "11:33.67",
+                                                                                                                                                 "9:31.22", "10:13.78", "10:36.19", "11:17.24", "11:31.89"), Points = c("9",
+                                                                                                                                                                                                                        "10", "11", "12", "13", "14", "15", "16", "24", "25", "26", "27",
+                                                                                                                                                                                                                        "28", "29", "30", "31", "39", "40", "41", "42", "43", "44", "52",
+                                                                                                                                                                                                                        "53", "54", "55", "56", "71", "72", "73", "74", "75", "76", "77",
+                                                                                                                                                                                                                        "78", "86", "87", "88", "89", "90", "91", "92", "93", "101",
+                                                                                                                                                                                                                        "102", "103", "104", "105", "106", "114", "115", "116", "117",
+                                                                                                                                                                                                                        "132", "133", "134", "135", "136", "137", "138", "139", "147",
+                                                                                                                                                                                                                        "148", "149", "150", "151", "152", "153", "154", "162", "163",
+                                                                                                                                                                                                                        "164", "165", "166", "167", "168", "169", "184", "185", "186",
+                                                                                                                                                                                                                        "187", "188", "196", "197", "198", "199", "200", "201", "202",
+                                                                                                                                                                                                                        "203", "204", "205", "212", "213", "214", "215", "216"), DQ = c(0,
+                                                                                                                                                                                                                                                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                                                                                                                                                                                                                                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                                                                                                                                                                                                                                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                                                                                                                                                                                                                                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                                                                                                                                                                                                                                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)), row.names = c(NA, -97L), class = "data.frame")
+
+  expect_equivalent(df_test, df_standard)
+
+})
