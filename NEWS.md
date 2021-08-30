@@ -1,3 +1,6 @@
+# SwimmeR 0.12.2 - August 30th 2021
+* `course_convert` is now vectorized, works well in `dplyr` pipes
+
 # SwimmeR 0.12.1 - August 19th 2021
 * Initial work in Splash Meet Manager/Swimming Federation of India results
 

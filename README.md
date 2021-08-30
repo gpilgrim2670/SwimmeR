@@ -16,9 +16,10 @@
 
 ### Latest Development Version from Github
 
-Version 0.12.1
+Version 0.12.2
 
 * Initial work on Splash meet Manager/Swimming Federation of India Results
+* `course_convert` is now vectorized so that it works in `dplyr` pipes
 
 `devtools::install_github("gpilgrim2670/SwimmeR", build_vignettes = TRUE)`
 

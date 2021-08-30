@@ -23,6 +23,42 @@ test_that("course_convert_works 400-500", {
 })
 
 
+test_that("course_convert_works 800-1000", {
+  converted_time <- course_convert(
+    time = "8:12.57",
+    event = "Womens 800m Freestyle",
+    course = "LCM",
+    course_to = "SCY"
+  )
+
+  expect_equivalent(converted_time,
+                    "9:11.90")
+})
+
+test_that("course_convert_works 1500", {
+  converted_time <- course_convert(
+    time = "15:37.34",
+    event = "1500m Freestyle",
+    course = "LCM",
+    course_to = "SCM"
+  )
+
+  expect_equivalent(converted_time,
+                    "15:13.34")
+})
+
+test_that("course_convert_works 1500-1650", {
+  converted_time <- course_convert(
+    time = "15:03.31",
+    event = "Women's 1650y Free",
+    course = "SCY",
+    course_to = "LCM"
+  )
+
+  expect_equivalent(converted_time,
+                    "15:21.38")
+})
+
 test_that("course_convert verbose works", {
 
   df_test <- course_convert(
