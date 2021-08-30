@@ -3,7 +3,7 @@
 \name{course_convert_DF}
 \alias{course_convert_DF}
 \alias{course_convert_df}
-\title{Course converter, returns data frame}
+\title{Course converter, returns data frame - defunct}
 \usage{
 course_convert_DF(time, event, course, course_to)
 
@@ -33,12 +33,6 @@ Short Course Yards, returns data frame
 }
 \note{
 Relays are not presently supported.
-}
-\examples{
-course_convert_df(time = "1:35.93", event = "200 Free", course = "SCY", course_to = "LCM")
-course_convert_df(time = 95.93, event = "200 Free", course = "scy", course_to = "lcm")
-course_convert_df(time = 53.89, event = "100 Fly", course = "scm", course_to = "scy")
-
 }
 \references{
 Uses the USA swimming age group method described here

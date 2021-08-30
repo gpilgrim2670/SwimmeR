@@ -337,7 +337,7 @@ course_convert_helper <-
   }
 
 
-#' Course converter, returns data frame
+#' Course converter, returns data frame - defunct
 #'
 #' Used to convert times between Long Course Meters, Short Course Meters and
 #' Short Course Yards, returns data frame
@@ -363,15 +363,9 @@ course_convert_helper <-
 #'   Time \item Course \item Course_To \item Event \item Time_Converted_sec
 #'   \item Time_Converted_mmss }
 #'
-#' @examples course_convert_df(time = "1:35.93", event = "200 Free", course = "SCY", course_to = "LCM")
-#' course_convert_df(time = 95.93, event = "200 Free", course = "scy", course_to = "lcm")
-#' course_convert_df(time = 53.89, event = "100 Fly", course = "scm", course_to = "scy")
-#'
 #' @note Relays are not presently supported.
 #' @references Uses the USA swimming age group method described here
 #'   \url{https://support.teamunify.com/en/articles/260}
-#'
-#' @export
 
 course_convert_DF <- function(time, event, course, course_to) {
 

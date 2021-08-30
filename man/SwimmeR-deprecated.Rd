@@ -6,6 +6,3 @@
 \description{
 These functions still work but will be removed (defunct) in upcoming versions.
 }
-\details{
-\itemize{}
-}
