@@ -1,3 +1,6 @@
+# SwimmeR 0.12.3 - August 30th 2021
+* Moved `swim_parse_ISL` inside of `swim_parse`
+
 # SwimmeR 0.12.2 - August 30th 2021
 * `course_convert` is now vectorized, works well in `dplyr` pipes
 

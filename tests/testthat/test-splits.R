@@ -89,7 +89,7 @@ test_that("ISL results", {
     warning("Link to external data is broken")
   } else {
     df <- swim_parse_ISL(read_results(file), splits = TRUE) %>%
-      dplyr::rename("Finals_Time" = Time) %>%
+      # dplyr::rename("Finals_Time" = Time) %>%
       splits_reform()
 
   match_sum <- sum(df$not_matching, na.rm = TRUE) # should be 24 due to 24 relays

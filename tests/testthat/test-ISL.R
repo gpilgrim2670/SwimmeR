@@ -172,7 +172,7 @@ test_that("ISL season 2 whole dataframe", {
                                                                                                                            "LON", "CAC", "CAC", "AQC", "AQC", "LON", "LON", "LAC", "LAC",
                                                                                                                            "CAC", "CAC", "AQC", "AQC", "CAC", "CAC", "LAC", "LON", "LAC",
                                                                                                                            "LON", "CAC", "AQC", "CAC", "AQC", "LAC", "LAC", "LON", "LON",
-                                                                                                                           "LAC", "LAC"), Time = c("55.71", "55.72", "56.46", "56.50", "57.10",
+                                                                                                                           "LAC", "LAC"), Finals_Time = c("55.71", "55.72", "56.46", "56.50", "57.10",
                                                                                                                                                    "57.21", "58.17", "1:00.14", "49.02", "49.17", "49.67", "49.88",
                                                                                                                                                    "49.89", "49.93", "50.70", "51.64", "2:02.51", "2:03.02", "2:05.29",
                                                                                                                                                    "2:05.62", "2:05.64", "2:05.92", "2:06.12", "2:08.34", "1:48.60",
@@ -829,7 +829,7 @@ test_that("Lilly King Times with score - season 2", {
       read_results() %>%
       swim_parse_ISL()
 
-  expect_equivalent(df[which(df$Name == "KING Lilly"),]$Time,
+  expect_equivalent(df[which(df$Name == "KING Lilly"),]$Finals_Time,
                c("2:17.11", "28.86", "1:03.16", "29.16", "29.25", "28.90"))
   }
 
@@ -848,7 +848,7 @@ test_that("Lilly King Times without score - season 1", {
     read_results() %>%
     swim_parse_ISL()
 
-  expect_equivalent(df[which(df$Name == "KING Lilly"),]$Time,
+  expect_equivalent(df[which(df$Name == "KING Lilly"),]$Finals_Time,
                c("29.00", "2:17.78"))
   }
 
@@ -1486,7 +1486,7 @@ test_that("without score - season 1", {
             "DCT",
             "NYB"
           ),
-          Time = c(
+          Finals_Time = c(
             "55.78",
             "56.41",
             "56.93",

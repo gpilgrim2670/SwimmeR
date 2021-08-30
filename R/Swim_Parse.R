@@ -184,6 +184,17 @@ Swim_Parse <-
                           format_samms = format_results)
       return(data)
 
+    } else if (any(stringr::str_detect(file[1:6], "( ISL )|(^ISL )")) == TRUE) {
+
+      data <- swim_parse_ISL(
+        file = file,
+        splits = splits,
+        relay_swimmers = relay_swimmers
+      )
+
+      return(data)
+
+
     } else if (any(stringr::str_detect(file, "(Official Timekeeping by Omega)|(Report created )")) == TRUE) {
 
       data <- swim_parse_omega(
