@@ -1,3 +1,6 @@
+# SwimmeR 0.12.4 - August 31st 2021
+* Started Paralympics 2020 results
+
 # SwimmeR 0.12.3 - August 30th 2021
 * Moved `swim_parse_ISL` inside of `swim_parse`
 

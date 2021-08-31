@@ -25,6 +25,3 @@ extracts split times and associated row numbers
   output of \code{\link{read_results}} with row numbers from
   \code{\link{add_row_numbers}}
 }
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
-}

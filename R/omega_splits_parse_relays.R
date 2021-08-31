@@ -3,15 +3,15 @@
 #' Takes the output of \code{read_results} and, inside of \code{swim_parse_omega},
 #' extracts split times and associated row numbers
 #'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
-#'
 #' @importFrom dplyr full_join
 #' @importFrom dplyr bind_rows
 #' @importFrom dplyr rename_at
 #' @importFrom dplyr mutate_at
 #' @importFrom dplyr rename
 #' @importFrom dplyr vars
+#' @importFrom dplyr na_if
 #' @importFrom stringr str_replace_all
+#' @importFrom stringr str_replace
 #' @importFrom stringr str_remove_all
 #' @importFrom stringr str_extract_all
 #' @importFrom stringr str_split
@@ -33,7 +33,9 @@ splits_parse_omega_relays <-
   function(text, split_len = split_length_omega) {
     #### Testing ####
     # file <-
-    #   "https://olympics.com/tokyo-2020/olympic-games/resOG2020-/pdf/OG2020-/SWM/OG2020-_SWM_C73B1_SWMW4X100MFR----------HEAT000100--.pdf"
+    #   "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Tokyo2020/SWMW4X200MFR_HEAT.pdf"
+    # file <- "https://olympics.com/tokyo-2020/paralympic-games/resPG2020-/pdf/PG2020-/SWM/PG2020-_SWM_C73B1_SWMX4X100MFR13033-----FNL-000100--.pdf"
+    # file <- "https://olympics.com/tokyo-2020/paralympic-games/resPG2020-/pdf/PG2020-/SWM/PG2020-_SWM_C73B1_SWMM4X100MFR10102-----FNL-000100--.pdf"
     # text <-   read_results(file) %>%
     #   add_row_numbers()
     # split_len <- 50
@@ -41,16 +43,16 @@ splits_parse_omega_relays <-
     #### Actual Function ####
     ### collect row numbers from rows containing splits ###
     ### define strings ###
-    split_string <- "\\d?\\:?\\d{2}\\.\\d{2}"
+    split_string <- "(\\d?\\:?\\d{2}\\.\\d{2})|(  NA  )"
     relay_swimmer_string <- "^\n\\s*[:alpha:]"
-    record_string <- "\n\\s+WR\\s|\n\\s+OR\\s"
+    record_string <- "\n\\s+[:upper:]R\\s|\n\\s+US\\s|[:upper:][:alpha:]+ Record"
 
     text <- text %>%
       stringr::str_replace_all(" \\:", "  ") %>%
-      stringr::str_remove_all("\\(\\=?\\d+\\)\\s+\\d?\\:?\\d{2}\\.\\d{2}")
+      stringr::str_remove_all("\\(\\=?\\d+\\)\\s+\\d?\\:?\\d{2}\\.\\d{2}") %>%
+      stringr::str_replace("(?<=\\d\\.\\d\\d)\\s{16,}(?=\\d?\\:?\\d{2}\\.\\d{2} )", "   NA   ")
 
     ### collect splits
-
 
     row_numbs <- text %>%
       .[purrr::map_lgl(.,
@@ -83,7 +85,8 @@ splits_parse_omega_relays <-
                             stringr::str_detect,
                             record_string)] %>%
           stringr::str_extract_all(split_string) %>%
-          map(paste, collapse = "  ")
+          map(paste, collapse = "  ") %>%
+          trimws()
       )
 
 
@@ -219,8 +222,11 @@ splits_parse_omega_relays <-
       data_splits <- data_splits %>%
         dplyr::rename_at(dplyr::vars(old_names), ~ new_names)
 
+      data_splits <- data_splits %>%
+        dplyr::na_if("NA")
+
     } else {
-      # if there are no rows with valid splits return blank dataframe
+      # if there are no rows with valid splits return blank data frame
       data_splits <- data.frame(Row_Numb = as.numeric())
     }
     return(data_splits)

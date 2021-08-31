@@ -19,7 +19,7 @@
 
 collect_relay_swimmers_omega <- function(x){
 
-  # x <- "https://olympics.com/tokyo-2020/olympic-games/resOG2020-/pdf/OG2020-/SWM/OG2020-_SWM_C73B1_SWMW4X100MFR----------HEAT000100--.pdf" %>%
+  # x <- "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Tokyo2020/SWMW4X200MFR_HEAT.pdf" %>%
   #   read_results() %>%
   #   add_row_numbers()
 
@@ -27,7 +27,8 @@ collect_relay_swimmers_omega <- function(x){
 
   relay_swimmer_string <- "^\n\\s*[:alpha:]"
   record_string <- "\n\\s+[:upper:]R\\s|\n\\s+US\\s|[:upper:][:alpha:]+ Record"
-  header_string <- "Record\\s+Split|Record\\s+Name|Reaction\\sTime"
+  header_string <- "Record\\s+Split|Record\\s+Name|Reaction\\sTime|EVENT NO\\."
+
 
   row_numbs_relay_swimmer <- x %>%
     .[purrr::map_lgl(.,
@@ -48,9 +49,7 @@ collect_relay_swimmers_omega <- function(x){
     .[!purrr::map_lgl(.,
                       stringr::str_detect,
                       header_string)] %>%
-    .[!purrr::map_lgl(.,
-                      stringr::str_detect,
-                      record_string)] %>%
+    .[purrr::map_int(., stringr::str_count, "\\(") < 2] %>%
     stringr::str_extract_all("\\d{1,}$")
 
   if (length(row_numbs_relay_swimmer) > 0) {
@@ -61,6 +60,9 @@ collect_relay_swimmers_omega <- function(x){
         .[purrr::map_lgl(.,
                          stringr::str_detect,
                          relay_swimmer_string)] %>%
+        .[!purrr::map_lgl(.,
+                          stringr::str_detect,
+                          header_string)] %>%
         # .[purrr::map_lgl(.,
         #                  stringr::str_detect,
         #                  "\\d{2}\\.\\d{2}")] %>%
@@ -68,7 +70,9 @@ collect_relay_swimmers_omega <- function(x){
                          stringr::str_detect,
                          "[:upper:]\\s[:upper:]")] %>%
         stringr::str_remove_all("\n") %>%
-        stringr::str_extract_all("[:alpha:][A-Za-z\\s([:alpha:]\\-[:alpha:])([:alpha:]\\'[:alpha:])]*") %>%
+        stringr::str_remove_all("(?<=\\d) [:upper:] ") %>%
+        stringr::str_extract_all("[:alpha:][A-Za-z\\s([:alpha:]\\-[:alpha:])([:alpha:]\\'[:alpha:])(SB?M?\\d{1,2})]*") %>%
+        stringr::str_remove_all("\\s+\\-?\\d+$") %>%
         stringr::str_remove_all("\\s{2,}\\-") %>%
         .[lengths(.) == 1] %>%
         .[purrr::map_lgl(.,
@@ -86,8 +90,16 @@ collect_relay_swimmers_omega <- function(x){
     relay_swimmers_data <- data_1_relay_swimmer[purrr::map(data_1_relay_swimmer, length) == 2] %>%
       list_transform()
 
+    #### to capture athlete genders for mixed relays
     if(length(relay_swimmers_data) < 1){
       relay_swimmers_data <- data_1_relay_swimmer[purrr::map(data_1_relay_swimmer, length) == 3] %>%
+        list_transform()
+
+    }
+
+    #### to capture athlete genders and para codes for mixed para relays
+    if(length(relay_swimmers_data) < 1){
+      relay_swimmers_data <- data_1_relay_swimmer[purrr::map(data_1_relay_swimmer, length) == 4] %>%
         list_transform()
 
     }
@@ -109,16 +121,50 @@ collect_relay_swimmers_omega <- function(x){
         dplyr::na_if("NA")
 
     } else if(length(relay_swimmers_data) == 9) {
+      if(stringr::str_detect(relay_swimmers_data$V3[1], "^SB?M?\\d{1,2}$") == TRUE){
+      relay_swimmers_data <- relay_swimmers_data %>%
+        dplyr::select(
+          "Relay_Swimmer_1" = V2,
+          "Relay_Swimmer_1_Para" = V3,
+          "Relay_Swimmer_2" = V4,
+          "Relay_Swimmer_2_Para" = V5,
+          "Relay_Swimmer_3" = V6,
+          "Relay_Swimmer_3_Para" = V7,
+          "Relay_Swimmer_4" = V8,
+          "Relay_Swimmer_4_Para" = V9,
+          Row_Numb
+        ) %>%
+        dplyr::na_if("NA")
+      } else {
+        relay_swimmers_data <- relay_swimmers_data %>%
+          dplyr::select(
+            "Relay_Swimmer_1" = V2,
+            "Relay_Swimmer_1_Gender" = V3,
+            "Relay_Swimmer_2" = V4,
+            "Relay_Swimmer_2_Gender" = V5,
+            "Relay_Swimmer_3" = V6,
+            "Relay_Swimmer_3_Gender" = V7,
+            "Relay_Swimmer_4" = V8,
+            "Relay_Swimmer_4_Gender" = V9,
+            Row_Numb
+          ) %>%
+          dplyr::na_if("NA")
+      }
+    } else if(length(relay_swimmers_data) == 13) {
       relay_swimmers_data <- relay_swimmers_data %>%
         dplyr::select(
           "Relay_Swimmer_1" = V2,
           "Relay_Swimmer_1_Gender" = V3,
-          "Relay_Swimmer_2" = V4,
-          "Relay_Swimmer_2_Gender" = V5,
-          "Relay_Swimmer_3" = V6,
-          "Relay_Swimmer_3_Gender" = V7,
-          "Relay_Swimmer_4" = V8,
-          "Relay_Swimmer_5_Gender" = V9,
+          'Relay_Swimmer_1_Para' = V4,
+          "Relay_Swimmer_2" = V5,
+          "Relay_Swimmer_2_Gender" = V6,
+          'Relay_Swimmer_2_Para' = V7,
+          "Relay_Swimmer_3" = V8,
+          "Relay_Swimmer_3_Gender" = V9,
+          'Relay_Swimmer_3_Para' = V10,
+          "Relay_Swimmer_4" = V11,
+          "Relay_Swimmer_4_Gender" = V12,
+          'Relay_Swimmer_4_Para' = V13,
           Row_Numb
         ) %>%
         dplyr::na_if("NA")
