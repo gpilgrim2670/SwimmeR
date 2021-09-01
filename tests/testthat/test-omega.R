@@ -2771,7 +2771,7 @@ test_that("Tokyo Para SM6 200 IM Final, swimmer with long name distorts pdf form
             skip_on_cran()
 
             file <-
-              "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Paralympics2020/PG2020_SWMM200MIM_FNL.pdf"
+              "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/SwimmeR%20Test%20Files/PG2020_SWMM200MIM_FNL.pdf"
 
             df_test <- file %>%
               read_results() %>%
@@ -2812,7 +2812,7 @@ test_that("Tokyo Para S11 50 Free Heats, DNS",
             skip_on_cran()
 
             file <-
-              "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Paralympics2020/PG2020_SWMM50MFR_HEAT.pdf"
+              "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/SwimmeR%20Test%20Files/PG2020_SWMM50MFR_HEAT.pdf"
 
             df_test <- file %>%
               read_results() %>%
@@ -2862,7 +2862,7 @@ test_that("Tokyo Para Mixed 4x100 Free Relay 49 Points",
             skip_on_cran()
 
             file <-
-              "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Paralympics2020/PG2020_SWMX4X100MFR_FNL.pdf"
+              "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/SwimmeR%20Test%20Files/PG2020_SWMX4X100MFR_FNL.pdf"
 
             df_test <- file %>%
               read_results() %>%
@@ -2915,7 +2915,7 @@ test_that("Tokyo Para men 4x100 Free Relay 34 Points, P in splits",
             skip_on_cran()
 
             file <-
-              "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Paralympics2020/PG2020_SWMM4X100MFR_FNL.pdf"
+              "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/SwimmeR%20Test%20Files/PG2020_SWMM4X100MFR_FNL.pdf"
 
             df_test <- file %>%
               read_results() %>%
@@ -2962,6 +2962,48 @@ test_that("Tokyo Para men 4x100 Free Relay 34 Points, P in splits",
                             "28.23", "27.50", "26.78"), Split_400 = c("57.13", "50.77",
                                                                       "50.24", "51.40", "53.77", "59.50", "57.47", "58.23")), row.names = c(NA,
                                                                                                                                             -8L), class = "data.frame")
+            expect_equivalent(df_standard,
+                              df_test)
+
+          })
+
+test_that("Tokyo Para Women 150IM-SM4",
+          {
+            skip_on_cran()
+
+            file <-
+              "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Paralympics2020/raw_files/PG2020_SWMW150MIM_04042_FNL.pdf"
+
+            df_test <- file %>%
+              read_results() %>%
+              swim_parse(splits = TRUE,
+                         relay_swimmers = TRUE)
+
+            df_standard <-
+              structure(list(Place = c("1", "2", "3", "4", "5", "6", "7", "8"
+              ), Heat = c("Final", "Final", "Final", "Final", "Final", "Final",
+                          "Final", "Final"), Lane = c("4", "5", "3", "6", "7", "8", "1",
+                                                      "2"), Name = c("LIU Yu", "ZHOU Yanfei", "BUTKOVA Nataliia", "FERNANDEZ INFANTE Marta",
+                                                                     "SMITH Leanne", "MIRANDA HERRERA Nely", "VERBOVA Maryna", "SCHNARNDORF Susana"
+                                                      ), Para = c("SM4", "SM4", "SM4", "SM4", "SM3", "SM4", "SM4",
+                                                                  "SM4"), Team = c("CHN", "CHN", "RPC", "ESP", "USA", "MEX", "UKR",
+                                                                                   "BRA"), Reaction_Time = c("0.85", "1.05", "0.85", "0.90", "1.46",
+                                                                                                             "0.58", "0.75", "0.79"), Finals_Time = c("2:41.91", "2:47.41",
+                                                                                                                                                      "2:53.25", "2:59.13", "3:07.07", "3:08.71", "3:09.17", "3:11.54"
+                                                                                                             ), DQ = c("0", "0", "0", "0", "0", "0", "0", "0"), Exhibition = c("0",
+                                                                                                                                                                               "0", "0", "0", "0", "0", "0", "0"), Event = c("Women's 150m Individual Medley - SM4",
+                                                                                                                                                                                                                             "Women's 150m Individual Medley - SM4", "Women's 150m Individual Medley - SM4",
+                                                                                                                                                                                                                             "Women's 150m Individual Medley - SM4", "Women's 150m Individual Medley - SM4",
+                                                                                                                                                                                                                             "Women's 150m Individual Medley - SM4", "Women's 150m Individual Medley - SM4",
+                                                                                                                                                                                                                             "Women's 150m Individual Medley - SM4"), Split_50 = c("45.62",
+                                                                                                                                                                                                                                                                                   "50.45", "54.14", "68.59", "59.85", "57.41", "53.92", "61.32"
+                                                                                                                                                                                                                             ), Split_100 = c("63.18", "68.72", "68.71", "64.53", "70.97",
+                                                                                                                                                                                                                                              "78.58", "72.07", "73.89"), Split_150 = c("53.11", "48.24", "50.40",
+                                                                                                                                                                                                                                                                                        "46.01", "56.25", "52.72", "63.18", "56.33")), row.names = c(NA,
+                                                                                                                                                                                                                                                                                                                                                     -8L), class = "data.frame")
+
+
+
             expect_equivalent(df_standard,
                               df_test)
 

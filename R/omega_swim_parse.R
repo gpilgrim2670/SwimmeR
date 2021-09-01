@@ -124,7 +124,9 @@ swim_parse_omega <-
     # file_omega <- read_results("https://olympics.com/tokyo-2020/olympic-games/resOG2020-/pdf/OG2020-/SWM/OG2020-_SWM_C73B1_SWMW4X100MFR----------HEAT000100--.pdf")
     # file_omega <- read_results("https://olympics.com/tokyo-2020/paralympic-games/resPG2020-/pdf/PG2020-/SWM/PG2020-_SWM_C73A2_SWMM50MFR---11010-----HEAT--------.pdf")
     # file_omega <- read_results("https://olympics.com/tokyo-2020/paralympic-games/resPG2020-/pdf/PG2020-/SWM/PG2020-_SWM_C73B1_SWMX4X100MFR13033-----FNL-000100--.pdf")
-    # file_omega <- read_results("https://olympics.com/tokyo-2020/paralympic-games/resPG2020-/pdf/PG2020-/SWM/PG2020-_SWM_C73B1_SWMM4X100MFR10102-----FNL-000100--.pdf")
+    # file_omega <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/SwimmeR%20Test%20Files/PG2020_SWMM200MIM_FNL.pdf")
+    # file_omega <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Paralympics2020/raw_files/PG2020_SWMW150MIM_04042_FNL.pdf")
+    # file_omega <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Tokyo2020/SWMM4X200MFR_FNL.pdf")
     # avoid_omega <- c("abcxyz")
     # typo_omega <- c("typo")
     # replacement_omega <- c("typo")
@@ -135,7 +137,7 @@ swim_parse_omega <-
     #### assign row numbers ####
     as_lines_list_2 <- file_omega %>%
       .[purrr::map_lgl(., stringr::str_detect, "Early take-off", negate = TRUE)] %>% # removes DQ rational used in some relay DQs that messes up line spacing between relay and swimmers/splits - must happen before adding in row numbers
-      .[purrr::map_lgl(., stringr::str_detect, " 1?\\d50m ", negate = TRUE)] %>% # removes cumulative split rows for Omega results only
+      .[purrr::map_lgl(., stringr::str_detect, "  1?\\d50m ", negate = TRUE)] %>% # removes cumulative split rows for Omega results only but does not remove Women's 150m IM for para games
       add_row_numbers() %>%
       .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid_omega)))] %>%
       stringr::str_replace_all(stats::setNames(replacement_omega, typo_omega)) %>% # replace typos with replacements
@@ -157,7 +159,7 @@ swim_parse_omega <-
       Time_Score_Specials_String <- paste0("^NT$|^NP$|^DQ$|^DSQ$|^D?NS$|^SCR$|^x?X?", Time_Score_String, "x?X?$")
       Time_Score_Specials_String_Extract <- paste0(Time_Score_String, "|^NT$|^NP$|^DQ$|^NS$|^SCR$")
       Para_String <- "^SB?M?\\d{1,2}$"
-      Reaction_String <- "^\\+\\s?\\d\\.\\d{3}$|^\\-\\s?\\d\\.\\d{3}$|^0\\.00$|^0\\.\\d\\d$"
+      Reaction_String <- "^\\+\\s?\\d\\.\\d{3}$|^\\-\\s?\\d\\.\\d{3}$|^[0-1]\\.00$|^[0-1]\\.\\d\\d$"
       Record_String <- "^\\=?WR$|^\\=?AR$|^\\=?US$|^\\=?CR$|^\\=?WJ$|^\\=?OT$|^\\=?OR$|^\\=?[:upper:]R$"
       Header_string <- "\\sDisqualified\\s|\\sReaction\\sTime\\s"
       Heat_String <- "Heat\\s\\d{1,}\\sof\\s\\d{1,}|Semifinal\\s+\\d{1,}|Final|(Heats?)(?![:alpha:])"
@@ -174,7 +176,7 @@ swim_parse_omega <-
         .[purrr::map_lgl(., stringr::str_detect, "\\d{2} [:upper:]{3} \\d{4} GOLD", negate = TRUE)] %>%  # omega remove medalist results from the end of Wave II 2021 OTs
         .[purrr::map_lgl(., stringr::str_detect, Heat_String, negate = TRUE)] %>% # omega removes weird formatting issue where results and heat labels are connected
         stringr::str_replace_all("([:alpha:])\\. ", "\\1 ") %>% # remove periods from athlete names Omega
-        .[!dplyr::between(purrr::map_int(., stringr::str_count, "\\.|\\("), 6.1, 7.9)] %>%  # keeps relay swimmers + splits from 4x200 races from getting in Omega
+        # .[!all(dplyr::between(purrr::map_int(., stringr::str_count, "\\.|\\("), 6.1, 7.9), purrr::map_int(., stringr::str_count, "\\.") != 6)] %>%  # keeps relay swimmers + splits from 4x200 races from getting in Omega
         .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]\\s+\\-\\d\\.\\d{2}\\s+\\d{1,}$", negate = TRUE)] %>%
         .[purrr::map_lgl(., stringr::str_detect, Header_string, negate = TRUE)] %>%
         stringr::str_replace_all("( [:upper:]{2},\\s)*\\s?(?<![:upper:])[:upper:]{2}\\.?\\s(?=\\s{1,}\\d{1,}$)", "  ") %>% # remove record strings like OR, OC but miss DNS, DSQ etc.
@@ -399,8 +401,14 @@ swim_parse_omega <-
             ) %>%
             dplyr::mutate(
               Finals_Time = dplyr::case_when(
-                stringr::str_detect(Heat, "NA") == TRUE & stringr::str_detect(V4, Para_String) == FALSE ~ V9,
-                stringr::str_detect(V5, Reaction_String) == TRUE & stringr::str_detect(V9, Time_Score_Specials_String) == TRUE ~ V9,
+                stringr::str_detect(Heat, "NA") == TRUE &
+                  stringr::str_detect(V4, Para_String) == FALSE ~ V9,
+                stringr::str_detect(V5, Reaction_String) == TRUE &
+                  stringr::str_detect(V9, Time_Score_Specials_String) == TRUE ~ V9,
+                stringr::str_detect(Heat, "NA") == TRUE &
+                  stringr::str_detect(V4, Para_String) == TRUE &
+                  stringr::str_detect(V9, Time_Score_Specials_String) == TRUE &
+                  stringr::str_detect(V10, "\\:") == FALSE ~ V9,
                 stringr::str_detect(V10, Time_Score_Specials_String) == TRUE ~ V10,
                 TRUE ~ "NA"
               )
@@ -473,6 +481,7 @@ swim_parse_omega <-
                 stringr::str_detect(Heat, "NA") == TRUE &
                   stringr::str_detect(V4, Para_String) == FALSE ~ V9,
                 stringr::str_detect(V5, Reaction_String) == TRUE & stringr::str_detect(V9, Time_Score_Specials_String) == TRUE ~ V9,
+                stringr::str_detect(Heat, "NA") == TRUE & stringr::str_detect(V4, Para_String) == TRUE & stringr::str_detect(V9, Time_Score_Specials_String) == TRUE ~ V9,
                 stringr::str_detect(V8, Time_Score_Specials_String) == TRUE ~ V8,
                 TRUE ~ "NA"
               )
@@ -639,7 +648,8 @@ swim_parse_omega <-
               Reaction_Time,
               Finals_Time,
               Row_Numb = V8
-            )
+            ) %>%
+            dplyr::filter(stringr::str_detect(Place, "\\d")) # removes relay swimmer rows
         )
       } else {
         df_8 <- data.frame(Row_Numb = character(),
