@@ -36,6 +36,7 @@ splits_parse_omega_relays <-
     #   "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Tokyo2020/SWMW4X200MFR_HEAT.pdf"
     # file <- "https://olympics.com/tokyo-2020/paralympic-games/resPG2020-/pdf/PG2020-/SWM/PG2020-_SWM_C73B1_SWMX4X100MFR13033-----FNL-000100--.pdf"
     # file <- "https://olympics.com/tokyo-2020/paralympic-games/resPG2020-/pdf/PG2020-/SWM/PG2020-_SWM_C73B1_SWMM4X100MFR10102-----FNL-000100--.pdf"
+    # file <- "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Paralympics2020/raw_files/PG2020_SWMX4X50MFR_10101_FNL.pdf"
     # text <-   read_results(file) %>%
     #   add_row_numbers()
     # split_len <- 50
@@ -49,7 +50,7 @@ splits_parse_omega_relays <-
 
     text <- text %>%
       stringr::str_replace_all(" \\:", "  ") %>%
-      stringr::str_remove_all("\\(\\=?\\d+\\)\\s+\\d?\\:?\\d{2}\\.\\d{2}") %>%
+      stringr::str_remove_all("\\(\\=?\\d?\\d?\\)\\s+\\d?\\:?\\d{2}\\.\\d{2}") %>%
       stringr::str_replace("(?<=\\d\\.\\d\\d)\\s{16,}(?=\\d?\\:?\\d{2}\\.\\d{2} )", "   NA   ")
 
     ### collect splits

@@ -19,7 +19,7 @@
 
 collect_relay_swimmers_omega <- function(x){
 
-  # x <- "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Tokyo2020/SWMW4X200MFR_HEAT.pdf" %>%
+  # x <- "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Paralympics2020/raw_files/PG2020_SWMX4X50MFR_10101_FNL.pdf" %>%
   #   read_results() %>%
   #   add_row_numbers()
 
@@ -71,6 +71,7 @@ collect_relay_swimmers_omega <- function(x){
                          "[:upper:]\\s[:upper:]")] %>%
         stringr::str_remove_all("\n") %>%
         stringr::str_remove_all("(?<=\\d) [:upper:] ") %>%
+        stringr::str_remove_all("(?<=[:alpha:])\\. ") %>%
         stringr::str_extract_all("[:alpha:][A-Za-z\\s([:alpha:]\\-[:alpha:])([:alpha:]\\'[:alpha:])(SB?M?\\d{1,2})]*") %>%
         stringr::str_remove_all("\\s+\\-?\\d+$") %>%
         stringr::str_remove_all("\\s{2,}\\-") %>%
