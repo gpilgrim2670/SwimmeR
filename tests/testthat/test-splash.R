@@ -425,3 +425,43 @@ test_that("Khelo India Youth Games 2020 whole meet, has a tie, fully checked", {
   expect_equivalent(df_test, df_standard)
 
 })
+
+test_that("2012 Euro Juniors", {
+  skip_on_cran()
+
+  file <-
+    "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Splash/European_Jr_Champs_2012.pdf"
+
+  df_test <- file %>%
+    read_results() %>%
+    swim_parse() %>%
+    select(-Event)
+
+  place_sum <- sum(as.numeric(df_test$Place), na.rm = TRUE)
+  dq_sum <- sum(df_test$DQ, na.rm = TRUE)
+
+
+  expect_equivalent(place_sum, 33438)
+  expect_equivalent(dq_sum, 46)
+
+})
+
+test_that("2013 Euro Juniors", {
+  skip_on_cran()
+
+  file <-
+    "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Splash/Arena_European_Junior_Swimming_Champs_2013.pdf"
+
+  df_test <- file %>%
+    read_results() %>%
+    swim_parse() %>%
+    select(-Event)
+
+  place_sum <- sum(as.numeric(df_test$Place), na.rm = TRUE)
+  dq_sum <- sum(df_test$DQ, na.rm = TRUE)
+
+
+  expect_equivalent(place_sum, 1443)
+  expect_equivalent(dq_sum, 1)
+
+})
