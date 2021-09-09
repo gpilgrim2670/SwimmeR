@@ -125,11 +125,17 @@ swim_parse_splash <-
       "Heat\\s\\d{1,}\\sof\\s\\d{1,}|Semifinal\\s+\\d{1,}|Final|(Heats?)(?![:alpha:])"
 
     data_cleaned <- as_lines_list_2 %>%
-      stringr::str_remove("^\n\\s{0,}") %>%
+      # stringr::str_remove("^\n\\s{0,}") %>%
+      stringr::str_remove("^\n") %>%
+      .[purrr::map_lgl(.,
+                       stringr::str_detect,
+                       "^\\s{12,}",
+                       negate = TRUE)] %>% # removes relay swimmer rows
+      stringr::str_remove("^\\s{0,}") %>%
       .[purrr::map(., stringr::str_length) > 50] %>% # slight speed boost from cutting down length of file
       .[purrr::map_lgl(.,
                        stringr::str_detect,
-                       paste0(Time_Score_String, "|DS?Q|SCR|D?NS"))] %>% # must have \\.\\d\\d because all swimming and diving times do
+                       paste0(Time_Score_String, "|DSQ|SCR|DNS"))] %>% # must have \\.\\d\\d because all swimming and diving times do
       .[purrr::map_lgl(.,
                        stringr::str_detect,
                        paste0(Record_String, "|Splash Meet Manager"),
@@ -149,7 +155,7 @@ swim_parse_splash <-
       stringr::str_replace_all("(?<=\\d)\\s+[:upper:]R?\\*?\\s", "  ") %>% # remove Q, R etc. as label
       stringr::str_replace_all(" q ", "  ") %>% # remove Q, R etc. as label
       stringr::str_replace_all("(?<=\\d)\\.(?=[:alpha:])", "\\.   ") %>%
-      stringr::str_replace_all(" ([:upper:]{2,3})\\s\\s+([:alpha:]{2,}\\s?[:alpha:]{0,})", " \\1-\\2   ") %>%
+      stringr::str_replace_all("  ([:upper:]{2,3})\\s\\s+([:alpha:]{2,}\\s?[:alpha:]{0,})", " \\1-\\2   ") %>% # merge team and country names
       trimws()
 
     data_cleaned <- data_cleaned %>%
@@ -217,11 +223,21 @@ swim_parse_splash <-
                              TRUE ~ "Unknown"
                            )
                          ) %>%
+                         dplyr::mutate(
+                           Points = dplyr::case_when(
+                             stringr::str_detect(V5, "\\d+") == TRUE &
+                               stringr::str_detect(V5, "\\.") == FALSE ~ V5,
+                             stringr::str_detect(V9, "\\d+") == TRUE &
+                               stringr::str_detect(V9, "\\.") == FALSE ~ V9,
+                             TRUE ~ "Unknown"
+                           )
+                         ) %>%
                          dplyr::select(Place = V1,
                                 Name = V2,
                                 Age,
                                 Team,
                                 Finals_Time,
+                                Points,
                                 Row_Numb = V10)
                        )
     } else {
@@ -468,7 +484,9 @@ swim_parse_splash <-
                                        Age,
                                        Team,
                                        Finals_Time,
-                                       Row_Numb = V5))
+                                       Row_Numb = V5) %>%
+                         dplyr::filter(stringr::str_detect(Team, Time_Score_Specials_String) == FALSE)
+                       )
     } else {
       df_5 <- data.frame(Row_Numb = character(),
                          stringsAsFactors = FALSE)
@@ -480,8 +498,10 @@ swim_parse_splash <-
                          list_transform() %>%
                          dplyr::select(Place = V1,
                                        Team = V3,
-                                       Row_Numb = V4)
-                       )
+                                       Row_Numb = V4) %>%
+        dplyr::filter(stringr::str_detect(Team, Time_Score_Specials_String) == FALSE)
+      )
+
     } else {
       df_4 <- data.frame(Row_Numb = character(),
                          stringsAsFactors = FALSE)
