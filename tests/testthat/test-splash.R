@@ -465,3 +465,23 @@ test_that("2013 Euro Juniors", {
   expect_equivalent(dq_sum, 1)
 
 })
+
+test_that("2017 Open belgian Champs, has prelims, team-country", {
+  skip_on_cran()
+
+  file <-
+    "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Splash/Open_Belgian_Champs_2017.pdf"
+
+  df_test <- file %>%
+    read_results() %>%
+    swim_parse() %>%
+    select(-Event)
+
+  place_sum <- sum(as.numeric(df_test$Place), na.rm = TRUE)
+  dq_sum <- sum(df_test$DQ, na.rm = TRUE)
+
+
+  expect_equivalent(place_sum, 25383)
+  expect_equivalent(dq_sum, 42)
+
+})
