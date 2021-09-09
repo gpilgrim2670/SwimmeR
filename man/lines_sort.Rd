@@ -4,13 +4,17 @@
 \alias{lines_sort}
 \title{Sorts and collects lines by performance and row number}
 \usage{
-lines_sort(x, min_row = minimum_row)
+lines_sort(x, min_row = minimum_row, to_wide = TRUE)
 }
 \arguments{
 \item{x}{a list of character strings including performances, with tow numbers
 added by \code{add_row_numbers}}
 
 \item{min_row}{the lowest row number}
+
+\item{to_wide}{should the data frame x be converted to wide format?  Default
+is \code{TRUE} as used in Hytek and Omega results.  Use \code{FALSE} in
+Splash results}
 }
 \value{
 a data frame with \code{Row_Numb} as the first column.  Other columns

@@ -3,9 +3,6 @@
 #' Takes the output of \code{read_results} and, inside of \code{swim_parse},
 #' extracts split times and associated row numbers
 #'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
-#'
-#' @importFrom dplyr full_join
 #' @importFrom dplyr bind_rows
 #' @importFrom dplyr rename_at
 #' @importFrom dplyr mutate_at

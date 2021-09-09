@@ -16,6 +16,9 @@
 #' @param x a list of character strings including performances, with tow numbers
 #'   added by \code{add_row_numbers}
 #' @param min_row the lowest row number
+#' @param to_wide should the data frame x be converted to wide format?  Default
+#'   is \code{TRUE} as used in Hytek and Omega results.  Use \code{FALSE} in
+#'   Splash results
 #' @return a data frame with \code{Row_Numb} as the first column.  Other columns
 #'   are performance elements, like splits or relay swimmers, both in order of
 #'   occurrence left to right
@@ -23,7 +26,7 @@
 #' @seealso \code{lines_sort} is a helper function inside \code{splits_parse}
 #'   and \code{swim_parse_ISL}
 
-lines_sort <- function(x, min_row = minimum_row) {
+lines_sort <- function(x, min_row = minimum_row, to_wide = TRUE) {
   min_row <- as.numeric(min_row)
 
   x <- x %>%
@@ -46,13 +49,24 @@ lines_sort <- function(x, min_row = minimum_row) {
     dplyr::mutate(Row_Fill = fill_down(Row_Fill)) %>%
 
     dplyr::select(-V1, -Row_Numb, -Row_Numb_2) %>%
-    dplyr::mutate(row_index = 1:dplyr::n()) %>%
+    dplyr::mutate(row_index = 1:dplyr::n())
+
+  if(to_wide == TRUE){
+    x <- x %>%
     stats::reshape(direction = "wide",
                    idvar = "Row_Fill",
                    timevar = "row_index") %>%
     fill_left()
 
   names(x)[1] <- "Row_Numb"
+  }
+
+  if(to_wide == FALSE){
+    x <- x %>%
+      dplyr::rename("Row_Numb" = Row_Fill) %>%
+      dplyr::select(-row_index)
+
+  }
 
   return(x)
 }

@@ -86,7 +86,7 @@ splits_parse_omega_relays <-
                             stringr::str_detect,
                             record_string)] %>%
           stringr::str_extract_all(split_string) %>%
-          map(paste, collapse = "  ") %>%
+          purrr::map(paste, collapse = "  ") %>%
           trimws()
       )
 
