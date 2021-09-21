@@ -14,7 +14,7 @@ splits_parse_splash(text, split_len = split_length_splash)
 50}
 }
 \value{
-returns a dataframe with split times and row numbers
+returns a data frame with split times and row numbers
 }
 \description{
 Takes the output of \code{read_results} and, inside of

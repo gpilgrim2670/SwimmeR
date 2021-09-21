@@ -20,7 +20,7 @@
 #'   \code{add_row_numbers}
 #' @param split_len length of pool at which splits are measured - usually 25 or
 #'   50
-#' @return returns a dataframe with split times and row numbers
+#' @return returns a data frame with split times and row numbers
 #'
 #' @seealso \code{splits_parse} runs inside \code{\link{swim_parse_splash}} on
 #'   the output of \code{\link{read_results}} with row numbers from
@@ -31,17 +31,22 @@ splits_parse_splash <- function(text, split_len = split_length_splash) {
   #### Testing ####
   # text <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Splash/Glenmark_Senior_Nationals_2019.pdf") %>%
   #   add_row_numbers()
+  # text <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Splash/Open_Belgian_Champs_2017.pdf") %>%
+  #   add_row_numbers()
+  # text <- as_lines_list_2
 
   #### Actual Function ####
   ### collect row numbers from rows containing splits ###
   ### define strings ###
 
+  split_string <- "\\d{1,}m\\:\\s+\\d{0,2}\\:?\\d?\\d\\.\\d\\d|\\d{1,}m\\:\\s+Unknown"
+
+#### Clean up text ####
   text <- text %>%
     stringr::str_replace_all("(?<=\\dm\\:)\\s+(?=\\d{1,}m\\:)", "  Unknown  ") %>%
     stringr::str_replace_all("(?<=\\dm\\:)\\s+(?=\\d{1,}$)", "  Unknown  ")
 
-  split_string <- "\\d{1,}m\\:\\s+\\d{0,2}\\:?\\d?\\d\\.\\d\\d|\\d{1,}m\\:\\s+Unknown"
-
+  #### Pull out Row numbers for lines with splits ####
 
   row_numbs <- text %>%
     .[purrr::map_lgl(.,
@@ -49,7 +54,7 @@ splits_parse_splash <- function(text, split_len = split_length_splash) {
                      split_string)] %>%
     stringr::str_extract_all("\\d{1,}$")
 
-  #### if there are still no valid splits return blank dataframe ####
+  #### if there are still no valid splits return blank data frame ####
   if (length(row_numbs) > 0) {
     minimum_row <- min(as.numeric(row_numbs))
     maximum_row <- as.numeric(length(text))
@@ -72,10 +77,15 @@ splits_parse_splash <- function(text, split_len = split_length_splash) {
     #### add row numbers back in since they were removed ####
     data_1_splits <- paste(row_numbs, data_1_splits, sep = "   ")
 
+    # data_splits <- data_1_splits %>%
+    #   splits_parse_splash_helper_1()
+
     #### break out by length ####
     data_1_splits <-
       unlist(purrr::map(data_1_splits, stringr::str_split, "\\s{2,}"),
              recursive = FALSE)
+
+    # unique(map(data_1_splits, length))
 
     data_splits_length_2 <- data_1_splits[purrr::map(data_1_splits, length) == 2]
     data_splits_length_3 <- data_1_splits[purrr::map(data_1_splits, length) == 3]
@@ -87,7 +97,7 @@ splits_parse_splash <- function(text, split_len = split_length_splash) {
     data_splits_length_9 <- data_1_splits[purrr::map(data_1_splits, length) == 9]
     data_splits_length_10 <- data_1_splits[purrr::map(data_1_splits, length) == 10]
 
-    #### transform all lists to dataframes ####
+    #### transform all lists to data frames ####
     if (length(data_splits_length_10) > 0) {
       df_10_splits <- data_splits_length_10 %>%
         list_transform()
@@ -115,6 +125,47 @@ splits_parse_splash <- function(text, split_len = split_length_splash) {
     if (length(data_splits_length_7) > 0) {
       df_7_splits <- data_splits_length_7 %>%
         list_transform()
+
+      df_7_splits_2 <- df_7_splits %>%
+        select(V1, "Dummy" = V2) %>%
+        splash_collect_splits()
+
+      df_7_splits_3 <- df_7_splits %>%
+        select(V1, "Dummy" = V3) %>%
+        splash_collect_splits()
+
+      df_7_splits_4 <- df_7_splits %>%
+        select(V1, "Dummy" = V4) %>%
+        splash_collect_splits()
+
+      df_7_splits_5 <- df_7_splits %>%
+        select(V1, "Dummy" = V5) %>%
+        splash_collect_splits()
+
+      df_7_splits_6 <- df_7_splits %>%
+        select(V1, "Dummy" = V6) %>%
+        splash_collect_splits()
+
+      df_7_splits_7 <- df_7_splits %>%
+        select(V1, "Dummy" = V7) %>%
+        splash_collect_splits()
+
+      df_7_splits <- df_7_splits_2 %>%
+        dplyr::bind_rows(df_7_splits_3) %>%
+        dplyr::bind_rows(df_7_splits_4) %>%
+        dplyr::bind_rows(df_7_splits_5) %>%
+        dplyr::bind_rows(df_7_splits_6) %>%
+        dplyr::bind_rows(df_7_splits_7)
+
+      rm(df_7_splits_2, df_7_splits_3, df_7_splits_4, df_7_splits_5, df_7_splits_6, df_7_splits_7)
+
+      df_7_splits <- df_7_splits %>%
+        reshape(direction = "wide",
+                timevar = "Split_Distance",
+                idvar = "Row_Numb",
+                v.names = "Split",
+                sep = "")
+
     } else {
       df_7_splits <- data.frame(Row_Numb = character(),
                                 stringsAsFactors = FALSE)
@@ -123,6 +174,42 @@ splits_parse_splash <- function(text, split_len = split_length_splash) {
     if (length(data_splits_length_6) > 0) {
       df_6_splits <- data_splits_length_6 %>%
         list_transform()
+
+      df_6_splits_2 <- df_6_splits %>%
+        select(V1, "Dummy" = V2) %>%
+        splash_collect_splits()
+
+      df_6_splits_3 <- df_6_splits %>%
+        select(V1, "Dummy" = V3) %>%
+        splash_collect_splits()
+
+      df_6_splits_4 <- df_6_splits %>%
+        select(V1, "Dummy" = V4) %>%
+        splash_collect_splits()
+
+      df_6_splits_5 <- df_6_splits %>%
+        select(V1, "Dummy" = V5) %>%
+        splash_collect_splits()
+
+      df_6_splits_6 <- df_6_splits %>%
+        select(V1, "Dummy" = V6) %>%
+        splash_collect_splits()
+
+      df_6_splits <- df_6_splits_2 %>%
+        dplyr::bind_rows(df_6_splits_3) %>%
+        dplyr::bind_rows(df_6_splits_4) %>%
+        dplyr::bind_rows(df_6_splits_5) %>%
+        dplyr::bind_rows(df_6_splits_6)
+
+      rm(df_6_splits_2, df_6_splits_3, df_6_splits_4, df_6_splits_5, df_6_splits_6)
+
+      df_6_splits <- df_6_splits %>%
+        reshape(direction = "wide",
+                timevar = "Split_Distance",
+                idvar = "Row_Numb",
+                v.names = "Split",
+                sep = "")
+
     } else {
       df_6_splits <- data.frame(Row_Numb = character(),
                                 stringsAsFactors = FALSE)
@@ -152,6 +239,8 @@ splits_parse_splash <- function(text, split_len = split_length_splash) {
         dplyr::bind_rows(df_5_splits_3) %>%
         dplyr::bind_rows(df_5_splits_4) %>%
         dplyr::bind_rows(df_5_splits_5)
+
+      rm(df_5_splits_2, df_5_splits_3, df_5_splits_4, df_5_splits_5)
 
       df_5_splits <- df_5_splits %>%
         reshape(direction = "wide",
@@ -185,6 +274,8 @@ splits_parse_splash <- function(text, split_len = split_length_splash) {
         dplyr::bind_rows(df_4_splits_3) %>%
         dplyr::bind_rows(df_4_splits_4)
 
+      rm(df_4_splits_2, df_4_splits_3, df_4_splits_4)
+
       df_4_splits <- df_4_splits %>%
         reshape(direction = "wide",
                 timevar = "Split_Distance",
@@ -200,6 +291,28 @@ splits_parse_splash <- function(text, split_len = split_length_splash) {
     if (length(data_splits_length_3) > 0) {
       df_3_splits <- data_splits_length_3 %>%
         list_transform()
+
+      df_3_splits_2 <- df_3_splits %>%
+        select(V1, "Dummy" = V2) %>%
+        splash_collect_splits()
+
+      df_3_splits_3 <- df_3_splits %>%
+        select(V1, "Dummy" = V3) %>%
+        splash_collect_splits()
+
+      df_3_splits <- df_3_splits_2 %>%
+        dplyr::bind_rows(df_3_splits_3)
+
+      rm(df_3_splits_2, df_3_splits_3)
+
+      df_3_splits <- df_3_splits %>%
+        reshape(direction = "wide",
+                timevar = "Split_Distance",
+                idvar = "Row_Numb",
+                v.names = "Split",
+                sep = "")
+
+
     } else {
       df_3_splits <- data.frame(Row_Numb = character(),
                                 stringsAsFactors = FALSE)
@@ -227,42 +340,10 @@ splits_parse_splash <- function(text, split_len = split_length_splash) {
       dplyr::full_join(df_2_splits) %>%
       rename(V1 = Row_Numb)
 
-    data_splits %>%
+    data_splits <- data_splits %>%
       lines_sort(min_row = minimum_row, to_wide = FALSE) %>%
-      dplyr::mutate(Row_Numb = as.numeric(Row_Numb) - 1)  # make row number of split match row number of performance
-      # dplyr::group_by(Row_Numb) %>%
-      # summarise(across(starts_with("Split"), ~na.omit()))
+      dplyr::mutate(Row_Numb = as.numeric(Row_Numb) - 1)   # make row number of split match row number of performance
 
-    # names_data_splits <- data_splits %>%
-    #   select(-Row_Numb) %>%
-    #   names()
-    #
-    # Row_Numb <- data_splits$Row_Numb
-    #
-    #
-    # df_splits <- data_splits %>%
-    #   dplyr::select(-Row_Numb) %>%
-    #   t() %>%
-    #   data.frame() %>%
-    #   map(undo_interleave)
-    #
-    # df_splits_2 <- df_splits %>%
-    #   data.frame() %>%
-    #   t() %>%
-    #   data.frame()
-    #
-    # names(df_splits) <- names_data_splits
-    #
-    # df_splits_2$Row_Numb <- Row_Numb
-
-
-    #### rename columns V1, V2 etc. by 50 ####
-    # old_names <- names(data_splits)[grep("^V", names(data_splits))]
-    # new_names <-
-    #   paste("Split", seq(1, length(names(data_splits)) - 1) * split_len, sep = "_")
-    #
-    # data_splits <- data_splits %>%
-    #   dplyr::rename_at(dplyr::vars(old_names), ~ new_names)
 
   } else { # if there are no rows with valid splits return blank dataframe
     data_splits <- data.frame(Row_Numb = as.numeric())
@@ -272,4 +353,91 @@ splits_parse_splash <- function(text, split_len = split_length_splash) {
 
   return(data_splits)
 
+}
+
+#' Produces data frames of splits within \code{swim_parse_splash} for Splash
+#' results
+#'
+#' Converts strings of splits and row numbers into data frames with a row number
+#' column (V1) and a splits column (Split_XX)
+#'
+#' @importFrom dplyr left_join
+#' @importFrom stringr str_extract_all
+#' @importFrom purrr map
+#' @importFrom purrr as_vector
+#' @importFrom purrr reduce
+#'
+#' @param data a list of lists containing splits and row numbers
+#' @return returns a data frame with split times and row numbers
+#'
+#' @seealso \code{splits_parse_splash_helper_1} runs inside
+#'   \code{\link{splits_parse_splash}}
+
+splits_parse_splash_helper_1 <- function(data){
+
+  split_distances <- data %>%
+    purrr::as_vector() %>%
+    stringr::str_extract_all("\\d{2,}m") %>%
+    unique() %>%
+    purrr::as_vector()
+
+  i <- seq(1, length(split_distances), 1)
+
+  suppressMessages(
+    splits_df_complete <- i %>%
+      purrr::map(splits_parse_splash_helper_2, data = data, split_distances = split_distances) %>%
+      purrr::reduce(dplyr::left_join) %>%
+      unique()
+  )
+
+  return(splits_df_complete)
+
+}
+
+#' Produces data frames of splits within \code{swim_parse_splash} for Splash
+#' results
+#'
+#' Converts strings of splits and row numbers into data frames with a row number
+#' column (V1) and a splits column (Split_XX)
+#'
+#' @importFrom dplyr bind_rows
+#' @importFrom dplyr rename_at
+#' @importFrom dplyr mutate_at
+#' @importFrom dplyr rename
+#' @importFrom dplyr vars
+#' @importFrom stringr str_replace
+#' @importFrom stringr str_remove
+#' @importFrom stringr str_extract_all
+#' @importFrom purrr map_lgl
+#' @importFrom purrr map
+#'
+#' @param data a list of lists containing splits and row numbers
+#' @param split_distances a list of distances for splits, e.g. "50m", "100m"
+#' @param i a number between 1 and the length of \code(split_distances)
+#' @return returns a data frame with split times and row numbers
+#'
+#' @seealso \code{splits_parse_splash_helper_2} runs inside
+#'   \code{\link{splits_parse_splash}}
+
+splits_parse_splash_helper_2 <- function(data, split_distances, i){
+
+  splits_df <- data %>%
+    stringr::str_extract_all(
+      paste0(
+        "^\\d{1,}|",
+        "(?<=\\s)",
+        split_distances[i],
+        "\\s\\d?\\d?\\:?\\d{2}\\.\\d{2}"
+      )
+    ) %>%
+
+    do.call(rbind, .) %>%
+    as.data.frame() %>%
+    dplyr::mutate(V2 = stringr::str_remove(V2, "\\d{1,}m\\s"))
+
+  names(splits_df) <- names(splits_df) %>%
+    stringr::str_replace("V2", paste0("Split_", split_distances[i])) %>%
+    stringr::str_remove("m$")
+
+  return(splits_df)
 }

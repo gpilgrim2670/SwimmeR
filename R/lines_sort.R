@@ -11,6 +11,12 @@
 #' @importFrom dplyr select
 #' @importFrom dplyr n
 #' @importFrom dplyr arrange
+#' @importFrom dplyr relocate
+#' @importFrom dplyr select
+#' @importFrom dplyr across
+#' @importFrom dplyr summarise
+#' @importFrom dplyr starts_with
+#' @importFrom dplyr ungroup
 #' @importFrom stats reshape
 #'
 #' @param x a list of character strings including performances, with tow numbers
@@ -27,6 +33,15 @@
 #'   and \code{swim_parse_ISL}
 
 lines_sort <- function(x, min_row = minimum_row, to_wide = TRUE) {
+
+  #### testing ####
+  # x <- data_splits
+  # min_row <- 13
+  # to_wide <- FALSE
+
+
+  #### actual function ####
+
   min_row <- as.numeric(min_row)
 
   x <- x %>%
@@ -49,22 +64,30 @@ lines_sort <- function(x, min_row = minimum_row, to_wide = TRUE) {
     dplyr::mutate(Row_Fill = fill_down(Row_Fill)) %>%
 
     dplyr::select(-V1, -Row_Numb, -Row_Numb_2) %>%
-    dplyr::mutate(row_index = 1:dplyr::n())
+    dplyr::mutate(row_index = 1:dplyr::n()) %>%
+    dplyr::relocate(Row_Fill)
 
-  if(to_wide == TRUE){
+  if (to_wide == TRUE) {
     x <- x %>%
-    stats::reshape(direction = "wide",
-                   idvar = "Row_Fill",
-                   timevar = "row_index") %>%
-    fill_left()
+      stats::reshape(direction = "wide",
+                     idvar = "Row_Fill",
+                     timevar = "row_index") %>%
+      fill_left()
 
-  names(x)[1] <- "Row_Numb"
+    names(x)[1] <- "Row_Numb"
   }
 
-  if(to_wide == FALSE){
+  if (to_wide == FALSE) {
     x <- x %>%
+      dplyr::select(-row_index) %>%
+      dplyr::group_by(Row_Fill) %>%
+      dplyr::mutate(dplyr::across(dplyr::starts_with("Split"), ~ sec_format(.x))) %>%
+      dplyr::summarise(dplyr::across(dplyr::starts_with("Split"), ~ sum(.x, na.rm = TRUE))) %>%
+      dplyr::ungroup() %>%
+      dplyr::mutate(dplyr::across(dplyr::starts_with("Split"), ~ mmss_format(.x))) %>%
+      dplyr::na_if("00.00") %>%
       dplyr::rename("Row_Numb" = Row_Fill) %>%
-      dplyr::select(-row_index)
+      dplyr::relocate(Row_Numb)
 
   }
 

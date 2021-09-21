@@ -439,8 +439,6 @@ swim_parse_splash <-
                            Points = dplyr::case_when(
                              stringr::str_detect(V5, "\\d+") == TRUE &
                                stringr::str_detect(V5, "\\.") == FALSE ~ V5,
-                             stringr::str_detect(V6, "\\d+") == TRUE &
-                               stringr::str_detect(V6, "\\.") == FALSE ~ V6,
                              TRUE ~ "Unknown"
                            )
                          ) %>%
@@ -521,12 +519,23 @@ swim_parse_splash <-
         dplyr::arrange(Row_Numb)
     )
 
+    if("Prelims_Time" %in% names(data) == FALSE){
+      data$Prelims_Time <- "Unknown"
+    }
+
 
     #### Clean Up Data ####
     data <- data %>%
       dplyr::mutate(DQ = dplyr::case_when(stringr::str_detect(Place, "DSQ|DNS|DFS") == TRUE ~ 1,
                                           TRUE ~ 0)) %>%
       dplyr::mutate(Place = str_remove(Place, "\\.")) %>%
+      dplyr::mutate(Prelims_Time = dplyr::case_when(stringr::str_detect(Place, "DNS") == TRUE &
+                                                      stringr::str_detect(Finals_Time, Time_Score_String) == TRUE &
+                                                      is.na(Prelims_Time) == TRUE ~ Finals_Time,
+                                                    TRUE ~ Prelims_Time)) %>%
+      dplyr::mutate(Finals_Time = dplyr::case_when(stringr::str_detect(Place, "DNS") == TRUE &
+                                                      stringr::str_detect(Finals_Time, Prelims_Time) == TRUE ~ "Unknown",
+                                                    TRUE ~ Finals_Time)) %>%
       dplyr::mutate(Place = dplyr::case_when(stringr::str_detect(Place, "DSQ|DNS|DFS") == TRUE ~ "Unknown",
                                       TRUE ~ Place)) %>%
       dplyr::mutate(Place = dplyr::case_when(stringr::str_detect(Place, "999") == TRUE ~ dplyr::lag(Place),
@@ -551,8 +560,8 @@ swim_parse_splash <-
       dplyr::na_if("Unknown")
 
     #### adding relay swimmers in ####
-    # if (relay_swimmers_omega == TRUE) {
-    #   relay_swimmers_df <- collect_relay_swimmers_omega(as_lines_list_2)
+    # if (relay_swimmers_splash == TRUE) {
+    #   relay_swimmers_df <- collect_relay_swimmers_splash(as_lines_list_2)
     #
     #   relay_swimmers_df <-
     #     transform(relay_swimmers_df, Row_Numb_Adjusted = data$Row_Numb[findInterval(Row_Numb, data$Row_Numb)]) %>%
@@ -584,9 +593,10 @@ swim_parse_splash <-
     #     # helps a lot with relays, since their row numbers vary based on whether or not relay swimmers are included
     #     # and if those swimmers are listed on one line or two
     #     splits_df  <-
-    #       transform(splits_df, Row_Numb_Adjusted = data$Row_Numb[findInterval(Row_Numb, as.numeric(data_ind$Row_Numb))]) %>%
+    #       transform(splits_df, Row_Numb_Adjusted = data_ind$Row_Numb[findInterval(Row_Numb, as.numeric(data_ind$Row_Numb))]) %>%
     #       dplyr::mutate(Row_Numb_Adjusted = as.character(Row_Numb_Adjusted)) %>%
-    #       dplyr::select(-Row_Numb)
+    #       dplyr::select(-Row_Numb) %>%
+    #       dplyr::relocate(Row_Numb_Adjusted)
     #
     #     data_ind <- data_ind %>%
     #       dplyr::left_join(splits_df, by = c("Row_Numb" = "Row_Numb_Adjusted")) %>%
@@ -600,7 +610,8 @@ swim_parse_splash <-
     #
     #   if(nrow(data_relay) > 0){
     #     splits_df <-
-    #       splits_parse_omega_relays(as_lines_list_2, split_len = split_length_omega)
+    #       splits_parse_splash_relays(as_lines_list_2, split_len = split_length_splash) %>%
+    #       dplyr::filter(Row_Numb %in% data_relay$Row_Numb)
     #
     #     #### matches row numbers in splits_df to available row numbers in data
     #     # helps a lot with relays, since their row numbers vary based on whether or not relay swimmers are included

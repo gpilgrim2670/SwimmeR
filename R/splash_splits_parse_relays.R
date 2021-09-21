@@ -1,6 +1,6 @@
-#' Collects splits for relays within \code{swim_parse_omega}
+#' Collects splits for relays within \code{swim_parse_splash}
 #'
-#' Takes the output of \code{read_results} and, inside of \code{swim_parse_omega},
+#' Takes the output of \code{read_results} and, inside of \code{swim_parse_splash},
 #' extracts split times and associated row numbers
 #'
 #' @importFrom dplyr full_join
@@ -25,19 +25,15 @@
 #'   50
 #' @return returns a dataframe with split times and row numbers
 #'
-#' @seealso \code{splits_parse} runs inside \code{\link{swim_parse_omega}} on the
+#' @seealso \code{splits_parse} runs inside \code{\link{swim_parse_splash}} on the
 #'   output of \code{\link{read_results}} with row numbers from
 #'   \code{\link{add_row_numbers}}
 
-splits_parse_omega_relays <-
-  function(text, split_len = split_length_omega) {
+splits_parse_splash_relays <-
+  function(text, split_len = split_length_splash) {
     #### Testing ####
-    # file <-
-    #   "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Tokyo2020/SWMW4X200MFR_HEAT.pdf"
-    # file <- "https://olympics.com/tokyo-2020/paralympic-games/resPG2020-/pdf/PG2020-/SWM/PG2020-_SWM_C73B1_SWMX4X100MFR13033-----FNL-000100--.pdf"
-    # file <- "https://olympics.com/tokyo-2020/paralympic-games/resPG2020-/pdf/PG2020-/SWM/PG2020-_SWM_C73B1_SWMM4X100MFR10102-----FNL-000100--.pdf"
-    # file <- "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Paralympics2020/raw_files/PG2020_SWMX4X50MFR_10101_FNL.pdf"
-    # text <-   read_results(file) %>%
+
+    # text <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Splash/Open_Belgian_Champs_2017.pdf") %>%
     #   add_row_numbers()
     # split_len <- 50
 
@@ -46,7 +42,8 @@ splits_parse_omega_relays <-
     ### define strings ###
     split_string <- "(\\d?\\:?\\d{2}\\.\\d{2})|(  NA  )"
     relay_swimmer_string <- "^\n\\s*[:alpha:]"
-    record_string <- "\n\\s+[:upper:]R\\s|\n\\s+US\\s|[:upper:][:alpha:]+ Record"
+    record_string <- "\n\\s+[:upper:]R\\s|\n\\s+US\\s|[:upper:][:alpha:]+ Record|\n\\s?[:upper:]{1,}\\s"
+    splash_string <- "Splash Meet Manager"
 
     text <- text %>%
       stringr::str_replace_all(" \\:", "  ") %>%
@@ -65,6 +62,9 @@ splits_parse_omega_relays <-
       .[!purrr::map_lgl(.,
                         stringr::str_detect,
                         record_string)] %>%
+      .[!purrr::map_lgl(.,
+                        stringr::str_detect,
+                        splash_string)] %>%
       stringr::str_extract_all("\\d{1,}$")
     flag <- FALSE
 
@@ -85,6 +85,9 @@ splits_parse_omega_relays <-
           .[!purrr::map_lgl(.,
                             stringr::str_detect,
                             record_string)] %>%
+          .[!purrr::map_lgl(.,
+                            stringr::str_detect,
+                            splash_string)] %>%
           stringr::str_extract_all(split_string) %>%
           purrr::map(paste, collapse = "  ") %>%
           trimws()
@@ -225,6 +228,8 @@ splits_parse_omega_relays <-
 
       data_splits <- data_splits %>%
         dplyr::na_if("NA")
+
+      row.names(data_splits) <- NULL
 
     } else {
       # if there are no rows with valid splits return blank data frame
