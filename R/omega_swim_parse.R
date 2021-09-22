@@ -1058,7 +1058,7 @@ swim_parse_omega <-
         # helps a lot with relays, since their row numbers vary based on whether or not relay swimmers are included
         # and if those swimmers are listed on one line or two
         splits_df  <-
-          transform(splits_df, Row_Numb_Adjusted = data$Row_Numb[findInterval(Row_Numb, as.numeric(data_ind$Row_Numb))]) %>%
+          transform(splits_df, Row_Numb_Adjusted = data_ind$Row_Numb[findInterval(Row_Numb, as.numeric(data_ind$Row_Numb))]) %>%
           dplyr::mutate(Row_Numb_Adjusted = as.character(Row_Numb_Adjusted)) %>%
           dplyr::select(-Row_Numb)
 
@@ -1096,7 +1096,7 @@ swim_parse_omega <-
           # helps a lot with relays, since their row numbers vary based on whether or not relay swimmers are included
           # and if those swimmers are listed on one line or two
           splits_df  <-
-            transform(splits_df, Row_Numb_Adjusted = data$Row_Numb[findInterval(Row_Numb, as.numeric(data_relay$Row_Numb))]) %>%
+            transform(splits_df, Row_Numb_Adjusted = data_relay$Row_Numb[findInterval(Row_Numb, as.numeric(data_relay$Row_Numb))]) %>%
             dplyr::mutate(Row_Numb_Adjusted = as.character(Row_Numb_Adjusted)) %>%
             dplyr::select(-Row_Numb)
 
