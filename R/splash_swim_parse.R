@@ -92,7 +92,7 @@ swim_parse_splash <-
     # avoid_splash <- c("abcxyz")
     # typo_splash <- c("typo")
     # replacement_splash <- c("typo")
-    # split_length_splash <- 50
+    # split_length_splash <- 100
     # relay_swimmers_splash <- TRUE
     # splits <- TRUE
 
@@ -199,6 +199,10 @@ swim_parse_splash <-
                                 Team = V4,
                                 Finals_Time = V5,
                                 Points = V6,
+                                Split_1 = V7,
+                                Split_2 = V8,
+                                Split_3 = V9,
+                                Split_4 = V10,
                                 Row_Numb = V11))
     } else {
       df_11 <- data.frame(Row_Numb = character(),
@@ -232,12 +236,31 @@ swim_parse_splash <-
                              TRUE ~ "Unknown"
                            )
                          ) %>%
+                         dplyr::mutate(Split_1 = dplyr::case_when(V5 == Points & V4 == Finals_Time &
+                                                                    stringr::str_detect(V6, Time_Score_String) == TRUE ~ V6,
+                                                                  TRUE ~ "Unknown")) %>%
+                         dplyr::mutate(Split_2 = dplyr::case_when(V5 == Points & V4 == Finals_Time &
+                                                                  V6 == Split_1 &
+                                                                  stringr::str_detect(V7, Time_Score_String) == TRUE ~ V7,
+                                                                  TRUE ~ "Unknown")) %>%
+                         dplyr::mutate(Split_3 = dplyr::case_when(V5 == Points & V4 == Finals_Time &
+                                                                  V7 == Split_2 &
+                                                                  stringr::str_detect(V8, Time_Score_String) == TRUE ~ V8,
+                                                                  TRUE ~ "Unknown")) %>%
+                         dplyr::mutate(Split_4 = dplyr::case_when(V5 == Points & V4 == Finals_Time &
+                                                                  V8 == Split_3 &
+                                                                  stringr::str_detect(V9, Time_Score_String) == TRUE ~ V9,
+                                                                  TRUE ~ "Unknown")) %>%
                          dplyr::select(Place = V1,
                                 Name = V2,
                                 Age,
                                 Team,
                                 Finals_Time,
                                 Points,
+                                Split_1,
+                                Split_2,
+                                Split_3,
+                                Split_4,
                                 Row_Numb = V10)
                        )
     } else {
@@ -288,6 +311,13 @@ swim_parse_splash <-
                              TRUE ~ "Unknown"
                            )
                          ) %>%
+                         dplyr::mutate(Split_1 = dplyr::case_when(V6 == Points & V5 == Finals_Time &
+                                                                    stringr::str_detect(V7, Time_Score_String) == TRUE ~ V7,
+                                                                  TRUE ~ "Unknown")) %>%
+                         dplyr::mutate(Split_2 = dplyr::case_when(V6 == Points & V5 == Finals_Time &
+                                                                    V7 == Split_1 &
+                                                                    stringr::str_detect(V8, Time_Score_String) == TRUE ~ V8,
+                                                                  TRUE ~ "Unknown")) %>%
                          dplyr::select(Place = V1,
                                        Name = V2,
                                        Age,
@@ -295,6 +325,8 @@ swim_parse_splash <-
                                        Prelims_Time,
                                        Finals_Time,
                                        Points,
+                                       Split_1,
+                                       Split_2,
                                        Row_Numb = V9)
                        )
     } else {
@@ -349,6 +381,13 @@ swim_parse_splash <-
                              TRUE ~ "Unknown"
                            )
                          ) %>%
+                         dplyr::mutate(Split_1 = dplyr::case_when(V5 == Points & V4 == Finals_Time &
+                                                                    stringr::str_detect(V6, Time_Score_String) == TRUE ~ V6,
+                                                                  TRUE ~ "Unknown")) %>%
+                         dplyr::mutate(Split_2 = dplyr::case_when(V5 == Points & V4 == Finals_Time &
+                                                                    V7 == Split_1 &
+                                                                    stringr::str_detect(V7, Time_Score_String) == TRUE ~ V7,
+                                                                  TRUE ~ "Unknown")) %>%
                          dplyr::select(Place = V1,
                                        Name = V2,
                                        Age,
@@ -356,6 +395,8 @@ swim_parse_splash <-
                                        Prelims_Time,
                                        Finals_Time,
                                        Points,
+                                       Split_1,
+                                       Split_2,
                                        Row_Numb = V8)
                        )
     } else {
@@ -399,6 +440,9 @@ swim_parse_splash <-
                              TRUE ~ "Unknown"
                            )
                          ) %>%
+                         dplyr::mutate(Split_1 = dplyr::case_when(V5 == Points & V4 == Finals_Time &
+                                                                    stringr::str_detect(V6, Time_Score_String) == TRUE ~ V6,
+                                                                  TRUE ~ "Unknown")) %>%
                          dplyr::select(
                            Place = V1,
                            Name = V2,
@@ -406,6 +450,7 @@ swim_parse_splash <-
                            Team,
                            Finals_Time,
                            Points,
+                           Split_1,
                            Row_Numb = V7
                          )
                        )
@@ -572,72 +617,90 @@ swim_parse_splash <-
     # }
 
     #### adding splits back in ####
-    # if (splits == TRUE) {
-    #
-    #   data <- data %>%
-    #     dplyr::mutate(dplyr::across(where(is.numeric), as.character))
-    #
-    #   data_ind <- data %>%
-    #     dplyr::filter(stringr::str_detect(Event, "(R|r)elay|\\sx\\s|\\dx\\d") == FALSE)
-    #
-    #   data_relay <- data %>%
-    #     dplyr::filter(stringr::str_detect(Event, "(R|r)elay|\\sx\\s|\\dx\\d") == TRUE)
-    #
-    #   if(nrow(data_ind) > 0) {
-    #
-    #     # split_length <- 50
-    #     splits_df <-
-    #       splits_parse_splash(as_lines_list_2, split_len = split_length_splash)
-    #
-    #     #### matches row numbers in splits_df to available row numbers in data
-    #     # helps a lot with relays, since their row numbers vary based on whether or not relay swimmers are included
-    #     # and if those swimmers are listed on one line or two
-    #     splits_df  <-
-    #       transform(splits_df, Row_Numb_Adjusted = data_ind$Row_Numb[findInterval(Row_Numb, as.numeric(data_ind$Row_Numb))]) %>%
-    #       dplyr::mutate(Row_Numb_Adjusted = as.character(Row_Numb_Adjusted)) %>%
-    #       dplyr::select(-Row_Numb) %>%
-    #       dplyr::relocate(Row_Numb_Adjusted)
-    #
-    #     data_ind <- data_ind %>%
-    #       dplyr::left_join(splits_df, by = c("Row_Numb" = "Row_Numb_Adjusted")) %>%
-    #       dplyr::mutate(dplyr::across(dplyr::starts_with("Split"), format, nsmall = 2)) %>%
-    #       dplyr::mutate(dplyr::across(where(is.numeric), as.character)) %>%
-    #       dplyr::mutate(dplyr::across(where(is.character), trimws)) %>%
-    #       dplyr::na_if("NA") %>%
-    #       dplyr::select(!dplyr::starts_with("Split"),
-    #                     stringr::str_sort(names(.), numeric = TRUE)) # keep splits columns in order
-    #   }
-    #
-    #   if(nrow(data_relay) > 0){
-    #     splits_df <-
-    #       splits_parse_splash_relays(as_lines_list_2, split_len = split_length_splash) %>%
-    #       dplyr::filter(Row_Numb %in% data_relay$Row_Numb)
-    #
-    #     #### matches row numbers in splits_df to available row numbers in data
-    #     # helps a lot with relays, since their row numbers vary based on whether or not relay swimmers are included
-    #     # and if those swimmers are listed on one line or two
-    #     splits_df  <-
-    #       transform(splits_df, Row_Numb_Adjusted = data$Row_Numb[findInterval(Row_Numb, as.numeric(data_relay$Row_Numb))]) %>%
-    #       dplyr::mutate(Row_Numb_Adjusted = as.character(Row_Numb_Adjusted)) %>%
-    #       dplyr::select(-Row_Numb)
-    #
-    #     data_relay <- data_relay %>%
-    #       dplyr::left_join(splits_df, by = c("Row_Numb" = "Row_Numb_Adjusted")) %>%
-    #       dplyr::na_if(10000) %>%
-    #       dplyr::mutate(dplyr::across(dplyr::starts_with("Split"), format, nsmall = 2)) %>%
-    #       dplyr::mutate(dplyr::across(where(is.numeric), as.character)) %>%
-    #       dplyr::mutate(dplyr::across(where(is.character), trimws)) %>%
-    #       dplyr::na_if("NA") %>%
-    #       dplyr::select(!dplyr::starts_with("Split"),
-    #                     stringr::str_sort(names(.), numeric = TRUE)) # keep splits columns in order
-    #   }
-    #
-    #
-    #   data <- data_ind %>%
-    #     dplyr::bind_rows(data_relay) %>%
-    #     dplyr::arrange(as.numeric(Row_Numb))
-    #
-    # }
+    if (splits == TRUE) {
+
+      data <- data %>%
+        dplyr::mutate(dplyr::across(where(is.numeric), as.character))
+
+      #### rename existing splits columns ####
+      if(any(stringr::str_detect(names(data), "Split")) == TRUE){
+        old_names <- names(data)[grep("^Split", names(data))]
+        new_names <-
+          paste("Split", seq(1, length(old_names)) * split_length_splash, sep = "_")
+
+        data <- data %>%
+          dplyr::rename_at(dplyr::vars(dplyr::all_of(old_names)), ~ new_names)
+      }
+
+      data_ind <- data %>%
+        dplyr::filter(stringr::str_detect(Event, "(R|r)elay|\\sx\\s|\\dx\\d") == FALSE)
+
+      data_relay <- data %>%
+        dplyr::filter(stringr::str_detect(Event, "(R|r)elay|\\sx\\s|\\dx\\d") == TRUE)
+
+      if(nrow(data_ind) > 0) {
+
+        # split_length <- 50
+        splits_df <-
+          splits_parse_splash(raw_results = as_lines_list_2)
+
+        print(names(splits_df))
+
+        #### matches row numbers in splits_df to available row numbers in data
+        # helps a lot with relays, since their row numbers vary based on whether or not relay swimmers are included
+        # and if those swimmers are listed on one line or two
+        splits_df  <-
+          transform(splits_df, Row_Numb_Adjusted = data_ind$Row_Numb[findInterval(Row_Numb, as.numeric(data_ind$Row_Numb))]) %>%
+          dplyr::mutate(Row_Numb_Adjusted = as.character(Row_Numb_Adjusted)) %>%
+          dplyr::select(-Row_Numb) %>%
+          dplyr::relocate(Row_Numb = Row_Numb_Adjusted)
+
+        data_ind <- data_ind %>%
+          dplyr::left_join(splits_df, by = "Row_Numb", suffix = c(".x", ".y")) %>%
+          coalesce_many() %>%
+          dplyr::mutate(dplyr::across(dplyr::starts_with("Split"), format, nsmall = 2)) %>%
+          dplyr::mutate(dplyr::across(where(is.numeric), as.character)) %>%
+          dplyr::mutate(dplyr::across(where(is.character), trimws)) %>%
+          dplyr::na_if("NA") %>%
+          dplyr::select(!dplyr::starts_with("Split"),
+                        stringr::str_sort(names(.), numeric = TRUE)) # keep splits columns in order
+      }
+
+      if(nrow(data_relay) > 0){
+        splits_df <-
+          splits_parse_splash_relays(as_lines_list_2, split_len = split_length_splash) %>%
+          dplyr::filter(Row_Numb %in% data_relay$Row_Numb)
+
+        #### matches row numbers in splits_df to available row numbers in data
+        # helps a lot with relays, since their row numbers vary based on whether or not relay swimmers are included
+        # and if those swimmers are listed on one line or two
+        splits_df  <-
+          transform(splits_df, Row_Numb_Adjusted = data_relay$Row_Numb[findInterval(Row_Numb, as.numeric(data_relay$Row_Numb))]) %>%
+          dplyr::mutate(Row_Numb_Adjusted = as.character(Row_Numb_Adjusted)) %>%
+          dplyr::select(-Row_Numb) %>%
+          dplyr::relocate(Row_Numb = Row_Numb_Adjusted)
+
+        data_relay <- data_relay %>%
+          dplyr::left_join(splits_df, by = "Row_Numb") %>%
+          coalesce_many() %>%
+          dplyr::na_if(10000) %>%
+          dplyr::mutate(dplyr::across(dplyr::starts_with("Split"), format, nsmall = 2)) %>%
+          dplyr::mutate(dplyr::across(where(is.numeric), as.character)) %>%
+          dplyr::mutate(dplyr::across(where(is.character), trimws)) %>%
+          dplyr::na_if("NA") %>%
+          dplyr::select(!dplyr::starts_with("Split"),
+                        stringr::str_sort(names(.), numeric = TRUE)) # keep splits columns in order
+      }
+
+
+      data <- data_ind %>%
+        dplyr::bind_rows(data_relay) %>%
+        dplyr::arrange(as.numeric(Row_Numb))
+
+    } else {
+      data <- data %>%
+        dplyr::select(-dplyr::starts_with("Split"))
+    }
 
     ### remove empty columns (all values are NA) ###
     data <- Filter(function(x)

@@ -87,6 +87,19 @@ Swim_Parse <-
            relay_swimmers = FALSE) {
 
 
+# file <-
+#   read_results(
+#     "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Splash/Glenmark_Senior_Nationals_2019.pdf"
+#   )
+#
+# avoid = avoid_default
+# typo = typo_default
+# replacement = replacement_default
+# format_results = TRUE
+# splits = FALSE
+# split_length = 100
+# relay_swimmers = TRUE
+
 
     #### default typo and replacement strings ####
     typo_default <- c("typo")
@@ -209,7 +222,16 @@ Swim_Parse <-
 
       return(data)
 
-    } else if ((any(stringr::str_detect(file, "Splash Meet Manager")))) {
+    } else if (any(stringr::str_detect(file, "Splash Meet Manager"))) {
+
+      avoid_default_splash <-
+        c(
+          "abcxyz"
+        )
+
+
+      avoid <- unique(c(avoid, avoid_default_splash))
+
       data <- swim_parse_splash(
         file_splash = file,
         avoid_splash = avoid,

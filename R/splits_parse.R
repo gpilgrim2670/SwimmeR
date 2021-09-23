@@ -8,6 +8,7 @@
 #' @importFrom dplyr mutate_at
 #' @importFrom dplyr rename
 #' @importFrom dplyr vars
+#' @importFrom dplyr all_of
 #' @importFrom stringr str_replace_all
 #' @importFrom stringr str_remove_all
 #' @importFrom stringr str_extract_all
@@ -20,7 +21,7 @@
 #'   \code{add_row_numbers}
 #' @param split_len length of pool at which splits are measured - usually 25 or
 #'   50
-#' @return returns a dataframe with split times and row numbers
+#' @return returns a data frame with split times and row numbers
 #'
 #' @seealso \code{splits_parse} runs inside \code{\link{swim_parse}} on the
 #'   output of \code{\link{read_results}} with row numbers from
@@ -278,7 +279,7 @@ splits_parse <- function(text, split_len = split_length) {
       paste("Split", seq(1, length(names(data_splits)) - 1) * split_len, sep = "_")
 
     data_splits <- data_splits %>%
-      dplyr::rename_at(dplyr::vars(old_names), ~ new_names)
+      dplyr::rename_at(dplyr::vars(dplyr::all_of(old_names)), ~ new_names)
 
   } else { # if there are no rows with valid splits return blank dataframe
     data_splits <- data.frame(Row_Numb = as.numeric())

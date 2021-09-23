@@ -16,7 +16,7 @@
 #' @importFrom purrr map_lgl
 #' @importFrom purrr map
 #'
-#' @param text output of \code{read_results} with row numbers appended by
+#' @param raw_results output of \code{read_results} with row numbers appended by
 #'   \code{add_row_numbers}
 #' @param split_len length of pool at which splits are measured - usually 25 or
 #'   50
@@ -26,14 +26,14 @@
 #'   the output of \code{\link{read_results}} with row numbers from
 #'   \code{\link{add_row_numbers}}
 
-splits_parse_splash <- function(text, split_len = split_length_splash) {
+splits_parse_splash <- function(raw_results) {
 
   #### Testing ####
-  # text <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Splash/Glenmark_Senior_Nationals_2019.pdf") %>%
+  # raw_results <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Splash/Glenmark_Senior_Nationals_2019.pdf") %>%
   #   add_row_numbers()
-  # text <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Splash/Open_Belgian_Champs_2017.pdf") %>%
+  # raw_results <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Splash/Open_Belgian_Champs_2017.pdf") %>%
   #   add_row_numbers()
-  # text <- as_lines_list_2
+  # raw_results <- as_lines_list_2
 
   #### Actual Function ####
   ### collect row numbers from rows containing splits ###
@@ -41,30 +41,31 @@ splits_parse_splash <- function(text, split_len = split_length_splash) {
 
   split_string <- "\\d{1,}m\\:\\s+\\d{0,2}\\:?\\d?\\d\\.\\d\\d|\\d{1,}m\\:\\s+Unknown"
 
-#### Clean up text ####
-  text <- text %>%
+  #### Clean up raw_results ####
+  raw_results <- raw_results %>%
     stringr::str_replace_all("(?<=\\dm\\:)\\s+(?=\\d{1,}m\\:)", "  Unknown  ") %>%
     stringr::str_replace_all("(?<=\\dm\\:)\\s+(?=\\d{1,}$)", "  Unknown  ")
 
   #### Pull out Row numbers for lines with splits ####
 
-  row_numbs <- text %>%
+  row_numbs <- raw_results %>%
     .[purrr::map_lgl(.,
                      stringr::str_detect,
                      split_string)] %>%
     stringr::str_extract_all("\\d{1,}$")
 
+
   #### if there are still no valid splits return blank data frame ####
   if (length(row_numbs) > 0) {
     minimum_row <- min(as.numeric(row_numbs))
-    maximum_row <- as.numeric(length(text))
+    maximum_row <- as.numeric(length(raw_results))
 
     #### help out a little, in case there are splits that only have one space between them ####
-    text <- stringr::str_replace_all(text, "(\\d) (\\d)", "\\1  \\2")
+    raw_results <- stringr::str_replace_all(raw_results, "(\\d) (\\d)", "\\1  \\2")
 
     #### pull out rows containing splits, which will remove row numbers ####
 
-    data_1_splits <- text %>%
+    data_1_splits <- raw_results %>%
       .[purrr::map_lgl(.,
                        stringr::str_detect,
                        split_string)] %>%
@@ -341,6 +342,7 @@ splits_parse_splash <- function(text, split_len = split_length_splash) {
       rename(V1 = Row_Numb)
 
     data_splits <- data_splits %>%
+      dplyr::na_if("Unknown") %>%
       lines_sort(min_row = minimum_row, to_wide = FALSE) %>%
       dplyr::mutate(Row_Numb = as.numeric(Row_Numb) - 1)   # make row number of split match row number of performance
 

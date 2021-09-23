@@ -10,6 +10,7 @@
 #' @importFrom dplyr rename
 #' @importFrom dplyr vars
 #' @importFrom dplyr na_if
+#' @importFrom dplyr all_of
 #' @importFrom stringr str_replace_all
 #' @importFrom stringr str_replace
 #' @importFrom stringr str_remove_all
@@ -37,17 +38,23 @@ splits_parse_splash_relays <-
     #   add_row_numbers()
     # split_len <- 50
 
+    # text <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Splash/Glenmark_Senior_Nationals_2019.pdf") %>%
+    #   add_row_numbers()
+    # split_len <- 50
+
     #### Actual Function ####
     ### collect row numbers from rows containing splits ###
     ### define strings ###
     split_string <- "(\\d?\\:?\\d{2}\\.\\d{2})|(  NA  )"
     relay_swimmer_string <- "^\n\\s*[:alpha:]"
-    record_string <- "\n\\s+[:upper:]R\\s|\n\\s+US\\s|[:upper:][:alpha:]+ Record|\n\\s?[:upper:]{1,}\\s"
+    record_string <- "\n\\s+[:upper:]R\\s|\n\\s+US\\s|[:upper:][:alpha:]+ Record|\n\\s?[:upper:]{1,}\\s|\n\\s+NMR\\s+\\d{1,}$"
     splash_string <- "Splash Meet Manager"
 
     text <- text %>%
+      .[stringr::str_detect(., record_string, negate = TRUE)] %>%
       stringr::str_replace_all(" \\:", "  ") %>%
       stringr::str_remove_all("\\(\\=?\\d?\\d?\\)\\s+\\d?\\:?\\d{2}\\.\\d{2}") %>%
+      stringr::str_replace("([:alpha:])\\s{6,}(\\d{1,}$)", "\\1  NA  \\2") %>%
       stringr::str_replace("(?<=\\d\\.\\d\\d)\\s{16,}(?=\\d?\\:?\\d{2}\\.\\d{2} )", "   NA   ")
 
     ### collect splits

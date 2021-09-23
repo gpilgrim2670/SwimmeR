@@ -14,7 +14,7 @@ splits_parse(text, split_len = split_length)
 50}
 }
 \value{
-returns a dataframe with split times and row numbers
+returns a data frame with split times and row numbers
 }
 \description{
 Takes the output of \code{read_results} and, inside of \code{swim_parse},

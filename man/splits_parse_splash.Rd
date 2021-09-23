@@ -4,10 +4,10 @@
 \alias{splits_parse_splash}
 \title{Collects splits within \code{swim_parse_splash} for Splash results}
 \usage{
-splits_parse_splash(text, split_len = split_length_splash)
+splits_parse_splash(raw_results)
 }
 \arguments{
-\item{text}{output of \code{read_results} with row numbers appended by
+\item{raw_results}{output of \code{read_results} with row numbers appended by
 \code{add_row_numbers}}
 
 \item{split_len}{length of pool at which splits are measured - usually 25 or
