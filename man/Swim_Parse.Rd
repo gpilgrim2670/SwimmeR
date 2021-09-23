@@ -8,7 +8,7 @@ frame}
 \usage{
 Swim_Parse(
   file,
-  avoid = avoid_default,
+  avoid = NULL,
   typo = typo_default,
   replacement = replacement_default,
   format_results = TRUE,
@@ -19,7 +19,7 @@ Swim_Parse(
 
 swim_parse(
   file,
-  avoid = avoid_default,
+  avoid = NULL,
   typo = typo_default,
   replacement = replacement_default,
   format_results = TRUE,

@@ -644,7 +644,6 @@ swim_parse_splash <-
         splits_df <-
           splits_parse_splash(raw_results = as_lines_list_2)
 
-        print(names(splits_df))
 
         #### matches row numbers in splits_df to available row numbers in data
         # helps a lot with relays, since their row numbers vary based on whether or not relay swimmers are included
@@ -655,6 +654,7 @@ swim_parse_splash <-
           dplyr::select(-Row_Numb) %>%
           dplyr::relocate(Row_Numb = Row_Numb_Adjusted)
 
+        suppressMessages(
         data_ind <- data_ind %>%
           dplyr::left_join(splits_df, by = "Row_Numb", suffix = c(".x", ".y")) %>%
           coalesce_many() %>%
@@ -664,6 +664,7 @@ swim_parse_splash <-
           dplyr::na_if("NA") %>%
           dplyr::select(!dplyr::starts_with("Split"),
                         stringr::str_sort(names(.), numeric = TRUE)) # keep splits columns in order
+        )
       }
 
       if(nrow(data_relay) > 0){
@@ -680,6 +681,7 @@ swim_parse_splash <-
           dplyr::select(-Row_Numb) %>%
           dplyr::relocate(Row_Numb = Row_Numb_Adjusted)
 
+        suppressMessages(
         data_relay <- data_relay %>%
           dplyr::left_join(splits_df, by = "Row_Numb") %>%
           coalesce_many() %>%
@@ -690,6 +692,7 @@ swim_parse_splash <-
           dplyr::na_if("NA") %>%
           dplyr::select(!dplyr::starts_with("Split"),
                         stringr::str_sort(names(.), numeric = TRUE)) # keep splits columns in order
+        )
       }
 
 

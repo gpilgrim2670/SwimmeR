@@ -78,7 +78,7 @@
 
 Swim_Parse <-
   function(file,
-           avoid = avoid_default,
+           avoid = NULL,
            typo = typo_default,
            replacement = replacement_default,
            format_results = TRUE,
@@ -161,7 +161,7 @@ Swim_Parse <-
     avoid_minimal <- c("^\\s{1,}r\\:")
 
     #### combine avoid and avoid_default
-    avoid <- unique(c(avoid, avoid_default))
+    avoid_non_splash <- unique(c(avoid, avoid_default))
 
     #### message only posts once per session ####
     ## removed in v0.11.0 7/14/21 ##
@@ -191,7 +191,7 @@ Swim_Parse <-
 
     } else if (any(stringr::str_detect(file[1:6], "S\\.A\\.M\\.M\\.S\\.|MEET SANCTION NUMBER")) == TRUE) { # for S.A.M.M.S files
       data <- swim_parse_samms(file_samms = file,
-                          avoid_samms = avoid,
+                          avoid_samms = avoid_non_splash,
                           typo_samms = typo,
                           replacement_samms = replacement,
                           format_samms = format_results)
@@ -212,7 +212,7 @@ Swim_Parse <-
 
       data <- swim_parse_omega(
         file_omega = file,
-        avoid_omega = avoid,
+        avoid_omega = avoid_non_splash,
         typo_omega = typo,
         replacement_omega = replacement,
         splits = splits,
@@ -230,11 +230,11 @@ Swim_Parse <-
         )
 
 
-      avoid <- unique(c(avoid, avoid_default_splash))
+      avoid_splash <- unique(c(avoid, avoid_default_splash))
 
       data <- swim_parse_splash(
         file_splash = file,
-        avoid_splash = avoid,
+        avoid_splash = avoid_splash,
         typo_splash = typo,
         replacement_splash = replacement,
         splits = splits,
@@ -248,7 +248,7 @@ Swim_Parse <-
 
       data <- swim_parse_hytek(
         file_hytek = file,
-        avoid_hytek = avoid,
+        avoid_hytek = avoid_non_splash,
         typo_hytek = typo,
         replacement_hytek = replacement,
         splits = splits,

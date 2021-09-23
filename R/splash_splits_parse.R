@@ -330,6 +330,7 @@ splits_parse_splash <- function(raw_results) {
     #### bind up results ####
     # results are bound before going to lines_sort so that in cases where there are multiple rows with splits for the same race,
     # like in longer events with many splits, those splits can be collected and treated together
+    suppressMessages(
     data_splits <- df_10_splits %>%
       dplyr::full_join(df_9_splits) %>%
       dplyr::full_join(df_8_splits) %>%
@@ -340,6 +341,7 @@ splits_parse_splash <- function(raw_results) {
       dplyr::full_join(df_3_splits) %>%
       dplyr::full_join(df_2_splits) %>%
       rename(V1 = Row_Numb)
+    )
 
     data_splits <- data_splits %>%
       dplyr::na_if("Unknown") %>%
