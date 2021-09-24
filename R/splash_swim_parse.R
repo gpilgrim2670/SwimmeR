@@ -89,6 +89,10 @@ swim_parse_splash <-
     #   read_results()
     # file_splash <- "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Splash/Open_Belgian_Champs_2017.pdf" %>%
     #   read_results()
+    # file_splash <- "http://www.toptime.be/oresults/ResultList_111_us.pdf" %>%
+    #   read_results()
+    # file_splash <- "http://www.toptime.be/oresults/ResultList_75_us.pdf" %>%
+    #   read_results()
     # avoid_splash <- c("abcxyz")
     # typo_splash <- c("typo")
     # replacement_splash <- c("typo")
@@ -124,12 +128,30 @@ swim_parse_splash <-
     Heat_String <-
       "Heat\\s\\d{1,}\\sof\\s\\d{1,}|Semifinal\\s+\\d{1,}|Final|(Heats?)(?![:alpha:])"
 
+    # Indent Length is used to differentiate ties (whose lines don't start with a place/DQ) and relay swimmers
+    # whose lines also don't start with a place/DQ.  Relay swimmers are indented further, but overall indents
+    # vary from results to results
+    Indent_Length <- as_lines_list_2 %>%
+      .[purrr::map_lgl(.,
+                       stringr::str_detect,
+                       paste0(Time_Score_String, "|DSQ|SCR|DNS"))] %>%
+      .[purrr::map_lgl(.,
+                       stringr::str_detect,
+                       "\n\\s+\\d\\.")] %>%
+      head(1) %>%
+      stringr::str_extract("(?<=\n)\\s+(?=\\d\\.)") %>%
+      stringr::str_length() + 4
+
+    Indent_Length <- ifelse(is.na(Indent_Length), 12, Indent_Length)
+    Indent_Length <- ifelse(Indent_Length < 12, 12, Indent_Length)
+
+
     data_cleaned <- as_lines_list_2 %>%
       # stringr::str_remove("^\n\\s{0,}") %>%
       stringr::str_remove("^\n") %>%
       .[purrr::map_lgl(.,
                        stringr::str_detect,
-                       "^\\s{12,}",
+                       paste0("^\\s{", Indent_Length, ",}"),
                        negate = TRUE)] %>% # removes relay swimmer rows
       stringr::str_remove("^\\s{0,}") %>%
       .[purrr::map(., stringr::str_length) > 50] %>% # slight speed boost from cutting down length of file
@@ -144,7 +166,7 @@ swim_parse_splash <-
       # .[purrr::map_lgl(., stringr::str_detect, "^\\d+|^DSQ")] %>%
       .[purrr::map_lgl(., stringr::str_detect, "\\d\\.\\d{2}\\s+[[:alpha:]\\'\\.]{2,}", negate = TRUE)] %>% # removes relay swimmer rows
       .[purrr::map_lgl(., stringr::str_detect, Reaction_String, negate = TRUE)] %>% # also removes relay swimmer rows
-      .[purrr::map_lgl(., stringr::str_detect, "^[:alpha:]+\\'?\\s?[:alpha:]{0,}\\,", negate = TRUE)] %>% # also removes relay swimmer rows
+      #.[purrr::map_lgl(., stringr::str_detect, "^[:alpha:]+\\'?\\s?[:alpha:]{0,}\\,", negate = TRUE)] %>% # also removes relay swimmer rows
       .[purrr::map_lgl(., stringr::str_detect, Rule_String, negate = TRUE)] %>% # also removes rows with rule numbers for DQ reasons
       stringr::str_replace_all("(?<=\\d\\.) (?=[:alpha:])", "  ") %>% # split places (1.) and names
       stringr::str_replace_all("(?<=\\d) (?=\\d)", "  ") %>% # split times and scores
@@ -356,7 +378,6 @@ swim_parse_splash <-
                              TRUE ~ "Unknown"
                            )
                          ) %>%
-
                          dplyr::mutate(
                            Finals_Time = dplyr::case_when(
                              str_detect(V4, Time_Score_Specials_String) == TRUE ~ V4,
@@ -465,7 +486,8 @@ swim_parse_splash <-
                          list_transform() %>%
                          dplyr::mutate(Name = dplyr::case_when(V2 == V3 ~ "Unknown",
                                                                TRUE ~ V2)) %>%
-                         dplyr::mutate(Age = dplyr::case_when(stringr::str_detect(V3, "\\d\\d") == TRUE ~ V3,
+                         dplyr::mutate(Age = dplyr::case_when(stringr::str_detect(V3, "\\d\\d") == TRUE &
+                                                                stringr::str_detect(V3, "[:alpha:]") == FALSE ~ V3,
                                                               TRUE ~ "Unknown")) %>%
                          dplyr::mutate(Team = dplyr::case_when(stringr::str_detect(V3, Age) == TRUE ~ V4,
                                                                stringr::str_detect(V3, "^\\d\\s?") == TRUE ~ V4,
@@ -473,8 +495,17 @@ swim_parse_splash <-
                                                                  stringr::str_detect(V4, Time_Score_Specials_String) == TRUE ~ V3,
                                                                TRUE ~ "Unknown")) %>%
                          dplyr::mutate(
+                           Prelims_Time = dplyr::case_when(
+                             stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
+                               stringr::str_detect(V5, Time_Score_Specials_String) == TRUE &
+                               stringr::str_detect(V3, Time_Score_Specials_String) == FALSE ~ V4,
+                             TRUE ~ "Unknown"
+                           )
+                         ) %>%
+                         dplyr::mutate(
                            Finals_Time = dplyr::case_when(
-                             stringr::str_detect(V4, Time_Score_Specials_String) == TRUE ~ V4,
+                             stringr::str_detect(V4, Time_Score_Specials_String) == TRUE & V4 != Prelims_Time ~ V4,
+                             stringr::str_detect(V5, Time_Score_Specials_String) == TRUE & V4 == Prelims_Time ~ V5,
                              stringr::str_detect(V4, Time_Score_Specials_String) == FALSE &
                                stringr::str_detect(V5, Time_Score_Specials_String) == TRUE ~ V5,
                              TRUE ~ "Unknown"
@@ -492,6 +523,7 @@ swim_parse_splash <-
                            Name,
                            Age,
                            Team,
+                           Prelims_Time,
                            Finals_Time,
                            Points,
                            Row_Numb = V6
@@ -574,6 +606,10 @@ swim_parse_splash <-
       dplyr::mutate(DQ = dplyr::case_when(stringr::str_detect(Place, "DSQ|DNS|DFS") == TRUE ~ 1,
                                           TRUE ~ 0)) %>%
       dplyr::mutate(Place = str_remove(Place, "\\.")) %>%
+      dplyr::mutate(Age = dplyr::case_when(Age == "Unknown" &
+                                             stringr::str_detect(Team, "/\\d\\d$") == TRUE ~ stringr::str_extract(Team, "\\d\\d$"),
+                                           TRUE ~ Age)) %>%
+      dplyr::mutate(Team = stringr::str_remove(Team, "/\\d{1,}/\\d{1,}$")) %>%
       dplyr::mutate(Prelims_Time = dplyr::case_when(stringr::str_detect(Place, "DNS") == TRUE &
                                                       stringr::str_detect(Finals_Time, Time_Score_String) == TRUE &
                                                       is.na(Prelims_Time) == TRUE ~ Finals_Time,

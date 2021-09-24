@@ -644,7 +644,7 @@ test_that("2017 Open belgian Champs, has prelims, team-country", {
   dq_sum <- sum(df_test$DQ, na.rm = TRUE)
 
 
-  expect_equivalent(place_sum, 25383)
+  expect_equivalent(place_sum, 26332)
   expect_equivalent(dq_sum, 42)
 
 })
@@ -662,7 +662,8 @@ test_that("2017 Open belgian Champs, has prelims, team-country, splits", {
 
   df_test_dim <- dim(df_test)
 
-  expect_equivalent(df_test_dim, c(1690, 108))
+  expect_equivalent(df_test_dim, c(1709, 108))
+  # rows 1709 fully checked
 
   df_test_head <- df_test %>%
     head(5)
@@ -949,7 +950,7 @@ test_that("Glenmark Senior Nationals 2019 relays", {
 })
 
 
-test_that("Glenmark Senior Nationals 2019 individuals vs ", {
+test_that("Glenmark Senior Nationals 2019 individuals with splits", {
 
   skip_on_cran()
 
@@ -1044,3 +1045,67 @@ test_that("Glenmark Senior Nationals 2019 individuals vs ", {
   expect_equivalent(df_test, df_standard)
 
 })
+
+test_that("RBSF 100 free with merged teams/ages", {
+  skip_on_cran()
+
+  file <-
+    "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Splash/RBSF_100Free.pdf"
+
+  df_test <- file %>%
+    read_results() %>%
+    swim_parse(splits = TRUE)
+
+  df_standard <-
+    structure(list(Place = c("1", "2", "3", "4", "5", "6", "7", "8"
+    ), Name = c("VERDONCK, Fleur", "DUREZ, Laure", "WOUTERS, Briana",
+                "HENVEAUX, Camille", "VAN DEN EEDE, Lisa", "DUJARDIN, Faye",
+                "SEYNAEVE, Marthe", "VANDEPOORTE, Pauline"), Age = c("06", "06",
+                                                                     "06", "06", "06", "06", "06", "06"), Team = c("ZGEEL", "ENLN",
+                                                                                                                   "HZA", "LGN", "AZL", "GOLD", "BZK", "FAST"), Prelims_Time = c("55.92",
+                                                                                                                                                                                 "57.25", "57.81", "58.54", "1:00.96", "1:00.17", "1:00.59", "1:00.77"
+                                                                                                                   ), Finals_Time = c("57.50", "57.77", "58.91", "59.53", "1:01.72",
+                                                                                                                                      "1:02.25", "1:02.55", "1:03.21"), DQ = c("0", "0", "0", "0",
+                                                                                                                                                                               "0", "0", "0", "0"), Event = c("Girls, 100m Freestyle 15 years",
+                                                                                                                                                                                                              "Girls, 100m Freestyle 15 years", "Girls, 100m Freestyle 15 years",
+                                                                                                                                                                                                              "Girls, 100m Freestyle 15 years", "Girls, 100m Freestyle 15 years",
+                                                                                                                                                                                                              "Girls, 100m Freestyle 15 years", "Girls, 100m Freestyle 15 years",
+                                                                                                                                                                                                              "Girls, 100m Freestyle 15 years"), Split_50 = c("27.73", "28.09",
+                                                                                                                                                                                                                                                              "28.13", "28.95", "29.78", "29.53", "29.73", "30.07"), Split_100 = c("57.50",
+                                                                                                                                                                                                                                                                                                                                   "57.77", "58.91", "59.53", "1:01.72", "1:02.25", "1:02.55", "1:03.21"
+                                                                                                                                                                                                                                                              )), row.names = c(NA, -8L), class = "data.frame")
+
+
+  expect_equivalent(df_test, df_standard)
+
+})
+
+test_that("RBSF 50 free with merged teams/ages, also has a tie", {
+  skip_on_cran()
+
+  file <-
+    "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Splash/RBSF_50Free.pdf"
+
+  df_test <- file %>%
+    read_results() %>%
+    swim_parse(splits = TRUE)
+
+  df_standard <-
+    structure(list(Place = c("1", "2", "3", "4", "5", "5", "7", "8"
+    ), Name = c("SNEYERS, Kobe", "PETRE, Olivier", "WILLEMS, Dieter",
+                "BOETS, Victor", "VERCAUTEREN, Jasper", "DUFLOUCQ, Seppe", "OPDEBEECK, Thomas",
+                "EVENS, Thibo"), Age = c("06", "06", "06", "06", "06", "06",
+                                         "06", "06"), Team = c("SHARK", "ENLN", "AZV", "MOZKA", "BRABO",
+                                                               "ISWIM", "BRABO", "KAZS"), Prelims_Time = c("25.00", "26.15",
+                                                                                                           "25.79", "26.14", "26.29", "26.25", "26.15", "26.30"), Finals_Time = c("25.69",
+                                                                                                                                                                                  "26.05", "26.34", "26.57", "26.96", "26.96", "27.11", "27.66"
+                                                                                                           ), DQ = c("0", "0", "0", "0", "0", "0", "0", "0"), Event = c("Boys, 50m Freestyle 15 years",
+                                                                                                                                                                        "Boys, 50m Freestyle 15 years", "Boys, 50m Freestyle 15 years",
+                                                                                                                                                                        "Boys, 50m Freestyle 15 years", "Boys, 50m Freestyle 15 years",
+                                                                                                                                                                        "Boys, 50m Freestyle 15 years", "Boys, 50m Freestyle 15 years",
+                                                                                                                                                                        "Boys, 50m Freestyle 15 years")), row.names = c(NA, -8L), class = "data.frame")
+
+  expect_equivalent(df_test, df_standard)
+
+})
+
