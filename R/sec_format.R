@@ -42,10 +42,14 @@ sec_format <- function(x) {
 sec_format_helper <- function(x) {
 
   x <- as.character(x)
+  x <- stringr::str_remove(x, "^\\:")
+  x <- stringr::str_remove(x, "^`")
   if(is.na(x) == TRUE) return(NA)
-  if (stringr::str_detect(x, "`") == TRUE){
-    x <- stringr::str_remove(x, "^`")
-  }
+
+  # if (stringr::str_detect(x, "`") == TRUE){
+  #   x <- stringr::str_remove(x, "^`")
+  # }
+
   if (stringr::str_detect(x, ":") == TRUE) {
     min <- as.numeric(stringr::str_split_fixed(x, ":", n = 2)[,1])
     sec <- as.numeric(stringr::str_split_fixed(x, ":", n = 2)[,2])
