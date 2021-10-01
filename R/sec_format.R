@@ -15,7 +15,7 @@
 #' sec_format("16:45.19")
 #' sec_format("25.43")
 #' sec_format(c("1:35.93", "16:45.19", "25.43"))
-#' sec_format(c("1:35.93", "16:45.19", NA, "25.43"))
+#' sec_format(c("1:35.93", "16:45.19", NA, "25.43", ":55.23"))
 #'
 #' @seealso \code{sec_format} is the reverse of \code{\link{mmss_format}}
 #'
@@ -53,7 +53,7 @@ sec_format_helper <- function(x) {
   if (stringr::str_detect(x, ":") == TRUE) {
     min <- as.numeric(stringr::str_split_fixed(x, ":", n = 2)[,1])
     sec <- as.numeric(stringr::str_split_fixed(x, ":", n = 2)[,2])
-    if (sec >= 60) stop("Seconds must be less than 60 in a swim formatted time")
+    if (sec >= 60) warning("Seconds should be less than 60 in a swim formatted time")
     x <- (min*60) + sec
   } else {
     as.numeric(x)
