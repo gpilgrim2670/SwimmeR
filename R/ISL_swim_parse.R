@@ -75,7 +75,7 @@ swim_parse_ISL <-
 
     #### clean input data ####
     suppressWarnings(
-      data_1 <- as_lines_list_2 %>%
+      data_cleaned <- as_lines_list_2 %>%
         stringr::str_replace_all("\\*(\\d{1,})", replacement = "\\1") %>%  # removes * placed in front of place number in ties
         .[purrr::map(., length) > 0] %>%
         .[purrr::map_lgl(., stringr::str_detect, "\\d\\d\\.\\d\\d|DSQ|[:upper:]{2,}\\s[:upper:][:lower:]")] %>% # must have \\.\\d\\d because all swimming and diving times do
@@ -102,24 +102,30 @@ swim_parse_ISL <-
         trimws()
     )
 
+    #### if data_cleaned is empty ####
+    if(!length(data_cleaned) > 0){
+      message("No results found in file")
+
+    } else {
+
     #### splits data into variables by splitting at multiple (>= 2) spaces ####
-    data_1 <-
-      unlist(purrr::map(data_1, stringr::str_split, "\\s{2,}"),
+    data_cleaned <-
+      unlist(purrr::map(data_cleaned, stringr::str_split, "\\s{2,}"),
              recursive = FALSE)
 
     #### breaks data into subsets based on swim type ####
     is_digit <-
-      purrr::map(data_1, stringr::str_detect, "^\\d") # is first element of list a digit - no for relay swimmers, yes for everyone else
+      purrr::map(data_cleaned, stringr::str_detect, "^\\d") # is first element of list a digit - no for relay swimmers, yes for everyone else
 
     if(relay_swimmers == TRUE){
     data_relay_swimmer <-
-      data_1[purrr::map(is_digit, 1) == FALSE] # pull out relay swimmers
+      data_cleaned[purrr::map(is_digit, 1) == FALSE] # pull out relay swimmers
     } else {
       data_relay_swimmer <- NULL
     }
 
     data_entry <-
-      data_1[purrr::map(is_digit, 1) == TRUE] # all entries (ie not relay swimmers, which are a kind of sub entry)
+      data_cleaned[purrr::map(is_digit, 1) == TRUE] # all entries (ie not relay swimmers, which are a kind of sub entry)
 
     #### ind swimmer list ####
     suppressWarnings(data_ind_swimmer <-
@@ -146,7 +152,7 @@ swim_parse_ISL <-
 
     #### DQ swimmer list ####
     suppressWarnings(data_DSQ <-
-                       data_1[stringr::str_detect(data_1, "(DSQ)|(DNS)") == TRUE]) # pull out DQ swimmers, called DSQ by ISL
+                       data_cleaned[stringr::str_detect(data_cleaned, "(DSQ)|(DNS)") == TRUE]) # pull out DQ swimmers, called DSQ by ISL
 
     #### individual swimmers df ####
     if (length(data_ind_swimmer) > 0) {
@@ -427,6 +433,7 @@ swim_parse_ISL <-
 
     data$Row_Numb <- NULL
     return(data)
+    }
   }
 
 #' @rdname swim_parse_ISL

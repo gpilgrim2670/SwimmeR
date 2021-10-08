@@ -237,6 +237,12 @@ swim_parse_omega <-
         # }
         stringr::str_replace_all("(^[:upper:]{3,}.*\\s{3,}[:upper:]{3})", "NA  NA  \\1") # for GUTIERREZ BERMUDEZ Juan Jose in 2020 Para Games 200IM Finals
 
+      #### if data_cleaned is empty ####
+      if(!length(data_cleaned) > 0){
+        message("No results found in file")
+
+      } else {
+
       #### splits data into variables by splitting at multiple (>= 2) spaces ####
       data_cleaned <-
         unlist(purrr::map(data_cleaned, stringr::str_split, "\\s{2,}"),
@@ -1147,6 +1153,7 @@ swim_parse_omega <-
 
       return(data)
 
+      }
   }
 
 

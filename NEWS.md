@@ -1,3 +1,8 @@
+# SwimmeR 0.12.5 - August 31st 2021
+* Splash results
+* bug fix for empty files
+* Paralympics 2020 results complete
+
 # SwimmeR 0.12.4 - August 31st 2021
 * Started Paralympics 2020 results
 

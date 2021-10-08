@@ -190,6 +190,12 @@ swim_parse_splash <-
       stringr::str_replace("DFS ", "DFS  ") %>%
       stringr::str_replace("DSQ ", "DSQ  ")
 
+    #### if data_cleaned is empty ####
+    if(!length(data_cleaned) > 0){
+      message("No results found in file")
+
+    } else {
+
 
     #### splits data into variables by splitting at multiple (>= 2) spaces ####
     data_cleaned <-
@@ -756,6 +762,7 @@ swim_parse_splash <-
     row.names(data) <- NULL
 
     return(data)
+    }
 
   }
 

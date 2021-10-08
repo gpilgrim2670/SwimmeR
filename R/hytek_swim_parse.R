@@ -231,6 +231,12 @@ swim_parse_hytek <-
       stringr::str_replace_all("(?<=\\s)S(?=B?M?\\d{1,2})", "  S") %>%  # for para classifications
       stringr::str_remove_all("(?<=\\d\\d\\.\\d\\d )[:upper:]{1,}") # removes AAA, AAC from after time
 
+    #### if data_cleaned is empty ####
+    if(!length(data_cleaned) > 0){
+      message("No results found in file")
+
+    } else {
+
     #### splits data into variables by splitting at multiple (>= 2) spaces ####
     data_cleaned <-
       unlist(purrr::map(data_cleaned, stringr::str_split, "\\s{2,}"),
@@ -903,6 +909,7 @@ swim_parse_hytek <-
 
     return(data)
 
+    }
   }
 
 
