@@ -26,7 +26,7 @@ collect_relay_swimmers_omega <- function(x){
   # x <- as_lines_list_2
 
   relay_swimmer_string <- "^\n\\s*[:alpha:]"
-  record_string <- "\n\\s+[:upper:]R\\s|\n\\s+US\\s|[:upper:][:alpha:]+ Record"
+  record_string <- "\n\\s+[:upper:]R\\s|\n\\s+US\\s|[:upper:][:alpha:]+ Record|\n\\s+W[:upper:]\\s"
   header_string <- "Record\\s+Split|Record\\s+Name|Reaction\\sTime|EVENT NO\\."
 
 

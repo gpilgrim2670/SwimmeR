@@ -127,6 +127,7 @@ swim_parse_omega <-
     # file_omega <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/SwimmeR%20Test%20Files/PG2020_SWMM200MIM_FNL.pdf")
     # file_omega <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Paralympics2020/raw_files/PG2020_SWMW150MIM_04042_FNL.pdf")
     # file_omega <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Tokyo2020/SWMM4X200MFR_FNL.pdf")
+    # file_omega <- read_results("https://www.omegatiming.com/File/00011500100201EF01FFFFFFFFFFFF01.pdf")
     # avoid_omega <- c("abcxyz")
     # typo_omega <- c("typo")
     # replacement_omega <- c("typo")
@@ -160,7 +161,7 @@ swim_parse_omega <-
       Time_Score_Specials_String_Extract <- paste0(Time_Score_String, "|^NT$|^NP$|^DQ$|^NS$|^SCR$")
       Para_String <- "^SB?M?\\d{1,2}$"
       Reaction_String <- "^\\+\\s?\\d\\.\\d{3}$|^\\-\\s?\\d\\.\\d{3}$|^[0-1]\\.00$|^[0-1]\\.\\d\\d$"
-      Record_String <- "^\\=?WR$|^\\=?AR$|^\\=?US$|^\\=?CR$|^\\=?WJ$|^\\=?OT$|^\\=?OR$|^\\=?[:upper:]R$"
+      Record_String <- "^\\=?W[:upper:]$|^\\=?AR$|^\\=?US$|^\\=?CR$|^\\=?OT$|^\\=?OR$|^\\=?[:upper:]R$"
       Header_string <- "\\sDisqualified\\s|\\sReaction\\sTime\\s"
       Heat_String <- "Heat\\s\\d{1,}\\sof\\s\\d{1,}|Semifinal\\s+\\d{1,}|Final|(Heats?)(?![:alpha:])"
 
@@ -1073,25 +1074,30 @@ swim_parse_omega <-
           dplyr::rename_with(splits_rename_omega, dplyr::starts_with("Split"), split_len = split_length_omega) %>%
           dplyr::mutate(dplyr::across(dplyr::starts_with("Split"), sec_format))
 
-
-        data_ind <- data_ind %>%
-          dplyr::left_join(splits_df, by = c("Row_Numb" = "Row_Numb_Adjusted")) %>%
-          dplyr::mutate(dplyr::across(dplyr::starts_with("Split"), as.numeric)) %>%
-          dplyr::mutate(
-            Split_Total = rowSums(dplyr::across(dplyr::starts_with("Split")), na.rm = TRUE),
-            Finals_Time_Sec = sec_format(Finals_Time),
-            Split_50 = Finals_Time_Sec - Split_Total,
-            Split_50 = dplyr::case_when(Split_50 < 0 ~ 10000,
-                                 TRUE ~ Split_50)
-          ) %>%
-          dplyr::na_if(10000) %>%
-          dplyr::select(-Split_Total,-Finals_Time_Sec) %>%
-          dplyr::mutate(dplyr::across(dplyr::starts_with("Split"), format, nsmall = 2)) %>%
-          dplyr::mutate(dplyr::across(where(is.numeric), as.character)) %>%
-          dplyr::mutate(dplyr::across(where(is.character), trimws)) %>%
-          dplyr::na_if("NA") %>%
-          dplyr::select(!dplyr::starts_with("Split"),
-                        stringr::str_sort(names(.), numeric = TRUE)) # keep splits columns in order
+        suppressWarnings(
+          data_ind <- data_ind %>%
+            dplyr::left_join(splits_df, by = c("Row_Numb" = "Row_Numb_Adjusted")) %>%
+            dplyr::mutate(dplyr::across(dplyr::starts_with("Split"), as.numeric)) %>%
+            dplyr::mutate(
+              Split_Total = rowSums(dplyr::across(dplyr::starts_with("Split")), na.rm = TRUE),
+              Finals_Time_Sec = sec_format(Finals_Time),
+              Split_50 = Finals_Time_Sec - Split_Total,
+              Split_50 = dplyr::case_when(Split_50 < 0 ~ 10000,
+                                          TRUE ~ Split_50)
+            ) %>%
+            dplyr::na_if(10000) %>%
+            dplyr::select(-Split_Total, -Finals_Time_Sec) %>%
+            dplyr::mutate(dplyr::across(
+              dplyr::starts_with("Split"), format, nsmall = 2
+            )) %>%
+            dplyr::mutate(dplyr::across(where(is.numeric), as.character)) %>%
+            dplyr::mutate(dplyr::across(where(is.character), trimws)) %>%
+            dplyr::na_if("NA") %>%
+            dplyr::select(
+              !dplyr::starts_with("Split"),
+              stringr::str_sort(names(.), numeric = TRUE)
+            ) # keep splits columns in order
+        )
         }
 
         if(nrow(data_relay) > 0){
