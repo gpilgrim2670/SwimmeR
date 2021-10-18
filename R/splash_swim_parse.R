@@ -132,18 +132,20 @@ swim_parse_splash <-
     # whose lines also don't start with a place/DQ.  Relay swimmers are indented further, but overall indents
     # vary from results to results
     Indent_Length <- as_lines_list_2 %>%
-      .[purrr::map_lgl(.,
-                       stringr::str_detect,
-                       paste0(Time_Score_String, "|DSQ|SCR|DNS"))] %>%
-      .[purrr::map_lgl(.,
-                       stringr::str_detect,
-                       "\n\\s+\\d\\.")] %>%
-      head(1) %>%
-      stringr::str_extract("(?<=\n)\\s+(?=\\d\\.)") %>%
-      stringr::str_length() + 4
-
-    Indent_Length <- ifelse(is.na(Indent_Length), 12, Indent_Length)
-    Indent_Length <- ifelse(Indent_Length < 12, 12, Indent_Length)
+      determine_indent_length_splash(time_score_string = Time_Score_String)
+    # %>%
+    #   .[purrr::map_lgl(.,
+    #                    stringr::str_detect,
+    #                    paste0(Time_Score_String, "|DSQ|SCR|DNS"))] %>%
+    #   .[purrr::map_lgl(.,
+    #                    stringr::str_detect,
+    #                    "\n\\s+\\d\\.")] %>%
+    #   head(1) %>%
+    #   stringr::str_extract("(?<=\n)\\s+(?=\\d\\.)") %>%
+    #   stringr::str_length() + 4
+    #
+    # Indent_Length <- ifelse(is.na(Indent_Length), 12, Indent_Length)
+    # Indent_Length <- ifelse(Indent_Length < 12, 12, Indent_Length)
 
 
     data_cleaned <- as_lines_list_2 %>%
@@ -647,16 +649,16 @@ swim_parse_splash <-
       dplyr::na_if("Unknown")
 
     #### adding relay swimmers in ####
-    # if (relay_swimmers_splash == TRUE) {
-    #   relay_swimmers_df <- collect_relay_swimmers_splash(as_lines_list_2)
-    #
-    #   relay_swimmers_df <-
-    #     transform(relay_swimmers_df, Row_Numb_Adjusted = data$Row_Numb[findInterval(Row_Numb, data$Row_Numb)]) %>%
-    #     dplyr::select(-Row_Numb)
-    #
-    #   data <- data %>%
-    #     dplyr::left_join(relay_swimmers_df, c("Row_Numb" = "Row_Numb_Adjusted"))
-    # }
+    if (relay_swimmers_splash == TRUE) {
+      relay_swimmers_df <- collect_relay_swimmers_splash(as_lines_list_2, relay_indent = Indent_Length)
+
+      relay_swimmers_df <-
+        transform(relay_swimmers_df, Row_Numb_Adjusted = data$Row_Numb[findInterval(Row_Numb, data$Row_Numb)]) %>%
+        dplyr::select(-Row_Numb)
+
+      data <- data %>%
+        dplyr::left_join(relay_swimmers_df, c("Row_Numb" = "Row_Numb_Adjusted"))
+    }
 
     #### adding splits back in ####
     if (splits == TRUE) {

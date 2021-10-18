@@ -10,11 +10,13 @@ collect_relay_swimmers_omega(x)
 \item{x}{output from \code{read_results} followed by \code{add_row_numbers}}
 }
 \value{
-returns a data frame of relay swimmers and the associated performance row number
+returns a data frame of relay swimmers and the associated performance
+  row number
 }
 \description{
 Collects relay swimmers as a data frame within \code{swim_parse_omega}
 }
 \seealso{
-\code{collect_relay_swimmers_data} runs inside of \code{swim_parse_omega}
+\code{collect_relay_swimmers_data} runs inside of
+  \code{swim_parse_omega}
 }

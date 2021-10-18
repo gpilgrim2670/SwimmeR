@@ -12,9 +12,11 @@
 #' @importFrom purrr map
 #'
 #' @param x output from \code{read_results} followed by \code{add_row_numbers}
-#' @return returns a data frame of relay swimmers and the associated performance row number
+#' @return returns a data frame of relay swimmers and the associated performance
+#'   row number
 #'
-#' @seealso \code{collect_relay_swimmers_data} runs inside of \code{swim_parse_omega}
+#' @seealso \code{collect_relay_swimmers_data} runs inside of
+#'   \code{swim_parse_omega}
 #'
 
 collect_relay_swimmers_omega <- function(x){
