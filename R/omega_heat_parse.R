@@ -33,8 +33,7 @@ heat_parse_omega <- function(text) {
   heat_string <- "Heat\\s\\d{1,}\\sof\\s\\d{1,}|Semifinal\\s+\\d{1,}|Final|Heats(?![:alpha:])"
 
   heats <- text %>%
-    .[purrr::map_lgl(.,
-                     stringr::str_detect,
+    .[stringr::str_detect(.,
                      heat_string)]
 
   if (length(heats) > 0) {

@@ -12,7 +12,6 @@
 #' @importFrom stringr str_extract
 #' @importFrom stringr str_split
 #' @importFrom stringr str_detect
-#' @importFrom purrr map_lgl
 #' @importFrom purrr map
 #'
 #' @param text output from \code{read_results} followed by
@@ -30,13 +29,12 @@ event_parse_ISL <- function(text){
   # text <- add_row_numbers(text = file)
 
   events <- text %>%
-  .[purrr::map_lgl( # new 10/16
-    .,
-    stringr::str_detect,
+  .[stringr::str_detect(.,
     "Event \\d{1,}|Women .* Yard|Women .* Meter|Women.*\\d{2,4}\\s*[:alpha:]+|Girls .* Yard|Girls .* Meter|Girl.*\\d{2,4}\\s*[:alpha:]+|Men .* Yard|Men .* Meter|Men.*\\d{2,4}\\s*[:alpha:]+|Boys .* Yard|Boys .* Meter|Boy.*\\d{2,4}\\s*[:alpha:]+|Mixed .* Yard|Mixed .* Meter|Mixed.*\\d{2,4}\\s*[:alpha:]+|Results Summary"
   )]
+
   events <- events %>%
-    .[purrr::map_lgl(., stringr::str_detect, "[[:alpha:]]")] %>%
+    .[stringr::str_detect(., "[[:alpha:]]")] %>%
     stringr::str_remove_all("\\\n") %>%
     stringr::str_remove_all("Event \\d+") %>%
     stringr::str_replace_all("([:alpha:])\\s{2,}([:alpha:])", "\\1 \\2") %>% # collapse events ending with final or round together into one string, like for skins rounds

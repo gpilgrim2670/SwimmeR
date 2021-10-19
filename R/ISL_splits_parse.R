@@ -12,7 +12,6 @@
 #' @importFrom stringr str_extract
 #' @importFrom stringr str_split
 #' @importFrom stringr str_detect
-#' @importFrom purrr map_lgl
 #' @importFrom purrr map
 #'
 #' @param text output of \code{read_results} with tow numbers appended by
@@ -36,11 +35,9 @@ splits_parse_ISL <- function(text) {
 
   ### collect row numbers from rows containing splits ###
   row_numbs_ind <- text %>%
-    .[purrr::map_lgl(.,
-                     stringr::str_detect,
+    .[stringr::str_detect(.,
                      split_string)] %>%
-    .[purrr::map_lgl(., # remove rows with letters, which should take care of removing normal (non-split) times
-                     stringr::str_detect,
+    .[stringr::str_detect(.,
                      "[:alpha:]", negate = TRUE)] %>%
     stringr::str_extract_all("\\d{1,}$")
 
@@ -49,14 +46,14 @@ splits_parse_ISL <- function(text) {
     minimum_row <- min(as.numeric(row_numbs_ind))
 
     #### pull out rows containing splits, which will also remove row numbers ####
+
+    split_rows_ind <- unlist(row_numbs_ind) %>%
+      paste0(" ", ., "$") %>%
+      paste(collapse = "|")
+
       suppressWarnings(
         data_1_ind <- text %>%
-          .[purrr::map_lgl(.,
-                           stringr::str_detect,
-                           split_string)] %>%
-          .[purrr::map_lgl(., # remove rows with letters, which should take care of removing normal (non-split) times
-                           stringr::str_detect,
-                           "[:alpha:]", negate = TRUE)] %>%
+          .[stringr::str_detect(., split_rows_ind)] %>%
           stringr::str_remove_all("\n") %>%
           stringr::str_remove_all("r\\:\\+\\s?\\d\\.\\d\\d") %>%
           stringr::str_extract_all(paste0(
@@ -115,29 +112,23 @@ splits_parse_ISL <- function(text) {
 
   #### relays ####
   row_numbs_relay <- text %>%
-    .[purrr::map_lgl(.,
-                     stringr::str_detect,
+    .[stringr::str_detect(.,
                      split_string)] %>%
-    .[purrr::map_lgl(., # include rows with letters, which should take care of removing normal (non-split) times
-                     stringr::str_detect,
+    .[stringr::str_detect(.,
                      "[:alpha:]")] %>%
-    .[purrr::map_lgl(., # remove rows with letters, which should take care of removing normal (non-split) times
-                     stringr::str_detect,
+    .[stringr::str_detect(.,
                      "^\n\\s*\\=?\\d", negate = TRUE)] %>%
     stringr::str_extract_all("\\d{1,}$")
 
   #### pull out rows containing splits, which will also remove row numbers ####
+
+    split_rows_relay <- unlist(row_numbs_relay) %>%
+      paste0(" ", ., "$") %>%
+      paste(collapse = "|")
+
   suppressWarnings(
     data_1_relay <- text %>%
-      .[purrr::map_lgl(.,
-                       stringr::str_detect,
-                       split_string)] %>%
-      .[purrr::map_lgl(., # include rows with letters, which are the names of the relay swimmers
-                       stringr::str_detect,
-                       "[:alpha:]")] %>%
-      .[purrr::map_lgl(., # remove rows that start with a place because relay swimmer rows don't
-                       stringr::str_detect,
-                       "^\n\\s*\\=?\\d", negate = TRUE)] %>%
+      .[stringr::str_detect(., split_rows_relay)] %>%
       stringr::str_remove_all("\n") %>%
       stringr::str_remove_all("(?<=\\)) [\\d|\\.\\:]+") %>%
       stringr::str_extract_all("\\d?\\:?\\d\\d\\.\\d\\d") %>%
@@ -149,8 +140,7 @@ splits_parse_ISL <- function(text) {
       stringr::str_replace_all("harater 0 ", "00.00, 00.00") %>%
       stringr::str_remove_all(',') %>%
       stringr::str_replace_all(" ", "  ") %>%
-      .[purrr::map_lgl(., # remove rows with letters, which should take care of removing normal (non-split) times
-                       stringr::str_detect,
+      .[stringr::str_detect(.,
                        "[:alpha:]", negate = TRUE)] %>%
       trimws()
   )

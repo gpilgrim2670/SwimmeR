@@ -27,8 +27,7 @@ reaction_times_parse <- function(text) {
 
 
   reaction_times_raw <- text %>%
-    .[purrr::map_lgl(.,
-                     stringr::str_detect,
+    .[stringr::str_detect(.,
                      reaction_time_string)]
 
   if (length(reaction_times_raw) > 0) {

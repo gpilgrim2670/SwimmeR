@@ -22,7 +22,6 @@
 #' @importFrom stringr str_split_fixed
 #' @importFrom stringr str_detect
 #' @importFrom stringr str_extract
-#' @importFrom purrr map_lgl
 #' @importFrom purrr map
 #'
 #' @param file output from \code{read_results}
@@ -78,9 +77,9 @@ swim_parse_ISL <-
       data_cleaned <- as_lines_list_2 %>%
         stringr::str_replace_all("\\*(\\d{1,})", replacement = "\\1") %>%  # removes * placed in front of place number in ties
         .[purrr::map(., length) > 0] %>%
-        .[purrr::map_lgl(., stringr::str_detect, "\\d\\d\\.\\d\\d|DSQ|[:upper:]{2,}\\s[:upper:][:lower:]")] %>% # must have \\.\\d\\d because all swimming and diving times do
-        .[purrr::map_lgl(., stringr::str_detect, "Reaction Time", negate = TRUE)] %>% # removes header row
-        .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]{2,}")] %>% # must have at least two letters in a row
+        .[stringr::str_detect(., "\\d\\d\\.\\d\\d|DSQ|[:upper:]{2,}\\s[:upper:][:lower:]")] %>% # must have \\.\\d\\d because all swimming and diving times do
+        .[stringr::str_detect(., "Reaction Time", negate = TRUE)] %>% # removes header row
+        .[stringr::str_detect(., "[:alpha:]{2,}")] %>% # must have at least two letters in a row
         stringr::str_remove_all("\n") %>%
         stringr::str_replace_all("(\\d|\\))\\s", "\\1   ") %>%
         stringr::str_replace_all("^\\s+(\\d)\\s{2,}\\d\\s{2,}(\\d)", "\\1    \\2") %>%

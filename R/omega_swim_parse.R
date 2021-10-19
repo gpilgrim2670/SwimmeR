@@ -137,8 +137,8 @@ swim_parse_omega <-
 
     #### assign row numbers ####
     as_lines_list_2 <- file_omega %>%
-      .[purrr::map_lgl(., stringr::str_detect, "Early take-off", negate = TRUE)] %>% # removes DQ rational used in some relay DQs that messes up line spacing between relay and swimmers/splits - must happen before adding in row numbers
-      .[purrr::map_lgl(., stringr::str_detect, "  1?\\d50m ", negate = TRUE)] %>% # removes cumulative split rows for Omega results only but does not remove Women's 150m IM for para games
+      .[stringr::str_detect(., "Early take-off", negate = TRUE)] %>% # removes DQ rational used in some relay DQs that messes up line spacing between relay and swimmers/splits - must happen before adding in row numbers
+      .[stringr::str_detect(., "  1?\\d50m ", negate = TRUE)] %>% # removes cumulative split rows for Omega results only but does not remove Women's 150m IM for para games
       add_row_numbers() %>%
       .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid_omega)))] %>%
       stringr::str_replace_all(stats::setNames(replacement_omega, typo_omega)) %>% # replace typos with replacements
@@ -169,17 +169,17 @@ swim_parse_omega <-
 
       data_cleaned <- as_lines_list_2 %>%
         stringr::str_remove("^\n\\s{0,}") %>%
-        .[purrr::map(., stringr::str_length) > 50] %>% # slight speed boost from cutting down length of file
-        .[purrr::map_lgl(., stringr::str_detect, paste0(Time_Score_String,"|DS?Q|SCR|D?NS"))] %>% # must have \\.\\d\\d because all swimming and diving times do
-        .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]{2,}.*[:alpha:]")] %>% # need some letters, need them to not just be a single instance of DQ etc.
-        .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]{2,} Record", negate = TRUE)] %>%  # remove legend contents that will be included if their are DQs, DNS etc. Omega
-        .[purrr::map_lgl(., stringr::str_detect, "[:alpha:] DSQ [:alpha:]", negate = TRUE)] %>% # omega Wave II removes notes from when a DSQ is overturned
-        .[purrr::map_lgl(., stringr::str_detect, "\\d{2} [:upper:]{3} \\d{4} GOLD", negate = TRUE)] %>%  # omega remove medalist results from the end of Wave II 2021 OTs
-        .[purrr::map_lgl(., stringr::str_detect, Heat_String, negate = TRUE)] %>% # omega removes weird formatting issue where results and heat labels are connected
+        .[stringr::str_length(.) > 50] %>% # slight speed boost from cutting down length of file
+        .[stringr::str_detect(., paste0(Time_Score_String,"|DS?Q|SCR|D?NS"))] %>% # must have \\.\\d\\d because all swimming and diving times do
+        .[stringr::str_detect(., "[:alpha:]{2,}.*[:alpha:]")] %>% # need some letters, need them to not just be a single instance of DQ etc.
+        .[stringr::str_detect(., "[:alpha:]{2,} Record", negate = TRUE)] %>%  # remove legend contents that will be included if their are DQs, DNS etc. Omega
+        .[stringr::str_detect(., "[:alpha:] DSQ [:alpha:]", negate = TRUE)] %>% # omega Wave II removes notes from when a DSQ is overturned
+        .[stringr::str_detect(., "\\d{2} [:upper:]{3} \\d{4} GOLD", negate = TRUE)] %>%  # omega remove medalist results from the end of Wave II 2021 OTs
+        .[stringr::str_detect(., Heat_String, negate = TRUE)] %>% # omega removes weird formatting issue where results and heat labels are connected
         stringr::str_replace_all("([:alpha:])\\. ", "\\1 ") %>% # remove periods from athlete names Omega
         # .[!all(dplyr::between(purrr::map_int(., stringr::str_count, "\\.|\\("), 6.1, 7.9), purrr::map_int(., stringr::str_count, "\\.") != 6)] %>%  # keeps relay swimmers + splits from 4x200 races from getting in Omega
-        .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]\\s+\\-\\d\\.\\d{2}\\s+\\d{1,}$", negate = TRUE)] %>%
-        .[purrr::map_lgl(., stringr::str_detect, Header_string, negate = TRUE)] %>%
+        .[stringr::str_detect(., "[:alpha:]\\s+\\-\\d\\.\\d{2}\\s+\\d{1,}$", negate = TRUE)] %>%
+        .[stringr::str_detect(., Header_string, negate = TRUE)] %>%
         stringr::str_replace_all("( [:upper:]{2},\\s)*\\s?(?<![:upper:])[:upper:]{2}\\.?\\s(?=\\s{1,}\\d{1,}$)", "  ") %>% # remove record strings like OR, OC but miss DNS, DSQ etc.
         stringr::str_replace_all("\\s?[&%]\\s?", " ") %>% # added 8/21 for removing "&" and "%" as record designator
 

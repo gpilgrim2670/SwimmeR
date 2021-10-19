@@ -12,7 +12,6 @@
 #' @importFrom stringr str_split
 #' @importFrom stringr str_detect
 #' @importFrom purrr map_lgl
-#' @importFrom purrr map
 #'
 #' @param text output from \code{read_results} followed by
 #'   \code{add_row_numbers}
@@ -35,12 +34,11 @@ event_parse <- function(text) {
   event_string <- paste(event_string, olympics_string, omega_headers_string, sep = "|")
 
   events <- text %>%
-    .[purrr::map_lgl(.,
-                     stringr::str_detect,
+    .[stringr::str_detect(.,
                      event_string)] %>% # new 12/15 for older NCAA results
     .[purrr::map_lgl(., ~ !any(stringr::str_detect(., "\\.\\.\\.")))] %>%  # removes subheaders like in OT results "Semi-Finals ... (women...)" etc.
-    .[purrr::map_lgl(., stringr::str_detect, "\\d{2}\\.\\d{2}", negate = TRUE)] %>%
-    .[purrr::map_lgl(., stringr::str_detect, "\\d{2} [:upper:]{3} \\d{4} GOLD", negate = TRUE)]
+    .[stringr::str_detect(., "\\d{2}\\.\\d{2}", negate = TRUE)] %>%
+    .[stringr::str_detect(., "\\d{2} [:upper:]{3} \\d{4} GOLD", negate = TRUE)]
 
   if (length(events) > 0) {
     #if event names are recognized clean them up and determine row ranges
