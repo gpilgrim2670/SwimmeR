@@ -115,7 +115,7 @@ swim_parse_hytek <-
 
 
     as_lines_list_2 <- file_hytek %>%
-      .[purrr::map_lgl(., stringr::str_detect, "Early take-off", negate = TRUE)] %>% # removes DQ rational used in some relay DQs that messes up line spacing between relay and swimmers/splits - must happen before adding in row numbers
+      .[stringr::str_detect(., "Early take-off", negate = TRUE)] %>% # removes DQ rational used in some relay DQs that messes up line spacing between relay and swimmers/splits - must happen before adding in row numbers
       add_row_numbers() %>%
       .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid_hytek)))] %>%
       stringr::str_replace_all(stats::setNames(replacement_hytek, typo_hytek)) %>% # replace typos with replacements
@@ -148,13 +148,13 @@ swim_parse_hytek <-
     data_cleaned <- as_lines_list_2 %>%
       stringr::str_remove("^\n\\s{0,}") %>%
       # .[purrr::map(., length) > 0] %>%
-      .[purrr::map(., stringr::str_length) > 50] %>% # slight speed boost from cutting down length of file
-      .[purrr::map_lgl(., stringr::str_detect, paste0(Time_Score_String,"|DQ|SCR|DFS"))] %>% # must have \\.\\d\\d because all swimming and diving times do
-      .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]{2,}.*[:alpha:]")] %>% # need some letters, need them to not just be a single instance of DQ etc.
-      .[purrr::map_lgl(., stringr::str_detect, "r\\:\\+?\\-?\\s?\\d", negate = TRUE)] %>% # remove reaction times
-      .[purrr::map_lgl(., stringr::str_detect, "^50m", negate = TRUE)] %>%  # remove British results that start with 50m for splits lines
+      .[stringr::str_length(.) > 50] %>% # slight speed boost from cutting down length of file
+      .[stringr::str_detect(., paste0(Time_Score_String,"|DQ|SCR|DFS"))] %>% # must have \\.\\d\\d because all swimming and diving times do
+      .[stringr::str_detect(., "[:alpha:]{2,}.*[:alpha:]")] %>% # need some letters, need them to not just be a single instance of DQ etc.
+      .[stringr::str_detect(., "r\\:\\+?\\-?\\s?\\d", negate = TRUE)] %>% # remove reaction times
+      .[stringr::str_detect(., "^50m", negate = TRUE)] %>%  # remove British results that start with 50m for splits lines
       # .[purrr::map_lgl(., stringr::str_detect, "[:alpha:]\\:", negate = TRUE)] %>% # remove records
-      .[purrr::map_dbl(., stringr::str_count, "\\d\\)") < 2] %>%  # remove inline splits from older style hy-tek results circa 2005
+      .[stringr::str_count(., "\\d\\)") < 2] %>%  # remove inline splits from older style hy-tek results circa 2005
       # .[purrr::map_lgl(., stringr::str_detect, " \\:\\d", negate = TRUE)] %>% # remove other inline splits from older style hytek results circa 2005
       stringr::str_replace_all("\\s?[&%]\\s?", " ") %>% # added 8/21 for removing "&" and "%" as record designator
       stringr::str_remove_all("(?<=\\d\\.\\d{2}\\s?)[:punct:]") %>% # remove symbols attached to times as record designator

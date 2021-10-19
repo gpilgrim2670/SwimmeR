@@ -56,15 +56,12 @@ splits_parse_omega_relays <-
     ### collect splits
 
     row_numbs <- text %>%
-      .[purrr::map_lgl(.,
-                       stringr::str_detect,
+      .[stringr::str_detect(.,
                        split_string)] %>%
-      .[purrr::map_lgl(.,
-                       stringr::str_detect,
+      .[stringr::str_detect(.,
                        relay_swimmer_string)] %>%
-      .[!purrr::map_lgl(.,
-                        stringr::str_detect,
-                        record_string)] %>%
+      .[stringr::str_detect(.,
+                        record_string, negate = TRUE)] %>%
       stringr::str_extract_all("\\d{1,}$")
     flag <- FALSE
 
@@ -73,6 +70,10 @@ splits_parse_omega_relays <-
     if (length(row_numbs) > 0) {
       minimum_row <- min(as.numeric(row_numbs))
       maximum_row <- as.numeric(length(text))
+
+      # row_numbs <- unlist(row_numbs) %>%
+      #   paste0(" ", ., "$") %>%
+      #   paste(collapse = "|")
 
       suppressWarnings(
         data_1_splits <- text %>%

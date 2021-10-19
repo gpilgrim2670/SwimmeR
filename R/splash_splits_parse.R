@@ -49,8 +49,7 @@ splits_parse_splash <- function(raw_results) {
   #### Pull out Row numbers for lines with splits ####
 
   row_numbs <- raw_results %>%
-    .[purrr::map_lgl(.,
-                     stringr::str_detect,
+    .[stringr::str_detect(.,
                      split_string)] %>%
     stringr::str_extract_all("\\d{1,}$")
 
@@ -66,8 +65,7 @@ splits_parse_splash <- function(raw_results) {
     #### pull out rows containing splits, which will remove row numbers ####
 
     data_1_splits <- raw_results %>%
-      .[purrr::map_lgl(.,
-                       stringr::str_detect,
+      .[stringr::str_detect(.,
                        split_string)] %>%
       stringr::str_extract_all(split_string) %>%
       purrr::map(paste, collapse = "  ") %>%

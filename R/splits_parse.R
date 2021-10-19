@@ -53,8 +53,7 @@ splits_parse <- function(text, split_len = split_length) {
     "\\(\\d{0,2}\\:?\\d\\d\\.\\d\\d\\)|\\s\\d{0,2}\\:?\\d\\d\\.\\d\\d\\s|\\s[8-9]\\.\\d{2}"
 
   row_numbs <- text %>%
-    .[purrr::map_lgl(.,
-                     stringr::str_detect,
+    .[stringr::str_detect(.,
                      split_string)] %>%
     stringr::str_extract_all("\\d{1,}$")
   flag <- FALSE
@@ -62,12 +61,10 @@ splits_parse <- function(text, split_len = split_length) {
   if (length(row_numbs) == 0) { # looks for splits that don't have parenthesis around them but will also capture rows with normal times
 
     row_numbs <- text %>%
-      .[purrr::map_lgl(.,
-                       stringr::str_detect,
+      .[stringr::str_detect(.,
                        split_string_parens)] %>%
       stringr::str_remove_all("r\\:\\+?\\s?\\d?\\d\\.\\d\\d") %>%
-      .[purrr::map_lgl(., # remove rows with letters, which should take care of removing normal (non-split) times
-                       stringr::str_detect,
+      .[stringr::str_detect(.,
                        "[:alpha:]", negate = TRUE)] %>%
       stringr::str_extract_all("\\d{1,}$")
     flag <- TRUE # sets flag to warn for possible rows with letters in them for next step
@@ -86,23 +83,20 @@ splits_parse <- function(text, split_len = split_length) {
       # if there's a risk of rows with letters
 
       data_1_splits <- text %>%
-        .[purrr::map_lgl(.,
-                         stringr::str_detect,
+        .[stringr::str_detect(.,
                          split_string)]
 
       # in some cases all splits are without parens
       if (length(data_1_splits) < 1) {
         data_1_splits <- text %>%
-          .[purrr::map_lgl(.,
-                           stringr::str_detect,
+          .[stringr::str_detect(.,
                            split_string_parens)]
       }
 
       suppressWarnings(
         data_1_splits <- data_1_splits %>%
           stringr::str_remove_all("r\\:\\+?\\s?\\d?\\d\\.\\d\\d") %>%
-          .[purrr::map_lgl(., # removes rows with letters
-                           stringr::str_detect,
+          .[stringr::str_detect(.,
                            "[:alpha:]", negate = TRUE)] %>%
           stringr::str_remove_all("\n") %>%
           # stringr::str_remove_all("r\\:\\+?\\s?\\d?\\d\\.\\d\\d") %>%
@@ -118,8 +112,7 @@ splits_parse <- function(text, split_len = split_length) {
     } else {
       suppressWarnings(
         data_1_splits <- text %>%
-          .[purrr::map_lgl(.,
-                           stringr::str_detect,
+          .[stringr::str_detect(.,
                            split_string)] %>%
           stringr::str_replace_all("\n", "") %>%
           # stringr::str_replace_all("r\\:\\+\\s?\\d\\.\\d\\d", "") %>%

@@ -133,43 +133,26 @@ swim_parse_splash <-
     # vary from results to results
     Indent_Length <- as_lines_list_2 %>%
       determine_indent_length_splash(time_score_string = Time_Score_String)
-    # %>%
-    #   .[purrr::map_lgl(.,
-    #                    stringr::str_detect,
-    #                    paste0(Time_Score_String, "|DSQ|SCR|DNS"))] %>%
-    #   .[purrr::map_lgl(.,
-    #                    stringr::str_detect,
-    #                    "\n\\s+\\d\\.")] %>%
-    #   head(1) %>%
-    #   stringr::str_extract("(?<=\n)\\s+(?=\\d\\.)") %>%
-    #   stringr::str_length() + 4
-    #
-    # Indent_Length <- ifelse(is.na(Indent_Length), 12, Indent_Length)
-    # Indent_Length <- ifelse(Indent_Length < 12, 12, Indent_Length)
-
 
     data_cleaned <- as_lines_list_2 %>%
       # stringr::str_remove("^\n\\s{0,}") %>%
       stringr::str_remove("^\n") %>%
-      .[purrr::map_lgl(.,
-                       stringr::str_detect,
+      .[stringr::str_detect(.,
                        paste0("^\\s{", Indent_Length, ",}"),
                        negate = TRUE)] %>% # removes relay swimmer rows
       stringr::str_remove("^\\s{0,}") %>%
-      .[purrr::map(., stringr::str_length) > 50] %>% # slight speed boost from cutting down length of file
-      .[purrr::map_lgl(.,
-                       stringr::str_detect,
+      .[stringr::str_length(.) > 50] %>% # slight speed boost from cutting down length of file
+      .[stringr::str_detect(.,
                        paste0(Time_Score_String, "|DSQ|SCR|DNS"))] %>% # must have \\.\\d\\d because all swimming and diving times do
-      .[purrr::map_lgl(.,
-                       stringr::str_detect,
+      .[stringr::str_detect(.,
                        paste0(Record_String, "|Splash Meet Manager"),
                        negate = TRUE)] %>%
-      .[purrr::map_lgl(., stringr::str_detect, "\\dm\\:", negate = TRUE)] %>% # removes split lines
+      .[stringr::str_detect(., "\\dm\\:", negate = TRUE)] %>% # removes split lines
       # .[purrr::map_lgl(., stringr::str_detect, "^\\d+|^DSQ")] %>%
-      .[purrr::map_lgl(., stringr::str_detect, "\\d\\.\\d{2}\\s+[[:alpha:]\\'\\.]{2,}", negate = TRUE)] %>% # removes relay swimmer rows
-      .[purrr::map_lgl(., stringr::str_detect, Reaction_String, negate = TRUE)] %>% # also removes relay swimmer rows
+      .[stringr::str_detect(., "\\d\\.\\d{2}\\s+[[:alpha:]\\'\\.]{2,}", negate = TRUE)] %>% # removes relay swimmer rows
+      .[stringr::str_detect(., Reaction_String, negate = TRUE)] %>% # also removes relay swimmer rows
       #.[purrr::map_lgl(., stringr::str_detect, "^[:alpha:]+\\'?\\s?[:alpha:]{0,}\\,", negate = TRUE)] %>% # also removes relay swimmer rows
-      .[purrr::map_lgl(., stringr::str_detect, Rule_String, negate = TRUE)] %>% # also removes rows with rule numbers for DQ reasons
+      .[stringr::str_detect(., Rule_String, negate = TRUE)] %>% # also removes rows with rule numbers for DQ reasons
       stringr::str_replace_all("(?<=\\d\\.) (?=[:alpha:])", "  ") %>% # split places (1.) and names
       stringr::str_replace_all("(?<=\\d) (?=\\d)", "  ") %>% # split times and scores
       stringr::str_replace_all("(?<=[:alpha:]\\.) (?=\\d\\d)", "  ") %>% # split names ending in "." and ages
