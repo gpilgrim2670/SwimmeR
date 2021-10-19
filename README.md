@@ -16,11 +16,10 @@
 
 ### Latest Development Version from Github
 
-Version 0.12.5
+Version 0.12.6
 
-* Initial work on Splash meet Manager/Swimming Federation of India Results
-* `course_convert` is now vectorized so that it works in `dplyr` pipes
-* Paralympics 2020 results complete
+* Splash results improving, now include relay swimmers, splits
+* various speed improvements
 
 `devtools::install_github("gpilgrim2670/SwimmeR", build_vignettes = TRUE)`
 

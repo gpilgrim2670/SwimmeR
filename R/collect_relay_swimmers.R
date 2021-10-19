@@ -30,8 +30,7 @@ collect_relay_swimmers <- function(x){
   relay_swimmer_string <- "\n\\s*[1-4]\\)"
 
   row_numbs_relay_swimmer <- x %>%
-    .[purrr::map_lgl(.,
-                     stringr::str_detect,
+    .[stringr::str_detect(.,
                      relay_swimmer_string)] %>%
     stringr::str_extract_all("\\d{1,}$")
 
@@ -40,8 +39,7 @@ collect_relay_swimmers <- function(x){
 
     suppressWarnings(
       data_1_relay_swimmer <- x %>%
-        .[purrr::map_lgl(.,
-                         stringr::str_detect,
+        .[stringr::str_detect(.,
                          relay_swimmer_string)] %>%
         stringr::str_remove_all("\n") %>%
         stringr::str_replace_all("\\s(?=\\d)", "  ") %>% # make to sure have enough spaces between athlete names

@@ -1,3 +1,7 @@
+# SwimmeR 0.12.6 - October 19th 2021
+* Splash results now include relay swimmers
+* various speed improvements
+
 # SwimmeR 0.12.5 - August 31st 2021
 * Splash results
 * bug fix for empty files
