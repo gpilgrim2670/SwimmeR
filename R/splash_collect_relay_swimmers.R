@@ -8,8 +8,6 @@
 #' @importFrom stringr str_extract_all
 #' @importFrom stringr str_split
 #' @importFrom stringr str_detect
-#' @importFrom purrr map_lgl
-#' @importFrom purrr map
 #'
 #' @param x output from \code{read_results} followed by \code{add_row_numbers}
 #' @return returns a data frame of relay swimmers and the associated performance
@@ -30,11 +28,16 @@ collect_relay_swimmers_splash <-
     #
     # x <- as_lines_list_2
     #
-    # Indent_Length <- x %>%
+    # x <-
+    #   "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Splash/Glenmark_Senior_Nationals_2019.pdf" %>%
+    #   read_results() %>%
+    #   add_row_numbers()
+    #
+    #
+    # relay_indent <- x %>%
     #   determine_indent_length_splash(time_score_string = "1?\\:?\\d{0,2}\\:?\\d{1,3}\\.\\d{2}")
 
     #### Actual Function ####
-
 
     relay_swimmer_string <-
       paste0("^\n", "\\s{", relay_indent , ",}", "[:alpha:]")
@@ -44,35 +47,24 @@ collect_relay_swimmers_splash <-
       "Record\\s+Split|Record\\s+Name|Reaction\\sTime|EVENT NO\\."
 
     row_numbs_relay_swimmer <- x %>%
-      .[purrr::map_lgl(.,
-                       stringr::str_detect,
-                       relay_swimmer_string)] %>%
-      .[purrr::map_lgl(.,
-                       stringr::str_detect,
-                       "[:alpha:][A-Za-z\\s]*")] %>%
-      .[purrr::map_lgl(.,
-                       stringr::str_detect,
-                       "[:upper:]\\,?\\s[:upper:]")] %>%
-      .[!purrr::map_lgl(.,
-                        stringr::str_detect,
-                        record_string)] %>%
-      .[!purrr::map_lgl(.,
-                        stringr::str_detect,
-                        header_string)] %>%
-      .[purrr::map_int(., stringr::str_count, "\\(") < 2] %>%
+      .[stringr::str_detect(., relay_swimmer_string)] %>%
+      .[stringr::str_detect(., "[:alpha:][A-Za-z\\s]*")] %>%
+      .[stringr::str_detect(., "[:alpha:]\\,?\\.?\\s[:alpha:]")] %>%
+      .[stringr::str_detect(., record_string, negate = TRUE)] %>%
+      .[stringr::str_detect(., header_string, negate = TRUE)] %>%
+      .[stringr::str_count(., "\\(") < 2] %>%
       stringr::str_extract_all("\\d{1,}$")
 
     if (length(row_numbs_relay_swimmer) > 0) {
       relay_rows <- unlist(row_numbs_relay_swimmer) %>%
-        paste0(" ", ., "$")
+        paste0(" ", ., "$") %>%
+        paste(collapse = "|")
 
       minimum_row <- min(as.numeric(row_numbs_relay_swimmer))
 
       suppressWarnings(
         data_1_relay_swimmer <- x %>%
-
-          .[purrr::map_lgl(., ~ any(stringr::str_detect(.x,
-                                                        relay_rows)))] %>%
+          .[stringr::str_detect(., relay_rows)] %>%
           stringr::str_remove_all("\n") %>%
           stringr::str_remove_all("\\s\\d{1,}\\:?\\d{0,}\\.?\\d{0,}") %>%
           trimws()
@@ -88,12 +80,12 @@ collect_relay_swimmers_splash <-
       relay_swimmers_data_2 <-
         data_1_relay_swimmer[purrr::map(data_1_relay_swimmer, length) == 2] %>%
         list_transform() %>%
-        lines_sort()
+        lines_sort(min_row = minimum_row)
 
       relay_swimmers_data_3 <-
         data_1_relay_swimmer[purrr::map(data_1_relay_swimmer, length) == 3] %>%
         list_transform() %>%
-        lines_sort()
+        lines_sort(min_row = minimum_row)
 
       relay_swimmers_data <-
         bind_rows(relay_swimmers_data_2, relay_swimmers_data_3) %>%
