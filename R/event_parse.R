@@ -73,15 +73,20 @@ event_parse <- function(text) {
         V1 = NULL,
         V2 = NULL
       )
+
+    #### clean up names
+    events <- events %>%
+      mutate(Event = stringr::str_replace(Event, "\\,$", ""))
+
   } else{
-    # if no event names are recognized deploy dummy data frame with event name "unknown" and post warning
+    # if no event names are recognized deploy dummy data frame with event name "Unknown" and post warning
     events <- data.frame(
       Event = "Unknown",
       Event_Row_Min = 1,
       Event_Row_Max = length(text) - 1,
       stringsAsFactors = FALSE
     )
-    warning("No event names recognized - defaulting to NA")
+    warning("No event names recognized - defaulting to Unknown")
   }
   return(events)
 
