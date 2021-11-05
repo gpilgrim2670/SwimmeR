@@ -16,7 +16,7 @@
 
 ### Latest Development Version from Github
 
-Version 0.12.6
+Version 0.13.0
 
 * Splash results improving, now include relay swimmers, splits
 * various speed improvements

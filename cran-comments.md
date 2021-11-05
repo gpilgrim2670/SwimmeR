@@ -1,3 +1,19 @@
+# Version 0.13.0
+* added functionality to parse Splash results
+* vectorized course_convert function
+* improvements to parsing of Omega results
+* various bug fixes, documentation updates etc.
+
+## Test environments
+* local Windows 10 install, R 4.0.5
+* local OS X install, R 4.0.2
+* win_devel
+* rhub
+
+## R CMD check results
+
+0 errors | 0 warnings | 0 notes
+
 # Version 0.12.0
 * much improved functionality for parsing Omega results
 * testing built for Tokyo 2020 results
