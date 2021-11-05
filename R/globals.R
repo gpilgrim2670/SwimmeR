@@ -108,6 +108,7 @@ utils::globalVariables(
     "Split_2",
     "Split_3",
     "Split_4",
-    "Heat_Lane"
+    "Heat_Lane",
+    "row_index"
   )
 )
