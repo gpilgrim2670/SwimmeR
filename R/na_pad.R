@@ -6,7 +6,7 @@
 #' have any \code{NA}s added to it.
 #'
 #' @param x a list of lists, with sub-lists having different lengths
-#' @param y a list of the nubmer of \code{NA} values to append to each sub-list
+#' @param y a list of the number of \code{NA} values to append to each sub-list
 #' @return a list of lists with each sub-list the same length
 
 

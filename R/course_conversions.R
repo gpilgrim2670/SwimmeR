@@ -1,4 +1,4 @@
-#' Swimming Course Convertor
+#' Swimming Course Converter
 #'
 #' Used to convert times between Long Course Meters, Short Course Meters and
 #' Short Course Yards
