@@ -10,6 +10,8 @@
 #' @importFrom stringr str_detect
 #'
 #' @param x output from \code{read_results} followed by \code{add_row_numbers}
+#' @param relay_indent the number of spaces relay swimmer lines are indented
+#'   compared to regular swimmer lines
 #' @return returns a data frame of relay swimmers and the associated performance
 #'   row number
 #'

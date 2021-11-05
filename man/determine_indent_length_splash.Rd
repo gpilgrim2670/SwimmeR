@@ -8,6 +8,9 @@ determine_indent_length_splash(x, time_score_string)
 }
 \arguments{
 \item{x}{output from \code{read_results} followed by \code{add_row_numbers}}
+
+\item{time_score_string}{a regular expression as a string that describes
+swimming times and diving scores}
 }
 \value{
 returns a number indicating the number of spaces preceding an

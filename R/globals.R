@@ -98,6 +98,16 @@ utils::globalVariables(
     "split_length_omega",
     "Reaction_Time",
     "Finals_Time_Sec",
-    "Split_Total"
+    "Split_Total",
+    "Indent_Length",
+    "Dummy",
+    "Split_Distance",
+    "Split",
+    "split_length_splash",
+    "Split_1",
+    "Split_2",
+    "Split_3",
+    "Split_4",
+    "Heat_Lane"
   )
 )

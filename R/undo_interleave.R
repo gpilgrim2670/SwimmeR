@@ -9,6 +9,7 @@
 #' @examples
 #' l <- c("A", "D", "B", "E", "C", "F")
 #' undo_interleave(l)
+#' @export
 
 undo_interleave <- function(x){
 

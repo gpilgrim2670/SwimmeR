@@ -12,7 +12,7 @@ splits_parse_splash_helper_2(data, split_distances, i)
 
 \item{split_distances}{a list of distances for splits, e.g. "50m", "100m"}
 
-\item{i}{a number between 1 and the length of \code(split_distances)}
+\item{i}{a number between 1 and the length of \code{split_distances}}
 }
 \value{
 returns a data frame with split times and row numbers

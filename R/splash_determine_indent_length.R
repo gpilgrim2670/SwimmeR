@@ -12,6 +12,8 @@
 #' @importFrom purrr map_lgl
 #'
 #' @param x output from \code{read_results} followed by \code{add_row_numbers}
+#' @param time_score_string a regular expression as a string that describes
+#'   swimming times and diving scores
 #' @return returns a number indicating the number of spaces preceding an
 #'   athlete's name in a tie row
 #'

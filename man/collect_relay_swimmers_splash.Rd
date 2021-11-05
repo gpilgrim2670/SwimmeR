@@ -8,6 +8,9 @@ collect_relay_swimmers_splash(x, relay_indent = Indent_Length)
 }
 \arguments{
 \item{x}{output from \code{read_results} followed by \code{add_row_numbers}}
+
+\item{relay_indent}{the number of spaces relay swimmer lines are indented
+compared to regular swimmer lines}
 }
 \value{
 returns a data frame of relay swimmers and the associated performance

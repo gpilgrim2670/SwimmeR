@@ -18,8 +18,6 @@
 #'
 #' @param raw_results output of \code{read_results} with row numbers appended by
 #'   \code{add_row_numbers}
-#' @param split_len length of pool at which splits are measured - usually 25 or
-#'   50
 #' @return returns a data frame with split times and row numbers
 #'
 #' @seealso \code{splits_parse} runs inside \code{\link{swim_parse_splash}} on
@@ -415,7 +413,7 @@ splits_parse_splash_helper_1 <- function(data){
 #'
 #' @param data a list of lists containing splits and row numbers
 #' @param split_distances a list of distances for splits, e.g. "50m", "100m"
-#' @param i a number between 1 and the length of \code(split_distances)
+#' @param i a number between 1 and the length of \code{split_distances}
 #' @return returns a data frame with split times and row numbers
 #'
 #' @seealso \code{splits_parse_splash_helper_2} runs inside
