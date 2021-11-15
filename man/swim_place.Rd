@@ -4,13 +4,32 @@
 \alias{swim_place}
 \title{Adds places to swimming results}
 \usage{
-swim_place(df, max_place)
+swim_place(
+  df,
+  max_place,
+  time_col = Finals_Time,
+  event_type = "ind",
+  max_relays_per_team = 1,
+  keep_nonscoring = TRUE
+)
 }
 \arguments{
 \item{df}{a data frame with results from \code{swim_parse}, including only
 swimming results (not diving)}
 
 \item{max_place}{highest place value that scores}
+
+\item{time_col}{the name of a column in \code{df} containing times on which
+to place (order) performances}
+
+\item{event_type}{either \code{"ind"} for individual or \code{"relay"} for
+relays}
+
+\item{max_relays_per_team}{an integer value denoting the number of relays a
+team may score (usually 1)}
+
+\item{keep_nonscoring}{are athletes in places greater than \code{max_place}
+be retained in the data frame.  Either \code{TRUE} or \code{FALSE}}
 }
 \value{
 a data frame modified so that places have been appended based on

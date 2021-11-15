@@ -4,13 +4,21 @@
 \alias{dive_place}
 \title{Adds places to diving results}
 \usage{
-dive_place(df, max_place)
+dive_place(df, max_place, score_col = Finals_Time, keep_nonscoring = TRUE)
 }
 \arguments{
 \item{df}{a data frame with results from \code{swim_parse}, including only
 diving results (not swimming)}
 
-\item{max_place}{highest place value that scores}
+\item{max_place}{highest place value that scores #' @param score_col the name
+of a column in \code{df} containing scores on which to place (order)
+performances}
+
+\item{score_col}{the name of a column in \code{df} containing scores on which
+to place (order) performances}
+
+\item{keep_nonscoring}{are athletes in places greater than \code{max_place}
+be retained in the data frame.  Either \code{TRUE} or \code{FALSE}}
 }
 \value{
 data frame modified so that places have been appended based on diving

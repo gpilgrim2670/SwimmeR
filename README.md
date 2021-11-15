@@ -16,10 +16,9 @@
 
 ### Latest Development Version from Github
 
-Version 0.13.0
+Version 0.13.1
 
-* Splash results improving, now include relay swimmers, splits
-* various speed improvements
+* `swim_place` and `dive_place` now exported
 
 `devtools::install_github("gpilgrim2670/SwimmeR", build_vignettes = TRUE)`
 

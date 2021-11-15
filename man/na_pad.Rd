@@ -10,7 +10,7 @@ na_pad(x, y)
 \arguments{
 \item{x}{a list of lists, with sub-lists having different lengths}
 
-\item{y}{a list of the nubmer of \code{NA} values to append to each sub-list}
+\item{y}{a list of the number of \code{NA} values to append to each sub-list}
 }
 \value{
 a list of lists with each sub-list the same length

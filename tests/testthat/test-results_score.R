@@ -46,7 +46,8 @@ test_that("prelims_finals works", {
       scoring_heats = 3,
       point_values = c(
         32, 28, 27, 26, 25, 24, 23, 22, 20, 17, 16, 15, 14, 13, 12, 11, 9, 7, 6, 5, 4, 3, 2, 1
-      )
+      ),
+      max_relays_per_team = 1
     )
 
   Total <- df %>%
@@ -62,28 +63,29 @@ test_that("prelims_finals works", {
 
 test_that("timed_finals works", {
 
-  results <- readRDS(system.file("extdata", "TX_OH_Results.rds", package = "SwimmeR"))
+  df_test <- readRDS(system.file("extdata", "TX_OH_Results.rds", package = "SwimmeR"))
 
-  results <- results %>%
+  df_test <- df_test %>%
     rename("Team" = School) %>%
     mutate(DQ = 0,
            Exhibition = 0)
 
   Results_Final <-
     results_score(
-      results = results,
-      events = unique(results$Event),
+      results = df_test,
+      events = unique(df_test$Event),
       meet_type = "timed_finals",
       lanes = 8,
       scoring_heats = 2,
-      point_values = c(20, 17, 16, 15, 14, 13, 12, 11, 9, 7, 6, 5, 4, 3, 2, 1)
+      point_values = c(20, 17, 16, 15, 14, 13, 12, 11, 9, 7, 6, 5, 4, 3, 2, 1),
+      max_relays_per_team = 1
     )
 
   Scores <- Results_Final %>%
     group_by(State) %>%
-    summarise(Score = sum(Points))
+    summarise(Score = sum(Points, na.rm = TRUE))
 
   expect_equal(Scores$Score[1], 2155.5)
 })
 
-# test_file("tests/testthat/test-results_score_works.R")
+# testthat::test_file("tests/testthat/test-results_score.R")

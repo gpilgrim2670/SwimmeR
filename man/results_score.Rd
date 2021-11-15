@@ -10,7 +10,8 @@ results_score(
   meet_type = c("timed_finals", "prelims_finals"),
   lanes = c(4, 6, 8, 10),
   scoring_heats = c(1, 2, 3),
-  point_values
+  point_values,
+  max_relays_per_team = 1
 )
 }
 \arguments{
@@ -28,6 +29,9 @@ for scoring purposes}
 if 2 A and B final score etc.)}
 
 \item{point_values}{a list of point values for each scoring place}
+
+\item{max_relays_per_team}{the number of relays a team is allowed to score
+(usually 1)}
 }
 \value{
 results with point values in a column called \code{Points}

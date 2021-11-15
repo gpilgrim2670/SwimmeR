@@ -1,3 +1,7 @@
+# SwimmeR 0.13.1 - November 15th 2021
+* now exporting `swim_place` and `dive_place`
+* `swim_place` and `dive_place` made more flexible
+
 # SwimmeR 0.13.0 - November 5th 2021
 * CRAN release
 * contains all dev version updates since SwimmeR 0.12.0

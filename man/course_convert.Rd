@@ -2,7 +2,7 @@
 % Please edit documentation in R/course_conversions.R
 \name{course_convert}
 \alias{course_convert}
-\title{Swimming Course Convertor}
+\title{Swimming Course Converter}
 \usage{
 course_convert(time, event, course, course_to, verbose = FALSE)
 }
