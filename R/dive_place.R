@@ -11,15 +11,15 @@
 #' @importFrom dplyr mutate
 #' @importFrom dplyr filter
 #' @importFrom dplyr desc
-#' @importFrom dplyr enquo
+#' @importFrom dplyr ensym
 #'
 #' @param df a data frame with results from \code{swim_parse}, including only
 #'   diving results (not swimming)
+#' @param score_col the name of a column in \code{df} containing scores on which
+#'   to place (order) performances
 #' @param max_place highest place value that scores #' @param score_col the name
 #'   of a column in \code{df} containing scores on which to place (order)
 #'   performances
-#' @param score_col the name of a column in \code{df} containing scores on which
-#'   to place (order) performances
 #' @param keep_nonscoring are athletes in places greater than \code{max_place}
 #'   be retained in the data frame.  Either \code{TRUE} or \code{FALSE}
 #' @return data frame modified so that places have been appended based on diving
@@ -31,26 +31,42 @@
 #' @export
 
 
-dive_place <- function(df, max_place, score_col = Finals_Time, keep_nonscoring = TRUE) {
+dive_place <- function(df, score_col = Finals, max_place = NULL, keep_nonscoring = TRUE) {
 
+  #### regularize score_col ####
+  score_col <- dplyr::ensym(score_col)
 
-  if(as.character(dplyr::ensym(score_col)) %!in% names(df)){
-    stop("score_col must be a column of times in df")
-  }
-
+  #### keep_nonscoring and max place ####
   if(any(!is.logical(keep_nonscoring), is.na(keep_nonscoring)) == TRUE) {
     stop("keep_nonscoring must be logical, either TRUE or FALSE")
   }
 
-  if("Event" %!in% names(df)){
-    stop("df must contain a column named Event")
+  if(keep_nonscoring == FALSE & is.null(max_place)){
+    stop("If keep_nonscoring = FALSE then max_place must be specified")
+  }
+
+  if(all(!is.null(max_place), max_place %% 1 < 0)){
+    stop("max_place must be an integer value greater than 0 or NULL")
+  }
+  max_place <- as.integer(max_place)
+
+  #### required columns ####
+  if(as.character(score_col) %!in% names(df)){
+    stop("score_col must be a column of scores in df")
   }
 
   if("Name" %!in% names(df)){
     stop("df must contain a column named Name")
   }
 
-  score_col <- dplyr::enquo(score_col)
+  if("Event" %!in% names(df)){
+    stop("df must contain a column named Event")
+  }
+
+  #### must have diving ####
+  if(any(stringr::str_detect(stringr::str_to_lower(df$Event), "diving")) == FALSE){
+    stop("df must contain a calumn called Event with some rows containing 'Diving' or 'diving'")
+  }
 
   df <- df %>%
     dplyr::filter(stringr::str_detect(str_to_lower(Event), "diving") == TRUE) %>%
@@ -58,14 +74,23 @@ dive_place <- function(df, max_place, score_col = Finals_Time, keep_nonscoring =
     dplyr::slice(1) %>% # first instance of every diver
     dplyr::ungroup() %>%
     dplyr::group_by(Event) %>%
-    dplyr::mutate(!!score_col := as.numeric(!!score_col)) %>%
-    dplyr::mutate(
-      Place = rank(desc(!!score_col), ties.method = "min"),
-      # again, highest score gets rank 1
-      !!score_col := as.character(!!score_col)
-    ) %>%
-    dplyr::mutate(Place = Place - cumsum(DQ)) %>% # take out DQs
-    {if(keep_nonscoring == FALSE)
-    dplyr::filter(., Place <= max_place) else .}
+    dplyr::mutate(Score = {{score_col}}) %>%
+    dplyr::mutate(Score = as.numeric(Score)) %>%
+    dplyr::mutate(Place = rank(desc(Score), ties.method = "min")) %>%
+    dplyr::select(-Score) %>%
+    {
+      if ("DQ" %in% names(df))
+        dplyr::mutate(., Place = Place - cumsum(DQ))
+      else
+        .
+    } %>% # take out DQs
+    {
+      if (keep_nonscoring == FALSE)
+        dplyr::filter(., Place <= max_place)
+      else
+        .
+    } %>%
+    dplyr::arrange(Place)
+
   return(df)
 }

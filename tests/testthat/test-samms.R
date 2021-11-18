@@ -24,8 +24,6 @@ test_that("samms_works_1", {
 
 test_that("samms_works_2", {
 
-  #### testing of pdfs does not work well on linux/debian builds at CRAN, I think due to deeper issues with pdftools/poppler
-
   skip_on_cran() #  I am removing this test so as to avoid that issue, but I am not happy about it
 
   # url_1 <- "http://www.pacswim.org/userfiles/meets/documents/1360/0719resl.htm"
@@ -41,7 +39,7 @@ test_that("samms_works_2", {
 
     df <- swim_parse(read_results(url_6))
 
-    expect_equal(sum(is.na(df$Finals_Time)), sum(df$DQ == 1)) # had problem on debian builds, likely due to pdf issues
+    expect_equal(sum(is.na(df$Finals)), sum(df$DQ == 1)) # had problem on debian builds, likely due to pdf issues
     # should be 42 DQs, 7 No Shows but one DQ (OAKM, A in the Womens 400 Free Relay is cut off by pdf tools)
     # test is 48 total NAs in finals = 41 DQs + 7 no shows
   }

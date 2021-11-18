@@ -1,3 +1,11 @@
+
+# SwimmeR 0.13.2 - November 17th 2021 
+* `results_score` no longer requires an Exhibition column
+* `results_score` has more informative error messages
+* `swim_parse` output columns `Finals_Time` and `Prelims_Time` have been
+renamed `Finals` and `Prelims`.  This is a *major change* and will require 
+workflows to be adjusted
+
 # SwimmeR 0.13.1 - November 15th 2021 
 * now exporting `swim_place` and `dive_place` 
 * `swim_place` and `dive_place` made more flexible

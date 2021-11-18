@@ -10,7 +10,8 @@ fill_down(x)
 \item{x}{a list having some number of non-NA values}
 }
 \value{
-a list where NA values have been replaced with the closest previous non-NA value
+a list where NA values have been replaced with the closest previous
+  non-NA value
 }
 \description{
 This is a base approximation of \code{tidyr::fill()}

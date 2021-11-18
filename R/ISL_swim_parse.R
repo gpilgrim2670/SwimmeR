@@ -169,18 +169,18 @@ swim_parse_ISL <-
 
       df_right <- right_side %>%
         list_transform() %>%
-        dplyr::rename("Finals_Time" = V1,
+        dplyr::rename("Finals" = V1,
                       "Points" = V2,
                       "Row_Numb" = V3)
 
       df_ind_swimmer <- dplyr::bind_cols(df_left, df_right) %>%
         dplyr::mutate(
-          Finals_Time = dplyr::case_when(
+          Finals = dplyr::case_when(
             stringr::str_detect(Points, "\\d{2}\\.\\d{2}") == TRUE ~ Points,
-            TRUE ~ Finals_Time
+            TRUE ~ Finals
           ),
           Points = dplyr::case_when(
-            Finals_Time == Points ~ "NA",
+            Finals == Points ~ "NA",
             str_detect(Points, "\\d{2}\\.\\d{2}") == TRUE ~ "NA",
             TRUE ~ Points
           )
@@ -206,7 +206,7 @@ swim_parse_ISL <-
             "Place" = V1,
             "Lane" = V2,
             "Team" = V3,
-            "Finals_Time" = V4,
+            "Finals" = V4,
             "Row_Numb" = V5
           )
       } else {
@@ -215,7 +215,7 @@ swim_parse_ISL <-
             "Place" = V1,
             "Lane" = V2,
             "Team" = V3,
-            "Finals_Time" = V4,
+            "Finals" = V4,
             "Points" = V5,
             "Row_Numb" = V6
           )
@@ -275,7 +275,7 @@ swim_parse_ISL <-
     #         dplyr::rename(
     #           "Lane" = V1,
     #           "Team" = V2,
-    #           "Finals_Time" = V3,
+    #           "Finals" = V3,
     #           "Row_Numb" = V4
     #         )
     #
@@ -295,7 +295,7 @@ swim_parse_ISL <-
         dplyr::mutate(Team = dplyr::case_when(stringr::str_detect(V3, "DSQ") == TRUE ~ V2,
                                               TRUE ~ V3)) %>%
         dplyr::mutate(
-          Finals_Time = dplyr::case_when(
+          Finals = dplyr::case_when(
             stringr::str_detect(V3, "DSQ") == TRUE ~ V3,
             stringr::str_detect(V4, "DSQ") == TRUE ~ V4
           )
@@ -303,7 +303,7 @@ swim_parse_ISL <-
         dplyr::mutate(Points = dplyr::case_when(stringr::str_detect(V3, "DSQ") == TRUE ~ V4,
                                                 TRUE ~ "NA")) %>%
         dplyr::na_if("NA") %>%
-        dplyr::select(Lane, Name, Team, Finals_Time, Row_Numb)
+        dplyr::select(Lane, Name, Team, Finals, Row_Numb)
 
     } else {
       df_DSQ_5 <- data.frame(Row_Numb = character(),
@@ -317,7 +317,7 @@ swim_parse_ISL <-
             "Lane" = V1,
             "Name" = V2,
             "Team" = V3,
-            "Finals_Time" = V4,
+            "Finals" = V4,
             "Points" = V5,
             "Row_Numb" = V6
           )
@@ -369,8 +369,8 @@ swim_parse_ISL <-
         dplyr::mutate(Points = dplyr::case_when(Points == "-" ~ "0",
                                                 Points != "-" ~ Points)) %>%
         ### deal with DQs ###
-        dplyr::mutate(DQ = case_when(Finals_Time == "DSQ" ~ 1,
-                                     Finals_Time == "DNS" ~ 1,
+        dplyr::mutate(DQ = case_when(Finals == "DSQ" ~ 1,
+                                     Finals == "DNS" ~ 1,
                                      TRUE ~ 0)) %>%
         dplyr::na_if("DSQ") %>%
         ### clean up relay names ###
@@ -388,12 +388,12 @@ swim_parse_ISL <-
 
     if(relay_swimmers == TRUE){
     data <- data %>%
-      dplyr::select(Row_Numb, Place, Lane, Name, Team, Finals_Time, Event, Points, DQ, Relay_Swimmer_1, Relay_Swimmer_2, Relay_Swimmer_3, Relay_Swimmer_4)
+      dplyr::select(Row_Numb, Place, Lane, Name, Team, Finals, Event, Points, DQ, Relay_Swimmer_1, Relay_Swimmer_2, Relay_Swimmer_3, Relay_Swimmer_4)
     # data <- data %>%
     #   filter(is.na(Relay_Swimmer_1) & str_detect(Event, "\\d\\s?x\\s?\\d"))
     } else {
       data <- data %>%
-        dplyr::select(Row_Numb, Place, Lane, Name, Team, Finals_Time, Event, Points, DQ)
+        dplyr::select(Row_Numb, Place, Lane, Name, Team, Finals, Event, Points, DQ)
     }
 
     #### adding splits back in ####
@@ -408,7 +408,7 @@ swim_parse_ISL <-
         dplyr::mutate(Split_50 = as.numeric(Split_50)) %>%
         dplyr::rowwise() %>%
         dplyr::mutate(Split_50 = dplyr::case_when(is.na(Split_100) == FALSE & str_detect(Event, "\\d\\s?x\\s?\\d") == FALSE ~ round(
-          sec_format(Finals_Time) - sum(as.numeric(
+          sec_format(Finals) - sum(as.numeric(
             c(
               Split_100,
               Split_150,

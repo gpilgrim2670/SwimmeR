@@ -35,13 +35,13 @@ Here one could pass "Central High School" (one space between "Central" and
 \code{typo}}
 
 \item{format_samms}{should the data be formatted for analysis (special
-strings like \code{"DQ"} replaced with \code{NA}, \code{Finals_Time} as
+strings like \code{"DQ"} replaced with \code{NA}, \code{Finals} as
 definitive column)?  Default is \code{TRUE}}
 }
 \value{
 returns a data frame with columns \code{Name}, \code{Place},
-  \code{Age}, \code{Team}, \code{Prelims_Time}, \code{Finals_Time},
-  \code{Event} & \code{DQ}.  Note all swims will have a \code{Finals_Time},
+  \code{Age}, \code{Team}, \code{Prelims}, \code{Finals},
+  \code{Event} & \code{DQ}.  Note all swims will have a \code{Finals},
   even if that time was actually swam in the prelims (i.e. a swimmer did not
   qualify for finals).  This is so that final results for an event can be
   generated from just one column.

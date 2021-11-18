@@ -9,7 +9,6 @@
 #' @importFrom stringr str_extract
 #' @importFrom stringr str_length
 #' @importFrom stringr str_detect
-#' @importFrom purrr map_lgl
 #'
 #' @param x output from \code{read_results} followed by \code{add_row_numbers}
 #' @param time_score_string a regular expression as a string that describes
@@ -24,11 +23,9 @@
 determine_indent_length_splash <- function(x, time_score_string){
 
 Indent_Length <- x %>%
-  .[purrr::map_lgl(.,
-                   stringr::str_detect,
+  .[stringr::str_detect(.,
                    paste0(time_score_string, "|DSQ|SCR|DNS"))] %>%
-  .[purrr::map_lgl(.,
-                   stringr::str_detect,
+  .[stringr::str_detect(.,
                    "\n\\s+\\d\\.")] %>%
   head(1) %>%
   stringr::str_extract("(?<=\n)\\s+(?=\\d\\.)") %>%

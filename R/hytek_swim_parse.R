@@ -46,7 +46,7 @@
 #'   between "Central" and "High") and "Texas" to \code{replacement_hytek} fix
 #'   the issues described in \code{typo_hytek}
 #' @param format_results should the results be formatted for analysis (special
-#'   strings like \code{"DQ"} replaced with \code{NA}, \code{Finals_Time} as
+#'   strings like \code{"DQ"} replaced with \code{NA}, \code{Finals} as
 #'   definitive column)?  Default is \code{TRUE}
 #' @param splits either \code{TRUE} or the default, \code{FALSE} - should
 #'   \code{swim_parse} attempt to include splits.
@@ -57,9 +57,9 @@
 #' @param relay_swimmers_hytek should names of relay swimmers be captured?
 #'   Default is \code{FALSE}
 #' @return returns a data frame with columns \code{Name}, \code{Place},
-#'   \code{Age}, \code{Team}, \code{Prelims_Time}, \code{Finals_Time},
+#'   \code{Age}, \code{Team}, \code{Prelims}, \code{Finals},
 #'   \code{Points}, \code{Event} & \code{DQ}.  Note all swims will have a
-#'   \code{Finals_Time}, even if that time was actually swam in the prelims
+#'   \code{Finals}, even if that time was actually swam in the prelims
 #'   (i.e. a swimmer did not qualify for finals).  This is so that final results
 #'   for an event can be generated from just one column.
 #'
@@ -292,7 +292,7 @@ swim_parse_hytek <-
             )
           ) %>%
           dplyr::mutate(
-            Prelims_Time = dplyr::case_when(
+            Prelims = dplyr::case_when(
               stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
                 stringr::str_detect(V5, Time_Score_Specials_String) == TRUE ~ V4,
               stringr::str_detect(V5, Time_Score_Specials_String) == TRUE &
@@ -303,7 +303,7 @@ swim_parse_hytek <-
                 stringr::str_detect(V8, Time_Score_Specials_String) == TRUE ~ V7,
               TRUE ~ "NA"
             ),
-            Finals_Time = dplyr::case_when(
+            Finals = dplyr::case_when(
               stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
                 stringr::str_detect(V5, Time_Score_Specials_String) == TRUE ~ V5,
               stringr::str_detect(V5, Time_Score_Specials_String) == TRUE &
@@ -334,8 +334,8 @@ swim_parse_hytek <-
             Para,
             Age,
             Team,
-            Prelims_Time,
-            Finals_Time,
+            Prelims,
+            Finals,
             Points,
             Row_Numb = V9
           )
@@ -378,7 +378,7 @@ swim_parse_hytek <-
             )
           ) %>%
           dplyr::mutate(
-            Prelims_Time = dplyr::case_when(
+            Prelims = dplyr::case_when(
               stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
                 stringr::str_detect(V5, Time_Score_Specials_String) == TRUE ~ V4,
               stringr::str_detect(V5, Time_Score_Specials_String) == TRUE &
@@ -387,7 +387,7 @@ swim_parse_hytek <-
                 stringr::str_detect(V7, Time_Score_Specials_String) == TRUE ~ V6,
               TRUE ~ "NA"
             ),
-            Finals_Time = dplyr::case_when(
+            Finals = dplyr::case_when(
               stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
                 stringr::str_detect(V5, Time_Score_Specials_String) == TRUE ~ V5,
               stringr::str_detect(V5, Time_Score_Specials_String) == TRUE &
@@ -411,8 +411,8 @@ swim_parse_hytek <-
             Age,
             Para,
             Team,
-            Prelims_Time,
-            Finals_Time,
+            Prelims,
+            Finals,
             Points,
             Row_Numb = V8
           )
@@ -467,7 +467,7 @@ swim_parse_hytek <-
             )
           ) %>%
           dplyr::mutate(
-            Prelims_Time = dplyr::case_when(
+            Prelims = dplyr::case_when(
               stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
                 stringr::str_detect(V5, Time_Score_Specials_String) == TRUE ~ V4,
               stringr::str_detect(V5, Time_Score_Specials_String) == TRUE &
@@ -476,7 +476,7 @@ swim_parse_hytek <-
             )
           ) %>%
           dplyr::mutate(
-            Finals_Time = dplyr::case_when(
+            Finals = dplyr::case_when(
               stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
                 stringr::str_detect(V5, Time_Score_Specials_String) == TRUE ~ V5,
               stringr::str_detect(V5, Time_Score_Specials_String) == TRUE &
@@ -489,7 +489,7 @@ swim_parse_hytek <-
           dplyr::mutate(
             Points = dplyr::case_when(
               # stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
-              stringr::str_detect(V5, Finals_Time) == TRUE &
+              stringr::str_detect(V5, Finals) == TRUE &
                 stringr::str_detect(V6, "^5\\d\\.|^4\\d\\.|^3\\d\\.|^2\\d\\.") == FALSE &
                 stringr::str_detect(V6, "^\\d{1,2}\\.?\\d?\\d?") ~ V6,
               TRUE ~ "NA"
@@ -503,8 +503,8 @@ swim_parse_hytek <-
             Name,
             Age,
             Team,
-            Prelims_Time,
-            Finals_Time,
+            Prelims,
+            Finals,
             Points,
             Row_Numb = V7
           )
@@ -542,14 +542,14 @@ swim_parse_hytek <-
               stringr::str_detect(V3, Age_String) == TRUE ~ V4,
               TRUE ~ "NA"
             ),
-            Prelims_Time = dplyr::case_when(
+            Prelims = dplyr::case_when(
               stringr::str_detect(V3, Time_Score_Specials_String) == TRUE &
                 stringr::str_detect(V4, Time_Score_Specials_String) == TRUE ~ V3,
               stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
                 stringr::str_detect(V5, Time_Score_Specials_String) == TRUE ~ V4,
               TRUE ~ "NA"
             ),
-            Finals_Time = dplyr::case_when(
+            Finals = dplyr::case_when(
               stringr::str_detect(V3, Time_Score_Specials_String) == TRUE &
                 stringr::str_detect(V4, Time_Score_Specials_String) == TRUE ~ V4,
               stringr::str_detect(V4, Time_Score_Specials_String) == TRUE &
@@ -559,7 +559,7 @@ swim_parse_hytek <-
             ),
             Points = dplyr::case_when(
               # stringr::str_detect(V3, Time_Score_Specials_String) == TRUE &
-              stringr::str_detect(V4, Finals_Time) == TRUE &
+              stringr::str_detect(V4, Finals) == TRUE &
                 stringr::str_detect(V5, "^5\\d\\.|^4\\d\\.|^3\\d\\.|^2\\d\\.") == FALSE &
                 stringr::str_detect(V5, "^\\d{1,2}\\.?\\d?\\d?") ~ V5,
               TRUE ~ "NA"
@@ -571,8 +571,8 @@ swim_parse_hytek <-
                         Age,
                         Para,
                         Team,
-                        Prelims_Time,
-                        Finals_Time,
+                        Prelims,
+                        Finals,
                         Points,
                         Row_Numb = V6)
       )
@@ -611,12 +611,12 @@ swim_parse_hytek <-
                 stringr::str_detect(V3, Para_String) == FALSE ~ V3,
               TRUE ~ "NA"
             ),
-            Prelims_Time = dplyr::case_when(
+            Prelims = dplyr::case_when(
               stringr::str_detect(V3, Time_Score_Specials_String) == TRUE &
                 stringr::str_detect(V4, Time_Score_Specials_String) == TRUE ~ V3,
               TRUE ~ "NA"
             ),
-            Finals_Time = dplyr::case_when(
+            Finals = dplyr::case_when(
               stringr::str_detect(V3, Time_Score_Specials_String) == TRUE &
                 stringr::str_detect(V4, Time_Score_Specials_String) == FALSE ~ V3,
               # stringr::str_detect(V3, Time_Score_Specials_String) == TRUE &
@@ -632,8 +632,8 @@ swim_parse_hytek <-
             Age,
             Para,
             Team,
-            Prelims_Time,
-            Finals_Time,
+            Prelims,
+            Finals,
             Row_Numb = V5
           )
       )
@@ -657,12 +657,12 @@ swim_parse_hytek <-
                 stringr::str_detect(V2, "[:alpha:]{2,}") == TRUE ~ V2,
               TRUE ~ "NA"
             ),
-            Prelims_Time = dplyr::case_when(
+            Prelims = dplyr::case_when(
               stringr::str_detect(V2, Time_Score_Specials_String) == TRUE &
                 stringr::str_detect(V3, Time_Score_Specials_String) == TRUE ~ V2,
               TRUE ~ "NA"
             ),
-            Finals_Time = dplyr::case_when(
+            Finals = dplyr::case_when(
               stringr::str_detect(V3, Time_Score_Specials_String) == TRUE ~ V3,
               TRUE ~ "NA"
             )
@@ -670,8 +670,8 @@ swim_parse_hytek <-
           dplyr::na_if("") %>%
           dplyr::select(Place,
                         Team,
-                        Prelims_Time,
-                        Finals_Time,
+                        Prelims,
+                        Finals,
                         Row_Numb = V4)
       )
     } else {
@@ -690,7 +690,7 @@ swim_parse_hytek <-
           dplyr::select(
             Place,
             Team = V1,
-            Finals_Time = V2,
+            Finals = V2,
             Row_Numb = V3
           )
       )
@@ -711,7 +711,7 @@ swim_parse_hytek <-
           dplyr::select(
             Place = V1,
             Team = V2,
-            Finals_Time = V3,
+            Finals = V3,
             Row_Numb = V4
           ) %>%
           dplyr::mutate(DQ = 1)
@@ -734,7 +734,7 @@ swim_parse_hytek <-
           dplyr::select(
             Place,
             Team = V1,
-            Finals_Time = V2,
+            Finals = V2,
             Row_Numb = V3
           ) %>%
           dplyr::mutate(DQ = 1)
@@ -765,16 +765,16 @@ swim_parse_hytek <-
     suppressWarnings(
       data <- data %>%
         dplyr::mutate(
-          Exhibition = dplyr::case_when(stringr::str_detect(Finals_Time, "x|X") == TRUE ~ 1,
+          Exhibition = dplyr::case_when(stringr::str_detect(Finals, "x|X") == TRUE ~ 1,
                                         TRUE ~ 0),
           ###
-          Finals_Time = stringr::str_extract(Finals_Time, Time_Score_Specials_String_Extract),
-          Prelims_Time = stringr::str_extract(Prelims_Time, Time_Score_Specials_String_Extract)
+          Finals = stringr::str_extract(Finals, Time_Score_Specials_String_Extract),
+          Prelims = stringr::str_extract(Prelims, Time_Score_Specials_String_Extract)
         ) %>%
         ### moved up from below for DQ work 8/20
         dplyr::mutate(DQ = dplyr::case_when(Place == 10000 &
                                               Exhibition == 0 ~ 1, # added exhibition condition 8/27
-                                            stringr::str_detect(Finals_Time, "DQ") == TRUE ~ 1,
+                                            stringr::str_detect(Finals, "DQ") == TRUE ~ 1,
                                             is.na(DQ) ~ 0,
                                             TRUE ~ DQ)) %>%
         na_if(10000) %>%
@@ -834,7 +834,7 @@ swim_parse_hytek <-
     data  <-
       # transform(data, Reaction_Time = reaction_times$Reaction_Time[findInterval(Row_Numb, reaction_times$Reaction_Time_Row_Min)]) %>%
       left_join(data, reaction_times, by = c("Row_Numb" = "Reaction_Time_Row_Numb")) %>%
-      dplyr::mutate(Reaction_Time = dplyr::case_when(is.na(Finals_Time) == TRUE ~ "NA",
+      dplyr::mutate(Reaction_Time = dplyr::case_when(is.na(Finals) == TRUE ~ "NA",
                                                      TRUE ~ Reaction_Time)) %>%
       dplyr::na_if("NA")
 

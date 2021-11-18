@@ -16,7 +16,10 @@
 #' @return returns a list of strings containing the information from
 #'   \code{file}.  Should then be parsed with \code{swim_parse}
 #'
-#' @examples \dontrun{read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm", node = "pre")}
+#' @examples \dontrun{
+#' link <-
+#'   "http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm", node = "pre"
+#' read_results(link)}
 #'
 #' @seealso \code{read_results} is meant to be followed by
 #'   \code{\link{swim_parse}}

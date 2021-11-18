@@ -172,7 +172,7 @@ test_that("ISL season 2 whole dataframe", {
                                                                                                                            "LON", "CAC", "CAC", "AQC", "AQC", "LON", "LON", "LAC", "LAC",
                                                                                                                            "CAC", "CAC", "AQC", "AQC", "CAC", "CAC", "LAC", "LON", "LAC",
                                                                                                                            "LON", "CAC", "AQC", "CAC", "AQC", "LAC", "LAC", "LON", "LON",
-                                                                                                                           "LAC", "LAC"), Finals_Time = c("55.71", "55.72", "56.46", "56.50", "57.10",
+                                                                                                                           "LAC", "LAC"), Finals = c("55.71", "55.72", "56.46", "56.50", "57.10",
                                                                                                                                                    "57.21", "58.17", "1:00.14", "49.02", "49.17", "49.67", "49.88",
                                                                                                                                                    "49.89", "49.93", "50.70", "51.64", "2:02.51", "2:03.02", "2:05.29",
                                                                                                                                                    "2:05.62", "2:05.64", "2:05.92", "2:06.12", "2:08.34", "1:48.60",
@@ -829,7 +829,7 @@ test_that("Lilly King Times with score - season 2", {
       read_results() %>%
       swim_parse_ISL()
 
-  expect_equivalent(df[which(df$Name == "KING Lilly"),]$Finals_Time,
+  expect_equivalent(df[which(df$Name == "KING Lilly"),]$Finals,
                c("2:17.11", "28.86", "1:03.16", "29.16", "29.25", "28.90"))
   }
 
@@ -848,7 +848,7 @@ test_that("Lilly King Times without score - season 1", {
     read_results() %>%
     swim_parse_ISL()
 
-  expect_equivalent(df[which(df$Name == "KING Lilly"),]$Finals_Time,
+  expect_equivalent(df[which(df$Name == "KING Lilly"),]$Finals,
                c("29.00", "2:17.78"))
   }
 
@@ -1486,7 +1486,7 @@ test_that("without score - season 1", {
             "DCT",
             "NYB"
           ),
-          Finals_Time = c(
+          Finals = c(
             "55.78",
             "56.41",
             "56.93",
@@ -3966,6 +3966,36 @@ test_that("without score - season 1", {
         )
       )
 
+
+    expect_equivalent(df_test, df_standard)
+  }
+
+})
+
+test_that("ISL inside swim_parse, ID by teams", {
+
+  skip_on_cran() # due to risk of external resources failing
+
+  file <- "https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/ISL/Season_2_2020/ISL_16102020_Budapest_Match_1.pdf"
+
+  if(is_link_broken(file) == TRUE){
+    warning("Link to external data is broken")
+  } else {
+    df_test <- file %>%
+      read_results() %>%
+      swim_parse() %>%
+      head(3)
+
+    df_standard <-
+      structure(list(Place = c(1, 2, 3), Lane = c(4, 3, 5), Name = c("SJOSTROM Sarah",
+                                                                     "SHKURDAI Anastasiya", "DAHLIA Kelsi"), Team = c("ENS", "ENS",
+                                                                                                                      "CAC"), Finals = c("56.00", "56.07", "56.70"), Event = c("Women's 100m Butterfly",
+                                                                                                                                                                                    "Women's 100m Butterfly", "Women's 100m Butterfly"), Points = c(9,
+                                                                                                                                                                                                                                                    7, 6), DQ = c(0, 0, 0)), class = c("rowwise_df", "tbl_df", "tbl",
+                                                                                                                                                                                                                                                                                       "data.frame"), row.names = c(NA, -3L), groups = structure(list(
+                                                                                                                                                                                                                                                                                         .rows = structure(list(1L, 2L, 3L), ptype = integer(0), class = c("vctrs_list_of",
+                                                                                                                                                                                                                                                                                                                                                           "vctrs_vctr", "list"))), row.names = c(NA, -3L), class = c("tbl_df",
+                                                                                                                                                                                                                                                                                                                                                                                                                      "tbl", "data.frame")))
 
     expect_equivalent(df_test, df_standard)
   }

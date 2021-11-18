@@ -111,6 +111,15 @@ results_score <-
     # point_values = c(20, 17, 16, 15, 14, 13, 12, 11, 9, 7, 6, 5, 4, 3, 2, 1)
 
 
+    #### errors ####
+    if(is.data.frame(results) == FALSE){
+      stop("results must be a data frame")
+    }
+
+    if("Event" %!in% names(results)){
+      stop("the results data frame must contain a called called 'Event'")
+    }
+
     #### begin actual function ####
     events <- stringr::str_to_lower(events)
 
@@ -123,17 +132,23 @@ results_score <-
     # name point values for their respective places
     names(point_values) <- 1:length(point_values)
 
+
+    if("Exhibition" %in% names(results)){
     ex_results <- results %>%
       dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event),
                                         paste(events, collapse = "|")) == TRUE) %>%
       dplyr::select(dplyr::everything(), -dplyr::matches("Points")) %>%
       dplyr::filter(Exhibition == 1)
+    } else {
+      ex_results <- results[0,]
+    }
 
     results <- results %>%
       dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event),
                                         paste(events, collapse = "|")) == TRUE) %>%
       dplyr::select(dplyr::everything(), -dplyr::matches("Points")) %>%
-      dplyr::filter(Exhibition == 0)
+      {if("Exhibition" %in% names(results)) dplyr::filter(., Exhibition == 0) else .}
+
 
     ind_results <- results %>%
       dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "relay") == FALSE) %>%
@@ -159,7 +174,6 @@ results_score <-
       if (any(stringr::str_detect(stringr::str_to_lower(results$Event), "relay"))) {
         relay_results <- results %>%
           dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "relay") == TRUE) %>% # only want relays
-          # dplyr::group_by(Event, Team) %>%
           swim_place(max_place = max_place, event_type ="relay", max_relays_per_team = max_relays_per_team)
 
       } else {
@@ -170,7 +184,6 @@ results_score <-
       if (any(stringr::str_detect(stringr::str_to_lower(results$Event), "diving|relay") == FALSE)) {
         ind_results <- results %>%
           dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "diving|relay") == FALSE) %>%
-          # dplyr::group_by(Event, Name) %>%
           swim_place(max_place = max_place)
 
       } else {
@@ -197,10 +210,10 @@ results_score <-
           dplyr::group_by(Event) %>%
           dplyr::slice(1:max_place)
 
+        #### ind one heat ####
         if (any(stringr::str_detect(stringr::str_to_lower(results$Event), "diving|relay") == FALSE)) {
           ind_results <- results %>%
             dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "diving|relay") == FALSE) %>%
-            # dplyr::group_by(Event, Name) %>%
             swim_place(max_place = max_place) %>%
             dplyr::mutate(Heat = 1)
 
@@ -208,10 +221,10 @@ results_score <-
           ind_results  <- results[0,]
         }
 
+        #### relay one heat ####
         if (any(stringr::str_detect(stringr::str_to_lower(results$Event), "relay"))) {
           relay_results <- results %>%
             dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "relay") == TRUE) %>% # only want relays
-            # dplyr::group_by(Event, Team) %>%
             swim_place(max_place = max_place, event_type ="relay", max_relays_per_team = max_relays_per_team) %>%
             dplyr::mutate(Heat = 1)
 
@@ -219,6 +232,7 @@ results_score <-
           relay_results  <- results[0,]
         }
 
+        #### diving one heat ####
         if (any(stringr::str_detect(stringr::str_to_lower(results$Event), "diving"))) {
           diving_results <- results %>%
             dive_place(max_place = max_place) %>%
@@ -237,18 +251,15 @@ results_score <-
           dplyr::group_by(Event) %>%
           dplyr::slice((lanes + 1):max_place)
 
+        #### ind two heats ####
         if (any(stringr::str_detect(stringr::str_to_lower(results$Event), "diving|relay") == FALSE)) {
           ind_results_1 <- results_1 %>%
-            # filter(Event == "Boys 500 Yard Freestyle") %>%
             dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "diving|relay") == FALSE) %>%
-            # dplyr::group_by(Event, Name) %>%
             swim_place(max_place = max_place) %>%
             dplyr::mutate(Heat = 1)
 
           ind_results_2 <- results_2 %>%
-            # filter(Event == "Boys 500 Yard Freestyle") %>%
             dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "diving|relay") == FALSE) %>%
-            # dplyr::group_by(Event, Name) %>%
             swim_place(max_place = max_place) %>%
             dplyr::mutate(Place = Place + lanes) %>%
             dplyr::mutate(Heat = 2)
@@ -260,16 +271,15 @@ results_score <-
           ind_results  <- results[0,]
         }
 
+        #### relay two heats ####
         if (any(stringr::str_detect(stringr::str_to_lower(results$Event), "relay"))) {
           relay_results_1 <- results_1 %>%
             dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "relay") == TRUE) %>% # only want relays
-            # dplyr::group_by(Event, Team) %>%
             swim_place(max_place = max_place, event_type ="relay", max_relays_per_team = max_relays_per_team) %>%
             dplyr::mutate(Heat = 1)
 
           relay_results_2 <- results_2 %>%
             dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "relay") == TRUE) %>% # only want relays
-            # dplyr::group_by(Event, Team) %>%
             swim_place(max_place = max_place, event_type ="relay", max_relays_per_team = max_relays_per_team) %>%
             dplyr::mutate(Place = Place + lanes) %>%
             dplyr::mutate(Heat = 2)
@@ -281,6 +291,7 @@ results_score <-
           relay_results  <- results[0,]
         }
 
+        #### diving two heats ####
         if (any(stringr::str_detect(stringr::str_to_lower(results$Event), "diving"))) {
           diving_results_1 <- results_1 %>%
             dive_place(max_place = max_place) %>%
@@ -311,23 +322,21 @@ results_score <-
           dplyr::group_by(Event) %>%
           dplyr::slice((1 + (lanes * 2)):max_place)
 
+        #### ind three heats ####
         if (any(stringr::str_detect(stringr::str_to_lower(results$Event), "diving|relay") == FALSE)) {
           ind_results_1 <- results_1 %>%
             dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "diving|relay") == FALSE) %>%
-            # dplyr::group_by(Event, Name) %>%
             swim_place(max_place = max_place) %>%
             dplyr::mutate(Heat = 1)
 
           ind_results_2 <- results_2 %>%
             dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "diving|relay") == FALSE) %>%
-            # dplyr::group_by(Event, Name) %>%
             swim_place(max_place = max_place) %>%
             dplyr::mutate(Place = Place + lanes) %>%
             dplyr::mutate(Heat = 2)
 
           ind_results_3 <- results_3 %>%
             dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "diving|relay") == FALSE) %>%
-            # dplyr::group_by(Event, Name) %>%
             swim_place(max_place = max_place) %>%
             dplyr::mutate(Place = Place + (2 * lanes)) %>%
             dplyr::mutate(Heat = 3)
@@ -339,6 +348,7 @@ results_score <-
           ind_results  <- results[0,]
         }
 
+        #### diving three heats ####
         if (any(stringr::str_detect(stringr::str_to_lower(results$Event), "diving"))) {
           diving_results_1 <- results_1 %>%
             dive_place(max_place = max_place) %>%
@@ -362,23 +372,21 @@ results_score <-
           diving_results  <- results[0,]
         }
 
+        #### relay three heats ####
         if (any(stringr::str_detect(stringr::str_to_lower(results$Event), "relay"))) {
           relay_results_1 <- results_1 %>%
             dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "relay") == TRUE) %>% # only want relays
-            # dplyr::group_by(Event, Team) %>%
             swim_place(max_place = max_place, event_type ="relay", max_relays_per_team = max_relays_per_team) %>%
             dplyr::mutate(Heat = 1)
 
           relay_results_2 <- results_2 %>%
             dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "relay") == TRUE) %>% # only want relays
-            # dplyr::group_by(Event, Team) %>%
             swim_place(max_place = max_place, event_type ="relay", max_relays_per_team = max_relays_per_team) %>%
             dplyr::mutate(Place = Place + lanes) %>%
             dplyr::mutate(Heat = 2)
 
           relay_results_3 <- results_3 %>%
             dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "relay") == TRUE) %>% # only want relays
-            # dplyr::group_by(Event, Team) %>%
             swim_place(max_place = max_place, event_type ="relay", max_relays_per_team = max_relays_per_team) %>%
             dplyr::mutate(Place = Place + (2 * lanes)) %>%
             dplyr::mutate(Heat = 3)

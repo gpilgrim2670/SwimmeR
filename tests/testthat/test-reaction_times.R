@@ -187,7 +187,7 @@ test_that("100 free reaction times in splits lines", {
           "Club Wolverine-M",
           "Unattached-OH"
         ),
-        Prelims_Time = c(
+        Prelims = c(
           "49.86",
           "50.49",
           "50.41",
@@ -231,7 +231,7 @@ test_that("100 free reaction times in splits lines", {
           NA,
           NA
         ),
-        Finals_Time = c(
+        Finals = c(
           "49.36",
           "49.86",
           "49.86",

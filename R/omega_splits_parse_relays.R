@@ -1,7 +1,7 @@
 #' Collects splits for relays within \code{swim_parse_omega}
 #'
-#' Takes the output of \code{read_results} and, inside of \code{swim_parse_omega},
-#' extracts split times and associated row numbers
+#' Takes the output of \code{read_results} and, inside of
+#' \code{swim_parse_omega}, extracts split times and associated row numbers
 #'
 #' @importFrom dplyr full_join
 #' @importFrom dplyr bind_rows
@@ -23,10 +23,10 @@
 #'   \code{add_row_numbers}
 #' @param split_len length of pool at which splits are measured - usually 25 or
 #'   50
-#' @return returns a dataframe with split times and row numbers
+#' @return returns a data frame with split times and row numbers
 #'
-#' @seealso \code{splits_parse} runs inside \code{\link{swim_parse_omega}} on the
-#'   output of \code{\link{read_results}} with row numbers from
+#' @seealso \code{splits_parse} runs inside \code{\link{swim_parse_omega}} on
+#'   the output of \code{\link{read_results}} with row numbers from
 #'   \code{\link{add_row_numbers}}
 
 splits_parse_omega_relays <-

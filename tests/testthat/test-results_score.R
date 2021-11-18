@@ -66,7 +66,7 @@ test_that("timed_finals works", {
   df_test <- readRDS(system.file("extdata", "TX_OH_Results.rds", package = "SwimmeR"))
 
   df_test <- df_test %>%
-    rename("Team" = School) %>%
+    rename("Team" = School, "Finals" = Finals_Time, "Prelims" = Prelims_Time) %>%
     mutate(DQ = 0,
            Exhibition = 0)
 

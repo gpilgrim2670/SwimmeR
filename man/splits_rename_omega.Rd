@@ -19,6 +19,6 @@ Used to adjust names of splits inside \code{swim_parse_omega} to account for
 50 split not being correctly captured
 }
 \seealso{
-\code{splits_rename_omega} runs inside \code{\link{swim_parse_omega}} on the
-  output of \code{\link{splits_parse}}
+\code{splits_rename_omega} runs inside
+  \code{\link{swim_parse_omega}} on the output of \code{\link{splits_parse}}
 }

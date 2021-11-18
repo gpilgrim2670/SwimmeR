@@ -31,8 +31,8 @@ test_that("places with parens '1)' etc", {
         Age = c("FR", "FR"),
         Team = c("GEORGIA",
                  "GEORGIA"),
-        Prelims_Time = c("24.21", "54.40"),
-        Finals_Time = c("24.24",
+        Prelims = c("24.21", "54.40"),
+        Finals = c("24.24",
                         "53.15"),
         DQ = c(0, 0),
         Exhibition = c(0, 0),
@@ -115,7 +115,7 @@ test_that("swim_parse_2 works 2", {
     read_results(file)
   )
 
-  expect_match(df$Finals_Time[257], # for swim_parse_2 because scratch lines are now included
+  expect_match(df$Finals[257], # for swim_parse_2 because scratch lines are now included
                "2:01.78")
 })
 
@@ -179,7 +179,8 @@ test_that("swim_parse works list", {
 
   # import standard
   # df_standard <- read.csv(system.file("extdata", "df_standard.csv", package = "SwimmeR"), stringsAsFactors = FALSE, colClasses=c("numeric", rep("character", 6), "numeric", "numeric", "character"))
-  df_standard <- readRDS(url("https://github.com/gpilgrim2670/Pilgrim_Data/blob/master/SwimmeR%20Test%20Files/df_standard.rds?raw=true"))
+  df_standard <- readRDS(url("https://github.com/gpilgrim2670/Pilgrim_Data/blob/master/SwimmeR%20Test%20Files/df_standard.rds?raw=true")) %>%
+    rename("Finals" = Finals_Time, "Prelims" = Prelims_Time)
 
 
   # import test files

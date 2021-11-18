@@ -22,6 +22,3 @@ issues in the source material. Sometimes splits aren't fully recorded in the
 source. Some relays also will not match due to the convention of reporting
 splits by swimmer (see vignette for more details).
 }
-\author{
-Greg Pilgrim \email{gpilgrim2670@gmail.com}
-}

@@ -6,8 +6,8 @@
 \usage{
 swim_place(
   df,
-  max_place,
-  time_col = Finals_Time,
+  time_col = Finals,
+  max_place = NULL,
   event_type = "ind",
   max_relays_per_team = 1,
   keep_nonscoring = TRUE
@@ -17,10 +17,10 @@ swim_place(
 \item{df}{a data frame with results from \code{swim_parse}, including only
 swimming results (not diving)}
 
-\item{max_place}{highest place value that scores}
-
 \item{time_col}{the name of a column in \code{df} containing times on which
-to place (order) performances}
+to place (order) performances.  Default is \code{Finals}}
+
+\item{max_place}{highest place value that scores}
 
 \item{event_type}{either \code{"ind"} for individual or \code{"relay"} for
 relays}
@@ -38,6 +38,25 @@ a data frame modified so that places have been appended based on
 \description{
 Places are awarded on the basis of time, with fastest (lowest) time winning.
 Ties are placed as ties (both athletes get 2nd etc.)
+}
+\examples{
+  df <- data.frame(Place = c(1, 1, 1),
+               Name = c("Sally Swimfast", "Bonnie Bubbles", "Kylie Kicker"),
+               Team = c("KVAC", "UBAM", "MERC"),
+               Event = rep("Women 200 Freestyle", 3),
+                Prelims = c("2:00.00", "1:59.99", "2:01.50"),
+               Finals = c("1:58.00", "1:59.50", "2:00.50"),
+               Meet = c("Summer 2021", "Fall 2020", "Champs 2020"))
+
+df \%>\%
+  swim_place()
+
+df \%>\%
+  swim_place(time_col = Prelims)
+
+df \%>\%
+  swim_place(time_col = "Prelims")
+
 }
 \seealso{
 \code{swim_place} is a helper function used inside of

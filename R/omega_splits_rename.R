@@ -9,8 +9,8 @@
 #' @param split_len distance for each split
 #' @return returns string iterated up by split_length
 #'
-#' @seealso \code{splits_rename_omega} runs inside \code{\link{swim_parse_omega}} on the
-#'   output of \code{\link{splits_parse}}
+#' @seealso \code{splits_rename_omega} runs inside
+#'   \code{\link{swim_parse_omega}} on the output of \code{\link{splits_parse}}
 
 splits_rename_omega <- function(x, split_len = split_length_omega){
 

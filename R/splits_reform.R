@@ -6,8 +6,6 @@
 #' source. Some relays also will not match due to the convention of reporting
 #' splits by swimmer (see vignette for more details).
 #'
-#' @author Greg Pilgrim \email{gpilgrim2670@@gmail.com}
-#'
 #' @importFrom dplyr filter
 #' @importFrom dplyr mutate
 #' @importFrom dplyr across
@@ -29,7 +27,7 @@ splits_reform <- function(df){
     dplyr::filter(DQ != 1,
            stringr::str_detect(Event, "Diving") == FALSE, # diving does not have splits
            stringr::str_detect(Event, "\\s50\\s|\\s50m\\s") == FALSE) %>% # 50s do not have splits
-    dplyr::mutate(F_sec = sec_format(Finals_Time)) %>% # finals time in seconds
+    dplyr::mutate(F_sec = sec_format(Finals)) %>% # finals time in seconds
     dplyr::mutate(dplyr::across(dplyr::starts_with("Split"), ~ sec_format(.x))) %>% # all splits in seconds to account for splits over 59.99
     dplyr::rowwise() %>%
     dplyr::mutate(total = sum(dplyr::c_across(Split_50:length(df)), na.rm = TRUE)) %>%

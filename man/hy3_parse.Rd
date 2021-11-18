@@ -33,9 +33,9 @@ and "Texas" to \code{replacement} fix the issues described in \code{typo}}
 }
 \value{
 returns a data frame with columns \code{Name}, \code{Place},
-  \code{Age}, \code{Team}, \code{Prelims_Time}, \code{Finals_Time}, &
+  \code{Age}, \code{Team}, \code{Prelims}, \code{Finals}, &
   \code{Event}.  May also contain \code{Seed_Time}, \code{USA_ID}, and/or
-  \code{Birthdate}.  Note all swims will have a \code{Finals_Time}, even if
+  \code{Birthdate}.  Note all swims will have a \code{Finals}, even if
   that time was actually swam in the prelims (i.e. a swimmer did not qualify
   for finals).  This is so that final results for an event can be generated
   from just one column.

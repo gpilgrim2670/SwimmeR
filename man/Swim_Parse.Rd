@@ -50,7 +50,7 @@ could pass "Central High School" (one space between "Central" and "High")
 and "Texas" to \code{replacement} fix the issues described in \code{typo}}
 
 \item{format_results}{should the results be formatted for analysis (special
-strings like \code{"DQ"} replaced with \code{NA}, \code{Finals_Time} as
+strings like \code{"DQ"} replaced with \code{NA}, \code{Finals} as
 definitive column)?  Default is \code{TRUE}}
 
 \item{splits}{either \code{TRUE} or the default, \code{FALSE} - should
@@ -67,9 +67,9 @@ columns named \code{Relay_Swimmer_1} etc.}
 }
 \value{
 returns a data frame with columns \code{Name}, \code{Place},
-  \code{Age}, \code{Team}, \code{Prelims_Time}, \code{Finals_Time},
+  \code{Age}, \code{Team}, \code{Prelims}, \code{Finals},
   \code{Points}, \code{Event} & \code{DQ}.  Note all swims will have a
-  \code{Finals_Time}, even if that time was actually swam in the prelims
+  \code{Finals}, even if that time was actually swam in the prelims
   (i.e. a swimmer did not qualify for finals).  This is so that final results
   for an event can be generated from just one column.
 }

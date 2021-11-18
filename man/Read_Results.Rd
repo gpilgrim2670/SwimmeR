@@ -25,7 +25,10 @@ returns a list of strings containing the information from
 Outputs list of strings to be processed by \code{swim_parse}
 }
 \examples{
-\dontrun{read_results("http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm", node = "pre")}
+\dontrun{
+link <-
+  "http://www.nyhsswim.com/Results/Boys/2008/NYS/Single.htm", node = "pre"
+read_results(link)}
 
 }
 \seealso{

@@ -2,8 +2,8 @@
 #'
 #' Takes the output of \code{read_results} and, inside of \code{swim_parse},
 #' removes "special" strings like DQ and SCR from results, replacing them with
-#' NA.  Also ensures that all athletes have a Finals_Time, by moving over
-#' Prelims_Time.  This makes later analysis much easier.
+#' NA.  Also ensures that all athletes have a Finals, by moving over
+#' Prelims.  This makes later analysis much easier.
 #'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
@@ -22,30 +22,30 @@
 
 format_results <- function(df){
 
-  if("Prelims_Time" %in% names(df) == FALSE){
-    df$Prelims_Time <- "NA"
+  if("Prelims" %in% names(df) == FALSE){
+    df$Prelims <- "NA"
   }
 
   specials <- c("NT", "NS", "DNS", "DQ", "DSQ", "SCR", "NP")
 
   df <- df %>%
-    dplyr::mutate(Finals_Time = replace(Finals_Time, which(Finals_Time %in% specials), NA)) %>%
-    dplyr::mutate(Prelims_Time = replace(Prelims_Time, which(
-      Prelims_Time %in% specials
+    dplyr::mutate(Finals = replace(Finals, which(Finals %in% specials), NA)) %>%
+    dplyr::mutate(Prelims = replace(Prelims, which(
+      Prelims %in% specials
     ), NA)) %>%
     dplyr::mutate(Switch = dplyr::case_when(
-      is.na(Prelims_Time) == FALSE &
-        is.na(Finals_Time) == TRUE & DQ == 0 ~ TRUE,
+      is.na(Prelims) == FALSE &
+        is.na(Finals) == TRUE & DQ == 0 ~ TRUE,
       TRUE ~ FALSE
     )) %>%
-    dplyr::mutate(Finals_Time = dplyr::case_when(
-      Switch == TRUE ~ dplyr::coalesce(Finals_Time, Prelims_Time),
-      TRUE ~ Finals_Time
+    dplyr::mutate(Finals = dplyr::case_when(
+      Switch == TRUE ~ dplyr::coalesce(Finals, Prelims),
+      TRUE ~ Finals
     )) %>%
     dplyr::mutate(
-      Prelims_Time = dplyr::case_when(Switch == TRUE ~ "NA",
-                                      TRUE ~ Prelims_Time),
-      Prelims_Time = dplyr::na_if(Prelims_Time, "NA")
+      Prelims = dplyr::case_when(Switch == TRUE ~ "NA",
+                                      TRUE ~ Prelims),
+      Prelims = dplyr::na_if(Prelims, "NA")
     ) %>%
     dplyr::select(-Switch)
 

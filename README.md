@@ -16,9 +16,11 @@
 
 ### Latest Development Version from Github
 
-Version 0.13.1
+Version 0.13.2
 
 * `swim_place` and `dive_place` now exported
+* `swim_place` and `dive_place` now much more flexible on which column to place on
+*  *major change* `swim_parse` output columns `Finals_Time` and `Prelims_Time` have been renamed `Finals` and `Prelims`
 
 `devtools::install_github("gpilgrim2670/SwimmeR", build_vignettes = TRUE)`
 
@@ -79,7 +81,7 @@ swim_parse_ISL(
 
 `Place`: Order of finish
 
-`Name`: An athlete's name.  Relays do not have ages
+`Name`: An athlete's name.  Relays do not have names.
 
 `Age`: Could be a number of years (25) or a year in school (SR)
 
@@ -91,9 +93,9 @@ swim_parse_ISL(
 
 `Finals_Time`: If two times/scores are listed this is the second one.  If only one time/score is listed this is it.
 
-`DQ`: Was an athlete/relay team disqualified
+`DQ`: Was an athlete/relay team disqualified (1) or not (0)
 
-`Exhibition`: Was an athlete/relay team competing as a non-scoring (exhibition) entry
+`Exhibition`: Was an athlete/relay team competing as a non-scoring (exhibition) entry (1) or not (0)
 
 `Points`: Points award based on place (not diving score)
 

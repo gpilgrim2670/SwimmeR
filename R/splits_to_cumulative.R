@@ -27,7 +27,7 @@
 #'                 Name = c("Lenore Lap", "Casey Cumulative"),
 #'                 Team = rep("KVAC", 2),
 #'                 Event = rep("Womens 200 Freestyle", 2),
-#'                 Finals_Time = rep("1:58.00", 2),
+#'                 Finals = rep("1:58.00", 2),
 #'                 Split_50 = rep("28.00", 2),
 #'                 Split_100 = c("31.00", "59.00"),
 #'                 Split_150 = c("30.00", "1:29.00"),

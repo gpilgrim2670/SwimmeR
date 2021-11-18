@@ -15,7 +15,7 @@ test_that("Men 400 IM prelims", {
     Name = c("FOSTER Carson", "KALISZ Chase"),
     Team = c("RAYSOH", "ABSC"),
     Reaction_Time = c("0.66", "0.69"),
-    Finals_Time = c("4:10.50", "4:10.61"),
+    Finals = c("4:10.50", "4:10.61"),
     DQ = rep("0", 2),
     Exhibition = rep("0", 2),
     Event = rep("AM Men's 400m Individual Medley Heats", 2),
@@ -64,7 +64,7 @@ test_that("2021 US OT Wave 2 Women 400 Free Heats, swimmers without reaction tim
                  "TAC-NC", "TNAQ", "UOFM"),
         Reaction_Time = c("0.70", "0.77",
                           NA, NA),
-        Finals_Time = c("4:03.07", "4:10.51", "4:17.58", "4:23.32"),
+        Finals = c("4:03.07", "4:10.51", "4:17.58", "4:23.32"),
         DQ = c("0", "0", "0", "0"),
         Exhibition = c("0", "0", "0",
                        "0"),
@@ -121,7 +121,7 @@ test_that("Women 200 fly prelims, need to not remove swimmers for decimal counti
         Team = c("NAC", "KATY", "PWAC"),
         Reaction_Time = c("0.73",
                           "0.72", "0.71"),
-        Finals_Time = c("2:13.01", "2:13.20", "2:13.76"),
+        Finals = c("2:13.01", "2:13.20", "2:13.76"),
         DQ = c("0", "0", "0"),
         Exhibition = c("0", "0", "0"),
         Event = c(
@@ -169,7 +169,7 @@ test_that("US OT 2021 Wave I Men 100 Free Heats", {
         Team = c("WA",
                  "EA"),
         Reaction_Time = c("0.62", "0.62"),
-        Finals_Time = c("50.10",
+        Finals = c("50.10",
                         "50.13"),
         DQ = c("0", "0"),
         Exhibition = c("0", "0"),
@@ -204,7 +204,7 @@ test_that("Women 400m finals", {
     Name = c("LEDECKY Katie", "MADDEN Paige"),
     Team = c("NCAP", "UVA"),
     Reaction_Time = c("0.65", "0.63"),
-    Finals_Time = c("4:01.27", "4:04.86"),
+    Finals = c("4:01.27", "4:04.86"),
     DQ = rep("0", 2),
     Exhibition = rep("0", 2),
     Event = rep("PM Women's 400m Freestyle Final", 2),
@@ -238,7 +238,7 @@ test_that("100 br swim off no heat", {
     Name = c("TYBUR Jonathan", "MASON Mitch"),
     Team = c("GSC-FL", "LSU"),
     Reaction_Time = c("0.66", "0.68"),
-    Finals_Time = c("1:00.91", "1:01.93"),
+    Finals = c("1:00.91", "1:01.93"),
     DQ = rep("0", 2),
     Exhibition = rep("0", 2),
     Event = rep("PM Men's 100m Breaststroke Heats Swim-off", 2),
@@ -268,7 +268,7 @@ test_that("wave 1 200 fly", {
     Name = c("SUN Eleanor", "THOMAS Luciana"),
     Team = c("NCAP", "IA"),
     Reaction_Time = c("0.72", "0.76"),
-    Finals_Time = c("2:13.76", "2:15.32"),
+    Finals = c("2:13.76", "2:15.32"),
     DQ = rep("0", 2),
     Exhibition = rep("0", 2),
     Event = rep("4 JUN 2021 - 7:23 PM Women's 200m Butterfly Final", 2),
@@ -333,7 +333,7 @@ test_that("Tokyo 2020 Men 400IM Heat 1", {
                                                                                                                   "6", "2"), Name = c("LOPES Jose", "PERIBONIO AVILA Tomas", "POLONSKY Ron",
                                                                                                                                       "MEIER Christoph", "VEGA TORRES Luis Emigdio"), Team = c("POR",
                                                                                                                                                                                                "ECU", "ISR", "LIE", "CUB"), Reaction_Time = c("0.66", "0.63",
-                                                                                                                                                                                                                                              "0.71", "0.68", "0.69"), Finals_Time = c("4:16.52", "4:18.73",
+                                                                                                                                                                                                                                              "0.71", "0.68", "0.69"), Finals = c("4:16.52", "4:18.73",
                                                                                                                                                                                                                                                                                        "4:21.50", "4:25.17", "4:27.65"), DQ = c("0", "0", "0", "0",
                                                                                                                                                                                                                                                                                                                                 "0"), Exhibition = c("0", "0", "0", "0", "0"), Event = c("Men's 400m Individual Medley",
                                                                                                                                                                                                                                                                                                                                                                                          "Men's 400m Individual Medley", "Men's 400m Individual Medley",
@@ -372,7 +372,7 @@ test_that("Tokyo 2020 Women 4 x 100m Free Heat 1, checked", {
                             "Heat_1", "Heat_1"), Lane = c("5", "4", "2", "6", "3", "7",
                                                           "1"), Team = c("GBR - Great Britain", "USA - United States of America",
                                                                          "DEN - Denmark", "SWE - Sweden", "FRA - France", "BRA - Brazil",
-                                                                         "HKG - Hong Kong, China"), Finals_Time = c("3:34.03", "3:34.80",
+                                                                         "HKG - Hong Kong, China"), Finals = c("3:34.03", "3:34.80",
                                                                                                                     "3:35.56", "3:35.93", "3:36.61", "3:39.19", "3:43.52"), DQ = c("0",
                                                                                                                                                                                    "0", "0", "0", "0", "0", "0"), Exhibition = c("0", "0", "0",
                                                                                                                                                                                                                                  "0", "0", "0", "0"), Event = c("Women's 4 x 100m Freestyle Relay",
@@ -714,7 +714,7 @@ test_that("Tokyo 2020 Women 100 Breast Heats, with DNS", {
           "0.76",
           "0.65"
         ),
-        Finals_Time = c(
+        Finals = c(
           "1:14.82",
           "1:16.37",
           "1:16.96",
@@ -1140,7 +1140,7 @@ test_that("Tokyo 2020 Men 100 Fly Semis, with ORs broken", {
           "0.58",
           "0.71"
         ),
-        Finals_Time = c(
+        Finals = c(
           "50.31",
           "51.06",
           "51.11",
@@ -1286,7 +1286,7 @@ test_that("Tokyo 2020 Women 400MR Finals, with record issues", {
           "ROC - ROC",
           "JPN - Japan"
         ),
-        Finals_Time = c(
+        Finals = c(
           "3:51.60",
           "3:51.73",
           "3:52.60",
@@ -1466,7 +1466,7 @@ test_that("Tokyo 2020 Mixed 4x100MR Finals, relay swimmer gender", {
           "ROC - ROC",
           "ISR - Israel"
         ),
-        Finals_Time = c(
+        Finals = c(
           "3:37.58",
           "3:38.86",
           "3:38.95",
@@ -1659,7 +1659,7 @@ test_that("Tokyo 2020 Men 200FR Finals, need to capture swims", {
                  "GBR", "BRA", "ROU", "ROC", "USA", "KOR", "LTU"),
         Reaction_Time = c("0.64",
                           "0.66", "0.66", "0.68", "0.70", "0.69", "0.58", "0.65"),
-        Finals_Time = c(
+        Finals = c(
           "1:44.22",
           "1:44.26",
           "1:44.66",
@@ -1760,7 +1760,7 @@ test_that("Tokyo 2020 Men 4x200FR Finals, need to not capture splits as swims",
                     "GER - Germany",
                     "BRA - Brazil"
                   ),
-                  Finals_Time = c(
+                  Finals = c(
                     "6:58.58",
                     "7:01.81",
                     "7:01.84",
@@ -2081,7 +2081,7 @@ test_that("Tokyo 2020 Women 4x200FR Heats, relay swimmers with punctuation in na
                     "HKG - Hong Kong, China",
                     "ITA - Italy"
                   ),
-                  Finals_Time = c(
+                  Finals = c(
                     "7:47.57",
                     "7:48.98",
                     "7:52.06",
@@ -2556,7 +2556,7 @@ test_that("Tokyo Men 50 Free Final, need to not pull out relay swimmers",
                            "FRA", "BRA", "USA", "GBR", "GRE", "ITA", "NED"),
                   Reaction_Time = c("0.63",
                                     "0.61", "0.64", "0.66", "0.58", "0.63", "0.61", "0.63"),
-                  Finals_Time = c(
+                  Finals = c(
                     "21.07",
                     "21.55",
                     "21.57",
@@ -2623,7 +2623,7 @@ test_that("Tokyo Para SM6 200 IM Final, swimmer with long name distorts pdf form
                                                                      "SHATTUCK Zach"), Para = c("SM6", "SM6", "SM6", "SM6", "SM6",
                                                                                                 "SM6", NA, "SM6"), Team = c("COL", "RPC", "CHN", "CHN", "CHN",
                                                                                                                             "BRA", "MEX", "USA"), Reaction_Time = c("0.66", "0.79", "0.92",
-                                                                                                                                                                    "0.76", "0.90", "0.90", "0.58", "0.52"), Finals_Time = c("2:38.12",
+                                                                                                                                                                    "0.76", "0.90", "0.90", "0.58", "0.52"), Finals = c("2:38.12",
                                                                                                                                                                                                                              "2:40.92", "2:41.29", "2:41.34", "2:43.74", "2:45.17", "2:48.79",
                                                                                                                                                                                                                              "2:52.52"), DQ = c("0", "0", "0", "0", "0", "0", "0", "0"), Exhibition = c("0",
                                                                                                                                                                                                                                                                                                         "0", "0", "0", "0", "0", "0", "0"), Event = c("Men's 200m Individual Medley - SM6",
@@ -2672,7 +2672,7 @@ test_that("Tokyo Para S11 50 Free Heats, DNS",
                                       "LTU", "CHN", "POL", "CAN", "RPC", "POL", "UKR", "BLR"),
                              Reaction_Time = c("0.69", "0.69", "0.76", "0.75", "0.87",
                                                "0.84", "0.75", "0.61", "0.75", "0.78", "0.70", "0.68", "0.74",
-                                               "0.74", NA), Finals_Time = c("26.47", "27.17", "27.19", "27.44",
+                                               "0.74", NA), Finals = c("26.47", "27.17", "27.19", "27.44",
                                                                             "28.07", "28.31", "29.30", "26.16", "26.55", "27.92", "28.13",
                                                                             "28.39", "29.02", "30.29", NA), DQ = c("0", "0", "0", "0",
                                                                                                                    "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "1"), Exhibition = c("0",
@@ -2710,7 +2710,7 @@ test_that("Tokyo Para Mixed 4x100 Free Relay 49 Points",
                                                                                "Final", "Final", "Final", "Final", "Final"), Lane = c("3", "5",
                                                                                                                                       "4", "6", "2", "7"), Team = c("RPC - RPC", "BRA - Brazil", "UKR - Ukraine",
                                                                                                                                                                     "ESP - Spain", "JPN - Japan", "CHN - People's Republic of China"
-                                                                                                                                      ), Finals_Time = c("3:53.79", "3:54.95", "3:55.15", "4:03.38",
+                                                                                                                                      ), Finals = c("3:53.79", "3:54.95", "3:55.15", "4:03.38",
                                                                                                                                                          "4:08.66", "4:18.60"), DQ = c("0", "0", "0", "0", "0", "0"),
                              Exhibition = c("0", "0", "0", "0", "0", "0"), Event = c("Mixed 4x100m Freestyle Relay - 49 Points",
                                                                                      "Mixed 4x100m Freestyle Relay - 49 Points", "Mixed 4x100m Freestyle Relay - 49 Points",
@@ -2764,7 +2764,7 @@ test_that("Tokyo Para men 4x100 Free Relay 34 Points, P in splits",
                           "Final", "Final"), Lane = c("3", "4", "5", "2", "6", "1", "7",
                                                       "8"), Team = c("AUS - Australia", "ITA - Italy", "UKR - Ukraine",
                                                                      "BRA - Brazil", "RPC - RPC", "CHN - People's Republic of China",
-                                                                     "ESP - Spain", "USA - United States of America"), Finals_Time = c("3:44.31",
+                                                                     "ESP - Spain", "USA - United States of America"), Finals = c("3:44.31",
                                                                                                                                        "3:45.89", "3:47.40", "3:52.28", "3:54.34", "4:00.18", "4:00.71",
                                                                                                                                        "4:13.94"), DQ = c("0", "0", "0", "0", "0", "0", "0", "0"), Exhibition = c("0",
                                                                                                                                                                                                                   "0", "0", "0", "0", "0", "0", "0"), Event = c("Men's 4x100m Freestyle Relay - 34 Points",
@@ -2824,7 +2824,7 @@ test_that("Tokyo Para Women 150IM-SM4",
                                                       ), Para = c("SM4", "SM4", "SM4", "SM4", "SM3", "SM4", "SM4",
                                                                   "SM4"), Team = c("CHN", "CHN", "RPC", "ESP", "USA", "MEX", "UKR",
                                                                                    "BRA"), Reaction_Time = c("0.85", "1.05", "0.85", "0.90", "1.46",
-                                                                                                             "0.58", "0.75", "0.79"), Finals_Time = c("2:41.91", "2:47.41",
+                                                                                                             "0.58", "0.75", "0.79"), Finals = c("2:41.91", "2:47.41",
                                                                                                                                                       "2:53.25", "2:59.13", "3:07.07", "3:08.71", "3:09.17", "3:11.54"
                                                                                                              ), DQ = c("0", "0", "0", "0", "0", "0", "0", "0"), Exhibition = c("0",
                                                                                                                                                                                "0", "0", "0", "0", "0", "0", "0"), Event = c("Women's 150m Individual Medley - SM4",
@@ -2863,7 +2863,7 @@ test_that("Tokyo Para Mixed 4x50m Freestyle Relay - 20 Points",
                           "Final", "Final"), Lane = c("6", "4", "7", "5", "3", "2", "8",
                                                       "1"), Team = c("CHN - People's Republic of China", "ITA - Italy",
                                                                      "BRA - Brazil", "UKR - Ukraine", "ESP - Spain", "RPC - RPC",
-                                                                     "TUR - Turkey", "GBR - Great Britain"), Finals_Time = c("2:15.49",
+                                                                     "TUR - Turkey", "GBR - Great Britain"), Finals = c("2:15.49",
                                                                                                                              "2:21.45", "2:24.82", "2:24.89", "2:25.66", "2:35.66", "2:42.43",
                                                                                                                              "2:48.34"), DQ = c("0", "0", "0", "0", "0", "0", "0", "0"), Exhibition = c("0",
                                                                                                                                                                                                         "0", "0", "0", "0", "0", "0", "0"), Event = c("Mixed 4x50m Freestyle Relay - 20 Points",

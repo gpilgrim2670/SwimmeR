@@ -25,10 +25,10 @@ hy3_times <-
     time_types <-
       c("prelims", "relay_prelims", "finals", "relay_finals")
     names <-
-      c("Prelims_Time",
-        "Prelims_Time",
-        "Finals_Time",
-        "Finals_Time")
+      c("Prelims",
+        "Prelims",
+        "Finals",
+        "Finals")
 
     codes_df <- data.frame(
       codes = codes,
