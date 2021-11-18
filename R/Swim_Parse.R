@@ -197,7 +197,29 @@ Swim_Parse <-
                           format_samms = format_results)
       return(data)
 
-    } else if (any(stringr::str_detect(file[1:6], "( ISL )|(^ISL )")) == TRUE) {
+    } else if (any(stringr::str_detect(file, "Splash Meet Manager"))) {
+
+      avoid_default_splash <-
+        c(
+          "abcxyz"
+        )
+
+
+      avoid_splash <- unique(c(avoid, avoid_default_splash))
+
+      data <- swim_parse_splash(
+        file_splash = file,
+        avoid_splash = avoid_splash,
+        typo_splash = typo,
+        replacement_splash = replacement,
+        splits = splits,
+        split_length_splash = split_length,
+        relay_swimmers_splash = relay_swimmers
+      )
+
+      return(data)
+
+    } else if (any(stringr::str_detect(file[1:6], "( ISL )|(^ISL )"), stringr::str_detect(file, "Cali Condors|LA Current|Energy Standard|DC Trident|Aqua Centurions|London Roar")) == TRUE) {
 
       data <- swim_parse_ISL(
         file = file,
@@ -218,28 +240,6 @@ Swim_Parse <-
         splits = splits,
         split_length_omega = split_length,
         relay_swimmers_omega = relay_swimmers
-      )
-
-      return(data)
-
-    } else if (any(stringr::str_detect(file, "Splash Meet Manager"))) {
-
-      avoid_default_splash <-
-        c(
-          "abcxyz"
-        )
-
-
-      avoid_splash <- unique(c(avoid, avoid_default_splash))
-
-      data <- swim_parse_splash(
-        file_splash = file,
-        avoid_splash = avoid_splash,
-        typo_splash = typo,
-        replacement_splash = replacement,
-        splits = splits,
-        split_length_splash = split_length,
-        relay_swimmers_splash = relay_swimmers
       )
 
       return(data)
