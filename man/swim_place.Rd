@@ -10,7 +10,8 @@ swim_place(
   max_place = NULL,
   event_type = "ind",
   max_relays_per_team = 1,
-  keep_nonscoring = TRUE
+  keep_nonscoring = TRUE,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -30,6 +31,9 @@ team may score (usually 1)}
 
 \item{keep_nonscoring}{are athletes in places greater than \code{max_place}
 be retained in the data frame.  Either \code{TRUE} or \code{FALSE}}
+
+\item{verbose}{should warning messages be posted.  Default is \code{TRUE} and
+should rarely be changed.}
 }
 \value{
 a data frame modified so that places have been appended based on

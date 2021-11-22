@@ -4,7 +4,13 @@
 \alias{dive_place}
 \title{Adds places to diving results}
 \usage{
-dive_place(df, score_col = Finals, max_place = NULL, keep_nonscoring = TRUE)
+dive_place(
+  df,
+  score_col = Finals,
+  max_place = NULL,
+  keep_nonscoring = TRUE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{df}{a data frame with results from \code{swim_parse}, including only
@@ -19,6 +25,9 @@ performances}
 
 \item{keep_nonscoring}{are athletes in places greater than \code{max_place}
 be retained in the data frame.  Either \code{TRUE} or \code{FALSE}}
+
+\item{verbose}{should warning messages be posted.  Default is \code{TRUE} and
+should rarely be changed.}
 }
 \value{
 data frame modified so that places have been appended based on diving

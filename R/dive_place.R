@@ -22,6 +22,8 @@
 #'   performances
 #' @param keep_nonscoring are athletes in places greater than \code{max_place}
 #'   be retained in the data frame.  Either \code{TRUE} or \code{FALSE}
+#' @param verbose should warning messages be posted.  Default is \code{TRUE} and
+#'   should rarely be changed.
 #' @return data frame modified so that places have been appended based on diving
 #'   score
 #'
@@ -31,7 +33,12 @@
 #' @export
 
 
-dive_place <- function(df, score_col = Finals, max_place = NULL, keep_nonscoring = TRUE) {
+dive_place <-
+  function(df,
+           score_col = Finals,
+           max_place = NULL,
+           keep_nonscoring = TRUE,
+           verbose = TRUE) {
 
   #### regularize score_col ####
   score_col <- dplyr::ensym(score_col)
@@ -64,12 +71,13 @@ dive_place <- function(df, score_col = Finals, max_place = NULL, keep_nonscoring
   }
 
   #### must have diving ####
-  if(any(stringr::str_detect(stringr::str_to_lower(df$Event), "diving")) == FALSE){
-    stop("df must contain a calumn called Event with some rows containing 'Diving' or 'diving'")
-  }
+  # if(any(stringr::str_detect(stringr::str_to_lower(as.character(df$Event)), "diving")) == FALSE){
+  #   warning("df does not have column called Event with some rows containing 'Diving' or 'diving'.  No places determined.")
+  # }
 
+  if(any(stringr::str_detect(stringr::str_to_lower(as.character(df$Event)), "diving"))){
   df <- df %>%
-    dplyr::filter(stringr::str_detect(str_to_lower(Event), "diving") == TRUE) %>%
+    dplyr::filter(stringr::str_detect(str_to_lower(as.character(Event)), "diving") == TRUE) %>%
     dplyr::group_by(Event, Name) %>%
     dplyr::slice(1) %>% # first instance of every diver
     dplyr::ungroup() %>%
@@ -91,6 +99,9 @@ dive_place <- function(df, score_col = Finals, max_place = NULL, keep_nonscoring
         .
     } %>%
     dplyr::arrange(Place)
+  } else if (verbose == TRUE){
+      warning("df does not have column called Event with some rows containing 'Diving' or 'diving'.  No places determined.")
+  }
 
   return(df)
 }

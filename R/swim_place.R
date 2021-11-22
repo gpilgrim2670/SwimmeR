@@ -22,6 +22,8 @@
 #'   team may score (usually 1)
 #' @param keep_nonscoring are athletes in places greater than \code{max_place}
 #'   be retained in the data frame.  Either \code{TRUE} or \code{FALSE}
+#' @param verbose should warning messages be posted.  Default is \code{TRUE} and
+#'   should rarely be changed.
 #' @return a data frame modified so that places have been appended based on
 #'   swimming time
 #'
@@ -53,7 +55,8 @@ swim_place <- function(df,
                        max_place = NULL,
                        event_type = "ind",
                        max_relays_per_team = 1,
-                       keep_nonscoring = TRUE
+                       keep_nonscoring = TRUE,
+                       verbose = TRUE
                        ) {
 
   #### regularize time_col ####
@@ -108,6 +111,7 @@ swim_place <- function(df,
   }
 
   #### actual function ####
+  if(any(stringr::str_detect(stringr::str_to_lower(as.character(df$Event)), "diving")) == FALSE){
 
   df <- df %>%
     {
@@ -116,7 +120,7 @@ swim_place <- function(df,
       else
         dplyr::group_by(., Event, Team)
     } %>%
-    dplyr::filter(stringr::str_detect(stringr::str_to_lower(Event), "diving") == FALSE) %>%
+    dplyr::filter(stringr::str_detect(stringr::str_to_lower(as.character(Event)), "diving") == FALSE) %>%
     {
       if (event_type == "ind")
         dplyr::slice(., 1)
@@ -143,6 +147,9 @@ swim_place <- function(df,
       else
         .
     }
+  } else if (verbose == TRUE) {
+    message("df does not have column called Event with some rows not containing 'Diving' or 'diving'.  No places determined.")
+  }
 
   return(df)
 }
