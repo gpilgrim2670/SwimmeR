@@ -264,27 +264,10 @@ swim_parse_ISL <-
     }
 
     #### DQ df ####
-    data_DSQ_4 <- data_DSQ[purrr::map(data_DSQ, length) == 4]
-    data_DSQ_5 <- data_DSQ[purrr::map(data_DSQ, length) == 5]
-    data_DSQ_6 <- data_DSQ[purrr::map(data_DSQ, length) == 6]
 
-    # if (length(data_DSQ_4) > 0) {
-    #     df_DSQ_4 <- data_DSQ_4 %>%
-    #       list_transform() %>%
-    #         dplyr::mutate(Points = NA) %>%
-    #         dplyr::rename(
-    #           "Lane" = V1,
-    #           "Team" = V2,
-    #           "Finals" = V3,
-    #           "Row_Numb" = V4
-    #         )
-    #
-    # } else {
-    #   df_DSQ_4 <- data.frame(
-    #     Row_Numb = character(),
-    #     stringsAsFactors = FALSE
-    #   )
-    # }
+    data_DSQ_4 <- list_breaker(data_DSQ, len = 4)
+    data_DSQ_5 <- list_breaker(data_DSQ, len = 5)
+    data_DSQ_6 <- list_breaker(data_DSQ, len = 6)
 
     if (length(data_DSQ_5) > 0) {
       df_DSQ_5 <- data_DSQ_5 %>%

@@ -1,3 +1,6 @@
+# SwimmeR 0.13.3 - January 25th 2022
+* added the `list_breaker` function and the `list_sorter` family as part of a 
+refactoring exercise
 
 # SwimmeR 0.13.2 - November 17th 2021 
 * `results_score` no longer requires an Exhibition column

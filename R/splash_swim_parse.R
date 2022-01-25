@@ -216,17 +216,17 @@ swim_parse_splash <-
     # unique(map(data_cleaned, length))
 
     #### breaks data into subsets based on how many variables it has ####
-    # data_length_3 <- data_cleaned[purrr::map(data_cleaned, length) == 3]
-    data_length_4 <- data_cleaned[purrr::map(data_cleaned, length) == 4]
-    data_length_5 <- data_cleaned[purrr::map(data_cleaned, length) == 5]
-    data_length_6 <- data_cleaned[purrr::map(data_cleaned, length) == 6]
-    data_length_7 <- data_cleaned[purrr::map(data_cleaned, length) == 7]
-    data_length_8 <- data_cleaned[purrr::map(data_cleaned, length) == 8]
-    data_length_9 <- data_cleaned[purrr::map(data_cleaned, length) == 9]
-    data_length_10 <- data_cleaned[purrr::map(data_cleaned, length) == 10]
-    data_length_11 <- data_cleaned[purrr::map(data_cleaned, length) == 11]
-    data_length_12 <- data_cleaned[purrr::map(data_cleaned, length) == 12]
-    # data_length_13 <- data_cleaned[purrr::map(data_cleaned, length) == 13]
+
+    data_length_4 <- list_breaker(data_cleaned, len = 4)
+    data_length_5 <- list_breaker(data_cleaned, len = 5)
+    data_length_6 <- list_breaker(data_cleaned, len = 6)
+    data_length_7 <- list_breaker(data_cleaned, len = 7)
+    data_length_8 <- list_breaker(data_cleaned, len = 8)
+    data_length_9 <- list_breaker(data_cleaned, len = 9)
+    data_length_10 <- list_breaker(data_cleaned, len = 10)
+    data_length_11 <- list_breaker(data_cleaned, len = 11)
+    data_length_12 <- list_breaker(data_cleaned, len = 12)
+
 
     #### thirteen variables ####
     # if (length(data_length_13) > 0) {

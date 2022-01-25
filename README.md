@@ -16,7 +16,7 @@
 
 ### Latest Development Version from Github
 
-Version 0.13.2
+Version 0.13.3
 
 * `swim_place` and `dive_place` now exported
 * `swim_place` and `dive_place` now much more flexible on which column to place on
