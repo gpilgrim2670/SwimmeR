@@ -1158,3 +1158,5 @@ test_that("Euro 2018 Champs - a giant mess", {
 
 })
 
+# testthat::test_file("tests/testthat/test-splash.R")
+
