@@ -16,11 +16,11 @@
 #' @return returns a number indicating the number of spaces preceding an
 #'   athlete's name in a tie row
 #'
-#' @seealso \code{determine_indent_length_splash} runs inside of
+#' @seealso \code{splash_determine_indent_length} runs inside of
 #'   \code{swim_parse_splash}
 #'
 
-determine_indent_length_splash <- function(x, time_score_string){
+splash_determine_indent_length <- function(x, time_score_string){
 
 Indent_Length <- x %>%
   .[stringr::str_detect(.,
