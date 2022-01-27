@@ -1,6 +1,4 @@
-#' Sorts data in lists of length 12 within \code{splash_swim_parse}
-#'
-#' XXXXXX
+#' Sort data in lists of length 12 within \code{splash_swim_parse}
 #'
 #' @importFrom dplyr select
 #'
@@ -38,9 +36,7 @@ splash_length_12_sort <- function(x) {
 }
 
 
-#' Sorts data in lists of length 11 within \code{splash_swim_parse}
-#'
-#' XXXXXX
+#' Sort data in lists of length 11 within \code{splash_swim_parse}
 #'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr case_when
@@ -123,9 +119,7 @@ splash_length_11_sort <- function(x,
   }
 }
 
-#' Sorts data in lists of length 10 within \code{splash_swim_parse}
-#'
-#' XXXXXX
+#' Sort data in lists of length 10 within \code{splash_swim_parse}
 #'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr case_when
@@ -271,9 +265,7 @@ splash_length_10_sort <- function(x,
 
   }
 
-#' Sorts data in lists of length 9 within \code{spash_swim_parse}
-#'
-#' XXXXXX
+#' Sort data in lists of length 9 within \code{spash_swim_parse}
 #'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr case_when
@@ -423,9 +415,7 @@ splash_length_9_sort <- function(x,
   return(df_9)
 }
 
-#' Sorts data in lists of length 8 within \code{spash_swim_parse}
-#'
-#' XXXXXX
+#' Sort data in lists of length 8 within \code{spash_swim_parse}
 #'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr case_when
@@ -548,9 +538,7 @@ splash_length_8_sort <- function(x,
 
 }
 
-#' Sorts data in lists of length 7 within \code{spash_swim_parse}
-#'
-#' XXXXXX
+#' Sort data in lists of length 7 within \code{spash_swim_parse}
 #'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr case_when
@@ -644,9 +632,7 @@ splash_length_7_sort <-
   return(df_7)
 }
 
-#' Sorts data in lists of length 6 within \code{spash_swim_parse}
-#'
-#' XXXXXX
+#' Sort data in lists of length 6 within \code{spash_swim_parse}
 #'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr case_when
@@ -731,9 +717,7 @@ splash_length_6_sort <- function(x,
   return(df_6)
 }
 
-#' Sorts data in lists of length 5 within \code{spash_swim_parse}
-#'
-#' XXXXXX
+#' Sort data in lists of length 5 within \code{spash_swim_parse}
 #'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr case_when
@@ -806,9 +790,7 @@ splash_length_5_sort <- function(x,
   return(df_5)
 }
 
-#' Sorts data in lists of length 4 within \code{spash_swim_parse}
-#'
-#' XXXXXX
+#' Sort data in lists of length 4 within \code{spash_swim_parse}
 #'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr case_when

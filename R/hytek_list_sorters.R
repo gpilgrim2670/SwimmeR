@@ -1,6 +1,4 @@
-#' Sorts data in lists of length 9 within \code{hytek_swim_parse}
-#'
-#' XXXXXX
+#' Sort data in lists of length 9 within \code{hytek_swim_parse}
 #'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr case_when
@@ -114,9 +112,7 @@ hytek_length_9_sort <-
     return(df_9)
   }
 
-#' Sorts data in lists of length 8 within \code{hytek_swim_parse}
-#'
-#' XXXXXX
+#' Sort data in lists of length 8 within \code{hytek_swim_parse}
 #'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr case_when
@@ -224,9 +220,7 @@ hytek_length_8_sort <-
   }
 
 
-#' Sorts data in lists of length 7 within \code{hytek_swim_parse}
-#'
-#' XXXXXX
+#' Sort data in lists of length 7 within \code{hytek_swim_parse}
 #'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr case_when
@@ -354,9 +348,7 @@ hytek_length_7_sort <-
   }
 
 
-#' Sorts data in lists of length 6 within \code{hytek_swim_parse}
-#'
-#' XXXXXX
+#' Sort data in lists of length 6 within \code{hytek_swim_parse}
 #'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr case_when
@@ -450,9 +442,7 @@ hytek_length_6_sort <-
     return(df_6)
   }
 
-#' Sorts data in lists of length 5 within \code{hytek_swim_parse}
-#'
-#' XXXXXX
+#' Sort data in lists of length 5 within \code{hytek_swim_parse}
 #'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr case_when
@@ -541,9 +531,7 @@ hytek_length_5_sort <-
   }
 
 
-#' Sorts data in lists of length 4 within \code{hytek_swim_parse}
-#'
-#' XXXXXX
+#' Sort data in lists of length 4 within \code{hytek_swim_parse}
 #'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr case_when
@@ -605,9 +593,7 @@ hytek_length_4_sort <-
     return(df_4)
   }
 
-#' Sorts data in lists of length 3 within \code{hytek_swim_parse}
-#'
-#' XXXXXX
+#' Sort data in lists of length 3 within \code{hytek_swim_parse}
 #'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
@@ -644,9 +630,7 @@ hytek_length_3_sort <-
     return(df_3)
   }
 
-#' Sorts data in DQ lists of length 4 within \code{hytek_swim_parse}
-#'
-#' XXXXXX
+#' Sort data in DQ lists of length 4 within \code{hytek_swim_parse}
 #'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
@@ -686,9 +670,7 @@ hytek_length_4_DQ_sort <-
     return(df_DQ_4)
   }
 
-#' Sorts data in DQ lists of length 3 within \code{hytek_swim_parse}
-#'
-#' XXXXXX
+#' Sort data in DQ lists of length 3 within \code{hytek_swim_parse}
 #'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
