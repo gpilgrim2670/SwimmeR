@@ -41,9 +41,37 @@ splash_clean_strings <-
            reaction_string = Reaction_String,
            rule_string = Rule_String) {
 
+    #### check input types ####
+
     if (all.equal(indent_length, as.integer(indent_length)) == FALSE) {
       stop("indent_length must be a whole number")
     }
+
+    if(is.character(time_score_string) == FALSE){
+      stop("time_score_string should be regex, as a character string")
+    }
+
+    if(is.character(record_string) == FALSE){
+      stop("record_string should be regex, as a character string")
+    }
+
+    if(is.character(header_string) == FALSE){
+      stop("header_string should be regex, as a character string")
+    }
+
+    if(is.character(sponsorship_string) == FALSE){
+      stop("sponsorship_string should be regex, as a character string")
+    }
+
+    if(is.character(reaction_string) == FALSE){
+      stop("reaction_string should be regex, as a character string")
+    }
+
+    if(is.character(record_string) == FALSE){
+      stop("record_string should be regex, as a character string")
+    }
+
+    #### actual function ####
 
     data_cleaned <- x %>%
       stringr::str_remove("^\n") %>%

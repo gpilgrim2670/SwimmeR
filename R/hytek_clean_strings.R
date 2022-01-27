@@ -24,6 +24,14 @@
 hytek_clean_strings <- function(x,
                                 time_score_string = Time_Score_String){
 
+  #### check input types ####
+
+  if(is.character(time_score_string) == FALSE){
+    stop("time_score_string should be regex, as a character string")
+  }
+
+  #### actual function ####
+
   data_cleaned <- x %>%
     stringr::str_remove("^\n\\s{0,}") %>%
     .[stringr::str_length(.) > 50] %>% # slight speed boost from cutting down length of file
@@ -59,7 +67,6 @@ hytek_clean_strings <- function(x,
     stringr::str_replace_all("-{2,5}", "10000") %>% #8/26
     stringr::str_replace_all("(\\.\\d{2})\\d+", "\\1 ") %>% # added 8/21 for illinois to deal with points column merging with final times column
     stringr::str_replace_all("\\d{1,2} (\\d{1,})$", "  \\1 ") %>% # added 8/21 for illinois to deal with points column merging with final times column
-    # stringr::str_replace_all("\\*(?=[:digit:])", "_") %>% # for * prior to place for foreign athletes and sometimes ties
     stringr::str_replace_all("\\*(?=[:alpha:])", "_") %>% # for * prior to name for foreign athletes
     stringr::str_replace_all("\\*", "  ") %>%
     stringr::str_replace_all("(?<=\\d)\\.\\s{1,}(?=[:alpha:])", "  ") %>% # for British results where places are 1. Name
@@ -74,14 +81,11 @@ data_cleaned <- data_cleaned %>%
   stringr::str_replace_all("(?<=^\\s?\\d{1,5}) (?=[:alpha:])", "  ") %>% # mostly to split place and name
   stringr::str_replace_all("(?<=SB?M?\\d{1,2}) (?=[:alpha:])", "  ") %>% # split para classifications 1
   stringr::str_replace_all("(?<=[:alpha:]) (?=SB?M?\\d{1,2})", "  ") %>% # split para classifications 2
-
-  # stringr::str_replace_all("(?<=\\d) (?=[:alpha:])", "  ") %>% # mostly to split place and name, also age and team name
   stringr::str_replace_all("(?<=\\d) (?=_)", "  ") %>% # mostly to split place and name, if name is preceded by "_" as a stand-in for "*"
   stringr::str_replace_all("(?<=\\d) (?=\\d)", "  ") %>% # mostly to split place team names that start with a number, like in NYS results (5-Fairport etc.)
   stringr::str_replace_all("(?<=[:alpha:]),(?=[:alpha:])", ", ") %>% # split names that don't have a space between last,first
   stringr::str_replace_all("(?<=[:alpha:])\\. (?=[:digit:])", "\\.  ") %>% # split abbreviated team names like Southern Cal. and times
   stringr::str_replace_all("(?<=\\d) (?=_)", "  ") %>% # spacing between place and athletes with */_ leading name
-
   stringr::str_replace_all("(?<=\\)) (?=[:alpha:])", "  ") %>% # spacing between place) and names
   stringr::str_replace_all("\\((?=[:digit:])", "  \\(") %>% # spacing between (YoB) and name, for British results
   stringr::str_replace_all(" (\\d{1,3}) ", "       \\1      ") %>% # split age and team
