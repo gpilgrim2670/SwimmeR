@@ -2,7 +2,8 @@
 # up and sent to map.  Need to break events into Event_A, Event_B etc. for
 # actual use.  Will also need to accept scoring system.  Do keywords for scoring
 # systems, for rescoring functions as well.  Maybe an events-back-to-back
-# protocol as well.
+# protocol as well.  Also something to exclude a particular athlete from a
+# particular event
 
 
 
