@@ -31,7 +31,9 @@ event_parse <- function(text) {
   event_string <-
     "Event\\:?\\s?#?\\s+\\d{1,}|EVENT\\:?\\s?#?\\s+\\d{1,}|Women.* Yard|Women.* Meter|Women.* Metre|Girls.* Yard|Girls.* Meter|Girls.* Metre|Men.* Yard|Men.* Meter|Men.* Metre|Boys.* Yard|Boys.* Meter|Boys.* Metre|Mixed.* Yard|Mixed.* Meter|Mixed.* Metre"
 
-  event_string <- paste(event_string, olympics_string, omega_headers_string, sep = "|")
+  top_string <- "Women\\s+\\d{2,4}\\s(Free|Fly|Breast|Back|IM)|Men\\s+\\d{2,4}\\s(Free|Fly|Breast|Back|IM)"
+
+  event_string <- paste(event_string, olympics_string, omega_headers_string, top_string, sep = "|")
 
   events <- text %>%
     .[stringr::str_detect(.,

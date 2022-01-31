@@ -2,7 +2,7 @@
 % Please edit documentation in R/splash_list_sorters.R
 \name{splash_length_7_sort}
 \alias{splash_length_7_sort}
-\title{Sorts data in lists of length 7 within \code{spash_swim_parse}}
+\title{Sort data in lists of length 7 within \code{spash_swim_parse}}
 \usage{
 splash_length_7_sort(
   x,
@@ -24,5 +24,5 @@ returns a formatted data frame to be combined with others to make the
   output of \code{splash_swim_parse}
 }
 \description{
-XXXXXX
+Sort data in lists of length 7 within \code{spash_swim_parse}
 }

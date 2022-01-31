@@ -2,7 +2,7 @@
 % Please edit documentation in R/hytek_list_sorters.R
 \name{hytek_length_4_DQ_sort}
 \alias{hytek_length_4_DQ_sort}
-\title{Sorts data in DQ lists of length 4 within \code{hytek_swim_parse}}
+\title{Sort data in DQ lists of length 4 within \code{hytek_swim_parse}}
 \usage{
 hytek_length_4_DQ_sort(x)
 }
@@ -15,5 +15,5 @@ returns a formatted data frame to be combined with others to make the
   output of \code{hytek_swim_parse}
 }
 \description{
-XXXXXX
+Sort data in DQ lists of length 4 within \code{hytek_swim_parse}
 }

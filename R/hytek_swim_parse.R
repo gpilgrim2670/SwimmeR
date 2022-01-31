@@ -228,7 +228,6 @@ swim_parse_hytek <-
     df_DQ_3 <- hytek_length_3_DQ_sort(DQ_length_3)
 
     #### Rejoin data frames from each number of variables ####
-    Min_Row_Numb <- min(events$Event_Row_Min)
     suppressWarnings(
       data <- dplyr::bind_rows(df_9, df_8) %>%
         dplyr::bind_rows(df_7) %>%
@@ -286,6 +285,9 @@ swim_parse_hytek <-
     }
 
     #### add in events based on row number ranges ####
+
+    Min_Row_Numb <- min(events$Event_Row_Min)
+
     if(min(data$Row_Numb) < min(events$Event_Row_Min)){
       unknown_event <- data.frame(Event = "Unknown",
                                   Event_Row_Min = min(data$Row_Numb),

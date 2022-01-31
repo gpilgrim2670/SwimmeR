@@ -2,7 +2,7 @@
 % Please edit documentation in R/hytek_list_sorters.R
 \name{hytek_length_5_sort}
 \alias{hytek_length_5_sort}
-\title{Sorts data in lists of length 5 within \code{hytek_swim_parse}}
+\title{Sort data in lists of length 5 within \code{hytek_swim_parse}}
 \usage{
 hytek_length_5_sort(
   x,
@@ -31,5 +31,5 @@ returns a formatted data frame to be combined with others to make the
   output of \code{hytek_swim_parse}
 }
 \description{
-XXXXXX
+Sort data in lists of length 5 within \code{hytek_swim_parse}
 }
