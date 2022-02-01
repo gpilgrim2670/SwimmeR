@@ -6,18 +6,26 @@
 #'
 #' @param list_of_names a list of values, likely strings, to be the names of
 #'   sub-lists in a new list of lists
-#' @param value a value to initialize the first element of all sub-lists to.
-#'   Defaults to \code{0}
+#' @param value a value to initialize elements of all sub-lists to. Defaults to
+#'   \code{0}.  If \code{value} has multiple elements those elements will become
+#'   sub-list elements
 #' @return returns a list of lists with sub-list names from \code{list_of_names}
 #'   and first elements from \code{value}.  Used inside \code{determine_entries}
 
 list_to_list_names <- function(list_of_names, value = 0) {
-  eval(substitute(
-    list_names <-
-      list_value,
-    list(
-      list_names = as.name(list_of_names),
-      list_value = value
-    )
-  ))
+
+  x <- purrr::map(list_of_names, ~ value)
+  names(x) <- list_of_names
+
+  return(x)
+
+  # eval(substitute(
+  #   list_names <-
+  #     list_value,
+  #   list(
+  #     list_names = as.name(list_of_names),
+  #     list_value = value
+  #   )
+  # ))
+
 }

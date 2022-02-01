@@ -1,3 +1,9 @@
+# SwimmeR 0.13.4 - February 1st 2022
+* `toptimes_pars_hytek` included inside `swim_parse` to parse Hytek Top Times
+reports
+* work beginning on `determine_entries` function for maximizing team entries vs.
+a given opponent lineup
+
 # SwimmeR 0.13.3 - January 25th 2022
 * added the `list_breaker` function and the `list_sorter` family as part of a 
 refactoring exercise

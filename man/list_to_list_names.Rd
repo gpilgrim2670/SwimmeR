@@ -10,8 +10,9 @@ list_to_list_names(list_of_names, value = 0)
 \item{list_of_names}{a list of values, likely strings, to be the names of
 sub-lists in a new list of lists}
 
-\item{value}{a value to initialize the first element of all sub-lists to.
-Defaults to \code{0}}
+\item{value}{a value to initialize elements of all sub-lists to. Defaults to
+\code{0}.  If \code{value} has multiple elements those elements will become
+sub-list elements}
 }
 \value{
 returns a list of lists with sub-list names from \code{list_of_names}

@@ -16,8 +16,9 @@
 
 ### Latest Development Version from Github
 
-Version 0.13.3
+Version 0.13.4
 
+* `swim_parse` handles Hytek Top Times reports via `toptimes_parse_hytek`.  Still under development.
 * `swim_place` and `dive_place` now exported
 * `swim_place` and `dive_place` now much more flexible on which column to place on
 *  *major change* `swim_parse` output columns `Finals_Time` and `Prelims_Time` have been renamed `Finals` and `Prelims`
