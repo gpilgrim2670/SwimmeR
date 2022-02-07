@@ -7,7 +7,7 @@
 determine_entries_helper_2(
   i,
   df_helper,
-  df_2_helper,
+  in_progress_entries_df,
   events_competed_helper = Events_Competed,
   max_ind_entries = 3
 )
@@ -21,7 +21,7 @@ Must contain column \code{Event} with the same event naming convention as
 \code{op_df}, a column with name matching \code{time_col} containing times
 or diving scores, and a column called \code{Name} containing athlete names}
 
-\item{df_2_helper}{a data frame containing the output of
+\item{in_progress_entries_df}{a data frame containing the output of
 \code{determine_entries_helper}, which is the minimum power set of entries}
 
 \item{events_competed_helper}{a list of lists containing all the events a

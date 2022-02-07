@@ -4,7 +4,14 @@
 \alias{determine_entries}
 \title{Determine optimal entries against a given opponent lineup}
 \usage{
-determine_entries(df, op_df, point_values, time_col, events = NULL)
+determine_entries(
+  df,
+  op_df,
+  point_values,
+  time_col,
+  events = NULL,
+  max_entries = NULL
+)
 }
 \arguments{
 \item{df}{a data frame of times for the team to be entered.  Must contain
