@@ -138,7 +138,7 @@ determine_entries <- function(df, op_df, point_values, time_col, events = NULL){
     } %>%
     dplyr::group_split(Event)
 
-  max_entries <- max(unlist(map(op_df_split, nrow)))
+  max_entries <- max(unlist(purrr::map(op_df_split, nrow)))
 
   to_add <-
     op_df_split[unlist(map(op_df_split, nrow)) < max_entries]
@@ -151,10 +151,9 @@ determine_entries <- function(df, op_df, point_values, time_col, events = NULL){
           dplyr::group_modify( ~ dplyr::add_row(.x, Time = 99)))
 
     no_add <-
-      op_df_split[unlist(map(op_df_split, nrow)) == max_entries]
+      op_df_split[unlist(purrr::map(op_df_split, nrow)) == max_entries]
 
     op_df <- dplyr::bind_rows(c(to_add, no_add))
-
   }
 
   op_df_2 <- events %>%
@@ -192,7 +191,7 @@ determine_entries <- function(df, op_df, point_values, time_col, events = NULL){
     dplyr::arrange(Event, Time) %>%
     dplyr::mutate(Rank = as.numeric(Rank))
 
-  athletes_remaining <- Events_Competed[which(stringr::str_detect(Events_Competed, "X") == TRUE)]
+  athletes_remaining <- Events_Competed[which(purrr::map(map(Events_Competed, str_detect, "X"), all) == TRUE)]
 
   test_2 <- determine_entries_helper_2(
     i,
@@ -200,7 +199,7 @@ determine_entries <- function(df, op_df, point_values, time_col, events = NULL){
     df_2_helper = test,
     # athlete_ranks_helper = athlete_ranks,
     events_competed_helper = Events_Competed,
-    max_ind_entries = 3
+    max_ind_entries = max_entries
   )
 
   return(test_2)
@@ -565,7 +564,7 @@ determine_entries_helper_2 <-
             )
         }
 
-        e_df <- e_df[-1,]
+        e_df <- e_df[-3,]
 
         events_competed_helper[e_rank_helper$Name[1]][[1]][min(which(stringr::str_detect(events_competed_helper[e_rank_helper$Name[1]][[1]], "X") == TRUE))] <-
           paste(e, i, sep = "_")
@@ -676,7 +675,7 @@ determine_entries_helper_2 <-
           dplyr::filter(!all(Name == e_rank_helper$Name[2] & Event == e)) %>%
           dplyr::arrange(Event)
 
-      } else if (all(length(e_rank_helper$Rank) > 2,
+      } else if (all(length(e_rank_helper$Rank) >= 2,
                      length(e_df$Rank) >= 3,
                      e_df$Rank[3] > e_rank_helper$Rank[2])) {
         # need this as number of team entries
@@ -694,6 +693,7 @@ determine_entries_helper_2 <-
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
+
         } else if (i == 1) {
           Entries[[i]] <- Entries[[i]] %>%
             replacement_entries(
@@ -709,6 +709,7 @@ determine_entries_helper_2 <-
               e_df_replacement = e_df
 
             )
+        }
 
           e_df <- e_df[-3,]
 
@@ -724,11 +725,59 @@ determine_entries_helper_2 <-
                           Event == e)) %>%
             dplyr::arrange(Event)
 
-        }
+        } else if (all(length(e_rank_helper$Rank) >= 2,
+                      length(e_df$Rank) >= 4,
+                      e_df$Rank[3] > e_rank_helper$Rank[2])) {
+          # need this as number of team entries
 
-      } else {
-        e_df <- data.frame(Rank = 0)
-      }
+          row_to_add <- df_helper %>%
+            dplyr::mutate(Event = factor(Event, levels = unique(rank_helper$Event))) %>%
+            dplyr::mutate(Rank = as.numeric(Rank)) %>%
+            dplyr::filter(Name == e_rank_helper$Name[2],
+                          Event == e)
+
+          if (is.null(Entries[i][[1]]) & i == 1) {
+            Entries[[i]] <- df_2_helper %>%
+              replacement_entries(
+                index_number = 4,
+                row_to_add_replacement = row_to_add,
+                e_df_replacement = e_df
+              )
+          } else if (i == 1) {
+            Entries[[i]] <- Entries[[i]] %>%
+              replacement_entries(
+                index_number = 4,
+                row_to_add_replacement = row_to_add,
+                e_df_replacement = e_df
+              )
+          } else {
+            Entries[[i]] <- Entries[[i - 1]] %>%
+              replacement_entries(
+                index_number = 4,
+                row_to_add_replacement = row_to_add,
+                e_df_replacement = e_df
+
+              )
+          }
+
+            e_df <- e_df[-4,]
+
+            events_competed_helper[e_rank_helper$Name[2]][[1]][min(which(stringr::str_detect(events_competed_helper[e_rank_helper$Name[2]][[1]], "X") == TRUE))] <-
+              paste(e, i, sep = "_")
+
+            athletes_remaining_helper <-
+              events_competed_helper[which(stringr::str_detect(events_competed_helper, "X") == TRUE)]
+
+            rank_helper_2 <- rank_helper_2 %>%
+              dplyr::rowwise() %>%
+              dplyr::filter(!all(Name == e_rank_helper$Name[2] &
+                                   Event == e)) %>%
+              dplyr::arrange(Event)
+
+
+        } else {
+          e_df <- data.frame(Rank = 0)
+        }
 
       # print("completed second replacement")
 
@@ -876,9 +925,251 @@ determine_entries_helper_2 <-
           dplyr::filter(!all(Name == e_rank_helper$Name[3] & Event == e)) %>%
           dplyr::arrange(Event)
 
-      }
+      } else if (all(length(e_rank_helper$Rank) >= 3,
+                     length(e_df$Rank) >= 4,
+                     e_df$Rank[1] > e_rank_helper$Rank[3])) {
+        # need this as number of team entries
+
+        row_to_add <- df_helper %>%
+          mutate(Event = factor(Event, levels = unique(rank_helper$Event))) %>%
+          mutate(Rank = as.numeric(Rank)) %>%
+          filter(Name == e_rank_helper$Name[3],
+                 Event == e)
+
+
+        if (is.null(Entries[i][[1]]) & i == 1) {
+          Entries[[i]] <- df_2_helper %>%
+            replacement_entries(
+              index_number = 4,
+              row_to_add_replacement = row_to_add,
+              e_df_replacement = e_df
+            )
+        } else if (i == 1) {
+          Entries[[i]] <- Entries[[i]] %>%
+            replacement_entries(
+              index_number = 4,
+              row_to_add_replacement = row_to_add,
+              e_df_replacement = e_df
+            )
+        } else {
+          Entries[[i]] <- Entries[[i - 1]] %>%
+            replacement_entries(
+              index_number = 4,
+              row_to_add_replacement = row_to_add,
+              e_df_replacement = e_df
+            )
+        }
+
+        e_df <- e_df[-4,]
+
+        events_competed_helper[e_rank_helper$Name[3]][[1]][min(which(stringr::str_detect(events_competed_helper[e_rank_helper$Name[3]][[1]], "X") == TRUE))] <-
+          paste(e, i, sep = "_")
+
+        athletes_remaining_helper <- events_competed_helper[which(stringr::str_detect(events_competed_helper, "X") == TRUE)]
+
+        rank_helper_2 <- rank_helper_2 %>%
+          dplyr::rowwise() %>%
+          dplyr::filter(!all(Name == e_rank_helper$Name[3] & Event == e)) %>%
+          dplyr::arrange(Event)
+
 
       # print("completed third replacement")
+
+    }
+
+    ######### forth replacement ##########
+
+    if (all(length(e_rank_helper$Rank) >= 4,
+            length(e_df$Rank) >= 1,
+            e_df$Rank[1] > e_rank_helper$Rank[4])) {
+      # need this as number of team entries
+
+      row_to_add <- df_helper %>%
+        dplyr::mutate(Event = factor(Event, levels = unique(rank_helper$Event))) %>%
+        dplyr::mutate(Rank = as.numeric(Rank)) %>%
+        dplyr::filter(Name == e_rank_helper$Name[4],
+                      Event == e)
+
+      if (is.null(Entries[i][[1]]) & i == 1) {
+        Entries[[i]] <- df_2_helper %>%
+          replacement_entries(
+            index_number = 1,
+            row_to_add_replacement = row_to_add,
+            e_df_replacement = e_df
+          )
+
+      } else if (i == 1) {
+        Entries[[i]] <- Entries[[i]] %>%
+          replacement_entries(
+            index_number = 1,
+            row_to_add_replacement = row_to_add,
+            e_df_replacement = e_df
+          )
+
+      } else {
+        Entries[[i]] <- Entries[[i - 1]] %>%
+          replacement_entries(
+            index_number = 1,
+            row_to_add_replacement = row_to_add,
+            e_df_replacement = e_df
+          )
+      }
+
+      e_df <- e_df[-1,]
+
+      events_competed_helper[e_rank_helper$Name[4]][[1]][min(which(stringr::str_detect(events_competed_helper[e_rank_helper$Name[4]][[1]], "X") == TRUE))] <-
+        paste(e, i, sep = "_")
+
+      athletes_remaining_helper <- events_competed_helper[which(stringr::str_detect(events_competed_helper, "X") == TRUE)]
+
+      rank_helper_2 <- rank_helper_2 %>%
+        dplyr::rowwise() %>%
+        dplyr::filter(!all(Name == e_rank_helper$Name[4] & Event == e)) %>%
+        dplyr::arrange(Event)
+
+    } else if (all(length(e_rank_helper$Rank) >= 4,
+                   length(e_df$Rank) >= 2,
+                   e_df$Rank[2] > e_rank_helper$Rank[4])) {
+      # need this as number of team entries
+
+      row_to_add <- df_helper %>%
+        dplyr::mutate(Event = factor(Event, levels = unique(rank_helper$Event))) %>%
+        dplyr::mutate(Rank = as.numeric(Rank)) %>%
+        dplyr::filter(Name == e_rank_helper$Name[4],
+                      Event == e)
+
+      if (is.null(Entries[i][[1]]) & i == 1) {
+        Entries[[i]] <- df_2_helper %>%
+          replacement_entries(
+            index_number = 2,
+            row_to_add_replacement = row_to_add,
+            e_df_replacement = e_df
+          )
+      } else if (i == 1) {
+        Entries[[i]] <- Entries[[i]] %>%
+          replacement_entries(
+            index_number = 2,
+            row_to_add_replacement = row_to_add,
+            e_df_replacement = e_df
+          )
+      } else {
+        Entries[[i]] <- Entries[[i - 1]] %>%
+          replacement_entries(
+            index_number = 2,
+            row_to_add_replacement = row_to_add,
+            e_df_replacement = e_df
+          )
+      }
+
+      e_df <- e_df[-2,]
+
+      events_competed_helper[e_rank_helper$Name[4]][[1]][min(which(stringr::str_detect(events_competed_helper[e_rank_helper$Name[3]][[1]], "X") == TRUE))] <-
+        paste(e, i, sep = "_")
+
+      athletes_remaining_helper <- events_competed_helper[which(stringr::str_detect(events_competed_helper, "X") == TRUE)]
+
+      rank_helper_2 <- rank_helper_2 %>%
+        rowwise() %>%
+        filter(!all(Name == e_rank_helper$Name[4] & Event == e)) %>%
+        arrange(Event)
+
+    } else if (all(length(e_rank_helper$Rank) >= 4,
+                   length(e_df$Rank) >= 3,
+                   e_df$Rank[1] > e_rank_helper$Rank[4])) {
+      # need this as number of team entries
+
+      row_to_add <- df_helper %>%
+        mutate(Event = factor(Event, levels = unique(rank_helper$Event))) %>%
+        mutate(Rank = as.numeric(Rank)) %>%
+        filter(Name == e_rank_helper$Name[4],
+               Event == e)
+
+
+      if (is.null(Entries[i][[1]]) & i == 1) {
+        Entries[[i]] <- df_2_helper %>%
+          replacement_entries(
+            index_number = 3,
+            row_to_add_replacement = row_to_add,
+            e_df_replacement = e_df
+          )
+      } else if (i == 1) {
+        Entries[[i]] <- Entries[[i]] %>%
+          replacement_entries(
+            index_number = 3,
+            row_to_add_replacement = row_to_add,
+            e_df_replacement = e_df
+          )
+      } else {
+        Entries[[i]] <- Entries[[i - 1]] %>%
+          replacement_entries(
+            index_number = 3,
+            row_to_add_replacement = row_to_add,
+            e_df_replacement = e_df
+          )
+      }
+
+      e_df <- e_df[-3,]
+
+      events_competed_helper[e_rank_helper$Name[4]][[1]][min(which(stringr::str_detect(events_competed_helper[e_rank_helper$Name[3]][[1]], "X") == TRUE))] <-
+        paste(e, i, sep = "_")
+
+      athletes_remaining_helper <- events_competed_helper[which(stringr::str_detect(events_competed_helper, "X") == TRUE)]
+
+      rank_helper_2 <- rank_helper_2 %>%
+        dplyr::rowwise() %>%
+        dplyr::filter(!all(Name == e_rank_helper$Name[4] & Event == e)) %>%
+        dplyr::arrange(Event)
+
+    } else if (all(length(e_rank_helper$Rank) >= 4,
+                   length(e_df$Rank) >= 4,
+                   e_df$Rank[1] > e_rank_helper$Rank[4])) {
+      # need this as number of team entries
+
+      row_to_add <- df_helper %>%
+        mutate(Event = factor(Event, levels = unique(rank_helper$Event))) %>%
+        mutate(Rank = as.numeric(Rank)) %>%
+        filter(Name == e_rank_helper$Name[4],
+               Event == e)
+
+
+      if (is.null(Entries[i][[1]]) & i == 1) {
+        Entries[[i]] <- df_2_helper %>%
+          replacement_entries(
+            index_number = 4,
+            row_to_add_replacement = row_to_add,
+            e_df_replacement = e_df
+          )
+      } else if (i == 1) {
+        Entries[[i]] <- Entries[[i]] %>%
+          replacement_entries(
+            index_number = 4,
+            row_to_add_replacement = row_to_add,
+            e_df_replacement = e_df
+          )
+      } else {
+        Entries[[i]] <- Entries[[i - 1]] %>%
+          replacement_entries(
+            index_number = 4,
+            row_to_add_replacement = row_to_add,
+            e_df_replacement = e_df
+          )
+      }
+
+      e_df <- e_df[-4,]
+
+      events_competed_helper[e_rank_helper$Name[4]][[1]][min(which(stringr::str_detect(events_competed_helper[e_rank_helper$Name[3]][[1]], "X") == TRUE))] <-
+        paste(e, i, sep = "_")
+
+      athletes_remaining_helper <- events_competed_helper[which(stringr::str_detect(events_competed_helper, "X") == TRUE)]
+
+      rank_helper_2 <- rank_helper_2 %>%
+        dplyr::rowwise() %>%
+        dplyr::filter(!all(Name == e_rank_helper$Name[4] & Event == e)) %>%
+        dplyr::arrange(Event)
+
+    }
+
+    # print("completed forth replacement")
 
     }
 
