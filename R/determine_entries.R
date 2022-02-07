@@ -191,7 +191,7 @@ determine_entries <- function(df, op_df, point_values, time_col, events = NULL){
     dplyr::arrange(Event, Time) %>%
     dplyr::mutate(Rank = as.numeric(Rank))
 
-  athletes_remaining <- Events_Competed[which(purrr::map(map(Events_Competed, str_detect, "X"), all) == TRUE)]
+  athletes_remaining <- Events_Competed[which(purrr::map(map(Events_Competed, stringr::str_detect, "X"), all) == TRUE)]
 
   test_2 <- determine_entries_helper_2(
     i,
