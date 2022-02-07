@@ -28,7 +28,7 @@ containing the points awarded by place.  Recognized strings are
 will be taken from \code{unique(op_df$Event)}}
 }
 \value{
-xxx
+a data frame of optimal entries based on \code{df} and \code{op_df}
 }
 \description{
 Determine optimal entries against a given opponent lineup

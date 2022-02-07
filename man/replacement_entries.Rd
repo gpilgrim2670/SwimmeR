@@ -7,24 +7,21 @@
 replacement_entries(x, index_number, row_to_add_replacement, e_df_replacement)
 }
 \arguments{
-\item{i}{a sequential list of numbers incremented by 1.  Used to index
-function.}
+\item{x}{a data frame of entries, either df_helper_2 or Entries}
 
-\item{df_helper}{a data frame of times for the team to be entered.  Must
-contain column \code{Event} with the same event naming convention as
-\code{op_df}, a column with name matching \code{time_col} containing times
-or diving scores, and a column called \code{Name} containing athlete names}
+\item{index_number}{an integer denoting which element of e_df_replacement is
+under test for removal.  Should be 1, 2, 3 or 4 depending on the minimum
+number of entries}
 
-\item{op_df_helper}{a data frame containing the opponent lineup.  Must
-contain column \code{Event} with the same event naming convention as
-\code{df}, a column with name matching \code{time_col} containing times or
-diving scores, and a column called \code{Name} containing athlete names}
+\item{row_to_add_replacement}{a row containing an improved entry that should
+be added to x}
 
-\item{max_ind_entries}{a numeric value denoting the maximum number of
-individual events that may be entered by a single athlete}
+\item{e_df_replacement}{a data frame of entries that may be replaced}
 }
 \value{
-xxx
+a data frame containing entries updated to include new rows from
+  row_to_add_replacement and to not contain rows from e_df_replacement, based
+  on index_number
 }
 \description{
 Replaces superseded rows

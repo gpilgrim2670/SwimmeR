@@ -8,8 +8,6 @@ determine_entries_helper_2(
   i,
   df_helper,
   df_2_helper,
-  athlete_ranks_helper,
-  athletes_remaining_helper,
   events_competed_helper = Events_Competed,
   max_ind_entries = 3
 )
@@ -18,21 +16,22 @@ determine_entries_helper_2(
 \item{i}{a sequential list of numbers incremented by 1.  Used to index
 function.}
 
-\item{df_helper}{a data frame of times for the team to be entered.  Must
-contain column \code{Event} with the same event naming convention as
+\item{df_helper}{a data frame of all times to be entered for a given team.
+Must contain column \code{Event} with the same event naming convention as
 \code{op_df}, a column with name matching \code{time_col} containing times
 or diving scores, and a column called \code{Name} containing athlete names}
 
+\item{df_2_helper}{a data frame containing the output of
+\code{determine_entries_helper}, which is the minimum power set of entries}
+
+\item{events_competed_helper}{a list of lists containing all the events a
+given athlete is competing in.  Sub-lists are named with the athlete name.}
+
 \item{max_ind_entries}{a numeric value denoting the maximum number of
 individual events that may be entered by a single athlete}
-
-\item{op_df_helper}{a data frame containing the opponent lineup.  Must
-contain column \code{Event} with the same event naming convention as
-\code{df}, a column with name matching \code{time_col} containing times or
-diving scores, and a column called \code{Name} containing athlete names}
 }
 \value{
-xxx
+a data frame containing entries updated to be as powerful as possible
 }
 \description{
 Assign overpowered entries

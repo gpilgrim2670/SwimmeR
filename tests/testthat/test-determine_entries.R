@@ -1,6 +1,6 @@
 test_that("determine entries RIT v IC", {
 
-  skip_on_cran()
+  # skip_on_cran()
 
   file <- system.file("extdata", "RIT_TopTimes_FS2021.pdf", package = "SwimmeR")
 
@@ -133,12 +133,7 @@ test_that("determine entries RIT v IC", {
                                          286.97, 629.66, 671.81, 619.91, 52.14, 60.49, 54.13, 111.92,
                                          113.08, 119.98, 61.37, 62.77, 59.12, 134.51, 140.72, 133.59,
                                          52.57, 53.9, 52.1, 115.61, 115.77, 122.51, 113.57, 123.45,
-                                         119.06), Counter = c(NA, NA, NA, 6, 54, NA, 15, 61, 37, 70,
-                                                              46, NA, 72, 48, NA, 9, 33, NA, 16, 64, NA, 34, 10, NA, 44,
-                                                              20, NA, 31, 55, NA, 67, 43, NA, 41, 18, 65, 1, 49, NA, 3,
-                                                              51, NA, 11, 59, NA, 45, 69, NA, 47, 23, NA, 28, 4, NA, 36,
-                                                              13, NA, 32, 56, NA, 17, 66, NA, 5, 29, NA, 63, 14, 39, 12,
-                                                              62, NA)), class = c("tbl_df", "tbl", "data.frame"), row.names = c(NA,
+                                         119.06)), class = c("tbl_df", "tbl", "data.frame"), row.names = c(NA,
                                                                                                                                 -72L))
 
   expect_equivalent(df_test, df_standard)
