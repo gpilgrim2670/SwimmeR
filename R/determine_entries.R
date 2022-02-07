@@ -191,7 +191,7 @@ determine_entries <- function(df, op_df, point_values, time_col, events = NULL){
     dplyr::arrange(Event, Time) %>%
     dplyr::mutate(Rank = as.numeric(Rank))
 
-  athletes_remaining <- Events_Competed[which(purrr::map(map(Events_Competed, stringr::str_detect, "X"), all) == TRUE)]
+  athletes_remaining <- Events_Competed[which(purrr::map(purrr::map(Events_Competed, stringr::str_detect, "X"), any) == TRUE)]
 
   test_2 <- determine_entries_helper_2(
     i,
@@ -401,7 +401,10 @@ determine_entries_helper_2 <-
       dplyr::mutate(Rank = as.numeric(Rank))
 
     athletes_remaining_helper <-
-      events_competed_helper[which(stringr::str_detect(events_competed_helper, "X") == TRUE)]
+      events_competed_helper[which(purrr::map(purrr::map(events_competed_helper, stringr::str_detect, "X"), any) == TRUE)]
+
+    # athletes_remaining_helper <-
+    #   events_competed_helper[which(stringr::str_detect(events_competed_helper, "X") == TRUE)]
 
     rank_helper <- athlete_ranks %>%
       dplyr::filter(Name %in% names(athletes_remaining_helper)) %>%
@@ -481,7 +484,8 @@ determine_entries_helper_2 <-
         events_competed_helper[e_rank_helper$Name[1]][[1]][min(which(stringr::str_detect(events_competed_helper[e_rank_helper$Name[1]][[1]], "X") == TRUE))] <-
           paste(e, i, sep = "_")
 
-        athletes_remaining_helper <- events_competed_helper[which(stringr::str_detect(events_competed_helper, "X") == TRUE)]
+        athletes_remaining_helper <-
+          events_competed_helper[which(purrr::map(purrr::map(events_competed_helper, stringr::str_detect, "X"), any) == TRUE)]
 
         rank_helper_2 <- rank_helper_2 %>%
           dplyr::rowwise() %>%
@@ -525,7 +529,8 @@ determine_entries_helper_2 <-
         events_competed_helper[e_rank_helper$Name[1]][[1]][min(which(stringr::str_detect(events_competed_helper[e_rank_helper$Name[1]][[1]], "X") == TRUE))] <-
           paste(e, i, sep = "_")
 
-        athletes_remaining_helper <- events_competed_helper[which(stringr::str_detect(events_competed_helper, "X") == TRUE)]
+        athletes_remaining_helper <-
+          events_competed_helper[which(purrr::map(purrr::map(events_competed_helper, stringr::str_detect, "X"), any) == TRUE)]
 
         rank_helper_2 <- rank_helper_2 %>%
           dplyr::rowwise() %>%
@@ -569,7 +574,8 @@ determine_entries_helper_2 <-
         events_competed_helper[e_rank_helper$Name[1]][[1]][min(which(stringr::str_detect(events_competed_helper[e_rank_helper$Name[1]][[1]], "X") == TRUE))] <-
           paste(e, i, sep = "_")
 
-        athletes_remaining_helepr <- events_competed_helper[which(stringr::str_detect(events_competed_helper, "X") == TRUE)]
+        athletes_remaining_helper <-
+          events_competed_helper[which(purrr::map(purrr::map(events_competed_helper, stringr::str_detect, "X"), any) == TRUE)]
 
         rank_helper_2 <- rank_helper_2 %>%
           dplyr::rowwise() %>%
@@ -622,7 +628,8 @@ determine_entries_helper_2 <-
         events_competed_helper[e_rank_helper$Name[2]][[1]][min(which(stringr::str_detect(events_competed_helper[e_rank_helper$Name[2]][[1]], "X") == TRUE))] <-
           paste(e, i, sep = "_")
 
-        athletes_remaining_helper <- events_competed_helper[which(stringr::str_detect(events_competed_helper, "X") == TRUE)]
+        athletes_remaining_helper <-
+          events_competed_helper[which(purrr::map(purrr::map(events_competed_helper, stringr::str_detect, "X"), any) == TRUE)]
 
         rank_helper_2 <- rank_helper_2 %>%
           dplyr::rowwise() %>%
@@ -668,7 +675,8 @@ determine_entries_helper_2 <-
         events_competed_helper[e_rank_helper$Name[2]][[1]][min(which(stringr::str_detect(events_competed_helper[e_rank_helper$Name[2]][[1]], "X") == TRUE))] <-
           paste(e, i, sep = "_")
 
-        athletes_remaining_helper <- events_competed_helper[which(stringr::str_detect(events_competed_helper, "X") == TRUE)]
+        athletes_remaining_helper <-
+          events_competed_helper[which(purrr::map(purrr::map(events_competed_helper, stringr::str_detect, "X"), any) == TRUE)]
 
         rank_helper_2 <- rank_helper_2 %>%
           dplyr::rowwise() %>%
@@ -717,7 +725,7 @@ determine_entries_helper_2 <-
             paste(e, i, sep = "_")
 
           athletes_remaining_helper <-
-            events_competed_helper[which(stringr::str_detect(events_competed_helper, "X") == TRUE)]
+            events_competed_helper[which(purrr::map(purrr::map(events_competed_helper, stringr::str_detect, "X"), any) == TRUE)]
 
           rank_helper_2 <- rank_helper_2 %>%
             dplyr::rowwise() %>%
@@ -766,7 +774,7 @@ determine_entries_helper_2 <-
               paste(e, i, sep = "_")
 
             athletes_remaining_helper <-
-              events_competed_helper[which(stringr::str_detect(events_competed_helper, "X") == TRUE)]
+              events_competed_helper[which(purrr::map(purrr::map(events_competed_helper, stringr::str_detect, "X"), any) == TRUE)]
 
             rank_helper_2 <- rank_helper_2 %>%
               dplyr::rowwise() %>%
@@ -825,7 +833,8 @@ determine_entries_helper_2 <-
         events_competed_helper[e_rank_helper$Name[3]][[1]][min(which(stringr::str_detect(events_competed_helper[e_rank_helper$Name[3]][[1]], "X") == TRUE))] <-
           paste(e, i, sep = "_")
 
-        athletes_remaining_helper <- events_competed_helper[which(stringr::str_detect(events_competed_helper, "X") == TRUE)]
+        athletes_remaining_helper <-
+          events_competed_helper[which(purrr::map(purrr::map(events_competed_helper, stringr::str_detect, "X"), any) == TRUE)]
 
         rank_helper_2 <- rank_helper_2 %>%
           dplyr::rowwise() %>%
@@ -871,7 +880,8 @@ determine_entries_helper_2 <-
         events_competed_helper[e_rank_helper$Name[3]][[1]][min(which(stringr::str_detect(events_competed_helper[e_rank_helper$Name[3]][[1]], "X") == TRUE))] <-
           paste(e, i, sep = "_")
 
-        athletes_remaining_helper <- events_competed_helper[which(stringr::str_detect(events_competed_helper, "X") == TRUE)]
+        athletes_remaining_helper <-
+          events_competed_helper[which(purrr::map(purrr::map(events_competed_helper, stringr::str_detect, "X"), any) == TRUE)]
 
         rank_helper_2 <- rank_helper_2 %>%
           rowwise() %>%
@@ -918,7 +928,8 @@ determine_entries_helper_2 <-
         events_competed_helper[e_rank_helper$Name[3]][[1]][min(which(stringr::str_detect(events_competed_helper[e_rank_helper$Name[3]][[1]], "X") == TRUE))] <-
           paste(e, i, sep = "_")
 
-        athletes_remaining_helper <- events_competed_helper[which(stringr::str_detect(events_competed_helper, "X") == TRUE)]
+        athletes_remaining_helper <-
+          events_competed_helper[which(purrr::map(purrr::map(events_competed_helper, stringr::str_detect, "X"), any) == TRUE)]
 
         rank_helper_2 <- rank_helper_2 %>%
           dplyr::rowwise() %>%
@@ -965,7 +976,8 @@ determine_entries_helper_2 <-
         events_competed_helper[e_rank_helper$Name[3]][[1]][min(which(stringr::str_detect(events_competed_helper[e_rank_helper$Name[3]][[1]], "X") == TRUE))] <-
           paste(e, i, sep = "_")
 
-        athletes_remaining_helper <- events_competed_helper[which(stringr::str_detect(events_competed_helper, "X") == TRUE)]
+        athletes_remaining_helper <-
+          events_competed_helper[which(purrr::map(purrr::map(events_competed_helper, stringr::str_detect, "X"), any) == TRUE)]
 
         rank_helper_2 <- rank_helper_2 %>%
           dplyr::rowwise() %>%
@@ -1020,7 +1032,8 @@ determine_entries_helper_2 <-
       events_competed_helper[e_rank_helper$Name[4]][[1]][min(which(stringr::str_detect(events_competed_helper[e_rank_helper$Name[4]][[1]], "X") == TRUE))] <-
         paste(e, i, sep = "_")
 
-      athletes_remaining_helper <- events_competed_helper[which(stringr::str_detect(events_competed_helper, "X") == TRUE)]
+      athletes_remaining_helper <-
+        events_competed_helper[which(purrr::map(purrr::map(events_competed_helper, stringr::str_detect, "X"), any) == TRUE)]
 
       rank_helper_2 <- rank_helper_2 %>%
         dplyr::rowwise() %>%
@@ -1066,7 +1079,8 @@ determine_entries_helper_2 <-
       events_competed_helper[e_rank_helper$Name[4]][[1]][min(which(stringr::str_detect(events_competed_helper[e_rank_helper$Name[3]][[1]], "X") == TRUE))] <-
         paste(e, i, sep = "_")
 
-      athletes_remaining_helper <- events_competed_helper[which(stringr::str_detect(events_competed_helper, "X") == TRUE)]
+      athletes_remaining_helper <-
+        events_competed_helper[which(purrr::map(purrr::map(events_competed_helper, stringr::str_detect, "X"), any) == TRUE)]
 
       rank_helper_2 <- rank_helper_2 %>%
         rowwise() %>%
@@ -1113,7 +1127,8 @@ determine_entries_helper_2 <-
       events_competed_helper[e_rank_helper$Name[4]][[1]][min(which(stringr::str_detect(events_competed_helper[e_rank_helper$Name[3]][[1]], "X") == TRUE))] <-
         paste(e, i, sep = "_")
 
-      athletes_remaining_helper <- events_competed_helper[which(stringr::str_detect(events_competed_helper, "X") == TRUE)]
+      athletes_remaining_helper <-
+        events_competed_helper[which(purrr::map(purrr::map(events_competed_helper, stringr::str_detect, "X"), any) == TRUE)]
 
       rank_helper_2 <- rank_helper_2 %>%
         dplyr::rowwise() %>%
@@ -1160,7 +1175,8 @@ determine_entries_helper_2 <-
       events_competed_helper[e_rank_helper$Name[4]][[1]][min(which(stringr::str_detect(events_competed_helper[e_rank_helper$Name[3]][[1]], "X") == TRUE))] <-
         paste(e, i, sep = "_")
 
-      athletes_remaining_helper <- events_competed_helper[which(stringr::str_detect(events_competed_helper, "X") == TRUE)]
+      athletes_remaining_helper <-
+        events_competed_helper[which(purrr::map(purrr::map(events_competed_helper, stringr::str_detect, "X"), any) == TRUE)]
 
       rank_helper_2 <- rank_helper_2 %>%
         dplyr::rowwise() %>%
