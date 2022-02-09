@@ -1,3 +1,8 @@
+# SwimmeR 0.13.5 - February 9th 2022
+* `place` function introduced, supersedes `swim_place` and `dive_place`
+* `determine_entries` renamed to `make_lineup`, now works on test cases
+* work begun on `clean_events` to regularize event names
+
 # SwimmeR 0.13.4 - February 1st 2022
 * `toptimes_pars_hytek` included inside `swim_parse` to parse Hytek Top Times
 reports

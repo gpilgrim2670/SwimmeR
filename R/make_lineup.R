@@ -56,8 +56,11 @@
 #' @param events a list of events.  If no list is entered then \code{events}
 #'   will be taken from \code{unique(op_df$Event)}
 #' @return a data frame of optimal entries based on \code{df} and \code{op_df}
+#'
+#' @export
 
-determine_entries <- function(df, op_df, point_values, time_col, events = NULL, max_entries = NULL){
+
+make_lineup <- function(df, op_df, point_values, time_col, events = NULL, max_entries = NULL){
 
   # df = RIT_TopTimes_2021
   # op_df = IC
@@ -98,7 +101,7 @@ determine_entries <- function(df, op_df, point_values, time_col, events = NULL, 
   } else if (all(is.numeric(point_values)) == FALSE) {
     stop(
       "point_values must be a list of numeric values or a recognized string.\n
-      See ?determine_entries() for a list of recognized strings"
+      See ?make_lineup() for a list of recognized strings"
     )
   }
 
@@ -179,7 +182,7 @@ determine_entries <- function(df, op_df, point_values, time_col, events = NULL, 
 
   Events_Competed <- list_to_list_names(competitors, c("X", "X", "X"))
 
-  test <- determine_entries_helper(
+  test <- make_lineup_helper(
     i,
     df_helper = df,
     op_df_helper = op_df,
@@ -203,7 +206,7 @@ determine_entries <- function(df, op_df, point_values, time_col, events = NULL, 
 
   athletes_remaining <- Events_Competed[which(purrr::map(purrr::map(Events_Competed, stringr::str_detect, "X"), any) == TRUE)]
 
-  test <- determine_entries_helper_2(
+  test <- make_lineup_helper_2(
     i,
     df_helper = df,
     in_progress_entries_df = test,
@@ -241,7 +244,7 @@ determine_entries <- function(df, op_df, point_values, time_col, events = NULL, 
 #'   individual events that may be entered by a single athlete
 #' @return xxx
 
-determine_entries_helper <-
+make_lineup_helper <-
   function(i,
            df_helper,
            op_df_helper,
@@ -386,14 +389,14 @@ return(Times_Competed)
 #'   \code{op_df}, a column with name matching \code{time_col} containing times
 #'   or diving scores, and a column called \code{Name} containing athlete names
 #' @param in_progress_entries_df a data frame containing the output of
-#'   \code{determine_entries_helper}, which is the minimum power set of entries
+#'   \code{make_lineup_helper}, which is the minimum power set of entries
 #' @param events_competed_helper a list of lists containing all the events a
 #'   given athlete is competing in.  Sub-lists are named with the athlete name.
 #' @param max_ind_entries a numeric value denoting the maximum number of
 #'   individual events that may be entered by a single athlete
 #' @return a data frame containing entries updated to be as powerful as possible
 
-determine_entries_helper_2 <-
+make_lineup_helper_2 <-
   function(i,
            df_helper,
            in_progress_entries_df,

@@ -16,11 +16,11 @@
 
 ### Latest Development Version from Github
 
-Version 0.13.4
+Version 0.13.5
 
+* `make_lineup` works to make lineups based on top times reports and an opponent lineup.  Still under development.
 * `swim_parse` handles Hytek Top Times reports via `toptimes_parse_hytek`.  Still under development.
-* `swim_place` and `dive_place` now exported
-* `swim_place` and `dive_place` now much more flexible on which column to place on
+* new function `place` supersedes `swim_place` and `dive_place`, handling both swimming and diving
 *  *major change* `swim_parse` output columns `Finals_Time` and `Prelims_Time` have been renamed `Finals` and `Prelims`
 
 `devtools::install_github("gpilgrim2670/SwimmeR", build_vignettes = TRUE)`

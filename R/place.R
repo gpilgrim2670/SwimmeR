@@ -1,6 +1,8 @@
-#' Add places to swimming results
+#' Add places to results
 #'
 #' Places are awarded on the basis of time, with fastest (lowest) time winning.
+#' For diving places are awarded on the basis of score, with the highest score
+#' winning.
 #' Ties are placed as ties (both athletes get 2nd etc.)
 #'
 #' @importFrom dplyr slice
@@ -11,10 +13,11 @@
 #' @importFrom dplyr arrange
 #' @importFrom dplyr ensym
 #'
-#' @param df a data frame with results from \code{swim_parse}, including only
-#'   swimming results (not diving)
-#' @param time_col the name of a column in \code{df} containing times on which
-#'   to place (order) performances.  Default is \code{Finals}
+#' @param df a data frame with results from \code{swim_parse}, including
+#'   swimming and/or diving results.  \code{df} must contain a column called
+#'   \code{Event}
+#' @param result_col the name of a column in \code{df} containing times and/or
+#'   scores on which to place (order) performances.  Default is \code{Finals}
 #' @param max_place highest place value that scores
 #' @param event_type either \code{"ind"} for individual or \code{"relay"} for
 #'   relays
@@ -25,42 +28,47 @@
 #' @param verbose should warning messages be posted.  Default is \code{TRUE} and
 #'   should rarely be changed.
 #' @return a data frame modified so that places have been appended based on
-#'   swimming time
+#'   swimming time and/or diving score
 #'
 #' @seealso \code{swim_place} is a helper function used inside of
 #'   \code{results_score}
 #'
 #' @examples
-#'   df <- data.frame(Place = c(1, 1, 1),
-#'                Name = c("Sally Swimfast", "Bonnie Bubbles", "Kylie Kicker"),
-#'                Team = c("KVAC", "UBAM", "MERC"),
-#'                Event = rep("Women 200 Freestyle", 3),
-#'                Prelims = c("2:00.00", "1:59.99", "2:01.50"),
-#'                Finals = c("1:58.00", "1:59.50", "2:00.50"),
-#'                Meet = c("Summer 2021", "Fall 2020", "Champs 2020"))
+#'   df <- data.frame( Place = c(1, 1, 1, 1, 1, 1), Name = c("Sally Swimfast",
+#'   "Bonnie Bubbles", "Kylie Kicker", "Riley Ripit", "Nathan Nosplash", "Tim
+#'   Tuck"), Team = c("KVAC", "UBAM", "MERC", "Upstate Diving", "Nickel City
+#'   Splash", "Finger Lakes Diving"), Event = c(rep("Women 200 Freestyle", 3),
+#'   rep("Boys 1 mtr Diving", 3)), Prelims = c("2:00.00", "1:59.99", "2:01.50",
+#'   "300.00", "305.00", "200.00"), Finals = c("1:58.00", "1:59.50", "2:00.50",
+#'   "310.00", "307.00", "220.00"), Meet = c("Summer 2021", "Fall 2020", "Champs
+#'   2020","Regional Champs 2021", "Other Regional Champs 2021", "City Champs
+#'   2021" ))
 #'
 #' df %>%
-#'   swim_place()
+#'   place() %>%
+#'   arrange(Event)
 #'
 #' df %>%
-#'   swim_place(time_col = Prelims)
+#'   place(result_col = Prelims) %>%
+#'   arrange(Event)
 #'
 #' df %>%
-#'   swim_place(time_col = "Prelims")
+#'   place(result_col = "Prelims") %>%
+#'   arrange(Event)
 #'
 #' @export
 
-swim_place <- function(df,
-                       time_col = Finals,
+place <- function(df,
+                       result_col = Finals,
                        max_place = NULL,
                        event_type = "ind",
                        max_relays_per_team = 1,
                        keep_nonscoring = TRUE,
                        verbose = TRUE
-                       ) {
+) {
 
-  #### regularize time_col ####
-  time_col <- dplyr::ensym(time_col)
+  #### regularize result_col ####
+  result_col <- dplyr::ensym(result_col)
 
   #### max relays ####
   if(max_relays_per_team %% 1 > 0){
@@ -102,8 +110,8 @@ swim_place <- function(df,
   }
 
   #### required columns ####
-  if(as.character(time_col) %!in% names(df)){
-    stop("time_col must be a column of times in df")
+  if(as.character(result_col) %!in% names(df)){
+    stop("result_col must be a column of times in df")
   }
 
   if("Event" %!in% names(df)){
@@ -111,7 +119,7 @@ swim_place <- function(df,
   }
 
   #### actual function ####
-  if(any(stringr::str_detect(stringr::str_to_lower(as.character(df$Event)), "diving")) == FALSE){
+  # if(any(stringr::str_detect(stringr::str_to_lower(as.character(df$Event)), "diving")) == FALSE){
 
   df <- df %>%
     {
@@ -120,7 +128,7 @@ swim_place <- function(df,
       else
         dplyr::group_by(., Event, Team)
     } %>%
-    dplyr::filter(stringr::str_detect(stringr::str_to_lower(as.character(Event)), "diving") == FALSE) %>%
+    # dplyr::filter(stringr::str_detect(stringr::str_to_lower(as.character(Event)), "diving") == FALSE) %>%
     {
       if (event_type == "ind")
         dplyr::slice(., 1)
@@ -130,10 +138,13 @@ swim_place <- function(df,
     dplyr::slice(1) %>%
     dplyr::ungroup() %>%
     dplyr::group_by(Event) %>%
-    dplyr::mutate(Time_sec = {{time_col}}) %>%
-    dplyr::mutate(Time_sec = sec_format(Time_sec)) %>%
-    dplyr::mutate(Place = rank(Time_sec, ties.method = "min")) %>% # places, low number wins
-    dplyr::select(-Time_sec) %>%
+    dplyr::mutate(Result_numeric = {{result_col}}) %>%
+    dplyr::mutate(Result_numeric = sec_format(Result_numeric)) %>%
+    # reverse diving scores so that low score wins
+    dplyr::mutate(Result_numeric = case_when(stringr::str_detect(Event, "d|Div") ~ Result_numeric * -1,
+                                             TRUE ~ Result_numeric)) %>%
+    dplyr::mutate(Place = rank(Result_numeric, ties.method = "min")) %>% # places, low number wins
+    dplyr::select(-Result_numeric) %>%
     dplyr::arrange(Place) %>%
     {
       if ("DQ" %in% names(df))
@@ -147,9 +158,9 @@ swim_place <- function(df,
       else
         .
     }
-  } else if (verbose == TRUE) {
-    message("df does not have column called Event.  No places determined.")
-  }
+  # } else if (verbose == TRUE) {
+  #   message("df does not have column called Event.  No places determined.")
+  # }
 
   return(df)
 }
