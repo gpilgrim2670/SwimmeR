@@ -10,7 +10,7 @@ make_lineup_helper(
   op_df_helper,
   end_seq,
   max_ind_entries = 2,
-  time_col_helper = time_col
+  result_col_helper = result_col
 )
 }
 \arguments{
@@ -19,20 +19,24 @@ function.}
 
 \item{df_helper}{a data frame of times for the team to be entered.  Must
 contain column \code{Event} with the same event naming convention as
-\code{op_df}, a column with name matching \code{time_col} containing times
+\code{op_df}, a column with name matching \code{result_col} containing times
 or diving scores, and a column called \code{Name} containing athlete names}
 
 \item{op_df_helper}{a data frame containing the opponent lineup.  Must
 contain column \code{Event} with the same event naming convention as
-\code{df}, a column with name matching \code{time_col} containing times or
+\code{df}, a column with name matching \code{result_col} containing times or
 diving scores, and a column called \code{Name} containing athlete names}
 
 \item{max_ind_entries}{a numeric value denoting the maximum number of
 individual events that may be entered by a single athlete}
 }
 \value{
-xxx
+a data frame containing athletes entered into events
 }
 \description{
-Determine optimal entries against a given opponent lineup
+Matches athletes into events.  Each event is filled by the least capable
+(slowest) swimmer who can win or place in that event. For example if Team A
+has six breaststrokers at 57.00, 58.00, 59.00 and three 1:00.00s and Team B
+has three breaststrokers, all 1:01.00 then Team A's entries will be the three
+1:00.00s because they're sufficient to win.
 }

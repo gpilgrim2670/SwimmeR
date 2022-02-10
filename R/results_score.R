@@ -112,6 +112,39 @@ results_score <-
     # point_values = c(20, 17, 16, 15, 14, 13, 12, 11, 9, 7, 6, 5, 4, 3, 2, 1)
     # max_relays_per_team = 1
 
+    recognized_strings <- c("hs_four_lane",
+                            "hs_six_lane",
+                            # "hs_eight_lane",
+                            "ncaa_six_lane")
+
+    point_values_list <- list(
+      "hs_four_lane" = c(4, 3, 1, 0),
+      "hs_six_lane" = c(6, 4, 3, 2, 1, 0),
+      # "hs_eight_lane" = c(),
+      "ncaa_six_lane" = c(9, 4, 3, 2, 1, 0),
+      "championship_8_lane_2_heat_individual" = c(20, 17, 16, 15, 14, 13, 12, 11, 9, 7, 6, 5, 4, 3, 2, 1),
+      "championship_8_lane_3_heat_individual" = c(32, 28, 27, 26, 25, 24, 23, 22, 20, 17, 16, 15, 14, 13, 12, 11, 9, 7, 6, 5, 4, 3, 2, 1)
+    )
+
+    if (point_values %in% recognized_strings) {
+      point_values <- point_values_list[point_values][[1]]
+
+      # last point value should be 0
+      if (all(tail(point_values, 1) != 0, length(point_values) %%2 != 0)) {
+        point_values <- c(point_values, 0)
+      }
+
+    } else if (all(is.numeric(point_values)) == TRUE) {
+      point_values <- sort(point_values, decreasing = TRUE)
+
+
+    } else if (all(is.numeric(point_values)) == FALSE) {
+      stop(
+        "point_values must be a list of numeric values or a recognized string.\n
+      See ?make_lineup() for a list of recognized strings"
+      )
+    }
+
 
     #### errors ####
     if(is.data.frame(results) == FALSE){

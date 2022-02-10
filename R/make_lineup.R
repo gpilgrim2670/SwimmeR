@@ -1,10 +1,3 @@
-# In progress.  The for loop below does work but obviously needs to be cleaned
-# up and sent to map.  Need to break events into Event_A, Event_B etc. for
-# actual use.  Will also need to accept scoring system.  Do keywords for scoring
-# systems, for rescoring functions as well.  Maybe an events-back-to-back
-# protocol as well.  Also something to exclude a particular athlete from a
-# particular event
-
 # file <- system.file("extdata", "RIT_TopTimes_FS2021.pdf", package = "SwimmeR")
 #
 #  #### test dfs ####
@@ -42,16 +35,16 @@
 #'
 #' @param df a data frame of times for the team to be entered.  Must contain
 #'   column \code{Event} with the same event naming convention as \code{op_df},
-#'   a column with name matching \code{time_col} containing times or diving
+#'   a column with name matching \code{result_col} containing times or diving
 #'   scores, and a column called \code{Name} containing athlete names
 #' @param op_df a data frame containing the opponent lineup.  Must contain
 #'   column \code{Event} with the same event naming convention as \code{df},
-#'   a column with name matching \code{time_col} containing times or diving
+#'   a column with name matching \code{result_col} containing times or diving
 #'   scores, and a column called \code{Name} containing athlete names
 #' @param point_values either a recognized string or a list of numeric values
 #'   containing the points awarded by place.  Recognized strings are
 #'   \code{"hs_four_lane"}, \code{"hs_six_lane"}, \code{"ncaa_six_lane"}
-#' @param time_col the name of a column, present in both \code{df} and
+#' @param result_col the name of a column, present in both \code{df} and
 #'   \code{op_df} that contains times and/or diving scores
 #' @param events a list of events.  If no list is entered then \code{events}
 #'   will be taken from \code{unique(op_df$Event)}
@@ -60,17 +53,17 @@
 #' @export
 
 
-make_lineup <- function(df, op_df, point_values, time_col, events = NULL, max_entries = NULL){
+make_lineup <- function(df, op_df, point_values, result_col, events = NULL, max_entries = NULL){
 
   # df = RIT_TopTimes_2021
   # op_df = IC
   # point_values = "ncaa_six_lane"
-  # time_col = "Finals"
+  # result_col = "Finals"
   # events = NULL
   # max_entries = NULL
 
-  #### regularize time_col ####
-  time_col <- dplyr::ensym(time_col)
+  #### regularize result_col ####
+  result_col <- dplyr::ensym(result_col)
 
   recognized_strings <- c("hs_four_lane",
                           "hs_six_lane",
@@ -121,14 +114,18 @@ make_lineup <- function(df, op_df, point_values, time_col, events = NULL, max_en
   df <- df %>%
     dplyr::filter(is.na(Name) == FALSE) %>%
     dplyr::filter(Event %!in% events) %>%
-    dplyr::mutate(Time = {{time_col}}) %>%
-    dplyr::mutate(Time = sec_format(Time))
+    dplyr::mutate(Result_numeric = {{result_col}}) %>%
+    dplyr::mutate(Result_numeric = sec_format(Result_numeric)) %>%
+    dplyr::mutate(Result_numeric = case_when(stringr::str_detect(Event, "d|Div") ~ Result_numeric * -1,
+                                             TRUE ~ Result_numeric))
 
   op_df <- op_df %>%
     dplyr::filter(is.na(Name) == FALSE) %>%
     dplyr::filter(Event %!in% events) %>%
-    dplyr::mutate(Time = {{time_col}}) %>%
-    dplyr::mutate(Time = sec_format(Time))
+    dplyr::mutate(Result_numeric = {{result_col}}) %>%
+    dplyr::mutate(Result_numeric = sec_format(Result_numeric)) %>%
+    dplyr::mutate(Result_numeric = case_when(stringr::str_detect(Event, "d|Div") ~ Result_numeric * -1,
+                                             TRUE ~ Result_numeric))
 
   event_order <- unique(op_df$Event)
 
@@ -157,7 +154,7 @@ make_lineup <- function(df, op_df, point_values, time_col, events = NULL, max_en
       purrr::map(function(x)
         x %>%
           dplyr::group_by(Event) %>%
-          dplyr::group_modify(~ dplyr::add_row(.x, Time = 99)))
+          dplyr::group_modify(~ dplyr::add_row(.x, Result_numeric = 99)))
 
     no_add <-
       op_df_split[unlist(purrr::map(op_df_split, nrow)) == max_entries]
@@ -171,7 +168,7 @@ make_lineup <- function(df, op_df, point_values, time_col, events = NULL, max_en
     dplyr::filter(Exhibition < 1) %>%
     dplyr::group_by(Event) %>%
     dplyr::mutate(Points = Point_Values$Points) %>%
-    dplyr::arrange(dplyr::desc(Points), Time) %>%
+    dplyr::arrange(dplyr::desc(Points), Result_numeric) %>%
     dplyr::mutate(Event_Points = paste(Event, Points, sep = "_"))
 
   Entries <- list()
@@ -188,7 +185,7 @@ make_lineup <- function(df, op_df, point_values, time_col, events = NULL, max_en
     op_df_helper = op_df,
     end_seq = length(op_df$Event_Points),
     max_ind_entries = max_entries,
-    time_col_helper = time_col
+    result_col_helper = result_col
   )
 
   Events_Competed <- test[[length(test)]]
@@ -197,7 +194,7 @@ make_lineup <- function(df, op_df, point_values, time_col, events = NULL, max_en
 
   test <- test %>%
     dplyr::bind_rows() %>%
-    dplyr::arrange(Event, Time) %>%
+    dplyr::arrange(Event, Result_numeric) %>%
     dplyr::mutate(Rank = as.numeric(Rank))
 
   test <- test %>%
@@ -215,7 +212,7 @@ make_lineup <- function(df, op_df, point_values, time_col, events = NULL, max_en
   )
 
   test <- test %>%
-    dplyr::select(-Time) %>%
+    dplyr::select(-Result_numeric) %>%
     dplyr::mutate(Event = factor(Event, levels = event_order)) %>%
     dplyr::arrange(Event, Rank)
 
@@ -226,6 +223,12 @@ make_lineup <- function(df, op_df, point_values, time_col, events = NULL, max_en
 #### Helper 1 - Min Power ####
 #' Determine optimal entries against a given opponent lineup
 #'
+#' Matches athletes into events.  Each event is filled by the least capable
+#' (slowest) swimmer who can win or place in that event. For example if Team A
+#' has six breaststrokers at 57.00, 58.00, 59.00 and three 1:00.00s and Team B
+#' has three breaststrokers, all 1:01.00 then Team A's entries will be the three
+#' 1:00.00s because they're sufficient to win.
+#'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr filter
 #' @importFrom purrr map
@@ -234,15 +237,15 @@ make_lineup <- function(df, op_df, point_values, time_col, events = NULL, max_en
 #'   function.
 #' @param df_helper a data frame of times for the team to be entered.  Must
 #'   contain column \code{Event} with the same event naming convention as
-#'   \code{op_df}, a column with name matching \code{time_col} containing times
+#'   \code{op_df}, a column with name matching \code{result_col} containing times
 #'   or diving scores, and a column called \code{Name} containing athlete names
 #' @param op_df_helper a data frame containing the opponent lineup.  Must
 #'   contain column \code{Event} with the same event naming convention as
-#'   \code{df}, a column with name matching \code{time_col} containing times or
+#'   \code{df}, a column with name matching \code{result_col} containing times or
 #'   diving scores, and a column called \code{Name} containing athlete names
 #' @param max_ind_entries a numeric value denoting the maximum number of
 #'   individual events that may be entered by a single athlete
-#' @return xxx
+#' @return a data frame containing athletes entered into events
 
 make_lineup_helper <-
   function(i,
@@ -250,7 +253,7 @@ make_lineup_helper <-
            op_df_helper,
            end_seq,
            max_ind_entries = 2,
-           time_col_helper = time_col) {
+           result_col_helper = result_col) {
 
   # df_helper <- df
   # op_df_helper <- op_df
@@ -272,7 +275,7 @@ make_lineup_helper <-
 
   op_result <- op_df_helper %>%
     dplyr::filter(Event_Points == e) %>%
-    dplyr::pull({{time_col_helper}}) %>%
+    dplyr::pull({{result_col_helper}}) %>%
     sec_format()
 
   entry <- df_helper %>%
@@ -283,7 +286,7 @@ make_lineup_helper <-
       )
     )), "\\d.*$")) %>%
     dplyr::rowwise() %>%
-    dplyr::filter(Event == e_no_points, Time < op_result) %>%
+    dplyr::filter(Event == e_no_points, Result_numeric < op_result) %>%
     dplyr::ungroup()
 
   if (nrow(entry) > 1) {
@@ -295,7 +298,7 @@ make_lineup_helper <-
         )
       )), "\\d.*$")) %>%
       dplyr::ungroup() %>%
-      dplyr::slice(which.max(Time))
+      dplyr::slice(which.max(Result_numeric))
   }
 
   if (nrow(entry) == 0) {
@@ -308,7 +311,7 @@ make_lineup_helper <-
         )
       )), "\\d.*$")) %>%
       dplyr::ungroup() %>%
-      dplyr::slice(which.max(Time))
+      dplyr::slice(which.max(Result_numeric))
   }
 
   if(Times_Competed[entry$Name][[1]] > max_ind_entries - 1){
@@ -322,7 +325,7 @@ make_lineup_helper <-
       )), "\\d.*$")) %>%
       dplyr::ungroup() %>%
       dplyr::rowwise() %>%
-      dplyr::filter(Event == e_no_points, Time < op_result) %>%
+      dplyr::filter(Event == e_no_points, Result_numeric < op_result) %>%
       dplyr::ungroup()
   }
 
@@ -334,7 +337,7 @@ make_lineup_helper <-
           purrr::map(Events_Competed, stringr::str_detect, e_no_points)
         )
       )), "\\d.*$")) %>%
-      dplyr::slice(which.max(Time))
+      dplyr::slice(which.max(Result_numeric))
   }
 
   if (nrow(entry) == 0) {
@@ -347,12 +350,12 @@ make_lineup_helper <-
         )
       )), "\\d.*$")) %>%
       dplyr::ungroup() %>%
-      dplyr::slice(which.max(Time))
+      dplyr::slice(which.max(Result_numeric))
   }
 
   if(nrow(entry) == 0){
     entry <- data.frame(Name = paste0("NA", i),
-                        Time = NA,
+                        Result_numeric = NA,
                         Event = e_no_points)
   }
 
@@ -378,6 +381,18 @@ return(Times_Competed)
 
 #' Assign overpowered entries
 #'
+#' Matches athletes into events again, this time vs. the output of
+#' \code{make_lineup_helper}.  For example if Team A has six breaststrokers at
+#' 57.00, 58.00, 59.00 and three 1:00.00s and Team B has three breaststrokers,
+#' all 1:01.00 then following \code{make_lineup_helper} Team A's entries will be
+#' the three 1:00.00s because they're sufficient to win.
+#'
+#' Here though Team A's three 1:00.00s will be replaced by their 57.00, 58.00
+#' and 59.00 breaststrokers.  These entries are "overpowered" but better reflect
+#' an actual set of entries.  Not using \code{make_lineup_helper_2} often
+#' results in a team's best athletes not competing
+#'
+#'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr filter
 #' @importFrom purrr map
@@ -386,7 +401,7 @@ return(Times_Competed)
 #'   function.
 #' @param df_helper a data frame of all times to be entered for a given team.
 #'   Must contain column \code{Event} with the same event naming convention as
-#'   \code{op_df}, a column with name matching \code{time_col} containing times
+#'   \code{op_df}, a column with name matching \code{result_col} containing times
 #'   or diving scores, and a column called \code{Name} containing athlete names
 #' @param in_progress_entries_df a data frame containing the output of
 #'   \code{make_lineup_helper}, which is the minimum power set of entries

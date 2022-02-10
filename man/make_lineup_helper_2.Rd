@@ -18,7 +18,7 @@ function.}
 
 \item{df_helper}{a data frame of all times to be entered for a given team.
 Must contain column \code{Event} with the same event naming convention as
-\code{op_df}, a column with name matching \code{time_col} containing times
+\code{op_df}, a column with name matching \code{result_col} containing times
 or diving scores, and a column called \code{Name} containing athlete names}
 
 \item{in_progress_entries_df}{a data frame containing the output of
@@ -34,5 +34,15 @@ individual events that may be entered by a single athlete}
 a data frame containing entries updated to be as powerful as possible
 }
 \description{
-Assign overpowered entries
+Matches athletes into events again, this time vs. the output of
+\code{make_lineup_helper}.  For example if Team A has six breaststrokers at
+57.00, 58.00, 59.00 and three 1:00.00s and Team B has three breaststrokers,
+all 1:01.00 then following \code{make_lineup_helper} Team A's entries will be
+the three 1:00.00s because they're sufficient to win.
+}
+\details{
+Here though Team A's three 1:00.00s will be replaced by their 57.00, 58.00
+and 59.00 breaststrokers.  These entries are "overpowered" but better reflect
+an actual set of entries.  Not using \code{make_lineup_helper_2} often
+results in a team's best athletes not competing
 }

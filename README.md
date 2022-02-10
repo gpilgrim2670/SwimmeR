@@ -16,8 +16,9 @@
 
 ### Latest Development Version from Github
 
-Version 0.13.5
+Version 0.13.6
 
+* `read_results` now handles both pdf and html results at .aspx addresses
 * `make_lineup` works to make lineups based on top times reports and an opponent lineup.  Still under development.
 * `swim_parse` handles Hytek Top Times reports via `toptimes_parse_hytek`.  Still under development.
 * new function `place` supersedes `swim_place` and `dive_place`, handling both swimming and diving

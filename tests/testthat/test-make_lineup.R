@@ -1,4 +1,4 @@
-# testthat::test_file("tests/testthat/test-determine_entries.R")
+# testthat::test_file("tests/testthat/test-make_lineup.R")
 
 test_that("determine entries RIT v IC", {
 
@@ -26,11 +26,11 @@ test_that("determine entries RIT v IC", {
            Event = str_replace(Event, "Butterfly", "Fly"))
 
   df_test <-
-    determine_entries(
+    make_lineup(
       df = RIT_TopTimes_2021,
       op_df = IC,
       point_values = "ncaa_six_lane",
-      time_col = "Finals",
+      result_col = "Finals",
       events = NULL
     )
 

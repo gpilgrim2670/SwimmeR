@@ -8,7 +8,7 @@ make_lineup(
   df,
   op_df,
   point_values,
-  time_col,
+  result_col,
   events = NULL,
   max_entries = NULL
 )
@@ -16,19 +16,19 @@ make_lineup(
 \arguments{
 \item{df}{a data frame of times for the team to be entered.  Must contain
 column \code{Event} with the same event naming convention as \code{op_df},
-a column with name matching \code{time_col} containing times or diving
+a column with name matching \code{result_col} containing times or diving
 scores, and a column called \code{Name} containing athlete names}
 
 \item{op_df}{a data frame containing the opponent lineup.  Must contain
 column \code{Event} with the same event naming convention as \code{df},
-a column with name matching \code{time_col} containing times or diving
+a column with name matching \code{result_col} containing times or diving
 scores, and a column called \code{Name} containing athlete names}
 
 \item{point_values}{either a recognized string or a list of numeric values
 containing the points awarded by place.  Recognized strings are
 \code{"hs_four_lane"}, \code{"hs_six_lane"}, \code{"ncaa_six_lane"}}
 
-\item{time_col}{the name of a column, present in both \code{df} and
+\item{result_col}{the name of a column, present in both \code{df} and
 \code{op_df} that contains times and/or diving scores}
 
 \item{events}{a list of events.  If no list is entered then \code{events}
