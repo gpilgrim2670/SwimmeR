@@ -1,3 +1,5 @@
+# testthat::test_file("tests/testthat/test-read_results.R")
+
 test_that("read_results PDF works", {
   file <-
     system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")
@@ -31,4 +33,18 @@ test_that("read_results_flag PDF works", {
 
 })
 
-# test_file("tests/testthat/test-read_results.R")
+
+test_that("read_results HTML works", {
+
+  skip_on_cran() # due to risk of external resources failing
+
+  file <- "https://calbears.com/sports/2007/10/20/Stats_4752.aspx"
+
+  if (is_link_broken(file) == TRUE) {
+    warning("Link to external data is broken")
+  } else {
+    expect_match(read_results(file)[604],
+                 "\n  1 Thomas, Tara                 California-PC          54.75      55.30   20  ")
+  }
+
+})

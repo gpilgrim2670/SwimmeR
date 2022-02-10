@@ -1,3 +1,7 @@
+# SwimmeR 0.13.6 - February 10th 2022
+* `read_results` now handles the possibility of .aspx addresses containing pdf
+or html results
+
 # SwimmeR 0.13.5 - February 9th 2022
 * `place` function introduced, supersedes `swim_place` and `dive_place`
 * `determine_entries` renamed to `make_lineup`, now works on test cases
