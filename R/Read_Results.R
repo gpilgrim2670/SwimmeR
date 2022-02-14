@@ -148,11 +148,15 @@ read_htm <- function(x, node_helper) {
 #'
 
 read_hy3 <- function(x) {
-  results <-
-    readr::read_delim(file, delim = "\\s\\2", col_names = FALSE)
+
+  results <- readr::read_delim(x, delim = "\\s\\2", col_names = FALSE)
+
   results <- unlist(results, recursive = FALSE)
+
   results <- read_results_flag(results)
+
   row_numbs <- seq(1, length(results), 1)
+
   results <-
     paste(results, row_numbs, sep = "  ")
 

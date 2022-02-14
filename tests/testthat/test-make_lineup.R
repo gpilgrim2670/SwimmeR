@@ -3,7 +3,7 @@
 #### RIT vs IC ####
 test_that("determine entries RIT vs IC", {
 
-  # skip_on_cran()
+  skip_on_cran()
 
   file <- system.file("extdata", "RIT_TopTimes_FS2021.pdf", package = "SwimmeR")
 
@@ -138,7 +138,7 @@ test_that("determine entries RIT vs IC", {
 
 test_that("determine entries AU_Old vs AU_New", {
 
-  # skip_on_cran()
+  skip_on_cran()
 
   OldAU <- readRDS(url("https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/SwimmeR%20Test%20Files/Old_AU.rds"))
   NewAU <- readRDS(url("https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/SwimmeR%20Test%20Files/AU_TopTimes_2021.rds"))
