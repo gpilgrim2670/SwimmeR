@@ -89,9 +89,10 @@ swim_parse_hytek <-
     # file_hytek <-
     #   system.file("extdata", "2018_jimi_flowers_PARA.pdf", package = "SwimmeR") %>%
     #   read_results()
-    # file_hytek <- "http://www.swmeets.com/Realtime/Speedo%20Champions/210803F004.htm" %>%
+
+    # file_hytek <- "https://s3.amazonaws.com/sidearm.sites/alfred.sidearmsports.com/documents/2022/1/11/results_lmc_vs_au_2022.pdf" %>%
     #   read_results()
-    # avoid_hytek <- (    avoid_default <-
+    # avoid_hytek  <-
     # c(
     #   # "[:upper:]\\:",
     #   "[A-S]\\:",
@@ -109,8 +110,8 @@ swim_parse_hytek <-
     #   "\\d\\:\\s",
     #   "\\'\\:",
     #   "QUALIFYING "
-    # ))
-    # typo_avoid_hytek <- c("typo")
+    # )
+    # typo_hytek <- c("typo")
     # replacement_hytek <- c("typo")
 
 

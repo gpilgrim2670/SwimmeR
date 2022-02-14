@@ -24,6 +24,10 @@
 hytek_clean_strings <- function(x,
                                 time_score_string = Time_Score_String){
 
+
+  #### testing ####
+  # x <- as_lines_list_2
+
   #### check input types ####
 
   if(is.character(time_score_string) == FALSE){

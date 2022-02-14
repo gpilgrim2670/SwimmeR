@@ -36,26 +36,27 @@ Read_Results <- function(file, node = "pre") {
 
     results <- read_pdf(file)
 
-    if(all("error" %in% class(results), stringr::str_detect(file, "\\.aspx$")) ==TRUE){
+    if (all("error" %in% class(results),
+            stringr::str_detect(file, "\\.aspx$")) == TRUE) {
       results <- file %>%
         read_htm(node_helper = node)
     }
 
-    } else if (stringr::str_detect(file, "\\.htm|\\.aspx$") == TRUE) {
-        ### HTML ###
-      results <- file %>%
-        read_htm(node_helper = node)
-      } else if (stringr::str_detect(file, "\\.hy3") == TRUE) {
-        ### hy3 ###
-        ### add automatic unzipping?
-        results <- file %>%
-          read_hy3()
+  } else if (stringr::str_detect(file, "\\.htm|\\.aspx$") == TRUE) {
+    ### HTML ###
+    results <- file %>%
+      read_htm(node_helper = node)
+  } else if (stringr::str_detect(file, "\\.hy3") == TRUE) {
+    ### hy3 ###
+    ### add automatic unzipping?
+    results <- file %>%
+      read_hy3()
 
-      }
+  }
 
-      if("error" %in% class(results) == TRUE){
-        stop("Please supply a valid .html, .hy3 or .pdf document")
-      }
+  if ("error" %in% class(results) == TRUE) {
+    stop("Please supply a valid .html, .hy3 or .pdf document")
+  }
 
 
   return(results)

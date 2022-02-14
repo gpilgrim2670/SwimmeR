@@ -1,6 +1,7 @@
 # testthat::test_file("tests/testthat/test-make_lineup.R")
 
-test_that("determine entries RIT v IC", {
+#### RIT vs IC ####
+test_that("determine entries RIT vs IC", {
 
   # skip_on_cran()
 
@@ -131,3 +132,26 @@ test_that("determine entries RIT v IC", {
 
 })
 
+
+
+#### AU New vs AU Old ####
+
+test_that("determine entries AU_Old vs AU_New", {
+
+  # skip_on_cran()
+
+  OldAU <- readRDS(url("https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/SwimmeR%20Test%20Files/Old_AU.rds"))
+  NewAU <- readRDS(url("https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/SwimmeR%20Test%20Files/AU_TopTimes_2021.rds"))
+  df_standard <- readRDS(url("https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/SwimmeR%20Test%20Files/NewAUvsOldAU_Standard.rds"))
+
+  df_test <- make_lineup(df = NewAU,
+                           op_df = OldAU,
+                           point_values = "ncaa_six_lane",
+                           result_col = "Finals",
+                           events = NULL,
+                           max_entries = NULL)
+
+  expect_equivalent(df_test, df_standard)
+
+
+})
