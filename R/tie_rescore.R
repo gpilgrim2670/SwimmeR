@@ -8,6 +8,11 @@
 #' @importFrom dplyr group_by
 #' @importFrom dplyr mutate
 #' @importFrom dplyr filter
+#' @importFrom dplyr case_when
+#' @importFrom dplyr summarize
+#' @importFrom dplyr inner_join
+#' @importFrom stringr str_to_lower
+#' @importFrom stringr str_detect
 #'
 #' @param df a data frame with results from \code{swim_parse}, with places from
 #'   \code{swim_place} and/or \code{dive_place}
@@ -30,14 +35,12 @@ tie_rescore <- function(df, point_values, lanes) {
     dplyr::group_by(Place, Event) %>%
     dplyr::summarize(Points = mean(Points, na.rm = TRUE)) %>%
     dplyr::inner_join(df) %>%
-    # dplyr::inner_join(ind_results_2 %>%
-    #                     select(-Points)) %>%
     dplyr::mutate(Points = dplyr::case_when(
       stringr::str_detect(stringr::str_to_lower(Event), "relay") == TRUE ~ Points * 2,
       TRUE ~ Points
     )) %>%
-    ungroup() %>%
-    dplyr::mutate(Points = case_when(DQ == 1 ~ 0,
+    dplyr::ungroup() %>%
+    dplyr::mutate(Points = dplyr::case_when(DQ == 1 ~ 0,
                                      DQ == 0 ~ Points))
   return(results)
 }

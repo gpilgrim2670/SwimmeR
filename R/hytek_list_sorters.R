@@ -105,8 +105,6 @@ hytek_length_9_sort <-
           )
       )
     } else {
-      # df_9 <- data.frame(Row_Numb = character(),
-      #                    stringsAsFactors = FALSE)
       df_9 <- data.frame(
         Place = NA,
         ID = NA,

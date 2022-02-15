@@ -90,7 +90,7 @@ swim_parse_hytek <-
     #   system.file("extdata", "2018_jimi_flowers_PARA.pdf", package = "SwimmeR") %>%
     #   read_results()
 
-    # file_hytek <- "http://www.section5swim.com/Results/BoysHS/2022/Sec5/D/Event2.htm" %>%
+    # file_hytek <- "https://thesundevils.com/sports/2008/11/15/727343.aspx" %>%
     #   read_results()
     # avoid_hytek  <-
     # c(
@@ -111,15 +111,16 @@ swim_parse_hytek <-
     #   "\\'\\:",
     #   "QUALIFYING "
     # )
+    # typo_hytek <- c("\\s\\*{3}")
+    # replacement_hytek <- c("")
     # typo_hytek <- c("typo")
     # replacement_hytek <- c("typo")
-
 
     as_lines_list_2 <- file_hytek %>%
       .[stringr::str_detect(., "Early take-off", negate = TRUE)] %>% # removes DQ rational used in some relay DQs that messes up line spacing between relay and swimmers/splits - must happen before adding in row numbers
       add_row_numbers() %>%
-      .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid_hytek)))] %>%
       stringr::str_replace_all(stats::setNames(replacement_hytek, typo_hytek)) %>% # replace typos with replacements
+      .[purrr::map_lgl(., ~ !any(stringr::str_detect(., avoid_hytek)))] %>%
       stringr::str_replace_all("DISQUAL", " DQ ") %>%
       stringr::str_replace_all("EVENT\\:", "Event")
 
@@ -134,7 +135,7 @@ swim_parse_hytek <-
 
     #### set up strings ####
     Name_String <-
-      "_?[:alpha:]+\\s?\\'?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\'\\.]*,?\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:]*\\s?[:alpha:]*\\s?[:alpha:]*\\.?,? [:alpha:]+\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\']*\\s?[:alpha:]*\\s?[:alpha:]*\\s?[:alpha:\\.]*"
+      "_?[:alpha:]+\\s?\\'?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\'\\.]*,?\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:]*\\s?[:alpha:]*\\s?[:alpha:]*\\.?,?\\s?[:alpha:]+\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\']*\\s?[:alpha:]*\\s?[:alpha:]*\\s?[:alpha:\\.]*"
     Time_Score_String <- "\\d{0,2}\\:?\\d{1,3}\\.\\d{2}"
     Time_Score_Specials_String <- paste0("^NT$|^NP$|^DQ$|^NS$|^SCR$|^x?X?", Time_Score_String, "x?X?$")
     Time_Score_Specials_String_Extract <- paste0(Time_Score_String, "|^NT$|^NP$|^DQ$|^NS$|^SCR$")

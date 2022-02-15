@@ -141,11 +141,14 @@ results_score <-
     #### regularize inputs ####
 
     if(is.null(events)){
-      events <- unique(results$Event)
+      event_order <- unique(results$Event)
+      events <- event_order # work with events later, but need to maintain order and capitalization
 
       if(length(events) < 1){
         stop("No events available.  Please provide either a column named 'Event' in results data frame.")
       }
+    } else {
+      event_order <- events
     }
 
       recognized_strings <- c("hs_four_lane",
@@ -197,6 +200,7 @@ results_score <-
     names(point_values) <- 1:length(point_values)
 
     raw_results <- results
+    results_cols <- names(results)
 
     if("Exhibition" %in% names(results)){
     ex_results <- results %>%
@@ -233,14 +237,6 @@ results_score <-
     results <- dplyr::bind_rows(ind_results, relay_results)
 
     if (meet_type == "timed_finals") {
-      # diving
-      # if (any(stringr::str_detect(stringr::str_to_lower(as.character(results$Event)), "diving"))) {
-      #   diving_results <- results %>%
-      #     dive_place(max_place = max_place, verbose = FALSE)
-      #
-      # } else {
-      #   diving_results  <- results[0,]
-      # }
 
       # relays
       if (any(stringr::str_detect(stringr::str_to_lower(as.character(results$Event)), "relay"))) {
@@ -279,8 +275,11 @@ results_score <-
       results <- results %>%
         tie_rescore(point_values = point_values, lanes = lanes) %>%
         dplyr::select(-Heat) %>%
-        dplyr::left_join(ex_results)
+        dplyr::left_join(ex_results) %>%
+        dplyr::arrange(factor(Event, levels = event_order))
       )
+
+      results <- results[c(names(results), setdiff(results_cols, names(results)))]
 
       return(results)
       ### prelims_finals ####
@@ -318,16 +317,6 @@ results_score <-
           relay_results  <- results[0, ]
         }
 
-        #### diving one heat ####
-        # if (any(stringr::str_detect(stringr::str_to_lower(as.character(results$Event)), "diving"))) {
-        #   diving_results <- results %>%
-        #     dplyr::filter(stringr::str_detect(stringr::str_to_lower(as.character(Event)), "diving") == TRUE) %>%
-        #     dive_place(max_place = max_place, verbose = FALSE) %>%
-        #     dplyr::mutate(Heat = 1)
-        #
-        # } else {
-        #   diving_results  <- results[0,]
-        # }
         ### two heats ###
       } else if (scoring_heats == 2) {
         results_1 <- results %>%
@@ -388,25 +377,6 @@ results_score <-
           relay_results  <- results[0, ]
         }
 
-        #### diving two heats ####
-        # if (any(stringr::str_detect(stringr::str_to_lower(as.character(results$Event)), "diving"))) {
-        #   diving_results_1 <- results_1 %>%
-        #     dplyr::filter(stringr::str_detect(stringr::str_to_lower(as.character(Event)), "diving") == TRUE) %>%
-        #     dive_place(max_place = max_place, verbose = FALSE) %>%
-        #     dplyr::mutate(Heat = 1)
-        #
-        #   diving_results_2 <- results_2 %>%
-        #     dplyr::filter(stringr::str_detect(stringr::str_to_lower(as.character(Event)), "diving") == TRUE) %>%
-        #     dive_place(max_place = max_place, verbose = FALSE) %>%
-        #     dplyr::mutate(Place = Place + lanes) %>%
-        #     dplyr::mutate(Heat = 2)
-        #
-        #   diving_results <-
-        #     dplyr::bind_rows(diving_results_1, diving_results_2)
-        #
-        # } else {
-        #   diving_results  <- results[0,]
-        # }
         ### three heats ####
       } else if (scoring_heats == 3) {
         results_1 <- results %>%
@@ -446,33 +416,6 @@ results_score <-
         } else {
           ind_results  <- results[0,]
         }
-
-        #### diving three heats ####
-        # if (any(stringr::str_detect(stringr::str_to_lower(as.character(results$Event)), "diving"))) {
-        #   diving_results_1 <- results_1 %>%
-        #     dplyr::filter(stringr::str_detect(stringr::str_to_lower(as.character(Event)), "diving") == TRUE) %>%
-        #     dive_place(max_place = max_place, verbose = FALSE) %>%
-        #     dplyr::mutate(Heat = 1)
-        #
-        #   diving_results_2 <- results_2 %>%
-        #     dplyr::filter(stringr::str_detect(stringr::str_to_lower(as.character(Event)), "diving") == TRUE) %>%
-        #     dive_place(max_place = max_place, verbose = FALSE) %>%
-        #     dplyr::mutate(Place = Place + lanes) %>%
-        #     dplyr::mutate(Heat = 2)
-        #
-        #   diving_results_3 <- results_3 %>%
-        #     dplyr::filter(stringr::str_detect(stringr::str_to_lower(as.character(Event)), "diving") == TRUE) %>%
-        #     dive_place(max_place = max_place, verbose = FALSE) %>%
-        #     dplyr::mutate(Place = Place + (2 * lanes)) %>%
-        #     dplyr::mutate(Heat = 3)
-        #
-        #   diving_results <-
-        #     dplyr::bind_rows(diving_results_1, diving_results_2,
-        #                      diving_results_3)
-        #
-        # } else {
-        #   diving_results  <- results[0,]
-        # }
 
         #### relay three heats ####
         if (any(stringr::str_detect(stringr::str_to_lower(as.character(results$Event)), "relay"))) {
@@ -569,7 +512,8 @@ results_score <-
         Finals,
         Points,
         dplyr::everything()
-      )
+      ) %>%
+      dplyr::arrange(factor(Event, levels = event_order))
     # dplyr::distinct(Name, Team, Event, .keep_all = TRUE)
 
     return(results_new)
