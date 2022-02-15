@@ -28,7 +28,10 @@
 #' @param lanes number of lanes in to the pool, for purposes of heat
 #' @param scoring_heats number of heats which score (if 1 only A final scores,
 #'   if 2 A and B final score etc.)
-#' @param point_values a list of point values for each scoring place
+#' @param point_values Either a list of point values for each scoring place or
+#'   one of the following recognized strings: \code{"hs_four_lane"},
+#'   \code{"hs_six_lane"}, \code{"ncaa_six_lane"},
+#'   \code{"championship_8_lane_2_heat"} or \code{"championship_8_lane_3_heat"}
 #' @param max_relays_per_team the number of relays a team is allowed to score
 #'   (usually 1)
 #'
@@ -87,7 +90,7 @@
 
 results_score <-
   function(results,
-           events,
+           events = NULL,
            meet_type = c("timed_finals", "prelims_finals"),
            lanes = c(4, 6, 8, 10),
            scoring_heats = c(1, 2, 3),
@@ -125,42 +128,6 @@ results_score <-
     # point_values = c(20, 17, 16, 15, 14, 13, 12, 11, 9, 7, 6, 5, 4, 3, 2, 1)
     # max_relays_per_team = 1
 
-    #### regularize inputs ####
-
-    recognized_strings <- c("hs_four_lane",
-                            "hs_six_lane",
-                            # "hs_eight_lane",
-                            "ncaa_six_lane")
-
-    point_values_list <- list(
-      "hs_four_lane" = c(4, 3, 1, 0),
-      "hs_six_lane" = c(6, 4, 3, 2, 1, 0),
-      # "hs_eight_lane" = c(),
-      "ncaa_six_lane" = c(9, 4, 3, 2, 1, 0),
-      "championship_8_lane_2_heat_individual" = c(20, 17, 16, 15, 14, 13, 12, 11, 9, 7, 6, 5, 4, 3, 2, 1),
-      "championship_8_lane_3_heat_individual" = c(32, 28, 27, 26, 25, 24, 23, 22, 20, 17, 16, 15, 14, 13, 12, 11, 9, 7, 6, 5, 4, 3, 2, 1)
-    )
-
-    if (all(length(point_values) == 1, any(point_values %in% recognized_strings))) {
-      point_values <- point_values_list[point_values][[1]]
-
-      # last point value should be 0
-      if (tail(point_values, 1) != 0) {
-        point_values <- c(point_values, 0)
-        point_values <- sort(point_values, decreasing = TRUE)
-      }
-
-    } else if (all(is.numeric(point_values)) == TRUE) {
-      point_values <- sort(point_values, decreasing = TRUE)
-
-
-    } else if (all(is.numeric(point_values)) == FALSE) {
-      stop(
-        "point_values must be a list of numeric values or a recognized string.\n
-      See ?make_lineup() for a list of recognized strings"
-      )
-    }
-
 
     #### errors ####
     if(is.data.frame(results) == FALSE){
@@ -170,6 +137,52 @@ results_score <-
     if("Event" %!in% names(results)){
       stop("the results data frame must contain a called called 'Event'")
     }
+
+    #### regularize inputs ####
+
+    if(is.null(events)){
+      events <- unique(results$Event)
+
+      if(length(events) < 1){
+        stop("No events available.  Please provide either a column named 'Event' in results data frame.")
+      }
+    }
+
+      recognized_strings <- c("hs_four_lane",
+                              "hs_six_lane",
+                              # "hs_eight_lane",
+                              "ncaa_six_lane",
+                              "championship_8_lane_2_heat",
+                              "championship_8_lane_3_heat")
+
+      point_values_list <- list(
+        "hs_four_lane" = c(4, 3, 1, 0),
+        "hs_six_lane" = c(6, 4, 3, 2, 1, 0),
+        # "hs_eight_lane" = c(),
+        "ncaa_six_lane" = c(9, 4, 3, 2, 1, 0),
+        "championship_8_lane_2_heat" = c(20, 17, 16, 15, 14, 13, 12, 11, 9, 7, 6, 5, 4, 3, 2, 1),
+        "championship_8_lane_3_heat" = c(32, 28, 27, 26, 25, 24, 23, 22, 20, 17, 16, 15, 14, 13, 12, 11, 9, 7, 6, 5, 4, 3, 2, 1)
+      )
+
+      if (all(length(point_values) == 1, any(point_values %in% recognized_strings))) {
+        point_values <- point_values_list[point_values][[1]]
+
+        # last point value should be 0
+        if (tail(point_values, 1) != 0) {
+          point_values <- c(point_values, 0)
+          point_values <- sort(point_values, decreasing = TRUE)
+        }
+
+      } else if (all(is.numeric(point_values)) == TRUE) {
+        point_values <- sort(point_values, decreasing = TRUE)
+
+
+      } else if (all(is.numeric(point_values)) == FALSE) {
+        stop(
+          "point_values must be a list of numeric values or a recognized string.\n
+      See ?results_score() for a list of recognized strings"
+        )
+      }
 
     #### begin actual function ####
     events <- stringr::str_to_lower(as.character(events))
