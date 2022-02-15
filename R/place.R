@@ -67,6 +67,15 @@ place <- function(df,
                        verbose = TRUE
 ) {
 
+
+  #### testing ####
+  # df <- ind_results
+  # result_col <- "Finals"
+  # event_type <- "ind"
+  # keep_nonscoring <- TRUE
+  # verbose <- TRUE
+  # max_place <- 16
+
   #### regularize result_col ####
   result_col <- dplyr::ensym(result_col)
 
@@ -137,12 +146,13 @@ place <- function(df,
     } %>%
     dplyr::slice(1) %>%
     dplyr::ungroup() %>%
-    dplyr::group_by(Event) %>%
     dplyr::mutate(Result_numeric = {{result_col}}) %>%
     dplyr::mutate(Result_numeric = sec_format(Result_numeric)) %>%
     # reverse diving scores so that low score wins
-    dplyr::mutate(Result_numeric = case_when(stringr::str_detect(Event, "d|Div") ~ Result_numeric * -1,
+    dplyr::mutate(Result_numeric = case_when(stringr::str_detect(Event, "(d|D)iv") ~ as.numeric(Result_numeric * -1),
                                              TRUE ~ Result_numeric)) %>%
+    dplyr::group_by(Event) %>%
+    # dplyr::mutate(dplyr::arrange(Result_numeric)) %>%
     dplyr::mutate(Place = rank(Result_numeric, ties.method = "min")) %>% # places, low number wins
     dplyr::select(-Result_numeric) %>%
     dplyr::arrange(Place) %>%

@@ -1,3 +1,5 @@
+# testthat::test_file("tests/testthat/test-results_score.R")
+
 test_that("prelims_finals works", {
   file <-
     system.file("extdata", "BigTen_WSWIM_2018.pdf", package = "SwimmeR")
@@ -76,16 +78,15 @@ test_that("timed_finals works", {
       events = unique(df_test$Event),
       meet_type = "timed_finals",
       lanes = 8,
-      scoring_heats = 2,
       point_values = c(20, 17, 16, 15, 14, 13, 12, 11, 9, 7, 6, 5, 4, 3, 2, 1),
       max_relays_per_team = 1
     )
 
   Scores <- Results_Final %>%
     group_by(State) %>%
-    summarise(Score = sum(Points, na.rm = TRUE))
+    summarise(Score = sum(as.numeric(Points), na.rm = TRUE))
+
+  # Total number of points is 4650
 
   expect_equal(Scores$Score[1], 2155.5)
 })
-
-# testthat::test_file("tests/testthat/test-results_score.R")

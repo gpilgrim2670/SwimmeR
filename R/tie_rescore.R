@@ -19,6 +19,9 @@
 #'   \code{results_score}
 
 tie_rescore <- function(df, point_values, lanes) {
+
+  # df <- results
+
   results <- df %>%
     dplyr::ungroup() %>%
     dplyr::group_by(Event, Heat) %>%
