@@ -120,7 +120,7 @@ swim_place <- function(df,
       else
         dplyr::group_by(., Event, Team)
     } %>%
-    dplyr::filter(stringr::str_detect(stringr::str_to_lower(as.character(Event)), "diving") == FALSE) %>%
+    dplyr::filter(stringr::str_detect(stringr::str_to_lower(as.character(Event)), "div(e|ing)") == FALSE) %>%
     {
       if (event_type == "ind")
         dplyr::slice(., 1)
@@ -133,9 +133,6 @@ swim_place <- function(df,
     dplyr::mutate(Time_sec = {{time_col}}) %>%
     dplyr::mutate(Time_sec = sec_format(Time_sec)) %>%
     dplyr::mutate(Place = rank(Time_sec, ties.method = "min")) %>% # places, low number wins
-    dplyr::mutate(Place = case_when(event_type == "ind" & Place == 1 & dplyr::lag(Place) == 1 ~ 0,
-                                    TRUE ~ Place
-                  )) %>%
     dplyr::select(-Time_sec) %>%
     dplyr::arrange(Place) %>%
     {

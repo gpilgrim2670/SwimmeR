@@ -1,3 +1,7 @@
+# SwimmeR 0.13.7 - February 15th 2022
+* `swim_parse` now handles some Hytek psych sheets
+* bug fixes to make swim_parse more robust
+
 # SwimmeR 0.13.6 - February 10th 2022
 * `read_results` now handles the possibility of .aspx addresses containing pdf
 or html results

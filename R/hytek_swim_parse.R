@@ -90,7 +90,7 @@ swim_parse_hytek <-
     #   system.file("extdata", "2018_jimi_flowers_PARA.pdf", package = "SwimmeR") %>%
     #   read_results()
 
-    # file_hytek <- "https://s3.amazonaws.com/sidearm.sites/alfred.sidearmsports.com/documents/2022/1/11/results_lmc_vs_au_2022.pdf" %>%
+    # file_hytek <- "http://www.section5swim.com/Results/BoysHS/2022/Sec5/D/Event2.htm" %>%
     #   read_results()
     # avoid_hytek  <-
     # c(
@@ -138,7 +138,7 @@ swim_parse_hytek <-
     Time_Score_String <- "\\d{0,2}\\:?\\d{1,3}\\.\\d{2}"
     Time_Score_Specials_String <- paste0("^NT$|^NP$|^DQ$|^NS$|^SCR$|^x?X?", Time_Score_String, "x?X?$")
     Time_Score_Specials_String_Extract <- paste0(Time_Score_String, "|^NT$|^NP$|^DQ$|^NS$|^SCR$")
-    Age_String <- "^SR$|^JR$|^SO$|^FR$|^[:digit:]{1,3}$|^\\d{1,3}\\-\\d{2}$"
+    Age_String <- "^(M|F|W|B|G)?SR$|^(M|F|W|B|G)?JR$|^(M|F|W|B|G)?SO$|^(M|F|W|B|G)?FR$|^(M|F|W|B|G)?[:digit:]{1,3}$|^\\d{1,3}\\-\\d{2}$"
     Para_String <- "^SB?M?\\d{1,2}$"
     Reaction_String <- "^\\+\\s?\\d\\.\\d{3}$|^\\-\\s?\\d\\.\\d{3}$|^0.00$"
     Brit_ID_String <- "\\d{6,7}"
@@ -150,10 +150,7 @@ swim_parse_hytek <-
                                         time_score_string = Time_Score_String)
 
     #### if data_cleaned is empty ####
-    if(!length(data_cleaned) > 0){
-      message("No results found in file")
-
-    } else {
+    if(length(data_cleaned) > 0){
 
     #### splits data into variables by splitting at multiple (>= 2) spaces ####
     data_cleaned <-
@@ -238,6 +235,7 @@ swim_parse_hytek <-
         dplyr::bind_rows(df_3) %>%
         dplyr::left_join(df_DQ_4) %>%
         dplyr::left_join(df_DQ_3) %>%
+        dplyr::filter(is.na(Row_Numb) == FALSE) %>%
         dplyr::mutate(Row_Numb = as.numeric(Row_Numb)) %>%
         dplyr::arrange(Row_Numb)
     )
@@ -260,7 +258,8 @@ swim_parse_hytek <-
                                             TRUE ~ DQ)) %>%
         na_if(10000) %>%
         dplyr::mutate(dplyr::across(
-          c(Name, Team), ~ stringr::str_replace_all(., "10000", "--")
+          # c(Name, Team), ~ stringr::str_replace_all(., "10000", "--")
+          dplyr::contains("Name|Team"), ~ stringr::str_replace_all(., "10000", "--")
         )) %>% # remove any "10000"s added in erroniuously
         ####
         dplyr::mutate(
@@ -287,9 +286,9 @@ swim_parse_hytek <-
 
     #### add in events based on row number ranges ####
 
-    Min_Row_Numb <- min(events$Event_Row_Min)
+    Min_Row_Numb <- min(events$Event_Row_Min, na.rm = TRUE)
 
-    if(min(data$Row_Numb) < min(events$Event_Row_Min)){
+    if(min(data$Row_Numb, na.rm = TRUE) < min(events$Event_Row_Min, na.rm = TRUE)){
       unknown_event <- data.frame(Event = "Unknown",
                                   Event_Row_Min = min(data$Row_Numb),
                                   Event_Row_Max = min(events$Event_Row_Min) - 1)
@@ -301,7 +300,7 @@ swim_parse_hytek <-
       dplyr::na_if("Unknown")
 
     #### add in reaction times based on row number ranges ####
-    if(min(data$Row_Numb) < min(reaction_times$Reaction_Time_Row_Numb)){
+    if(min(data$Row_Numb, na.rm = TRUE) < min(reaction_times$Reaction_Time_Row_Numb, na.rm = TRUE)){
       unknown_reaction_time <- data.frame(Reaction_Time = "NA",
                                           Reaction_Time_Row_Numb = min(data$Row_Numb))
       reaction_times <- dplyr::bind_rows(unknown_reaction_time, reaction_times)
@@ -380,6 +379,9 @@ swim_parse_hytek <-
     data$Row_Numb <- NULL
 
     return(data)
+
+    } else {
+      message("No results found in file")
 
     }
   }

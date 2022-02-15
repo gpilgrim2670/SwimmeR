@@ -92,11 +92,11 @@ data_cleaned <- data_cleaned %>%
   stringr::str_replace_all("(?<=\\d) (?=_)", "  ") %>% # spacing between place and athletes with */_ leading name
   stringr::str_replace_all("(?<=\\)) (?=[:alpha:])", "  ") %>% # spacing between place) and names
   stringr::str_replace_all("\\((?=[:digit:])", "  \\(") %>% # spacing between (YoB) and name, for British results
-  stringr::str_replace_all(" (\\d{1,3}) ", "       \\1      ") %>% # split age and team
-  stringr::str_replace_all(" FR ", "       FR      ") %>% # split age and team
-  stringr::str_replace_all(" SO ", "       SO      ") %>% # split age and team
-  stringr::str_replace_all(" JR ", "       JR      ") %>% # split age and team
-  stringr::str_replace_all(" SR ", "       SR      ") %>% # split age and team
+  stringr::str_replace_all(" ((M|F|W|B|G)?\\d{1,3}) ", "       \\1      ") %>% # split age and team
+  stringr::str_replace_all(" ((M|F|W|B|G)?FR) ", "       \\1      ") %>% # split age and team
+  stringr::str_replace_all(" ((M|F|W|B|G)?SO) ", "       \\1      ") %>% # split age and team
+  stringr::str_replace_all(" ((M|F|W|B|G)?JR) ", "       \\1      ") %>% # split age and team
+  stringr::str_replace_all(" ((M|F|W|B|G)?SR) ", "       \\1      ") %>% # split age and team
   stringr::str_replace_all("(SM?B?1\\d{1})(\\d{1,2})", "\\1   \\2") %>%  # split para classification and age
   stringr::str_replace_all("(\\d{6,7})([:alpha:])", "\\1   \\2") %>%  # split Brit ID and Name
   stringr::str_replace_all(" NT ", "       NT      ") %>% # split prelim and final

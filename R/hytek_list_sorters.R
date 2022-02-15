@@ -105,8 +105,20 @@ hytek_length_9_sort <-
           )
       )
     } else {
-      df_9 <- data.frame(Row_Numb = character(),
-                         stringsAsFactors = FALSE)
+      # df_9 <- data.frame(Row_Numb = character(),
+      #                    stringsAsFactors = FALSE)
+      df_9 <- data.frame(
+        Place = NA,
+        ID = NA,
+        Name = NA_character_,
+        Para = NA_character_,
+        Age = NA_character_,
+        Team = NA_character_,
+        Prelims = NA_character_,
+        Finals = NA_character_,
+        Points = NA,
+        Row_Numb = NA
+      )
     }
 
     return(df_9)

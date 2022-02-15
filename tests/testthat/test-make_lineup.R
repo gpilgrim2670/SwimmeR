@@ -1,6 +1,5 @@
 # testthat::test_file("tests/testthat/test-make_lineup.R")
 
-#### RIT vs IC ####
 test_that("determine entries RIT vs IC", {
 
   skip_on_cran()
@@ -131,10 +130,6 @@ test_that("determine entries RIT vs IC", {
     expect_equivalent(df_test, df_standard)
 
 })
-
-
-
-#### AU New vs AU Old ####
 
 test_that("determine entries AU_Old vs AU_New", {
 
