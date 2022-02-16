@@ -31,7 +31,8 @@ test_that("determine entries RIT vs IC", {
       op_df = IC,
       point_values = "ncaa_six_lane",
       result_col = "Finals",
-      events = NULL
+      events = NULL,
+      max_ind_entries = 3
     )
 
   df_standard <-
@@ -144,7 +145,8 @@ test_that("determine entries AU_Old vs AU_New", {
                            point_values = "ncaa_six_lane",
                            result_col = "Finals",
                            events = NULL,
-                           max_entries = NULL)
+                           max_entries = NULL,
+                           max_ind_entries = 3)
 
   expect_equivalent(df_test, df_standard)
 

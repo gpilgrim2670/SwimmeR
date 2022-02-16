@@ -48,15 +48,44 @@
 #'   \code{op_df} that contains times and/or diving scores
 #' @param events a list of events.  If no list is entered then \code{events}
 #'   will be taken from \code{unique(op_df$Event)}
+#' @param max_entries the number of entries a team is permitted per race.
+#'   usually half the number of lanes in the competition pool
+#' @param max_ind_entries the number of indivdual events a given athlete may
+#'   enter
 #' @return a data frame of optimal entries based on \code{df} and \code{op_df}
 #'
 #' @export
 
 
-make_lineup <- function(df, op_df, point_values, result_col, events = NULL, max_entries = NULL){
+
+make_lineup <-
+  function(df,
+           op_df,
+           point_values,
+           result_col,
+           events = NULL,
+           max_entries = NULL,
+           max_ind_entries = NULL) {
+
+
+    # df = RIT_TopTimes_2021
+    # op_df = IC
+    # point_values = "hs_four_lane"
+    # result_col = 'Finals'
+    # events = NULL
+    # max_entries = NULL
+    # max_ind_entries = NULL
+
 
   #### regularize result_col ####
   result_col <- dplyr::ensym(result_col)
+
+  if (all(is.null(max_ind_entries), any(stringr::str_detect(point_values, "hs")))) {
+    max_ind_entries <- 2
+
+  } else if (is.null(max_ind_entries) == TRUE) {
+    stop("Please specify max_ind_entries")
+  }
 
   recognized_strings <- c("hs_four_lane",
                           "hs_six_lane",
@@ -138,7 +167,8 @@ make_lineup <- function(df, op_df, point_values, result_col, events = NULL, max_
     dplyr::group_split(Event)
 
   if (is.null(max_entries)) {
-    max_entries <- max(unlist(purrr::map(op_df_split, nrow)))
+    # max_entries <- max(unlist(purrr::map(op_df_split, nrow)))
+    max_entries <- length(point_values) / 2
   }
 
   to_add <-
@@ -167,6 +197,7 @@ make_lineup <- function(df, op_df, point_values, result_col, events = NULL, max_
     dplyr::select(-dplyr::contains("Points")) %>%
     dplyr::filter(Exhibition < 1) %>%
     dplyr::group_by(Event) %>%
+    dplyr::slice_head(n = max_entries) %>%
     dplyr::mutate(Points = Point_Values$Point_Values_Col) %>%
     dplyr::arrange(dplyr::desc(Points), Result_numeric) %>%
     dplyr::mutate(Event_Points = paste(Event, Points, sep = "_"))
@@ -178,7 +209,7 @@ make_lineup <- function(df, op_df, point_values, result_col, events = NULL, max_
     df_helper = df,
     op_df_helper = op_df,
     end_seq = length(op_df$Event_Points),
-    max_ind_entries = max_entries,
+    max_ind_entries_helper = max_ind_entries,
     result_col_helper = result_col
   )
 
@@ -202,7 +233,8 @@ make_lineup <- function(df, op_df, point_values, result_col, events = NULL, max_
     df_helper = df,
     in_progress_entries_df = test,
     events_competed_helper = Events_Competed,
-    max_ind_entries = max_entries
+    max_ind_entries_helper = max_ind_entries,
+    max_entries_helper = max_entries
   )
 
   test <- test %>%
@@ -237,7 +269,7 @@ make_lineup <- function(df, op_df, point_values, result_col, events = NULL, max_
 #'   contain column \code{Event} with the same event naming convention as
 #'   \code{df}, a column with name matching \code{result_col} containing times or
 #'   diving scores, and a column called \code{Name} containing athlete names
-#' @param max_ind_entries a numeric value denoting the maximum number of
+#' @param max_ind_entries_helper a numeric value denoting the maximum number of
 #'   individual events that may be entered by a single athlete
 #' @return a data frame containing athletes entered into events
 
@@ -246,12 +278,12 @@ make_lineup_helper <-
            df_helper,
            op_df_helper,
            end_seq,
-           max_ind_entries = 2,
+           max_ind_entries_helper = 2,
            result_col_helper = result_col) {
 
     # df_helper <- df
     # op_df_helper <- op_df
-    # max_ind_entries <- 3
+    # max_ind_entries_helper <- 3
     # i <- 1
     # end_seq = length(op_df$Event_Points)
     # result_col_helper = result_col
@@ -276,7 +308,7 @@ make_lineup_helper <-
 
   #### get all possible entries that are better than op result ####
   entry <- df_helper %>%
-    dplyr::filter(Name %!in% names(Times_Competed[which(Times_Competed > max_ind_entries - 1)])) %>%
+    dplyr::filter(Name %!in% names(Times_Competed[which(Times_Competed > max_ind_entries_helper - 1)])) %>%
     dplyr::filter(Name %!in% stringr::str_remove(names(which(
       unlist(
         purrr::map(Events_Competed, stringr::str_detect, e_no_points)
@@ -289,7 +321,7 @@ make_lineup_helper <-
   #### if there are entries that are better than the op_result, then choose the lowest power one ####
   if (nrow(entry) > 1) {
     entry <-  entry %>%
-      dplyr::filter(Name %!in% names(Times_Competed[which(Times_Competed > max_ind_entries - 1)])) %>%
+      dplyr::filter(Name %!in% names(Times_Competed[which(Times_Competed > max_ind_entries_helper - 1)])) %>%
       dplyr::filter(Name %!in% stringr::str_remove(names(which(
         unlist(
           purrr::map(Events_Competed, stringr::str_detect, e_no_points)
@@ -304,7 +336,7 @@ make_lineup_helper <-
   if (nrow(entry) == 0) {
     entry <- df_helper %>%
       dplyr::filter(Event == e_no_points) %>%
-      dplyr::filter(Name %!in% names(Times_Competed[which(Times_Competed > max_ind_entries - 1)])) %>%
+      dplyr::filter(Name %!in% names(Times_Competed[which(Times_Competed > max_ind_entries_helper - 1)])) %>%
       dplyr::filter(Name %!in% stringr::str_remove(names(which(
         unlist(
           purrr::map(Events_Competed, stringr::str_detect, e_no_points)
@@ -316,7 +348,7 @@ make_lineup_helper <-
 
   #### check to see that athlete is not over-entered ####
   if (nrow(entry) > 1) {
-    if (Times_Competed[entry$Name][[1]] > max_ind_entries - 1) {
+    if (Times_Competed[entry$Name][[1]] > max_ind_entries_helper - 1) {
       entry <- df_helper %>%
         dplyr::filter(Name != entry$Name[1]) %>%
         dplyr::filter(Name %!in% stringr::str_remove(names(which(
@@ -334,7 +366,7 @@ make_lineup_helper <-
   #### if there are multiple possible entries remove those which have their full complement of events ####
   if (nrow(entry) > 1) {
     entry <-  entry %>%
-      dplyr::filter(Name %!in% names(Times_Competed[which(Times_Competed > max_ind_entries - 1)])) %>%
+      dplyr::filter(Name %!in% names(Times_Competed[which(Times_Competed > max_ind_entries_helper - 1)])) %>%
       dplyr::filter(Name %!in% stringr::str_remove(names(which(
         unlist(
           purrr::map(Events_Competed, stringr::str_detect, e_no_points)
@@ -347,7 +379,7 @@ make_lineup_helper <-
   if (nrow(entry) == 0) {
     entry <- df_helper %>%
       dplyr::filter(Event == e_no_points) %>%
-      dplyr::filter(Name %!in% names(Times_Competed[which(Times_Competed > max_ind_entries - 1)])) %>%
+      dplyr::filter(Name %!in% names(Times_Competed[which(Times_Competed > max_ind_entries_helper - 1)])) %>%
       dplyr::filter(Name %!in% stringr::str_remove(names(which(
         unlist(
           purrr::map(Events_Competed, stringr::str_detect, e_no_points)
@@ -420,7 +452,9 @@ return(Entries)
 #'   \code{make_lineup_helper}, which is the minimum power set of entries
 #' @param events_competed_helper a list of lists containing all the events a
 #'   given athlete is competing in.  Sub-lists are named with the athlete name.
-#' @param max_ind_entries a numeric value denoting the maximum number of
+#' @param max_entries_helper a numeric value denoting the maximum number of
+#'   athletes a team may enter in a given event
+#' @param max_ind_entries_helper a numeric value denoting the maximum number of
 #'   individual events that may be entered by a single athlete
 #' @return a data frame containing entries updated to be as powerful as possible
 
@@ -430,12 +464,13 @@ make_lineup_helper_2 <-
            in_progress_entries_df,
            # athlete_ranks_helper,
            events_competed_helper = Events_Competed,
-           max_ind_entries = 3) {
+           max_entries_helper = max_entries,
+           max_ind_entries_helper = max_ind_entries) {
 
     # df_helper <- df
     # in_progress_entries_df <- test
     # events_competed_helper <- Events_Competed
-    # max_ind_entries <- 3
+    # max_ind_entries_helper <- 3
 
     Entries <- list()
 
@@ -486,7 +521,7 @@ make_lineup_helper_2 <-
         dplyr::filter(max(sort(Ranks)[1:Events_Remaining]) >= Rank) %>%
         dplyr::arrange(Rank) %>%
         ungroup() %>%
-        head(max_ind_entries)
+        head(max_ind_entries_helper)
     }
 
     # e_df
@@ -606,8 +641,8 @@ make_lineup_helper_2 <-
             events_remaining_helper = events_remaining
           )
 
-      } else if (all(length(e_rank_helper$Rank) >= 1 ,
-                     e_df$Rank[3] > e_rank_helper$Rank[1])) {
+      } else if (all(c(length(e_rank_helper$Rank) >= 1,
+                     e_df$Rank[3] > e_rank_helper$Rank[1]) %in% TRUE)) {
         row_to_add <- df_helper %>%
           generate_row_to_add(e_rank_helper_2 = e_rank_helper,
                               k = 1,
@@ -767,10 +802,10 @@ make_lineup_helper_2 <-
             events_remaining_helper = events_remaining
           )
 
-      } else if (all(
+      } else if (all(c(
         length(e_rank_helper$Rank) >= 2,
         length(e_df$Rank) >= 3,
-        e_df$Rank[3] > e_rank_helper$Rank[2]
+        e_df$Rank[3] > e_rank_helper$Rank[2]) %in% TRUE
       )) {
 
         row_to_add <- df_helper %>%
@@ -883,6 +918,7 @@ make_lineup_helper_2 <-
 
       ######### third replacement: k = 3 ##########
 
+      if(max_entries_helper > 2){
       if (all(
         length(e_rank_helper$Rank) >= 3,
         length(e_df$Rank) >= 1,
@@ -1101,11 +1137,12 @@ make_lineup_helper_2 <-
 
       # print("completed third replacement")
 
-    }
+      }
+      }
 
     ######### forth replacement: k = 4 ##########
 
-
+if(max_entries_helper > 3){
       if (all(
         length(e_rank_helper$Rank) >= 4,
         length(e_df$Rank) >= 1,
@@ -1325,6 +1362,7 @@ make_lineup_helper_2 <-
 
       # print("completed forth replacement")
 
+}
     }
 
     if(length(Entries) == 0 & i == 1){

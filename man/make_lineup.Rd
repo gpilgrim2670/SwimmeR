@@ -10,7 +10,8 @@ make_lineup(
   point_values,
   result_col,
   events = NULL,
-  max_entries = NULL
+  max_entries = NULL,
+  max_ind_entries = NULL
 )
 }
 \arguments{
@@ -33,6 +34,12 @@ containing the points awarded by place.  Recognized strings are
 
 \item{events}{a list of events.  If no list is entered then \code{events}
 will be taken from \code{unique(op_df$Event)}}
+
+\item{max_entries}{the number of entries a team is permitted per race.
+usually half the number of lanes in the competition pool}
+
+\item{max_ind_entries}{the number of indivdual events a given athlete may
+enter}
 }
 \value{
 a data frame of optimal entries based on \code{df} and \code{op_df}

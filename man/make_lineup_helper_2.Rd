@@ -9,7 +9,8 @@ make_lineup_helper_2(
   df_helper,
   in_progress_entries_df,
   events_competed_helper = Events_Competed,
-  max_ind_entries = 3
+  max_entries_helper = max_entries,
+  max_ind_entries_helper = max_ind_entries
 )
 }
 \arguments{
@@ -27,7 +28,10 @@ or diving scores, and a column called \code{Name} containing athlete names}
 \item{events_competed_helper}{a list of lists containing all the events a
 given athlete is competing in.  Sub-lists are named with the athlete name.}
 
-\item{max_ind_entries}{a numeric value denoting the maximum number of
+\item{max_entries_helper}{a numeric value denoting the maximum number of
+athletes a team may enter in a given event}
+
+\item{max_ind_entries_helper}{a numeric value denoting the maximum number of
 individual events that may be entered by a single athlete}
 }
 \value{

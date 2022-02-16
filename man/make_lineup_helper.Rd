@@ -9,7 +9,7 @@ make_lineup_helper(
   df_helper,
   op_df_helper,
   end_seq,
-  max_ind_entries = 2,
+  max_ind_entries_helper = 2,
   result_col_helper = result_col
 )
 }
@@ -27,7 +27,7 @@ contain column \code{Event} with the same event naming convention as
 \code{df}, a column with name matching \code{result_col} containing times or
 diving scores, and a column called \code{Name} containing athlete names}
 
-\item{max_ind_entries}{a numeric value denoting the maximum number of
+\item{max_ind_entries_helper}{a numeric value denoting the maximum number of
 individual events that may be entered by a single athlete}
 }
 \value{
