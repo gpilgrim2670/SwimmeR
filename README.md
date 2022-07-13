@@ -16,7 +16,7 @@
 
 ### Latest Development Version from Github
 
-Version 0.13.7
+Version 0.13.8
 
 * `swim_parse` handles some Hytek psych sheets (single column only)
 * `read_results` now handles both pdf and html results at .aspx addresses

@@ -16,6 +16,7 @@
 #' @importFrom stringr str_extract_all
 #' @importFrom stringr str_split
 #' @importFrom stringr str_detect
+#' @importFrom stringr str_count
 #' @importFrom purrr map_lgl
 #' @importFrom purrr map
 #'
@@ -37,6 +38,7 @@ splits_parse_omega_relays <-
     # file <- "https://olympics.com/tokyo-2020/paralympic-games/resPG2020-/pdf/PG2020-/SWM/PG2020-_SWM_C73B1_SWMX4X100MFR13033-----FNL-000100--.pdf"
     # file <- "https://olympics.com/tokyo-2020/paralympic-games/resPG2020-/pdf/PG2020-/SWM/PG2020-_SWM_C73B1_SWMM4X100MFR10102-----FNL-000100--.pdf"
     # file <- "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Paralympics2020/raw_files/PG2020_SWMX4X50MFR_10101_FNL.pdf"
+    # file <- system.file("extdata", "RESULTS_BOOK.pdf", package = "SwimmeR")
     # text <-   read_results(file) %>%
     #   add_row_numbers()
     # split_len <- 50
@@ -46,7 +48,7 @@ splits_parse_omega_relays <-
     ### define strings ###
     split_string <- "(\\d?\\:?\\d{2}\\.\\d{2})|(  NA  )"
     relay_swimmer_string <- "^\n\\s*[:alpha:]"
-    record_string <- "\n\\s+[:upper:]R\\s|\n\\s+US\\s|[:upper:][:alpha:]+ Record"
+    record_string <- "\n\\s+[:upper:]R\\s|\n\\s+[:upper:]J\\s|\n\\s+US\\s|[:upper:][:alpha:]+ Record"
 
     text <- text %>%
       stringr::str_replace_all(" \\:", "  ") %>%
@@ -56,6 +58,7 @@ splits_parse_omega_relays <-
     ### collect splits
 
     row_numbs <- text %>%
+      .[stringr::str_count(., "\\.") > 1] %>%
       .[stringr::str_detect(.,
                        split_string)] %>%
       .[stringr::str_detect(.,
@@ -77,6 +80,7 @@ splits_parse_omega_relays <-
 
       suppressWarnings(
         data_1_splits <- text %>%
+          .[stringr::str_count(., "\\.") > 1] %>%
           .[purrr::map_lgl(.,
                            stringr::str_detect,
                            split_string)] %>%
@@ -225,7 +229,8 @@ splits_parse_omega_relays <-
         dplyr::rename_at(dplyr::vars(dplyr::all_of(old_names)), ~ new_names)
 
       data_splits <- data_splits %>%
-        dplyr::na_if("NA")
+        dplyr::na_if("NA") %>%
+        filter(!is.na(Split_50))
 
     } else {
       # if there are no rows with valid splits return blank data frame

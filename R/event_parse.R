@@ -40,7 +40,12 @@ event_parse <- function(text) {
                      event_string)] %>% # new 12/15 for older NCAA results
     .[purrr::map_lgl(., ~ !any(stringr::str_detect(., "\\.\\.\\.")))] %>%  # removes sub headers like in OT results "Semi-Finals ... (women...)" etc.
     .[stringr::str_detect(., "\\d{2}\\.\\d{2}", negate = TRUE)] %>%
-    .[stringr::str_detect(., "\\d{2} [:upper:]{3} \\d{4} GOLD", negate = TRUE)]
+    .[stringr::str_detect(., "GOLD", negate = TRUE)] %>%
+    .[stringr::str_detect(., "SILVER", negate = TRUE)] %>%
+    .[stringr::str_detect(., "BRONZE", negate = TRUE)] %>%
+    .[stringr::str_detect(., "Medallists by Event", negate = TRUE)] %>%
+    .[stringr::str_detect(., "Rank\\s+Name\\s+NAT\\s+Code\\s+Event", negate = TRUE)]
+    # .[stringr::str_detect(., "\\d{2} [:upper:]{3} \\d{4} GOLD", negate = TRUE)]
 
   if (length(events) > 0) {
     #if event names are recognized clean them up and determine row ranges
