@@ -19,22 +19,22 @@
 
 collect_relay_swimmers_omega <- function(x){
 
-  # x <- "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Paralympics2020/raw_files/PG2020_SWMX4X50MFR_10101_FNL.pdf" %>%
+  # x <- "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Tokyo2020/SWMX4X100MMD_FNL.pdf" %>%
   #   read_results() %>%
   #   add_row_numbers()
 
   # x <- as_lines_list_2
 
   relay_swimmer_string <- "^\n\\s*[:alpha:]"
-  record_string <- "\n\\s+[:upper:]R\\s|\n\\s+US\\s|[:upper:][:alpha:]+ Record|\n\\s+W[:upper:]\\s|FINA\\s|BRONZE|GOLD|SILVER"
+  record_string <- "\n\\s+[:upper:]R\\s|\n\\s+US\\s|[:upper:][:alpha:]+ Record|\n\\s+W[:upper:]\\s|FINA\\s|BRONZE\\s{2,}|\\s+GOLD\\s{2,}|SILVER\\s{2,}|\n\\s?BRONZE|\n\\s?SILVER|\n\\s?GOLD"
   header_string <- "Record\\s+Split|Record\\s+Name|Reaction\\sTime|EVENT NO\\.|Rank\\s+Name|Rank\\s+NAT|NAT Code|Total\\s+\\d+$|(Women)|(Men)|\\s{3,}F\\s+\\d+$|\\s{3,}M\\s+\\d+$"
 
-  medallists_row <- stringr::str_extract(x, "Medallists\\s+\\d+$")
-  if(length(medallists_row) > 0){
-  medallists_row <- medallists_row[!is.na(medallists_row)]
-  medallists_row <- as.numeric(stringr::str_extract(medallists_row[1], "\\d+"))
-
-  }
+  # medallists_row <- stringr::str_extract(x, "Medallists\\s+\\d+$")
+  # if (length(medallists_row) > 0) {
+  #   medallists_row <- medallists_row[!is.na(medallists_row)]
+  #   medallists_row <-
+  #     as.numeric(stringr::str_extract(medallists_row[1], "\\d+"))
+  # }
 
   row_numbs_relay_swimmer <- x %>%
     .[stringr::str_detect(.,
