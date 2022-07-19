@@ -128,7 +128,7 @@ swim_parse_omega <-
     # file_omega <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Paralympics2020/raw_files/PG2020_SWMW150MIM_04042_FNL.pdf")
     # file_omega <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Tokyo2020/SWMM4X200MFR_FNL.pdf")
     # file_omega <- read_results("https://www.omegatiming.com/File/00011500100201EF01FFFFFFFFFFFF01.pdf")
-    file_omega <- read_results(system.file("extdata", "RESULTS_BOOK.pdf", package = "SwimmeR"))
+    # file_omega <- read_results(system.file("extdata", "RESULTS_BOOK.pdf", package = "SwimmeR"))
     # file_omega <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/SwimmeR%20Test%20Files/PG2020_SWMM200MIM_FNL.pdf")
     # avoid_omega <- c("abcxyz")
     # typo_omega <- c("typo")

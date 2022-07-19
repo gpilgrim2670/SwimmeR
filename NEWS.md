@@ -1,5 +1,8 @@
+# SwimmeR 0.13.9 - July 13th 2022
+* more bug fixes to re-enable Omega parsing
+
 # SwimmeR 0.13.8 - July 13th 2022
-* bug fixes to improve Omega parsing
+* bug fixes to improve Omega parsing, particularly with respect to 2022 Worlds
 
 # SwimmeR 0.13.7 - February 15th 2022
 * `swim_parse` now handles some Hytek psych sheets
