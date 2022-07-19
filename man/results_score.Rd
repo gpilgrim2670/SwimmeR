@@ -6,7 +6,7 @@
 \usage{
 results_score(
   results,
-  events,
+  events = NULL,
   meet_type = c("timed_finals", "prelims_finals"),
   lanes = c(4, 6, 8, 10),
   scoring_heats = c(1, 2, 3),
@@ -28,7 +28,10 @@ for scoring purposes}
 \item{scoring_heats}{number of heats which score (if 1 only A final scores,
 if 2 A and B final score etc.)}
 
-\item{point_values}{a list of point values for each scoring place}
+\item{point_values}{Either a list of point values for each scoring place or
+one of the following recognized strings: \code{"hs_four_lane"},
+\code{"hs_six_lane"}, \code{"ncaa_six_lane"},
+\code{"championship_8_lane_2_heat"} or \code{"championship_8_lane_3_heat"}}
 
 \item{max_relays_per_team}{the number of relays a team is allowed to score
 (usually 1)}
@@ -87,7 +90,8 @@ df <- BigTen \%>\%
     lanes = 8,
     scoring_heats = 3,
     point_values = c(
-      32, 28, 27, 26, 25, 24, 23, 22, 20, 17, 16, 15, 14, 13, 12, 11, 9, 7, 6, 5, 4, 3, 2, 1)
+      32, 28, 27, 26, 25, 24, 23, 22, 20, 17, 16, 15, 14, 13, 12, 11, 9, 7,
+       6, 5, 4, 3, 2, 1)
   )
  }
 

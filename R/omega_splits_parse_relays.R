@@ -16,6 +16,7 @@
 #' @importFrom stringr str_extract_all
 #' @importFrom stringr str_split
 #' @importFrom stringr str_detect
+#' @importFrom stringr str_count
 #' @importFrom purrr map_lgl
 #' @importFrom purrr map
 #'
@@ -37,6 +38,9 @@ splits_parse_omega_relays <-
     # file <- "https://olympics.com/tokyo-2020/paralympic-games/resPG2020-/pdf/PG2020-/SWM/PG2020-_SWM_C73B1_SWMX4X100MFR13033-----FNL-000100--.pdf"
     # file <- "https://olympics.com/tokyo-2020/paralympic-games/resPG2020-/pdf/PG2020-/SWM/PG2020-_SWM_C73B1_SWMM4X100MFR10102-----FNL-000100--.pdf"
     # file <- "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Paralympics2020/raw_files/PG2020_SWMX4X50MFR_10101_FNL.pdf"
+    # file <- system.file("extdata", "RESULTS_BOOK.pdf", package = "SwimmeR")
+    # file <-
+    #   system.file("extdata", "Results_Book.pdf", package = "SwimmeR")
     # text <-   read_results(file) %>%
     #   add_row_numbers()
     # split_len <- 50
@@ -46,7 +50,7 @@ splits_parse_omega_relays <-
     ### define strings ###
     split_string <- "(\\d?\\:?\\d{2}\\.\\d{2})|(  NA  )"
     relay_swimmer_string <- "^\n\\s*[:alpha:]"
-    record_string <- "\n\\s+[:upper:]R\\s|\n\\s+US\\s|[:upper:][:alpha:]+ Record"
+    record_string <- "\n\\s+[:upper:]R\\s|\n\\s+[:upper:]J\\s|\n\\s+US\\s|[:upper:][:alpha:]+ Record"
 
     text <- text %>%
       stringr::str_replace_all(" \\:", "  ") %>%
@@ -56,6 +60,7 @@ splits_parse_omega_relays <-
     ### collect splits
 
     row_numbs <- text %>%
+      .[any(stringr::str_count(., "\\.") > 1, stringr::str_detect(., "S\\d+"))] %>%
       .[stringr::str_detect(.,
                        split_string)] %>%
       .[stringr::str_detect(.,
@@ -77,6 +82,7 @@ splits_parse_omega_relays <-
 
       suppressWarnings(
         data_1_splits <- text %>%
+          .[any(stringr::str_count(., "\\.") > 1, stringr::str_detect(., "S\\d+"))] %>%
           .[purrr::map_lgl(.,
                            stringr::str_detect,
                            split_string)] %>%
@@ -154,7 +160,18 @@ splits_parse_omega_relays <-
 
       if (length(data_splits_length_6) > 0) {
         df_6_splits <- data_splits_length_6 %>%
-          list_transform()
+          list_transform() %>%
+          dplyr::mutate(
+            V6 = dplyr::case_when(
+              all.equal(sec_format(V6), sec_format(V5) + sec_format(dplyr::lag(V5, default = "0"))) == TRUE ~ "NA",
+              all.equal(sec_format(V6), sec_format(V5) + sec_format(dplyr::lag(V6, default = "0"))) == TRUE ~ "NA",
+              sec_format(V6) - sec_format(V5) > 2 *
+                (sec_format(V5) - sec_format(V4)) ~ "NA",
+              V6 == V5 ~ "NA",
+              TRUE ~ V6
+            )
+          ) %>% dplyr::na_if("NA") %>%
+          purrr::discard( ~ all(is.na(.)))
       } else {
         df_6_splits <- data.frame(Row_Numb = character(),
                                   stringsAsFactors = FALSE)
@@ -170,7 +187,17 @@ splits_parse_omega_relays <-
 
       if (length(data_splits_length_4) > 0) {
         df_4_splits <- data_splits_length_4 %>%
-          list_transform()
+          list_transform() %>%
+          dplyr::mutate(
+            V4 = dplyr::case_when(
+              all.equal(sec_format(V4), sec_format(V3) + sec_format(dplyr::lag(V3, default = "0"))) == TRUE ~ "NA",
+              all.equal(sec_format(V4), sec_format(V3) + sec_format(dplyr::lag(V4, default = "0"))) == TRUE ~ "NA",
+              sec_format(V4) - sec_format(V3) > 1.2 * (sec_format(V3) - sec_format(V2)) ~ "NA",
+              V4 == V3 ~ "NA",
+              TRUE ~ V4
+            )
+          ) %>% dplyr::na_if("NA") %>%
+          purrr::discard( ~ all(is.na(.)))
       } else {
         df_4_splits <- data.frame(Row_Numb = character(),
                                   stringsAsFactors = FALSE)
@@ -226,6 +253,7 @@ splits_parse_omega_relays <-
 
       data_splits <- data_splits %>%
         dplyr::na_if("NA")
+        # filter(!is.na(Split_50))
 
     } else {
       # if there are no rows with valid splits return blank data frame

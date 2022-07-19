@@ -61,13 +61,13 @@ coalesce_many <- function(df){
 #' @seealso \code{coalesce_many_helper} runs inside
 #'   \code{\link{coalesce_many}}
 #'
-coalesce_many_helper <- function(df, new_split_names, i){
+coalesce_many_helper <- function(df, new_split_names, i) {
 
   x_cols <- paste0(new_split_names, ".x")
   y_cols <- paste0(new_split_names, ".y")
 
   df_test <- df %>%
-    dplyr::mutate(!!dplyr::sym(new_split_names[i]) := dplyr::coalesce(!!dplyr::sym(x_cols[i]) , !!dplyr::sym(y_cols[i]))) %>%
+    dplyr::mutate(!!dplyr::sym(new_split_names[i]) := dplyr::coalesce(!!dplyr::sym(x_cols[i]) ,!!dplyr::sym(y_cols[i]))) %>%
     dplyr::select(-dplyr::all_of(c(x_cols, y_cols)))
 
   return(df_test)

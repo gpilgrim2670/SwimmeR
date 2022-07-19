@@ -1,5 +1,28 @@
-# SwimmeR 0.13.3 - November 27th 2021 
-* improved error handling for empty results in `swim_parse`
+# SwimmeR 0.13.8 - July 13th 2022
+* bug fixes to improve Omega parsing
+
+# SwimmeR 0.13.7 - February 15th 2022
+* `swim_parse` now handles some Hytek psych sheets
+* bug fixes to make `swim_parse` more robust
+
+# SwimmeR 0.13.6 - February 10th 2022
+* `read_results` now handles the possibility of .aspx addresses containing pdf
+or html results
+
+# SwimmeR 0.13.5 - February 9th 2022
+* `place` function introduced, supersedes `swim_place` and `dive_place`
+* `determine_entries` renamed to `make_lineup`, now works on test cases
+* work begun on `clean_events` to regularize event names
+
+# SwimmeR 0.13.4 - February 1st 2022
+* `toptimes_pars_hytek` included inside `swim_parse` to parse Hytek Top Times
+reports
+* work beginning on `determine_entries` function for maximizing team entries vs.
+a given opponent lineup
+
+# SwimmeR 0.13.3 - January 25th 2022
+* added the `list_breaker` function and the `list_sorter` family as part of a 
+refactoring exercise
 
 # SwimmeR 0.13.2 - November 17th 2021 
 * `results_score` no longer requires an Exhibition column

@@ -15,11 +15,13 @@
 `library(SwimmeR)`
 
 ### Latest Development Version from Github
+Version 0.13.8
 
-Version 0.13.3
-
-* `swim_place` and `dive_place` now exported
-* `swim_place` and `dive_place` now much more flexible on which column to place on
+* `swim_parse` handles some Hytek psych sheets (single column only)
+* `read_results` now handles both pdf and html results at .aspx addresses
+* `make_lineup` works to make lineups based on top times reports and an opponent lineup.  Still under development.
+* `swim_parse` handles Hytek Top Times reports via `toptimes_parse_hytek`.  Still under development.
+* new function `place` supersedes `swim_place` and `dive_place`, handling both swimming and diving
 *  *major change* `swim_parse` output columns `Finals_Time` and `Prelims_Time` have been renamed `Finals` and `Prelims`
 
 `devtools::install_github("gpilgrim2670/SwimmeR", build_vignettes = TRUE)`

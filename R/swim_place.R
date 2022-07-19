@@ -1,4 +1,4 @@
-#' Adds places to swimming results
+#' Add places to swimming results
 #'
 #' Places are awarded on the basis of time, with fastest (lowest) time winning.
 #' Ties are placed as ties (both athletes get 2nd etc.)
@@ -35,7 +35,7 @@
 #'                Name = c("Sally Swimfast", "Bonnie Bubbles", "Kylie Kicker"),
 #'                Team = c("KVAC", "UBAM", "MERC"),
 #'                Event = rep("Women 200 Freestyle", 3),
-#'                 Prelims = c("2:00.00", "1:59.99", "2:01.50"),
+#'                Prelims = c("2:00.00", "1:59.99", "2:01.50"),
 #'                Finals = c("1:58.00", "1:59.50", "2:00.50"),
 #'                Meet = c("Summer 2021", "Fall 2020", "Champs 2020"))
 #'
@@ -120,7 +120,7 @@ swim_place <- function(df,
       else
         dplyr::group_by(., Event, Team)
     } %>%
-    dplyr::filter(stringr::str_detect(stringr::str_to_lower(as.character(Event)), "diving") == FALSE) %>%
+    dplyr::filter(stringr::str_detect(stringr::str_to_lower(as.character(Event)), "div(e|ing)") == FALSE) %>%
     {
       if (event_type == "ind")
         dplyr::slice(., 1)
@@ -148,7 +148,7 @@ swim_place <- function(df,
         .
     }
   } else if (verbose == TRUE) {
-    message("df does not have column called Event with some rows not containing 'Diving' or 'diving'.  No places determined.")
+    message("df does not have column called Event.  No places determined.")
   }
 
   return(df)

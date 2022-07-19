@@ -1,3 +1,49 @@
+# testthat::test_file("tests/testthat/test-swim_parse.R")
+
+test_that("psych sheets work ind", {
+
+  skip_on_cran()
+
+  # rds file is post read_results
+  file <- readRDS(url("https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/SwimmeR%20Test%20Files/hytek_psych_ind_raw.RDS"))
+
+  df_test <- file %>%
+    swim_parse() %>%
+    select(-DQ, -Exhibition) %>%
+    head(3)
+
+  df_standard <-
+    structure(list(Place = c(1, 2, 3), Name = c("Andrea Bosa", "Nicholas Staley",
+                                                "Noah Dusinberre"), Age = c("MJR", "MSR", "MJR"), Team = c("HAC",
+                                                                                                           "Geneseo", "Alfred-Almond"), Finals = c("1:55.25", "1:57.32",
+                                                                                                                                                   "1:58.48"), Event = c("Mixed 200 Yard Freestyle", "Mixed 200 Yard Freestyle",
+                                                                                                                                                                         "Mixed 200 Yard Freestyle")), row.names = c(NA, 3L), class = "data.frame")
+
+  expect_equivalent(df_test, df_standard)
+})
+
+test_that("psych sheets work relay", {
+
+  skip_on_cran()
+
+  # rds file is post read_results
+  file <- readRDS(url("https://github.com/gpilgrim2670/Pilgrim_Data/raw/master/SwimmeR%20Test%20Files/hytek_psych_relay_raw.RDS"))
+
+  df_test <- file %>%
+    swim_parse() %>%
+    select(-DQ, -Exhibition) %>%
+    head(3)
+
+  df_standard <-
+    structure(list(Place = c(1, 2, 3), Team = c("Alfred-Almond",
+                                                "Naples", "Harley Allendale Columbia"), Finals = c("1:46.38",
+                                                                                                   "1:50.75", "1:52.21"), Event = c("Mixed 200 Yard Medley Relay",
+                                                                                                                                    "Mixed 200 Yard Medley Relay", "Mixed 200 Yard Medley Relay")), row.names = c(NA,
+                                                                                                                                                                                                                  3L), class = "data.frame")
+
+  expect_equivalent(df_test, df_standard)
+})
+
 test_that("read_results_flag within swim_parse", {
   file <- system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")
 
@@ -51,7 +97,6 @@ test_that("places with parens '1)' etc", {
 
 })
 
-
 test_that("swim_parse works", {
   file <- system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR")
 
@@ -62,7 +107,6 @@ test_that("swim_parse works", {
   expect_match(df[102, 2], "Lilly King") # for swim_parse post v0.6.0 because scratch lines are now included
 
 })
-
 
 test_that("swim_parse works para", {
 

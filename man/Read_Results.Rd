@@ -11,7 +11,7 @@ Read_Results(file, node = "pre")
 read_results(file, node = "pre")
 }
 \arguments{
-\item{file}{a .pdf or .html file (could be a url) where containing swimming
+\item{file}{a pdf, url or Hytek .hy3 file containing swimming
 results.  Must be formatted in a "normal" fashion - see vignette}
 
 \item{node}{a CSS node where html results are stored.  Required for html

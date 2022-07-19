@@ -178,7 +178,7 @@ Swim_Parse <-
 
       file <- file[-1]
 
-    } else{
+    } else {
 
       # if read_results flag isn't present post an error
 
@@ -194,7 +194,10 @@ Swim_Parse <-
       data <- hy3_parse(file = file)
       return(data)
 
-    } else if (any(stringr::str_detect(file[1:6], "S\\.A\\.M\\.M\\.S\\.|MEET SANCTION NUMBER")) == TRUE) { # for S.A.M.M.S files
+    } else if (any(stringr::str_detect(file[1:6], "S\\.A\\.M\\.M\\.S\\.|MEET SANCTION NUMBER")) == TRUE) {
+
+      #### S.A.M.M.S. ####
+
       data <- swim_parse_samms(file_samms = file,
                           avoid_samms = avoid_non_splash,
                           typo_samms = typo,
@@ -204,11 +207,12 @@ Swim_Parse <-
 
     } else if (any(stringr::str_detect(file, "Splash Meet Manager"))) {
 
+      #### Splash Meet Results ####
+
       avoid_default_splash <-
         c(
           "abcxyz"
         )
-
 
       avoid_splash <- unique(c(avoid, avoid_default_splash))
 
@@ -224,7 +228,15 @@ Swim_Parse <-
 
       return(data)
 
-    } else if (any(stringr::str_detect(file[1:6], "( ISL )|(^ISL )"), stringr::str_detect(file, "Cali Condors|LA Current|Energy Standard|DC Trident|Aqua Centurions|London Roar")) == TRUE) {
+    } else if (any(
+      stringr::str_detect(file[1:6], "( ISL )|(^ISL )"),
+      stringr::str_detect(
+        file,
+        "Cali Condors|LA Current|Energy Standard|DC Trident|Aqua Centurions|London Roar"
+      )
+    ) == TRUE) {
+
+      #### ISL ####
 
       data <- swim_parse_ISL(
         file = file,
@@ -234,8 +246,9 @@ Swim_Parse <-
 
       return(data)
 
-
     } else if (any(stringr::str_detect(file, "(Official Timekeeping by Omega)|(Report created )")) == TRUE) {
+
+      #### Omega Files ####
 
       data <- swim_parse_omega(
         file_omega = file,
@@ -249,7 +262,22 @@ Swim_Parse <-
 
       return(data)
 
-    } else { # hytek files
+    } else if(any(stringr::str_detect(file[1:10], "Top Times")) == TRUE) {
+
+      #### Hytek Top Times ####
+
+      data <- toptimes_parse_hytek(
+        file_hytek_toptimes = file,
+        avoid_hytek_toptimes = avoid_non_splash,
+        typo_hytek_toptimes = typo,
+        replacement_hytek_toptimes = replacement
+      )
+
+      return(data)
+
+    } else {
+
+      #### Hytek Meet Results ####
 
       data <- swim_parse_hytek(
         file_hytek = file,

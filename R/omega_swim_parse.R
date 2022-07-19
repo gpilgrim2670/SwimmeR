@@ -128,6 +128,8 @@ swim_parse_omega <-
     # file_omega <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Paralympics2020/raw_files/PG2020_SWMW150MIM_04042_FNL.pdf")
     # file_omega <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Tokyo2020/SWMM4X200MFR_FNL.pdf")
     # file_omega <- read_results("https://www.omegatiming.com/File/00011500100201EF01FFFFFFFFFFFF01.pdf")
+    file_omega <- read_results(system.file("extdata", "RESULTS_BOOK.pdf", package = "SwimmeR"))
+    # file_omega <- read_results("https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/SwimmeR%20Test%20Files/PG2020_SWMM200MIM_FNL.pdf")
     # avoid_omega <- c("abcxyz")
     # typo_omega <- c("typo")
     # replacement_omega <- c("typo")
@@ -153,6 +155,12 @@ swim_parse_omega <-
       #### Pulls out heat labels from text ####
       heats <- heat_parse_omega(as_lines_list_2)
 
+      #### Pulls out event date from text ####
+      Event_Date_String <- paste0("(?<=^\n)\\d{1,2}\\s(", paste(toupper(month.abb), collapse = "|"), ")\\s\\d{4}")
+      Event_Date <- stringr::str_extract(as_lines_list_2, Event_Date_String)
+      Event_Date <- Event_Date[!is.na(Event_Date)][1]
+      Event_Date <- as.Date(Event_Date, format = "%d %b %Y")
+
       #### set up strings ####
       Name_String <-
         "_?[:alpha:]+\\s?\\'?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\'\\.]*,?\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:]*\\s?[:alpha:]*\\s?[:alpha:]*\\.?,? [:alpha:]+\\s?[:alpha:\\-\\'\\.]*\\s?[:alpha:\\-\\']*\\s?[:alpha:]*\\s?[:alpha:]*\\s?[:alpha:\\.]*"
@@ -164,6 +172,26 @@ swim_parse_omega <-
       Record_String <- "^\\=?W[:upper:]$|^\\=?AR$|^\\=?US$|^\\=?CR$|^\\=?OT$|^\\=?OR$|^\\=?[:upper:]R$"
       Header_string <- "\\sDisqualified\\s|\\sReaction\\sTime\\s"
       Heat_String <- "Heat\\s\\d{1,}\\sof\\s\\d{1,}|Semifinal\\s+\\d{1,}|Final|(Heats?)(?![:alpha:])"
+      DOB_String_2 <- paste0("(?<=\\s)\\d{2}\\s(", paste(toupper(month.abb), collapse = "|"), ")\\s\\d{4}(?=\\s+\\d{1,2}\\.\\d{2})")
+      DOB_String_1 <- paste0("(?<=\\s)\\d{1}\\s(", paste(toupper(month.abb), collapse = "|"), ")\\s\\d{4}(?=\\s+\\d{1,2}\\.\\d{2})")
+      Age_String <- "^\\d{2}$"
+
+      #### Collect DOBs ####
+      DOBs_2 <- stringr::str_extract(as_lines_list_2, DOB_String_2)
+      DOBs_2 <- unique(DOBs_2[!is.na(DOBs_2)])
+      DOBs_2_Format <- as.Date(DOBs_2, format = "%d %b %Y")
+      Ages_2 <-
+        as.character(round(as.numeric(
+          difftime(Event_Date, DOBs_2_Format, units = "days") / 365
+        ), 0))
+
+      DOBs_1 <- stringr::str_extract(as_lines_list_2, DOB_String_1)
+      DOBs_1 <- unique(DOBs_1[!is.na(DOBs_1)])
+      DOBs_1_Format <- as.Date(DOBs_1, format = "%d %b %Y")
+      Ages_1 <-
+        as.character(round(as.numeric(
+          difftime(Event_Date, DOBs_1_Format, units = "days") / 365
+        ), 0))
 
       #### clean input data ####
 
@@ -176,11 +204,13 @@ swim_parse_omega <-
         .[stringr::str_detect(., "[:alpha:] DSQ [:alpha:]", negate = TRUE)] %>% # omega Wave II removes notes from when a DSQ is overturned
         .[stringr::str_detect(., "\\d{2} [:upper:]{3} \\d{4} GOLD", negate = TRUE)] %>%  # omega remove medalist results from the end of Wave II 2021 OTs
         .[stringr::str_detect(., Heat_String, negate = TRUE)] %>% # omega removes weird formatting issue where results and heat labels are connected
+        {if (length(Ages_2) > 0) purrr::reduce2(.init = ., DOBs_2, Ages_2, stringr::str_replace_all) else .} %>%
+        {if (length(Ages_1) > 0) purrr::reduce2(.init = ., DOBs_1, Ages_1, stringr::str_replace_all) else .} %>%
         stringr::str_replace_all("([:alpha:])\\. ", "\\1 ") %>% # remove periods from athlete names Omega
         # .[!all(dplyr::between(purrr::map_int(., stringr::str_count, "\\.|\\("), 6.1, 7.9), purrr::map_int(., stringr::str_count, "\\.") != 6)] %>%  # keeps relay swimmers + splits from 4x200 races from getting in Omega
         .[stringr::str_detect(., "[:alpha:]\\s+\\-\\d\\.\\d{2}\\s+\\d{1,}$", negate = TRUE)] %>%
         .[stringr::str_detect(., Header_string, negate = TRUE)] %>%
-        stringr::str_replace_all("( [:upper:]{2},\\s)*\\s?(?<![:upper:])[:upper:]{2}\\.?\\s(?=\\s{1,}\\d{1,}$)", "  ") %>% # remove record strings like OR, OC but miss DNS, DSQ etc.
+        stringr::str_replace_all("( [:upper:]{2},\\s)*\\s?(?<![:upper:])\\=?[:upper:]{2}\\.?\\s(?=\\s{1,}\\d{1,}$)", "  ") %>% # remove record strings like OR, OC but miss DNS, DSQ etc.
         stringr::str_replace_all("\\s?[&%]\\s?", " ") %>% # added 8/21 for removing "&" and "%" as record designator
 
         stringr::str_remove_all("(?<=\\d\\.\\d{2}\\s?)[:punct:]") %>% # remove symbols attached to times as record designator
@@ -236,7 +266,7 @@ swim_parse_omega <-
         # {if(stringr::str_detect(events$Event[1], "elay") == FALSE)
         #   stringr::str_replace_all(., "(^[:upper:]{3,})", "NA  NA  \\1") else . # for GUTIERREZ BERMUDEZ Juan Jose in 2020 Para Games 200IM Finals
         # }
-        stringr::str_replace_all("(^[:upper:]{3,}.*\\s{3,}[:upper:]{3})", "NA  NA  \\1") # for GUTIERREZ BERMUDEZ Juan Jose in 2020 Para Games 200IM Finals
+        stringr::str_replace_all("(^[:upper:]{3,}.*\\s{3,}[:upper:]{3})", "7  6  \\1") # for GUTIERREZ BERMUDEZ Juan Jose in 2020 Para Games 200IM Finals
 
       #### if data_cleaned is empty ####
       if(!length(data_cleaned) > 0){
@@ -261,6 +291,7 @@ swim_parse_omega <-
       data_length_11 <- data_cleaned[purrr::map(data_cleaned, length) == 11]
       data_length_12 <- data_cleaned[purrr::map(data_cleaned, length) == 12]
       data_length_13 <- data_cleaned[purrr::map(data_cleaned, length) == 13]
+      # data_length_14 <- data_cleaned[purrr::map(data_cleaned, length) == 14]
 
       # treatment of DQs new 8/19
       suppressWarnings(DQ <-
@@ -284,11 +315,13 @@ swim_parse_omega <-
               Lane = V3,
               Name = V4,
               Team = V5,
+              Age = V6,
               Reaction_Time = V7,
               Finals = V11,
               Row_Numb = V13
             )
-        )
+        ) %>%
+          dplyr::filter(stringr::str_detect(Place, "^\\d+$"))
       } else {
         df_13 <- data.frame(
           Row_Numb = character(),
@@ -336,14 +369,24 @@ swim_parse_omega <-
                 TRUE ~ "NA"
               )
             ) %>%
-            # dplyr::mutate(
-            #   Finals = dplyr::case_when(
-            #     stringr::str_detect(Heat, "NA") == TRUE &
-            #       stringr::str_detect(V4, Para_String) == FALSE ~ V10,
-            #     stringr::str_detect(V10, Time_Score_Specials_String) == TRUE ~ V8,
-            #     TRUE ~ "NA"
-            #   )
-            # ) %>%
+            dplyr::mutate(Age = case_when(stringr::str_detect(V6, Age_String) == TRUE ~ V6,
+                                                              TRUE ~ "NA")) %>%
+            dplyr::mutate(
+              Finals = dplyr::case_when(
+                stringr::str_detect(V11, Time_Score_Specials_String) == TRUE &
+                  sec_format(V10) < sec_format(V11) ~ V11,
+                stringr::str_detect(Heat, "NA") == TRUE &
+                  stringr::str_detect(V4, Para_String) == FALSE ~ V10,
+                stringr::str_detect(Heat, "NA") == TRUE &
+                  stringr::str_detect(V4, Para_String) == FALSE ~ V10,
+                stringr::str_detect(V7, Time_Score_Specials_String) == TRUE &
+                  stringr::str_detect(V8, Time_Score_Specials_String) == TRUE &
+                  stringr::str_detect(V9, Time_Score_Specials_String) == TRUE &
+                  stringr::str_detect(V10, Time_Score_Specials_String) == TRUE ~ V10,
+               stringr::str_detect(V10, Time_Score_Specials_String) == TRUE ~ V8,
+                TRUE ~ "NA"
+              )
+            ) %>%
             dplyr::na_if("") %>%
             dplyr::na_if("NA") %>%
             dplyr::select(
@@ -351,12 +394,14 @@ swim_parse_omega <-
               Heat,
               Lane,
               Name,
+              Age,
               Para,
               Team,
-              Reaction_Time = V6,
-              Finals = V10,
+              Reaction_Time,
+              Finals,
               Row_Numb = V12
-            )
+            ) %>%
+            dplyr::filter(stringr::str_detect(Place, "^\\d+$"))
         )
       } else {
         df_12 <- data.frame(
@@ -407,6 +452,8 @@ swim_parse_omega <-
                 TRUE ~ "NA"
               )
             ) %>%
+            dplyr::mutate(Age = case_when(stringr::str_detect(V6, Age_String) == TRUE ~ V6,
+                                          TRUE ~ "NA")) %>%
             dplyr::mutate(
               Finals = dplyr::case_when(
                 stringr::str_detect(Heat, "NA") == TRUE &
@@ -417,6 +464,9 @@ swim_parse_omega <-
                   stringr::str_detect(V4, Para_String) == TRUE &
                   stringr::str_detect(V9, Time_Score_Specials_String) == TRUE &
                   stringr::str_detect(V10, "\\:") == FALSE ~ V9,
+                stringr::str_detect(V10, Time_Score_Specials_String) == TRUE &
+                  stringr::str_detect(V9, Time_Score_Specials_String) == TRUE &
+                  (sec_format(V9) > sec_format(V10)) ~ V9,
                 stringr::str_detect(V10, Time_Score_Specials_String) == TRUE ~ V10,
                 TRUE ~ "NA"
               )
@@ -427,12 +477,14 @@ swim_parse_omega <-
               Heat,
               Lane,
               Name,
+              Age,
               Para,
               Team,
               Reaction_Time,
               Finals,
               Row_Numb = V11
-            )
+            ) %>%
+            dplyr::filter(stringr::str_detect(Place, "^\\d+$"))
         )
       } else {
         df_11 <- data.frame(
@@ -484,12 +536,16 @@ swim_parse_omega <-
                 TRUE ~ "NA"
               )
             ) %>%
+            dplyr::mutate(Age = case_when(stringr::str_detect(V6, Age_String) == TRUE ~ V6,
+                                          TRUE ~ "NA")) %>%
             dplyr::mutate(
               Finals = dplyr::case_when(
                 stringr::str_detect(Heat, "NA") == TRUE &
                   stringr::str_detect(V4, Para_String) == FALSE ~ V9,
                 stringr::str_detect(V5, Reaction_String) == TRUE & stringr::str_detect(V9, Time_Score_Specials_String) == TRUE ~ V9,
                 stringr::str_detect(Heat, "NA") == TRUE & stringr::str_detect(V4, Para_String) == TRUE & stringr::str_detect(V9, Time_Score_Specials_String) == TRUE ~ V9,
+                stringr::str_detect(V8, Time_Score_Specials_String) == TRUE & stringr::str_detect(V9, Time_Score_Specials_String) == TRUE &
+                  (sec_format(V9) > sec_format(V8)) ~ V9,
                 stringr::str_detect(V8, Time_Score_Specials_String) == TRUE ~ V8,
                 TRUE ~ "NA"
               )
@@ -500,12 +556,14 @@ swim_parse_omega <-
               Heat,
               Lane,
               Name,
+              Age,
               Para,
               Team,
               Reaction_Time,
               Finals,
               Row_Numb = V10
-            )
+            ) %>%
+            dplyr::filter(stringr::str_detect(Place, "^\\d+$"))
         )
       } else {
         df_10 <- data.frame(Row_Numb = character(),
@@ -519,6 +577,8 @@ swim_parse_omega <-
             list_transform() %>%
             dplyr::filter(stringr::str_detect(V1, Record_String) == FALSE) %>%
             dplyr::filter(stringr::str_detect(V1, "(Women)|(Men)") == FALSE) %>% # remove Women's Men's etc.
+            dplyr::filter(stringr::str_detect(V3, "(Women)|(Men)") == FALSE) %>% # remove Women's Men's etc.
+            dplyr::filter(stringr::str_detect(V4, "(Women)|(Men)") == FALSE) %>% # remove Women's Men's etc.
             dplyr::na_if("") %>%
             dplyr::mutate(Heat = case_when(
               str_detect(V2, "^\\d{1,2}$") == TRUE &
@@ -548,13 +608,18 @@ swim_parse_omega <-
             dplyr::mutate(
               Reaction_Time = dplyr::case_when(
                 stringr::str_detect(Heat, "NA") == TRUE &
-                  stringr::str_detect(V4, Para_String) == FALSE ~ V5,
-                stringr::str_detect(Heat, "NA") == TRUE &
-                  stringr::str_detect(V4, Para_String) == TRUE ~ V6,
-                TRUE ~ V6
+                  stringr::str_detect(V4, Para_String) == FALSE &
+                  stringr::str_detect(V5, "^\\d\\.\\d{2}") == TRUE ~ V5,
+                # stringr::str_detect(Heat, "NA") == TRUE &
+                #   stringr::str_detect(V4, Para_String) == TRUE &
+                  stringr::str_detect(V6, "^\\d\\.\\d{2}") == TRUE ~ V6,
+                stringr::str_detect(V7, "^\\d\\.\\d{2}") == TRUE &
+                  stringr::str_detect(V8, Time_Score_Specials_String) == TRUE ~ V7,
+                TRUE ~ "NA"
               )
             ) %>%
-
+            dplyr::mutate(Age = case_when(stringr::str_detect(V6, Age_String) == TRUE ~ V6,
+                                          TRUE ~ "NA")) %>%
             dplyr::mutate(
               Finals = dplyr::case_when(
                 stringr::str_detect(Heat, "NA") == TRUE & stringr::str_detect(V4, Para_String) == FALSE ~ V7,
@@ -571,12 +636,14 @@ swim_parse_omega <-
               Heat,
               Lane,
               Name,
+              Age,
               Para,
               Team,
               Reaction_Time,
               Finals,
               Row_Numb = V9
-            )
+            ) %>%
+            dplyr::filter(stringr::str_detect(Place, "^\\d+$"))
         )
       } else {
         df_9 <- data.frame(
@@ -591,7 +658,8 @@ swim_parse_omega <-
           df_8 <- data_length_8 %>%
             list_transform() %>%
             dplyr::filter(stringr::str_detect(V1, Record_String) == FALSE) %>%
-            dplyr::filter(stringr::str_detect(V1, "en") == FALSE) %>% # remove Women's Men's etc.
+            dplyr::filter(stringr::str_detect(V1, "(Women)|(Men)") == FALSE) %>% # remove Women's Men's etc.
+            dplyr::filter(stringr::str_detect(V4, "(Women)|(Men)") == FALSE) %>%
             dplyr::na_if("") %>%
             dplyr::mutate(Heat = case_when(
               str_detect(V2, "^\\d{1,2}$") == TRUE &
@@ -625,7 +693,8 @@ swim_parse_omega <-
                 TRUE ~ "NA"
               )
             ) %>%
-            # filter(Name == "NUNAN Amanda")
+            dplyr::mutate(Age = case_when(stringr::str_detect(V6, Age_String) == TRUE ~ V6,
+                                          TRUE ~ "NA")) %>%
             dplyr::mutate(
               Finals = dplyr::case_when(
                 stringr::str_detect(Heat, "NA") == TRUE &
@@ -651,6 +720,7 @@ swim_parse_omega <-
               Heat,
               Lane,
               Name,
+              Age,
               Para,
               Team,
               Reaction_Time,
@@ -683,16 +753,36 @@ swim_parse_omega <-
                 stringr::str_detect(V3, "^\\d{1,2}$") == FALSE ~ V2,
               TRUE ~ "NA"
             )) %>%
-            dplyr::mutate(Name = dplyr::case_when(stringr::str_detect(Heat, "NA") == TRUE ~ V3,
-                                                  TRUE ~ V4)) %>%
-            dplyr::mutate(Team = dplyr::case_when(stringr::str_detect(Heat, "NA") == TRUE ~ V4,
-                                                  TRUE ~ V5)) %>%
+            dplyr::mutate(
+              Name = dplyr::case_when(
+                stringr::str_detect(Heat, "NA") == TRUE ~ V3,
+                stringr::str_detect(Heat, V2) == TRUE &
+                  stringr::str_detect(V5, Time_Score_Specials_String) == TRUE ~ "NA",
+                TRUE ~ V4
+              )
+            ) %>%
+            dplyr::mutate(
+              Team = dplyr::case_when(
+                stringr::str_detect(Heat, "NA") == TRUE ~ V4,
+                stringr::str_detect(V5, Time_Score_Specials_String) == TRUE &
+                  stringr::str_detect(V4, "[:alpha:]{3,}") == TRUE ~ V4,
+                TRUE ~ V5
+              )
+            ) %>%
             dplyr::mutate(
               Reaction_Time = dplyr::case_when(
                 stringr::str_detect(Heat, "NA") == TRUE &
                   stringr::str_detect(V5, "^\\d\\.\\d\\d") == TRUE ~ V5,
                 stringr::str_detect(V6, "^\\d\\.\\d\\d") == TRUE &
                   str_detect(V5, "\\d\\d\\.\\d\\d") == FALSE ~ V6,
+                TRUE ~ "NA"
+              )
+            ) %>%
+            dplyr::mutate(
+              Age = case_when(
+                stringr::str_detect(V6, Age_String) == TRUE ~ V6,
+                stringr::str_detect(V6, Age_String) == FALSE &
+                  stringr::str_detect(V5, Age_String) == TRUE ~ V5,
                 TRUE ~ "NA"
               )
             ) %>%
@@ -711,10 +801,12 @@ swim_parse_omega <-
               Lane,
               Name,
               Team,
+              Age,
               Reaction_Time,
               Finals,
               Row_Numb = V7
             ) %>%
+            dplyr::filter(!is.na(Finals)) %>%
             dplyr::filter(stringr::str_detect(Place, "\\d")) # removes relay swimmer rows
         )
       } else {
@@ -735,6 +827,9 @@ swim_parse_omega <-
             ) %>%
             dplyr::mutate(
               Heat = dplyr::case_when(
+                stringr::str_detect(V1, "^\\d{1,2}$") == TRUE &
+                  stringr::str_detect(V2, "^\\d{1,2}$") == TRUE &
+                  stringr::str_detect(V3, "^\\d{1,2}$") == TRUE ~ V2,
                 stringr::str_detect(V2, "^\\d{1,2}$") == TRUE &
                   stringr::str_detect(V3, "^\\d{1,2}$") == TRUE &
                   stringr::str_detect(V5, "DSQ|DNS") == FALSE ~ V2,
@@ -762,6 +857,9 @@ swim_parse_omega <-
                 stringr::str_detect(V4, "\\d\\:\\d{2}\\.\\d{2}") == TRUE ~ "NA",
                 stringr::str_detect(Heat, "NA") == TRUE ~ V3,
                 stringr::str_detect(V5, "DSQ|DNS") == TRUE ~ V3,
+                stringr::str_detect(V3, Lane) == TRUE &
+                  str_detect(V4, "[:upper:][:lower:]") == TRUE &
+                  str_detect(V5, Time_Score_String) == TRUE ~ "NA",
                 TRUE ~ V4
               )
             ) %>%
@@ -771,13 +869,14 @@ swim_parse_omega <-
               Team = dplyr::case_when(
                 stringr::str_detect(V4, "\\d\\:\\d{2}\\.\\d{2}") == TRUE ~ V3,
                 stringr::str_detect(Heat, "NA") == TRUE ~ V4,
-                stringr::str_detect(V5, "DSQ|DNS") == TRUE ~ V4,
+                stringr::str_detect(V5, Time_Score_Specials_String) == TRUE ~ V4,
                 TRUE ~ V5
               )
             ) %>%
             dplyr::mutate(
               Reaction_Time = dplyr::case_when(stringr::str_detect(Heat, "NA") == TRUE &
-                                                 stringr::str_detect(V5, "\\d\\.\\d\\d") == TRUE ~ V5,
+                                                 stringr::str_detect(V4, Time_Score_Specials_String) == FALSE &
+                                                 stringr::str_detect(V5, "^\\d\\.\\d{2}") == TRUE ~ V5,
                                                TRUE ~ "NA")
             ) %>%
             dplyr::mutate(
@@ -952,11 +1051,16 @@ swim_parse_omega <-
             Exhibition = dplyr::case_when(stringr::str_detect(Finals, "x|X") == TRUE ~ 1,
                                           TRUE ~ 0),
           ) %>%
-          dplyr::mutate(DQ = dplyr::case_when(as.numeric(Place) == 10000 &
-                                                Exhibition == 0 ~ 1, # added exhibition condition 8/27
-                                              stringr::str_detect(Finals, "DQ|DSQ") == TRUE ~ 1,
-                                              is.na(DQ) ~ 0,
-                                              TRUE ~ DQ)) %>%
+          dplyr::mutate(
+            DQ = dplyr::case_when(
+              as.numeric(Place) == 10000 &
+                Exhibition == 0 ~ 1,
+              # added exhibition condition 8/27
+              stringr::str_detect(Finals, "DQ|DSQ|DNS|DFS") == TRUE ~ 1,
+              is.na(DQ) ~ 0,
+              TRUE ~ DQ
+            )
+          ) %>%
           na_if(as.numeric(10000)) %>%
           dplyr::mutate(dplyr::across(
             c(Name, Team), ~ stringr::str_replace_all(., "10000", "--")
@@ -973,7 +1077,9 @@ swim_parse_omega <-
             ),
             Place = as.character(Place),
             Row_Numb = as.numeric(Row_Numb)
-          )
+          ) %>%
+          dplyr::filter(Team %!in% c("Gold", "Silver", "Bronze")) %>%
+          dplyr::filter(Name %!in% c("GOLD", "SILVER", "BRONZE"))
       )
 
 
@@ -996,17 +1102,19 @@ swim_parse_omega <-
             select(-Heat)
         }
       }
-      if("Heat" %in% names(data) == FALSE){
-      if(min(data$Row_Numb) < min(heats$Heat_Row_Min)){
-        unknown_heat <- data.frame(Heat = "NA",
-                                    Heat_Row_Min = min(data$Row_Numb),
-                                    Heat_Row_Max = min(heats$Heat_Row_Min) - 1)
-        heats <- dplyr::bind_rows(unknown_heat, heats)
-      }
+      if ("Heat" %in% names(data) == FALSE) {
+        if (min(data$Row_Numb) < min(heats$Heat_Row_Min)) {
+          unknown_heat <- data.frame(
+            Heat = "NA",
+            Heat_Row_Min = min(data$Row_Numb),
+            Heat_Row_Max = min(heats$Heat_Row_Min) - 1
+          )
+          heats <- dplyr::bind_rows(unknown_heat, heats)
+        }
 
-      data  <-
-        transform(data, Heat = heats$Heat[findInterval(Row_Numb, heats$Heat_Row_Min)]) %>%
-        dplyr::na_if("NA")
+        data  <-
+          transform(data, Heat = heats$Heat[findInterval(Row_Numb, heats$Heat_Row_Min)]) %>%
+          dplyr::na_if("NA")
       }
 
       #### cleaning up final results ####
@@ -1023,6 +1131,8 @@ swim_parse_omega <-
                                        DQ == 0 ~ dplyr::lag(Place) + 1,
                                      TRUE ~ Place)
           ) %>%
+          dplyr::mutate(Reaction_Time = case_when(stringr::str_detect(Event, "(R|r)elay|\\dx\\d{3}") == TRUE ~ "NA",
+                                                  TRUE ~ Reaction_Time)) %>%
           dplyr::na_if("NA")
       )
 
@@ -1050,10 +1160,10 @@ swim_parse_omega <-
           dplyr::mutate(dplyr::across(where(is.numeric), as.character))
 
         data_ind <- data %>%
-          dplyr::filter(stringr::str_detect(Event, "(R|r)elay") == FALSE)
+          dplyr::filter(stringr::str_detect(Event, "(R|r)elay|\\dx\\d{3}") == FALSE)
 
         data_relay <- data %>%
-          dplyr::filter(stringr::str_detect(Event, "(R|r)elay") == TRUE)
+          dplyr::filter(stringr::str_detect(Event, "(R|r)elay|\\dx\\d{3}") == TRUE)
 
         if(nrow(data_ind) > 0) {
 
@@ -1113,6 +1223,8 @@ swim_parse_omega <-
             dplyr::select(-Row_Numb)
 
           data_relay <- data_relay %>%
+            # dplyr::filter(Finals != "DNS") %>%
+            # dplyr::filter(Finals != "DSQ") %>%
             dplyr::left_join(splits_df, by = c("Row_Numb" = "Row_Numb_Adjusted")) %>%
             dplyr::na_if(10000) %>%
             dplyr::mutate(dplyr::across(dplyr::starts_with("Split"), format, nsmall = 2)) %>%

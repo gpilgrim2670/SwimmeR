@@ -31,14 +31,21 @@ event_parse <- function(text) {
   event_string <-
     "Event\\:?\\s?#?\\s+\\d{1,}|EVENT\\:?\\s?#?\\s+\\d{1,}|Women.* Yard|Women.* Meter|Women.* Metre|Girls.* Yard|Girls.* Meter|Girls.* Metre|Men.* Yard|Men.* Meter|Men.* Metre|Boys.* Yard|Boys.* Meter|Boys.* Metre|Mixed.* Yard|Mixed.* Meter|Mixed.* Metre"
 
-  event_string <- paste(event_string, olympics_string, omega_headers_string, sep = "|")
+  top_string <- "Women\\s+\\d{2,4}\\s(Free|Fly|Breast|Back|IM)|Men\\s+\\d{2,4}\\s(Free|Fly|Breast|Back|IM)"
+
+  event_string <- paste(event_string, olympics_string, omega_headers_string, top_string, sep = "|")
 
   events <- text %>%
     .[stringr::str_detect(.,
                      event_string)] %>% # new 12/15 for older NCAA results
     .[purrr::map_lgl(., ~ !any(stringr::str_detect(., "\\.\\.\\.")))] %>%  # removes sub headers like in OT results "Semi-Finals ... (women...)" etc.
     .[stringr::str_detect(., "\\d{2}\\.\\d{2}", negate = TRUE)] %>%
-    .[stringr::str_detect(., "\\d{2} [:upper:]{3} \\d{4} GOLD", negate = TRUE)]
+    .[stringr::str_detect(., "GOLD", negate = TRUE)] %>%
+    .[stringr::str_detect(., "SILVER", negate = TRUE)] %>%
+    .[stringr::str_detect(., "BRONZE", negate = TRUE)] %>%
+    .[stringr::str_detect(., "Medallists by Event", negate = TRUE)] %>%
+    .[stringr::str_detect(., "Rank\\s+Name\\s+NAT\\s+Code\\s+Event", negate = TRUE)]
+    # .[stringr::str_detect(., "\\d{2} [:upper:]{3} \\d{4} GOLD", negate = TRUE)]
 
   if (length(events) > 0) {
     #if event names are recognized clean them up and determine row ranges

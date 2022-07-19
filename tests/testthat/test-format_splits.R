@@ -1,3 +1,5 @@
+# testthat::test_file("tests/testthat/test-format_splits.R")
+
 test_that("cumulative splits 1500", {
 
   file <-
@@ -7,10 +9,11 @@ test_that("cumulative splits 1500", {
                    splits = TRUE)
 
   df_test <- df %>%
+    filter(Event %in% c("Women 1500 LC Meter Freestyle Multi-Class S14", "Women 50 LC Meter Freestyle Multi-Class S6")) %>%
     splits_to_lap()
 
   #### 1500 has lots of splits ####
-
+#
   df_test_1500 <- df_test %>%
     filter(Event == "Women 1500 LC Meter Freestyle Multi-Class S14")
 
@@ -19,8 +22,8 @@ test_that("cumulative splits 1500", {
       list(
         Place = 1,
         Name = "Nagy, Tessa M",
-        Age = "18",
         Para = "S14",
+        Age = "18",
         Team = "Unattached-UN",
         Prelims = "26:19.38",
         Finals = "27:16.60",
@@ -79,9 +82,9 @@ test_that("cumulative splits 1500", {
           "Garcia, Julia",
           "Pfankuch, Emilynn N"
         ),
-        Age = c("14", "18", "10", "12"),
         Para = c("S6", "S6", "S6",
                  "S6"),
+        Age = c("14", "18", "10", "12"),
         Team = c(
           "Chinook Aquatic Club-PN",
           "Bend Swim Club-OR",
