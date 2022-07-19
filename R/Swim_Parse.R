@@ -171,6 +171,7 @@ Swim_Parse <-
     #   options("age_team_warning_0.6.0" = FALSE)
     # }
 
+
     if(stringr::str_detect(file[1], "^read_results_flag$") == TRUE){
 
       # remove read_results flag
@@ -182,6 +183,10 @@ Swim_Parse <-
       # if read_results flag isn't present post an error
 
       stop("Please run read_results on file prior to running swim_parse.")
+    }
+
+    if(length(file) <= 1){
+      stop("No results found.  Please check source.")
     }
 
     if (stringr::str_detect(file[1], "^A107") == TRUE) { # for .hy3 files
