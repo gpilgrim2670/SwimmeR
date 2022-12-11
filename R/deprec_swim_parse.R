@@ -330,7 +330,7 @@ swim_parse_old <-
             mutate(Team = str_remove(Team, Age),
                    Team = trimws(Team)
             ) %>%
-            # na_if("") %>%
+            # na_if_character("") %>%
             dplyr::mutate(
               Prelims_Time = dplyr::case_when(
                 # any(stringr::str_detect(V3, Time_Score_Specials_String)) == TRUE &
@@ -367,7 +367,7 @@ swim_parse_old <-
               Points = dplyr::case_when(stringr::str_detect(Points, "^\\d{1,}$") == FALSE ~ "",
                                         TRUE ~ Points)
             ) %>%
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::select(
               Place,
               Name,
@@ -378,8 +378,8 @@ swim_parse_old <-
               Points,
               Row_Numb = V7
             ) %>%
-            dplyr::na_if("") %>%
-            dplyr::na_if("''") %>%
+            na_if_character("") %>%
+            na_if_character("''") %>%
             dplyr::mutate(
               DQ = case_when(str_detect(Finals_Time, "^DQ$") ~ 1,
                              TRUE ~ 0),
@@ -437,7 +437,7 @@ swim_parse_old <-
               Finals_Time = stringr::str_extract(Finals_Time, Time_Score_String),
               Prelims_Time = stringr::str_extract(Prelims_Time, Time_Score_String)
             ) %>%
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::mutate(
               Prelims_Time = dplyr::case_when(
                 all(Prelims_Time == Finals_Time, na.rm = TRUE) ~ as.character(NA),
@@ -500,8 +500,7 @@ swim_parse_old <-
             ) %>%
             dplyr::mutate(V3 = case_when(is.na(Age) == FALSE & str_detect(V3, paste0("^", Age, " ")) ==TRUE ~ str_remove(V3, paste0(Age, " ")),
                                          TRUE ~ V3)) %>%
-            na_if("") %>%
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::mutate(
               Team = dplyr::case_when(
                 V3 == Age ~ V4,
@@ -562,7 +561,7 @@ swim_parse_old <-
               Points = dplyr::case_when(stringr::str_detect(Points, "^\\d{1,}$") == FALSE ~ "",
                                         TRUE ~ Points)
             ) %>%
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::select(
               Name,
               Place,
@@ -573,8 +572,8 @@ swim_parse_old <-
               Points,
               Row_Numb = V6
             ) %>%
-            dplyr::na_if("") %>%
-            dplyr::na_if("''") %>%
+            na_if_character("") %>%
+            na_if_character("''") %>%
             dplyr::mutate(
               Finals_Time = replace(Finals_Time, stringr::str_length(Finals_Time) < 3, NA),
               Finals_Time = dplyr::case_when(
@@ -617,7 +616,7 @@ swim_parse_old <-
               Finals_Time = stringr::str_extract(Finals_Time, Time_Score_String),
               Prelims_Time = stringr::str_extract(Prelims_Time, Time_Score_String),
             ) %>%
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::mutate(
               Prelims_Time = dplyr::case_when(
                 all(Prelims_Time == Finals_Time, na.rm = TRUE) ~ as.character(NA),
@@ -670,7 +669,7 @@ swim_parse_old <-
                 TRUE ~ stringr::str_split_fixed(V1, " ", n = 2)[, 2]
               )
             ) %>%
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::mutate(
               V1 = dplyr::case_when(
                 is.na(Place) == FALSE ~ stringr::str_remove(V1, Place),
@@ -693,7 +692,7 @@ swim_parse_old <-
                   stringr::str_detect(V3, "SR|JR|SO|FR|^\\d{1,3} ") ~ stringr::str_split_fixed(V3, " ", n = 2)[, 1],
                 TRUE ~ ""
               )) %>%
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::mutate(
               Age = trimws(Age),
               V3 = case_when(is.na(Age) == FALSE & stringr::str_detect(V3, Age) == TRUE & stringr::str_detect(V3, Time_Score_Specials_String) == FALSE & Age != "" ~ stringr::str_remove(V3, Age),
@@ -703,7 +702,7 @@ swim_parse_old <-
               V2 = trimws(V2),
               V3 = trimws(V3)
             ) %>%
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::mutate(
               Team = dplyr::case_when(
                 V2 == Name & str_detect(V4, Time_Score_Specials_String) == TRUE ~ V3,
@@ -759,7 +758,7 @@ swim_parse_old <-
               Points = dplyr::case_when(stringr::str_detect(Points, "^\\d{1,}$") == FALSE ~ "",
                                         TRUE ~ Points)
             ) %>%
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::select(
               Name,
               Place,
@@ -770,8 +769,8 @@ swim_parse_old <-
               Points,
               Row_Numb = V5
             ) %>%
-            dplyr::na_if("") %>%
-            dplyr::na_if("''") %>%
+            na_if_character("") %>%
+            na_if_character("''") %>%
             dplyr::mutate(
               DQ = case_when(str_detect(Finals_Time, "^DQ$") ~ 1,
                              TRUE ~ 0)
@@ -786,13 +785,13 @@ swim_parse_old <-
               Finals_Time = stringr::str_extract(Finals_Time, Time_Score_String),
               Prelims_Time = stringr::str_extract(Prelims_Time, Time_Score_String), # added 11/6
             ) %>%
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::mutate(
               Finals_Time = replace(Finals_Time, dplyr::n_distinct(Finals_Time) <= 2, ""),
               Prelims_Time = replace(Prelims_Time, dplyr::n_distinct(Prelims_Time) <= 2, "")
             ) %>%
-            dplyr::na_if("") %>%
-            dplyr::na_if("''") %>%
+            na_if_character("") %>%
+            na_if_character("''") %>%
             # dplyr::mutate(
             #   Finals_Time = dplyr::case_when(
             #     sum(stringr::str_detect(Finals_Time, Time_Score_String)) >= 1 ~ stringr::str_remove(Finals_Time, "NT"),
@@ -800,7 +799,7 @@ swim_parse_old <-
             #     TRUE ~ Finals_Time
             #   )
             # ) %>%
-            dplyr::na_if("") %>% # good 11/9
+            na_if_character("") %>% # good 11/9
             dplyr::mutate(
               Team = dplyr::case_when(
                 is.na(Team) == TRUE &
@@ -831,7 +830,7 @@ swim_parse_old <-
               #   Finals_Time = stringr::str_extract(Finals_Time, Time_Score_String),
               #   Prelims_Time = stringr::str_extract(Prelims_Time, Time_Score_String), # added 11/6
             ) %>%
-            # dplyr::na_if("") %>%
+            # na_if_character("") %>%
             dplyr::mutate(
               Prelims_Time = dplyr::case_when(
                 all(Prelims_Time == Finals_Time, na.rm = TRUE) ~ as.character(NA),
@@ -858,7 +857,7 @@ swim_parse_old <-
                 TRUE ~ Finals_Time
               )
             ) %>%
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::mutate(
               Points = dplyr::case_when(
                 is.na(Points_2) == FALSE ~ Points_2,
@@ -874,7 +873,7 @@ swim_parse_old <-
                 NA
               )
             ) %>%
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::mutate(
               Team = replace(Team, stringr::str_detect(Team, "\\.\\d") == TRUE, NA),
               Team = dplyr::case_when(
@@ -974,7 +973,7 @@ swim_parse_old <-
                 TRUE ~ stringr::str_split_fixed(V1, " ", n = 2)[, 2]
               )
             ) %>%
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::mutate(
               V1 = dplyr::case_when(
                 is.na(Place) == FALSE ~ stringr::str_remove(V1, Place),
@@ -995,7 +994,7 @@ swim_parse_old <-
               ),
               Age = trimws(Age)
             ) %>%
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::mutate(
               Team = dplyr::case_when(
                 V2 == Age &
@@ -1036,7 +1035,7 @@ swim_parse_old <-
                 TRUE ~ ""
               )
             ) %>%
-            na_if("") %>%
+            na_if_character("") %>%
             dplyr::mutate(
               Finals_Time = dplyr::case_when(
                 stringr::str_detect(V3, Time_Score_Specials_String) == TRUE &
@@ -1053,7 +1052,7 @@ swim_parse_old <-
               Points = dplyr::case_when(stringr::str_detect(Points, "^\\d{1,}$") == FALSE ~ "",
                                         TRUE ~ Points)
             ) %>%
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::select(
               Name,
               Place,
@@ -1063,8 +1062,8 @@ swim_parse_old <-
               Finals_Time,
               Row_Numb = V4
             ) %>%
-            dplyr::na_if("") %>%
-            dplyr::na_if("''") %>%
+            na_if_character("") %>%
+            na_if_character("''") %>%
             dplyr::mutate(
               DQ = case_when(str_detect(Finals_Time, "^DQ$") ~ 1,
                              TRUE ~ 0),
@@ -1115,7 +1114,7 @@ swim_parse_old <-
             dplyr::mutate(
               Finals_Time = stringr::str_extract(Finals_Time, Time_Score_String)
             ) %>%
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::mutate(
               Prelims_Time = dplyr::case_when(
                 all(Prelims_Time == Finals_Time, na.rm = TRUE) ~ as.character(NA),
@@ -1168,7 +1167,7 @@ swim_parse_old <-
                 Team,
                 "^[:digit:]{1,2}\\s")
             ) %>%
-            na_if("") %>%
+            na_if_character("") %>%
             dplyr::mutate(
               Name = stringr::str_remove(Name, "^-"),
               Name = replace(Name, Name == Team, NA)
@@ -1204,8 +1203,8 @@ swim_parse_old <-
               Finals_Time,
               Row_Numb = V3
             ) %>%
-            dplyr::na_if("") %>%
-            dplyr::na_if("''") %>%
+            na_if_character("") %>%
+            na_if_character("''") %>%
             dplyr::mutate(
               Finals_Time = replace(Finals_Time, stringr::str_length(Finals_Time) < 3, NA),
               Finals_Time = dplyr::case_when(
@@ -1235,7 +1234,7 @@ swim_parse_old <-
               Finals_Time = stringr::str_extract(Finals_Time, Time_Score_String),
               Prelims_Time = stringr::str_extract(Prelims_Time, Time_Score_String)
             ) %>%
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::mutate(
               Prelims_Time = dplyr::case_when(
                 all(Prelims_Time == Finals_Time, na.rm = TRUE) ~ as.character(NA),
@@ -1271,7 +1270,7 @@ swim_parse_old <-
                 TRUE ~ stringr::str_split_fixed(V1, " ", n = 2)[, 2]
               )
             ) %>%
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::mutate(
               V1 = dplyr::case_when(
                 is.na(Place) == FALSE ~ stringr::str_remove(V1, Place),
@@ -1292,7 +1291,7 @@ swim_parse_old <-
               ),
               Age = trimws(Age)
             ) %>%
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::mutate(
               Team = dplyr::case_when(
                 V2 == Age &
@@ -1323,14 +1322,14 @@ swim_parse_old <-
               ),
               Team = trimws(Team)
             ) %>%
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::select(Name,
                           Place,
                           Age,
                           Team,
                           Row_Numb = V4) %>%
-            dplyr::na_if("") %>%
-            dplyr::na_if("''") %>%
+            na_if_character("") %>%
+            na_if_character("''") %>%
             dplyr::mutate(DQ = 1)
         )
 
@@ -1351,12 +1350,12 @@ swim_parse_old <-
               Team = stringr::str_split_fixed(V1, " ", n = 2)[, 2],
               Team = trimws(Team)
             ) %>%
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::select(Place,
                           Team,
                           Row_Numb = V3) %>%
-            dplyr::na_if("") %>%
-            dplyr::na_if("''") %>%
+            na_if_character("") %>%
+            na_if_character("''") %>%
             dplyr::mutate(DQ = 1)
         )
       } else {
@@ -1386,7 +1385,7 @@ swim_parse_old <-
           ### moved up from below for DQ work 8/20
           dplyr::mutate(DQ = dplyr::case_when(Place == 10000 & Exhibition == 0 ~ 1, # added exhibition condition 8/27
                                               TRUE ~ DQ)) %>%
-          na_if(10000) %>%
+          na_if_numeric(10000) %>%
           dplyr::mutate(dplyr::across(c(Name, Team), ~ stringr::str_replace_all(., "10000", "--"))) %>% # remove any "10000"s added in erroniuously
           ####
           dplyr::mutate(
@@ -1456,7 +1455,7 @@ swim_parse_old <-
                                                       TRUE ~ Exhibition)) %>%
           dplyr::mutate(Finals_Time = dplyr::case_when(DQ == 1 ~ "NA",
                                                        TRUE ~ Finals_Time)) %>%
-          dplyr::na_if("NA")
+          na_if_character("NA")
 
       )
 

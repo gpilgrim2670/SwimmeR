@@ -340,7 +340,7 @@ splits_parse_splash <- function(raw_results) {
     )
 
     data_splits <- data_splits %>%
-      dplyr::na_if("Unknown") %>%
+      na_if_character("Unknown") %>%
       lines_sort(min_row = minimum_row, to_wide = FALSE) %>%
       dplyr::mutate(Row_Numb = as.numeric(Row_Numb) - 1)   # make row number of split match row number of performance
 

@@ -184,7 +184,7 @@ splits_parse_ISL <- function(text) {
   }
 
   data_splits <- data_splits %>%
-    dplyr::na_if("00.00")
+    na_if_character("00.00")
 
   return(data_splits)
 }

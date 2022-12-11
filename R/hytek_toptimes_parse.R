@@ -149,7 +149,7 @@ toptimes_parse_hytek <- function(file_hytek_toptimes,
 
   data  <-
     transform(data, Event = events$Event[findInterval(Row_Numb, events$Event_Row_Min)]) %>%
-    dplyr::na_if("Unknown")
+    na_if_character("Unknown")
 
   #### Rank column to numeric ####
   if ("Rank" %in% names(data)) {

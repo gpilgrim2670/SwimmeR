@@ -119,7 +119,7 @@ collect_relay_swimmers_splash <-
             "Relay_Swimmer_4" = V5,
             Row_Numb
           ) %>%
-          dplyr::na_if("NA")
+          na_if_character("NA")
       }
 
       } else {

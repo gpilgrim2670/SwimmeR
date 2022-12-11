@@ -60,13 +60,13 @@ name_reorder <- function(x, verbose = FALSE) {
           TRUE ~ ""
         )
       ) %>%
-      dplyr::na_if("") %>%
+      na_if_character("") %>%
       dplyr::mutate(First_Name = dplyr::case_when(
         is.na(Last_Name) == FALSE ~ stringr::str_remove(Name, paste0(Last_Name, ",", " ")),
         # gets first name if last name was identified above
         TRUE ~ ""
       )) %>%
-      dplyr::na_if("") %>%
+      na_if_character("") %>%
       dplyr::mutate(Name_3 = dplyr::case_when(
         # recombines first names and last names identified above into Firstname Lastname order
         is.na(First_Name) == FALSE &

@@ -234,7 +234,7 @@ splits_parse_splash_relays <-
         dplyr::rename_at(dplyr::vars(dplyr::all_of(old_names)), ~ new_names)
 
       data_splits <- data_splits %>%
-        dplyr::na_if("NA")
+        na_if_character("NA")
 
       row.names(data_splits) <- NULL
 

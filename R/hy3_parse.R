@@ -7,7 +7,6 @@
 #' @importFrom dplyr mutate
 #' @importFrom dplyr lead
 #' @importFrom dplyr case_when
-#' @importFrom dplyr na_if
 #' @importFrom dplyr select
 #' @importFrom dplyr arrange
 #' @importFrom dplyr left_join
@@ -204,7 +203,7 @@ hy3_parse <-
         Prelims = stringr::str_remove(Prelims, "[A-Z]{1,}"),
         Finals = stringr::str_remove(Finals, "[A-Z]{1,}"),
       ) %>%
-      dplyr::na_if("0.00") %>%
+      na_if_character("0.00") %>%
       dplyr::mutate(Seed_Time = dplyr::case_when(is.na(Seed_Time) ~ "00.00",
                                           TRUE ~ Seed_Time),
                     Prelims = dplyr::case_when(is.na(Prelims) ~ "00.00",
@@ -228,12 +227,12 @@ hy3_parse <-
           TRUE ~ Finals
         )
       ) %>%
-      dplyr::na_if("00.00") %>%
+      na_if_character("00.00") %>%
       dplyr::mutate(Place = as.numeric(Finals_Place)) %>%
       dplyr::select(-Finals_Place) %>%
       dplyr::mutate(Place = dplyr::case_when(Place == 0 ~ 100000,
                                       TRUE ~ Place)) %>%
-      dplyr::na_if(100000))
+      na_if_numeric(100000))
 
     # data beginning with D1M contains swimmer info (M for male, F for female)
     swimmer <- file %>%
@@ -269,7 +268,7 @@ hy3_parse <-
 
     # works for CA results 11/12 - reenable when completing hy3 work
     # swimmer <- data.frame(swimmer, stringsAsFactors = FALSE) %>%
-    #   na_if("") %>%
+    #   na_if_character("") %>%
     #   fill_left()
 
     swimmer <- data.frame(swimmer, stringsAsFactors = FALSE)
@@ -381,7 +380,7 @@ hy3_parse <-
           TRUE ~ "NA"
         )
       ) %>%
-      dplyr::na_if("^NA$") %>%
+      na_if_character("^NA$") %>%
       dplyr::select(-X8,-X9)
 
     relay <- relay %>%
@@ -456,12 +455,12 @@ hy3_parse <-
         Prelims = mmss_format(as.numeric(Prelims)),
         Finals = mmss_format(as.numeric(Finals))
       ) %>%
-      dplyr::na_if("00.00") %>%
+      na_if_character("00.00") %>%
       dplyr::mutate(Place = as.numeric(Finals_Place)) %>%
       dplyr::select(-Finals_Place) %>%
       dplyr::mutate(Place = dplyr::case_when(Place == 0 ~ 100000,
                                              TRUE ~ Place)) %>%
-      dplyr::na_if(100000))
+      na_if_numeric(100000))
     } else {
       relay <- data.frame(
         Name = character(),
@@ -497,7 +496,7 @@ hy3_parse <-
           TRUE ~ Prelims
         )
       ) %>%
-      dplyr::na_if("Bad Entry") %>%
+      na_if_character("Bad Entry") %>%
       dplyr::mutate(Finals = dplyr::case_when((is.na(Prelims) == FALSE &
                                                       is.na(Finals) == TRUE) ~ Prelims,
                                                    TRUE ~ Finals
@@ -507,7 +506,7 @@ hy3_parse <-
         USA_ID = dplyr::case_when(stringr::str_length(USA_ID) < 8 ~ "Bad Entry",
                                   TRUE ~ USA_ID)
       ) %>%
-      dplyr::na_if("Bad Entry") %>%
+      na_if_character("Bad Entry") %>%
       dplyr::select(-Row_Min,-Row_Max,-Row_Numb,-ID_Numb)
 
     ## cleaning up data
@@ -519,7 +518,7 @@ hy3_parse <-
           TRUE ~ Finals
         )
       ) %>%
-      dplyr::na_if("00.00")
+      na_if_character("00.00")
       # filter(is.na(Finals) == FALSE | is.na(Prelims) == FALSE)
 
     return(data)

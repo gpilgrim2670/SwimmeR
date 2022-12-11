@@ -28,7 +28,7 @@ hytek_length_9_sort <-
       suppressWarnings(
         df_9 <- x %>%
           list_transform() %>%
-          dplyr::na_if("") %>%
+          na_if_character("") %>%
           dplyr::mutate(
             ID = dplyr::case_when(
               stringr::str_detect(V2, brit_id_string) == TRUE ~ V2,
@@ -90,7 +90,7 @@ hytek_length_9_sort <-
               TRUE ~ "NA"
             )
           ) %>%
-          dplyr::na_if("NA") %>%
+          na_if_character("NA") %>%
           dplyr::select(
             Place = V1,
             ID,
@@ -153,7 +153,7 @@ hytek_length_8_sort <-
         df_8 <- x %>%
           list_transform() %>%
           filter(stringr::str_detect(V1, "\\.") == FALSE) %>% # occasionally old results with DQs in the splits will end up here - this removes them
-          dplyr::na_if("") %>%
+          na_if_character("") %>%
           dplyr::mutate(ID = dplyr::case_when(
             stringr::str_detect(V2, brit_id_string) == TRUE ~ V2,
             TRUE ~ "NA"
@@ -207,7 +207,7 @@ hytek_length_8_sort <-
               TRUE ~ "NA"
             )
           ) %>%
-          dplyr::na_if("NA") %>%
+          na_if_character("NA") %>%
           dplyr::select(
             Place = V1,
             ID,
@@ -334,7 +334,7 @@ hytek_length_7_sort <-
               TRUE ~ "NA"
             )
           ) %>%
-          dplyr::na_if("NA") %>%
+          na_if_character("NA") %>%
           dplyr::select(
             Place,
             ID,
@@ -431,7 +431,7 @@ hytek_length_6_sort <-
               TRUE ~ "NA"
             )
           ) %>%
-          dplyr::na_if("NA") %>%
+          na_if_character("NA") %>%
           dplyr::select(Place,
                         Name,
                         Age,
@@ -519,7 +519,7 @@ hytek_length_5_sort <-
             )
           ) %>%
 
-          dplyr::na_if("NA") %>%
+          na_if_character("NA") %>%
           dplyr::select(
             Place,
             Name,
@@ -585,7 +585,7 @@ hytek_length_4_sort <-
               TRUE ~ "NA"
             )
           ) %>%
-          dplyr::na_if("") %>%
+          na_if_character("") %>%
           dplyr::select(Place,
                         Team,
                         Prelims,

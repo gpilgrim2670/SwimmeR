@@ -185,7 +185,7 @@ swim_parse_ISL <-
             TRUE ~ Points
           )
         ) %>%
-        na_if("NA")
+        na_if_character("NA")
 
     } else {
       df_ind_swimmer <- data.frame(
@@ -243,7 +243,7 @@ swim_parse_ISL <-
         list_transform()
 
       df_relay_swimmer <- dplyr::bind_cols(df_left, df_right) %>%
-        dplyr::na_if("NA")
+        na_if_character("NA")
 
       suppressWarnings(
       df_relay_swimmer <- df_relay_swimmer %>%
@@ -285,7 +285,7 @@ swim_parse_ISL <-
         ) %>%
         dplyr::mutate(Points = dplyr::case_when(stringr::str_detect(V3, "DSQ") == TRUE ~ V4,
                                                 TRUE ~ "NA")) %>%
-        dplyr::na_if("NA") %>%
+        na_if_character("NA") %>%
         dplyr::select(Lane, Name, Team, Finals, Row_Numb)
 
     } else {
@@ -323,7 +323,7 @@ swim_parse_ISL <-
         dplyr::bind_rows(df_DSQ_6) %>%
         dplyr::mutate(Row_Numb = as.numeric(Row_Numb)) %>%
         dplyr::arrange(Row_Numb) %>%
-        dplyr::na_if("10000") %>%
+        na_if_character("10000") %>%
         unique() %>%
         dplyr::mutate(
           Place = as.numeric(Place),
@@ -355,7 +355,7 @@ swim_parse_ISL <-
         dplyr::mutate(DQ = case_when(Finals == "DSQ" ~ 1,
                                      Finals == "DNS" ~ 1,
                                      TRUE ~ 0)) %>%
-        dplyr::na_if("DSQ") %>%
+        na_if_character("DSQ") %>%
         ### clean up relay names ###
         dplyr::rowwise() %>%
         dplyr::mutate(Team = stringr::str_split_fixed(Team, "\\s", 2)[1]) %>%
@@ -405,7 +405,7 @@ swim_parse_ISL <-
         ),
         TRUE ~ Split_50)) %>%
         dplyr::mutate(Split_50 = sprintf("%.2f", Split_50)) %>% # to keep trailing zero e.g. in 24.50
-        na_if("NA")
+        na_if_character("NA")
       )
     }
 
