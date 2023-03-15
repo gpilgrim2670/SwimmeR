@@ -1061,7 +1061,8 @@ swim_parse_omega <-
               TRUE ~ DQ
             )
           ) %>%
-          na_if_numeric(10000) %>%
+          # 3/14/23
+          na_if_character("10000") %>%
           dplyr::mutate(dplyr::across(
             c(Name, Team), ~ stringr::str_replace_all(., "10000", "--")
           )) %>% # remove any "10000"s added in erroneously

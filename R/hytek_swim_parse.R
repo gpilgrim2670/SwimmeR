@@ -78,6 +78,9 @@ swim_parse_hytek <-
 
 
     #### testing ####
+    # file_hytek <-
+    #   read_results(system.file("extdata", "2018_jimi_flowers_PARA.pdf", package = "SwimmeR"))
+
     # file_hytek <- read_results("https://data.ohiostatebuckeyes.com/livestats/m-swim/210302F001.htm")
     # file_hytek <- read_results(system.file("extdata", "Texas-Florida-Indiana.pdf", package = "SwimmeR"))
 
@@ -257,7 +260,8 @@ swim_parse_hytek <-
                                             stringr::str_detect(Finals, "DQ") == TRUE ~ 1,
                                             is.na(DQ) ~ 0,
                                             TRUE ~ DQ)) %>%
-        na_if_numeric(10000) %>%
+        # na_if_numeric(10000) %>%
+        na_if_character("10000") %>%
         dplyr::mutate(dplyr::across(
           # c(Name, Team), ~ stringr::str_replace_all(., "10000", "--")
           dplyr::contains("Name|Team"), ~ stringr::str_replace_all(., "10000", "--")

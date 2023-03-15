@@ -91,6 +91,9 @@ Swim_Parse <-
 #     "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Splash/Glenmark_Senior_Nationals_2019.pdf"
 #   )
 #
+
+# file <-
+#       read_results(system.file("extdata", "2018_jimi_flowers_PARA.pdf", package = "SwimmeR"))
 # avoid = avoid_default
 # typo = typo_default
 # replacement = replacement_default

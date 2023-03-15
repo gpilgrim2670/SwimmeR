@@ -387,7 +387,8 @@ swim_parse_ISL <-
         dplyr::left_join(splits_df, by = 'Row_Numb')
 
       #### calculate 50 split since it's blank coming in from  split_parse_ISL due to row mismatches
-      suppressWarnings(data <- data %>%
+      suppressWarnings(
+        data <- data %>%
         dplyr::mutate(Split_50 = as.numeric(Split_50)) %>%
         dplyr::rowwise() %>%
         dplyr::mutate(Split_50 = dplyr::case_when(is.na(Split_100) == FALSE & str_detect(Event, "\\d\\s?x\\s?\\d") == FALSE ~ round(

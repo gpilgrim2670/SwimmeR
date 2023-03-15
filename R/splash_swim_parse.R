@@ -384,6 +384,7 @@ swim_parse_splash <-
         data_relay <- data_relay %>%
           dplyr::left_join(splits_df, by = "Row_Numb") %>%
           coalesce_many() %>%
+          # na_if_character("10000") %>%
           na_if_numeric(10000) %>%
           dplyr::mutate(dplyr::across(dplyr::starts_with("Split"), format, nsmall = 2)) %>%
           dplyr::mutate(dplyr::across(where(is.numeric), as.character)) %>%
