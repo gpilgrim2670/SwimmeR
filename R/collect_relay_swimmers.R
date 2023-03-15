@@ -4,7 +4,6 @@
 #' @importFrom dplyr rename
 #' @importFrom dplyr bind_rows
 #' @importFrom dplyr select
-#' @importFrom dplyr na_if
 #' @importFrom stringr str_remove_all
 #' @importFrom stringr str_replace_all
 #' @importFrom stringr str_extract_all
@@ -129,7 +128,7 @@ collect_relay_swimmers <- function(x){
         "Relay_Swimmer_4" = V5,
         Row_Numb
       ) %>%
-      dplyr::na_if("NA")
+      na_if_character("NA")
 
   } else {
     relay_swimmers_data <- data.frame(Row_Numb = as.numeric())

@@ -307,8 +307,8 @@ swim_parse_omega <-
           df_13 <- data_length_13 %>%
             list_transform() %>%
             dplyr::filter(stringr::str_detect(V1, Record_String) == FALSE) %>%
-            dplyr::na_if("") %>%
-            dplyr::na_if("NA") %>%
+            na_if_character("") %>%
+            na_if_character("NA") %>%
             dplyr::select(
               Place = V1,
               Heat = V2,
@@ -387,8 +387,8 @@ swim_parse_omega <-
                 TRUE ~ "NA"
               )
             ) %>%
-            dplyr::na_if("") %>%
-            dplyr::na_if("NA") %>%
+            na_if_character("") %>%
+            na_if_character("NA") %>%
             dplyr::select(
               Place = V1,
               Heat,
@@ -417,7 +417,7 @@ swim_parse_omega <-
             list_transform() %>%
             dplyr::filter(stringr::str_detect(V1, Record_String) == FALSE) %>%
             dplyr::filter(stringr::str_detect(V10, "Championship") == FALSE) %>%
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::mutate(Heat = case_when(
               str_detect(V2, "^\\d{1,2}$") == TRUE &
                 stringr::str_detect(V3, "^\\d{1,2}$") ~ V2,
@@ -471,7 +471,7 @@ swim_parse_omega <-
                 TRUE ~ "NA"
               )
             ) %>%
-            dplyr::na_if("NA") %>%
+            na_if_character("NA") %>%
             dplyr::select(
               Place = V1,
               Heat,
@@ -501,7 +501,7 @@ swim_parse_omega <-
             dplyr::filter(stringr::str_detect(V1, Record_String) == FALSE) %>%
             dplyr::filter(stringr::str_detect(V1, "en") == FALSE) %>% # remove Women's Men's etc.
             dplyr::filter(stringr::str_detect(V9, "Championship") == FALSE) %>%
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::mutate(Heat = case_when(
               str_detect(V2, "^\\d{1,2}$") == TRUE &
                 stringr::str_detect(V3, "^\\d{1,2}$") ~ V2,
@@ -550,7 +550,7 @@ swim_parse_omega <-
                 TRUE ~ "NA"
               )
             ) %>%
-            dplyr::na_if("NA") %>%
+            na_if_character("NA") %>%
             dplyr::select(
               Place = V1,
               Heat,
@@ -579,7 +579,7 @@ swim_parse_omega <-
             dplyr::filter(stringr::str_detect(V1, "(Women)|(Men)") == FALSE) %>% # remove Women's Men's etc.
             dplyr::filter(stringr::str_detect(V3, "(Women)|(Men)") == FALSE) %>% # remove Women's Men's etc.
             dplyr::filter(stringr::str_detect(V4, "(Women)|(Men)") == FALSE) %>% # remove Women's Men's etc.
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::mutate(Heat = case_when(
               str_detect(V2, "^\\d{1,2}$") == TRUE &
                 stringr::str_detect(V3, "^\\d{1,2}$") ~ V2,
@@ -630,7 +630,7 @@ swim_parse_omega <-
                 TRUE ~ "NA"
               )
             ) %>%
-            dplyr::na_if("NA") %>%
+            na_if_character("NA") %>%
             dplyr::select(
               Place = V1,
               Heat,
@@ -660,7 +660,7 @@ swim_parse_omega <-
             dplyr::filter(stringr::str_detect(V1, Record_String) == FALSE) %>%
             dplyr::filter(stringr::str_detect(V1, "(Women)|(Men)") == FALSE) %>% # remove Women's Men's etc.
             dplyr::filter(stringr::str_detect(V4, "(Women)|(Men)") == FALSE) %>%
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::mutate(Heat = case_when(
               str_detect(V2, "^\\d{1,2}$") == TRUE &
                 stringr::str_detect(V3, "^\\d{1,2}$") ~ V2,
@@ -714,7 +714,7 @@ swim_parse_omega <-
                 TRUE ~ "NA"
               )
             ) %>%
-            dplyr::na_if("NA") %>%
+            na_if_character("NA") %>%
             dplyr::select(
               Place = V1,
               Heat,
@@ -740,7 +740,7 @@ swim_parse_omega <-
           df_7 <- data_length_7 %>%
             list_transform() %>%
             dplyr::filter(stringr::str_detect(V1, Record_String) == FALSE) %>%
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::mutate(Heat = case_when(
               str_detect(V2, "^\\d{1,2}$") == TRUE &
                 stringr::str_detect(V3, "^\\d{1,2}$") ~ V2,
@@ -794,7 +794,7 @@ swim_parse_omega <-
                 TRUE ~ "NA"
               )
             ) %>%
-            dplyr::na_if("NA") %>%
+            na_if_character("NA") %>%
             dplyr::select(
               Place = V1,
               Heat,
@@ -820,7 +820,7 @@ swim_parse_omega <-
           df_6 <- data_length_6 %>%
             list_transform() %>%
             dplyr::filter(stringr::str_detect(V1, Record_String) == FALSE) %>%
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::mutate(
               Place = dplyr::case_when(stringr::str_detect(V5, "DSQ|DNS") == TRUE ~ "10000",
                                        TRUE ~ V1)
@@ -886,7 +886,7 @@ swim_parse_omega <-
                 TRUE ~ V5
               )
             ) %>%
-            dplyr::na_if("NA") %>%
+            na_if_character("NA") %>%
             dplyr::select(
               Place,
               Heat,
@@ -911,7 +911,7 @@ swim_parse_omega <-
           df_5 <- data_length_5 %>%
             list_transform() %>%
             dplyr::filter(stringr::str_detect(V1, Record_String) == FALSE) %>%
-            dplyr::na_if("") %>%
+            na_if_character("") %>%
             dplyr::mutate(
               Place = dplyr::case_when(stringr::str_detect(V4, "DSQ|DNS") == TRUE ~ "10000",
                                        TRUE ~ V1)
@@ -957,7 +957,7 @@ swim_parse_omega <-
             ) %>%
             # dplyr::mutate(Reaction_Time = dplyr::case_when(stringr::str_detect(Heat, "NA") == TRUE ~ V5,
             #                                                TRUE ~ "NA")) %>%
-            dplyr::na_if("NA") %>%
+            na_if_character("NA") %>%
             dplyr::select(
               Place,
               Heat,
@@ -1061,7 +1061,7 @@ swim_parse_omega <-
               TRUE ~ DQ
             )
           ) %>%
-          na_if(as.numeric(10000)) %>%
+          na_if_numeric(10000) %>%
           dplyr::mutate(dplyr::across(
             c(Name, Team), ~ stringr::str_replace_all(., "10000", "--")
           )) %>% # remove any "10000"s added in erroneously
@@ -1093,7 +1093,7 @@ swim_parse_omega <-
 
       data  <-
         transform(data, Event = events$Event[findInterval(Row_Numb, events$Event_Row_Min)]) %>%
-        dplyr::na_if("Unknown")
+        na_if_character("Unknown")
 
       #### adding heats based on row number ranges ####
       if ("Heat" %in% names(data) == TRUE) {
@@ -1114,7 +1114,7 @@ swim_parse_omega <-
 
         data  <-
           transform(data, Heat = heats$Heat[findInterval(Row_Numb, heats$Heat_Row_Min)]) %>%
-          dplyr::na_if("NA")
+          na_if_character("NA")
       }
 
       #### cleaning up final results ####
@@ -1133,7 +1133,7 @@ swim_parse_omega <-
           ) %>%
           dplyr::mutate(Reaction_Time = case_when(stringr::str_detect(Event, "(R|r)elay|\\dx\\d{3}") == TRUE ~ "NA",
                                                   TRUE ~ Reaction_Time)) %>%
-          dplyr::na_if("NA")
+          na_if_character("NA")
       )
 
       #### cleaning ####
@@ -1195,14 +1195,14 @@ swim_parse_omega <-
               Split_50 = dplyr::case_when(Split_50 < 0 ~ 10000,
                                           TRUE ~ Split_50)
             ) %>%
-            dplyr::na_if(10000) %>%
+            na_if_numeric(10000) %>%
             dplyr::select(-Split_Total, -Finals_Sec) %>%
             dplyr::mutate(dplyr::across(
               dplyr::starts_with("Split"), format, nsmall = 2
             )) %>%
             dplyr::mutate(dplyr::across(where(is.numeric), as.character)) %>%
             dplyr::mutate(dplyr::across(where(is.character), trimws)) %>%
-            dplyr::na_if("NA") %>%
+            na_if_character("NA") %>%
             dplyr::select(
               !dplyr::starts_with("Split"),
               stringr::str_sort(names(.), numeric = TRUE)
@@ -1226,11 +1226,11 @@ swim_parse_omega <-
             # dplyr::filter(Finals != "DNS") %>%
             # dplyr::filter(Finals != "DSQ") %>%
             dplyr::left_join(splits_df, by = c("Row_Numb" = "Row_Numb_Adjusted")) %>%
-            dplyr::na_if(10000) %>%
+            na_if_numeric(10000) %>%
             dplyr::mutate(dplyr::across(dplyr::starts_with("Split"), format, nsmall = 2)) %>%
             dplyr::mutate(dplyr::across(where(is.numeric), as.character)) %>%
             dplyr::mutate(dplyr::across(where(is.character), trimws)) %>%
-            dplyr::na_if("NA") %>%
+            na_if_character("NA") %>%
             dplyr::select(!dplyr::starts_with("Split"),
                           stringr::str_sort(names(.), numeric = TRUE)) # keep splits columns in order
         }
@@ -1247,7 +1247,7 @@ swim_parse_omega <-
         data <- data %>%
           dplyr::mutate(Reaction_Time = dplyr::case_when(stringr::str_detect(Event, "Relay") == TRUE ~ "NA",
                                                          TRUE ~ Reaction_Time)) %>%
-          dplyr::na_if("NA")
+          na_if_character("NA")
       }
 
       ### remove empty columns (all values are NA) ###

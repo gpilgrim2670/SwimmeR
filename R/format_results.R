@@ -43,9 +43,8 @@ format_results <- function(df){
       TRUE ~ Finals
     )) %>%
     dplyr::mutate(
-      Prelims = dplyr::case_when(Switch == TRUE ~ "NA",
+      Prelims = dplyr::case_when(Switch == TRUE ~ NA_character_,
                                       TRUE ~ Prelims),
-      Prelims = dplyr::na_if(Prelims, "NA")
     ) %>%
     dplyr::select(-Switch)
 

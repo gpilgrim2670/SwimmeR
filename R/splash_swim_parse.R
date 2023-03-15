@@ -281,7 +281,7 @@ swim_parse_splash <-
                                              TRUE ~ Place))
 
     data <- data %>%
-      dplyr::na_if("Unknown") %>%
+      na_if_character("Unknown") %>%
       dplyr::mutate(Finals = stringr::str_remove(Finals, "[:alpha:]{1,}")) %>%
       dplyr::mutate(Finals = stringr::str_remove(Finals, "\\?|\\*"))
 
@@ -303,7 +303,7 @@ swim_parse_splash <-
       mutate(Team = case_when(Team == Name &
                                 stringr::str_detect(Event, "elay|\\sx\\s") == FALSE ~ "Unknown",
                               TRUE ~ Team)) %>%
-      dplyr::na_if("Unknown")
+      na_if_character("Unknown")
 
     #### adding relay swimmers in ####
     if (relay_swimmers_splash == TRUE) {
@@ -362,7 +362,7 @@ swim_parse_splash <-
           dplyr::mutate(dplyr::across(dplyr::starts_with("Split"), format, nsmall = 2)) %>%
           dplyr::mutate(dplyr::across(where(is.numeric), as.character)) %>%
           dplyr::mutate(dplyr::across(where(is.character), trimws)) %>%
-          dplyr::na_if("NA")
+          na_if_character("NA")
         )
       }
 
@@ -384,11 +384,11 @@ swim_parse_splash <-
         data_relay <- data_relay %>%
           dplyr::left_join(splits_df, by = "Row_Numb") %>%
           coalesce_many() %>%
-          dplyr::na_if(10000) %>%
+          na_if_numeric(10000) %>%
           dplyr::mutate(dplyr::across(dplyr::starts_with("Split"), format, nsmall = 2)) %>%
           dplyr::mutate(dplyr::across(where(is.numeric), as.character)) %>%
           dplyr::mutate(dplyr::across(where(is.character), trimws)) %>%
-          dplyr::na_if("NA")
+          na_if_character("NA")
         )
       }
 

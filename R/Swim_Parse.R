@@ -7,7 +7,6 @@
 #' @importFrom dplyr mutate
 #' @importFrom dplyr lag
 #' @importFrom dplyr case_when
-#' @importFrom dplyr na_if
 #' @importFrom dplyr select
 #' @importFrom dplyr arrange
 #' @importFrom dplyr filter

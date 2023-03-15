@@ -170,7 +170,7 @@ splits_parse_omega_relays <-
               V6 == V5 ~ "NA",
               TRUE ~ V6
             )
-          ) %>% dplyr::na_if("NA") %>%
+          ) %>% na_if_character("NA") %>%
           purrr::discard( ~ all(is.na(.)))
       } else {
         df_6_splits <- data.frame(Row_Numb = character(),
@@ -196,7 +196,7 @@ splits_parse_omega_relays <-
               V4 == V3 ~ "NA",
               TRUE ~ V4
             )
-          ) %>% dplyr::na_if("NA") %>%
+          ) %>% na_if_character("NA") %>%
           purrr::discard( ~ all(is.na(.)))
       } else {
         df_4_splits <- data.frame(Row_Numb = character(),
@@ -252,7 +252,7 @@ splits_parse_omega_relays <-
         dplyr::rename_at(dplyr::vars(dplyr::all_of(old_names)), ~ new_names)
 
       data_splits <- data_splits %>%
-        dplyr::na_if("NA")
+        na_if_character("NA")
         # filter(!is.na(Split_50))
 
     } else {

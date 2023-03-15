@@ -257,7 +257,7 @@ swim_parse_hytek <-
                                             stringr::str_detect(Finals, "DQ") == TRUE ~ 1,
                                             is.na(DQ) ~ 0,
                                             TRUE ~ DQ)) %>%
-        na_if(10000) %>%
+        na_if_numeric(10000) %>%
         dplyr::mutate(dplyr::across(
           # c(Name, Team), ~ stringr::str_replace_all(., "10000", "--")
           dplyr::contains("Name|Team"), ~ stringr::str_replace_all(., "10000", "--")
@@ -298,7 +298,7 @@ swim_parse_hytek <-
 
     data  <-
       transform(data, Event = events$Event[findInterval(Row_Numb, events$Event_Row_Min)]) %>%
-      dplyr::na_if("Unknown")
+      na_if_character("Unknown")
 
     #### add in reaction times based on row number ranges ####
     if(min(data$Row_Numb, na.rm = TRUE) < min(reaction_times$Reaction_Time_Row_Numb, na.rm = TRUE)){
@@ -311,7 +311,7 @@ swim_parse_hytek <-
       dplyr::left_join(data, reaction_times, by = c("Row_Numb" = "Reaction_Time_Row_Numb")) %>%
       dplyr::mutate(Reaction_Time = dplyr::case_when(is.na(Finals) == TRUE ~ "NA",
                                                      TRUE ~ Reaction_Time)) %>%
-      dplyr::na_if("NA")
+      na_if_character("NA")
 
     #### cleaning up final results ####
 

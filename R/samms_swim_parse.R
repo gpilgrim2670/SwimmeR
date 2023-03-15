@@ -316,7 +316,7 @@ swim_parse_samms <-
             Finals_Place,
             Row_Numb = V15
           ) %>%
-          dplyr::na_if("NA")
+          na_if_character("NA")
       )
     } else {
       df_15 <- data.frame(Row_Numb = character(),
@@ -392,7 +392,7 @@ swim_parse_samms <-
             Finals_Place,
             Row_Numb = V14
           ) %>%
-          dplyr::na_if("NA")
+          na_if_character("NA")
       )
     } else {
       df_14 <- data.frame(Row_Numb = character(),
@@ -456,7 +456,7 @@ swim_parse_samms <-
             Finals_Place,
             Row_Numb = V13
           ) %>%
-          dplyr::na_if("NA")
+          na_if_character("NA")
       )
     } else {
       df_13 <- data.frame(Row_Numb = character(),
@@ -478,7 +478,7 @@ swim_parse_samms <-
             Finals = V4,
             Row_Numb = V12
           ) %>%
-          dplyr::na_if("NA")
+          na_if_character("NA")
       )
     } else {
       df_12 <- data.frame(Row_Numb = character(),
@@ -541,7 +541,7 @@ swim_parse_samms <-
             Finals_Place,
             Row_Numb = V11
           ) %>%
-          dplyr::na_if("NA")
+          na_if_character("NA")
       )
     } else {
       df_11 <- data.frame(Row_Numb = character(),
@@ -602,7 +602,7 @@ swim_parse_samms <-
             Finals_Place,
             Row_Numb = V10
           ) %>%
-          dplyr::na_if("NA")
+          na_if_character("NA")
       )
     } else {
       df_10 <- data.frame(Row_Numb = character(),
@@ -665,7 +665,7 @@ swim_parse_samms <-
             Finals_Place,
             Row_Numb = V9
           ) %>%
-          dplyr::na_if("NA")
+          na_if_character("NA")
       )
 
     } else {
@@ -744,7 +744,7 @@ swim_parse_samms <-
             Finals_Place,
             Row_Numb = V8
           ) %>%
-          dplyr::na_if("NA")
+          na_if_character("NA")
       )
     } else {
       df_8 <- data.frame(Row_Numb = character(),
@@ -802,7 +802,7 @@ swim_parse_samms <-
             DQ,
             Row_Numb = V7
           ) %>%
-          dplyr::na_if("NA")
+          na_if_character("NA")
       )
     } else {
       df_7 <- data.frame(Row_Numb = character(),
@@ -825,7 +825,7 @@ swim_parse_samms <-
             Finals_Place,
             Row_Numb = V6
           ) %>%
-          dplyr::na_if("NA")
+          na_if_character("NA")
       )
     } else {
       df_6 <- data.frame(Row_Numb = character(),
@@ -940,7 +940,7 @@ swim_parse_samms <-
           stringr::str_detect(Team, "[:alpha:]") == TRUE &
           stringr::str_detect(Finals, Time_Score_Specials_String) == TRUE
       ) %>%
-      dplyr::na_if("Unknown") %>%
+      na_if_character("Unknown") %>%
       dplyr::mutate(
         Event = stringr::str_remove_all(Event, " EVENT \\d{1,3}$"),
         Event = stringr::str_replace_all(Event, "F\\. ?R\\.", "FREE RELAY"),
@@ -1002,8 +1002,7 @@ swim_parse_samms <-
     if (format_samms == TRUE) {
       if("Prelims" %!in% names(data)){
         data <- data %>%
-          dplyr::mutate(Prelims = "NA") %>%
-          dplyr::mutate(Prelims = dplyr::na_if(Prelims, "NA"))
+          dplyr::mutate(Prelims = NA_character_)
       }
       data <- format_results(data)
     }
@@ -1015,7 +1014,7 @@ swim_parse_samms <-
                                             TRUE ~ Name)) %>%
       dplyr::mutate(Age = dplyr::case_when(stringr::str_detect(Age, Age_String) == FALSE ~ "NA",
                                             TRUE ~ Age)) %>%
-      dplyr::na_if("NA")
+      na_if_character("NA")
 
     ## Diving ##
     data <- data %>%
@@ -1040,7 +1039,7 @@ swim_parse_samms <-
     #                                TRUE ~ DQ)) %>%
     #   dplyr::mutate(Finals = dplyr::case_when(DQ > 0 ~ "NA",
     #                                                TRUE ~ Finals)) %>%
-    #   dplyr::na_if("NA")
+    #   na_if_character("NA")
 
 
     #### Remove Empty Columns ####
@@ -1067,7 +1066,7 @@ swim_parse_samms <-
     #                                                TRUE ~ Finals),
     #                 Finals_Place = dplyr::case_when(Switch == "Y" ~ "NA",
     #                                                 TRUE ~ Finals_Place)) %>%
-    #  dplyr::na_if("NA") %>%
+    #  na_if_character("NA") %>%
     #  dplyr::select(-Switch)
 
 
