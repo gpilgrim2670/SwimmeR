@@ -29,7 +29,7 @@
 #'
 #' @note Relays are not presently supported.
 #' @references Uses the USA swimming age group method described here:
-#'   \url{https://support.teamunify.com/en/articles/260}
+#'   \url{https://support.gomotionapp.com/en/articles/6457476-how-to-perform-course-conversion-factoring-of-times}
 #' @export
 
 

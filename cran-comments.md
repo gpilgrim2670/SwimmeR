@@ -1,3 +1,18 @@
+# Version 0.14.0
+* Issues per CRAN 2023-03-01 have been corrected
+* bug fixes related to updates in dplyr::na_if
+* make_lineup function added
+
+## Test environments
+* local Windows 10 install, R 4.2.0
+* local OS X install, R 4.2.0
+* win_devel
+* rhub
+
+## R CMD check results
+
+0 errors | 0 warnings | 0 notes
+
 # Version 0.13.0
 * added functionality to parse Splash results
 * vectorized course_convert function
