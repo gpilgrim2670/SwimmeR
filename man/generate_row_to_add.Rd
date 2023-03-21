@@ -10,14 +10,14 @@ generate_row_to_add(df_helper_2, e_rank_helper_2, k, e_helper)
 \arguments{
 \item{df_helper_2}{a  master data frame of athlete ranks by event}
 
+\item{e_rank_helper_2}{a data frame of candidate athlete entries to add to a
+given event}
+
 \item{k}{an integer denoting which element of e_rank_helper is under
 evaluation for addition.  Should be 1, 2, 3 or 4 depending on the minimum
 number of entries}
 
 \item{e_helper}{the event for which entries are being evaluated}
-
-\item{e_rank_helper}{a data frame of candidate athlete entries to add to a
-given event}
 }
 \value{
 a one row data frame containing an improved entry

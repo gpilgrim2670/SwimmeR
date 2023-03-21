@@ -1,3 +1,7 @@
+# SwimmeR 0.13.10 - March 18th 2023
+* bug fixes for dplyr::na_if change
+* issues with importing Splash pdfs
+
 # SwimmeR 0.13.9 - July 13th 2022
 * more bug fixes to re-enable Omega parsing
 

@@ -59,15 +59,15 @@ Ties are placed as ties (both athletes get 2nd etc.)
 
 df \%>\%
   place() \%>\%
-  arrange(Event)
+  dplyr::arrange(Event)
 
 df \%>\%
   place(result_col = Prelims) \%>\%
-  arrange(Event)
+  dplyr::arrange(Event)
 
 df \%>\%
   place(result_col = "Prelims") \%>\%
-  arrange(Event)
+  dplyr::arrange(Event)
 
 }
 \seealso{

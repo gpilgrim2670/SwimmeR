@@ -1,5 +1,6 @@
 ^SwimR\.Rproj$
 ^\.Rproj\.user$
+^inst/extdata/not_included.*
 ^cran-comments\.Rmd$
 ^CRAN-RELEASE$
 ^LICENSE\.md$
@@ -13,8 +14,6 @@
 ^inst/extdata/HSEmpireMeet\.png$
 ^R/logo\.R$
 ^\.travis\.yml$
-09Mar2020-001.hy3
-28Feb2020-001.hy3
 ^testing_results_score.R$
 ^R/splits_scratch\.R$
 ^R/scratch_paper\.R$

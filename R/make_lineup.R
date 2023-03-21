@@ -269,8 +269,10 @@ make_lineup <-
 #'   contain column \code{Event} with the same event naming convention as
 #'   \code{df}, a column with name matching \code{result_col} containing times or
 #'   diving scores, and a column called \code{Name} containing athlete names
+#' @param end_seq how many events score
 #' @param max_ind_entries_helper a numeric value denoting the maximum number of
 #'   individual events that may be entered by a single athlete
+#' @param result_col_helper name of column with results in it
 #' @return a data frame containing athletes entered into events
 
 make_lineup_helper <-
@@ -441,6 +443,7 @@ return(Entries)
 #' @importFrom dplyr mutate
 #' @importFrom dplyr filter
 #' @importFrom purrr map
+#' @importFrom utils stack
 #'
 #' @param i a sequential list of numbers incremented by 1.  Used to index
 #'   function.
@@ -549,14 +552,14 @@ make_lineup_helper_2 <-
         if (is.null(Entries[i][[1]]) & i == 1) {
           Entries[[i]] <- in_progress_entries_df %>%
             replacement_entries(
-              j = 1,
+              j_helper = 1,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
         } else {
           Entries[[i]] <- Entries[[i - 1]] %>%
             replacement_entries(
-              j = 1,
+              j_helper = 1,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
@@ -576,7 +579,7 @@ make_lineup_helper_2 <-
           ) == TRUE)]
 
         events_remaining <-
-          stack(purrr::map(
+          utils::stack(purrr::map(
             purrr::map(events_competed_helper, stringr::str_count, "X"),
             sum
           )) %>%
@@ -600,14 +603,14 @@ make_lineup_helper_2 <-
         if (is.null(Entries[i][[1]]) & i == 1) {
           Entries[[i]] <- in_progress_entries_df %>%
             replacement_entries(
-              j = 2,
+              j_helper = 2,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
         } else {
           Entries[[i]] <- Entries[[i - 1]] %>%
             replacement_entries(
-              j = 2,
+              j_helper = 2,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
@@ -627,7 +630,7 @@ make_lineup_helper_2 <-
           ) == TRUE)]
 
         events_remaining <-
-          stack(purrr::map(
+          utils::stack(purrr::map(
             purrr::map(events_competed_helper, stringr::str_count, "X"),
             sum
           )) %>%
@@ -651,14 +654,14 @@ make_lineup_helper_2 <-
         if (is.null(Entries[i][[1]]) & i == 1) {
           Entries[[i]] <- in_progress_entries_df %>%
             replacement_entries(
-              j = 3,
+              j_helper = 3,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
         } else {
           Entries[[i]] <- Entries[[i-1]] %>%
             replacement_entries(
-              j = 3,
+              j_helper = 3,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
@@ -678,7 +681,7 @@ make_lineup_helper_2 <-
           ) == TRUE)]
 
         events_remaining <-
-          stack(purrr::map(
+          utils::stack(purrr::map(
             purrr::map(events_competed_helper, stringr::str_count, "X"),
             sum
           )) %>%
@@ -710,14 +713,14 @@ make_lineup_helper_2 <-
         if (is.null(Entries[i][[1]]) & i == 1) {
           Entries[[i]] <- in_progress_entries_df %>%
             replacement_entries(
-              j = 1,
+              j_helper = 1,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
         } else {
           Entries[[i]] <- Entries[[i]] %>%
             replacement_entries(
-              j = 1,
+              j_helper = 1,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
@@ -735,7 +738,7 @@ make_lineup_helper_2 <-
           ) == TRUE)]
 
         events_remaining <-
-          stack(purrr::map(
+          utils::stack(purrr::map(
             purrr::map(events_competed_helper, stringr::str_count, "X"),
             sum
           )) %>%
@@ -763,14 +766,14 @@ make_lineup_helper_2 <-
         if (is.null(Entries[i][[1]]) & i == 1) {
           Entries[[i]] <- in_progress_entries_df %>%
             replacement_entries(
-              j = 2,
+              j_helper = 2,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
         } else {
           Entries[[i]] <- Entries[[i]] %>%
             replacement_entries(
-              j = 2,
+              j_helper = 2,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
@@ -788,7 +791,7 @@ make_lineup_helper_2 <-
           ) == TRUE)]
 
         events_remaining <-
-          stack(purrr::map(
+          utils::stack(purrr::map(
             purrr::map(events_competed_helper, stringr::str_count, "X"),
             sum
           )) %>%
@@ -816,14 +819,14 @@ make_lineup_helper_2 <-
         if (is.null(Entries[i][[1]]) & i == 1) {
           Entries[[i]] <- in_progress_entries_df %>%
             replacement_entries(
-              j = 3,
+              j_helper = 3,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
         } else {
           Entries[[i]] <- Entries[[i]] %>%
             replacement_entries(
-              j = 3,
+              j_helper = 3,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
 
@@ -842,7 +845,7 @@ make_lineup_helper_2 <-
           ) == TRUE)]
 
         events_remaining <-
-          stack(purrr::map(
+          utils::stack(purrr::map(
             purrr::map(events_competed_helper, stringr::str_count, "X"),
             sum
           )) %>%
@@ -870,14 +873,14 @@ make_lineup_helper_2 <-
         if (is.null(Entries[i][[1]]) & i == 1) {
           Entries[[i]] <- in_progress_entries_df %>%
             replacement_entries(
-              j = 4,
+              j_helper = 4,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
         } else {
           Entries[[i]] <- Entries[[i]] %>%
             replacement_entries(
-              j = 4,
+              j_helper = 4,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
@@ -895,7 +898,7 @@ make_lineup_helper_2 <-
           ) == TRUE)]
 
         events_remaining <-
-          stack(purrr::map(
+          utils::stack(purrr::map(
             purrr::map(events_competed_helper, stringr::str_count, "X"),
             sum
           )) %>%
@@ -933,7 +936,7 @@ make_lineup_helper_2 <-
         if (is.null(Entries[i][[1]]) & i == 1) {
           Entries[[i]] <- in_progress_entries_df %>%
             replacement_entries(
-              j = 1,
+              j_helper = 1,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
@@ -941,7 +944,7 @@ make_lineup_helper_2 <-
         } else {
           Entries[[i]] <- Entries[[i]] %>%
             replacement_entries(
-              j = 1,
+              j_helper = 1,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
@@ -959,7 +962,7 @@ make_lineup_helper_2 <-
           ) == TRUE)]
 
         events_remaining <-
-          stack(purrr::map(
+          utils::stack(purrr::map(
             purrr::map(events_competed_helper, stringr::str_count, "X"),
             sum
           )) %>%
@@ -986,14 +989,14 @@ make_lineup_helper_2 <-
         if (is.null(Entries[i][[1]]) & i == 1) {
           Entries[[i]] <- in_progress_entries_df %>%
             replacement_entries(
-              j = 2,
+              j_helper = 2,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
         } else {
           Entries[[i]] <- Entries[[i]] %>%
             replacement_entries(
-              j = 2,
+              j_helper = 2,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
@@ -1011,7 +1014,7 @@ make_lineup_helper_2 <-
           ) == TRUE)]
 
         events_remaining <-
-          stack(purrr::map(
+          utils::stack(purrr::map(
             purrr::map(events_competed_helper, stringr::str_count, "X"),
             sum
           )) %>%
@@ -1040,14 +1043,14 @@ make_lineup_helper_2 <-
         if (is.null(Entries[i][[1]]) & i == 1) {
           Entries[[i]] <- in_progress_entries_df %>%
             replacement_entries(
-              j = 3,
+              j_helper = 3,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
         } else {
           Entries[[i]] <- Entries[[i]] %>%
             replacement_entries(
-              j = 3,
+              j_helper = 3,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
@@ -1065,7 +1068,7 @@ make_lineup_helper_2 <-
           ) == TRUE)]
 
         events_remaining <-
-          stack(purrr::map(
+          utils::stack(purrr::map(
             purrr::map(events_competed_helper, stringr::str_count, "X"),
             sum
           )) %>%
@@ -1095,14 +1098,14 @@ make_lineup_helper_2 <-
         if (is.null(Entries[i][[1]]) & i == 1) {
           Entries[[i]] <- in_progress_entries_df %>%
             replacement_entries(
-              j = 4,
+              j_helper = 4,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
         } else {
           Entries[[i]] <- Entries[[i]] %>%
             replacement_entries(
-              j = 4,
+              j_helper = 4,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
@@ -1120,7 +1123,7 @@ make_lineup_helper_2 <-
           ) == TRUE)]
 
         events_remaining <-
-          stack(purrr::map(
+          utils::stack(purrr::map(
             purrr::map(events_competed_helper, stringr::str_count, "X"),
             sum
           )) %>%
@@ -1158,14 +1161,14 @@ if(max_entries_helper > 3){
         if (is.null(Entries[i][[1]]) & i == 1) {
           Entries[[i]] <- in_progress_entries_df %>%
             replacement_entries(
-              j = 1,
+              j_helper = 1,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
         } else {
           Entries[[i]] <- Entries[[i]] %>%
             replacement_entries(
-              j = 1,
+              j_helper = 1,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
@@ -1183,7 +1186,7 @@ if(max_entries_helper > 3){
           ) == TRUE)]
 
         events_remaining <-
-          stack(purrr::map(
+          utils::stack(purrr::map(
             purrr::map(events_competed_helper, stringr::str_count, "X"),
             sum
           )) %>%
@@ -1211,14 +1214,14 @@ if(max_entries_helper > 3){
         if (is.null(Entries[i][[1]]) & i == 1) {
           Entries[[i]] <- in_progress_entries_df %>%
             replacement_entries(
-              j = 2,
+              j_helper = 2,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
         } else {
           Entries[[i]] <- Entries[[i]] %>%
             replacement_entries(
-              j = 2,
+              j_helper = 2,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
@@ -1236,7 +1239,7 @@ if(max_entries_helper > 3){
           ) == TRUE)]
 
         events_remaining <-
-          stack(purrr::map(
+          utils::stack(purrr::map(
             purrr::map(events_competed_helper, stringr::str_count, "X"),
             sum
           )) %>%
@@ -1265,14 +1268,14 @@ if(max_entries_helper > 3){
         if (is.null(Entries[i][[1]]) & i == 1) {
           Entries[[i]] <- in_progress_entries_df %>%
             replacement_entries(
-              j = 3,
+              j_helper = 3,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
         } else {
           Entries[[i]] <- Entries[[i]] %>%
             replacement_entries(
-              j = 3,
+              j_helper = 3,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
@@ -1290,7 +1293,7 @@ if(max_entries_helper > 3){
           ) == TRUE)]
 
         events_remaining <-
-          stack(purrr::map(
+          utils::stack(purrr::map(
             purrr::map(events_competed_helper, stringr::str_count, "X"),
             sum
           )) %>%
@@ -1319,14 +1322,14 @@ if(max_entries_helper > 3){
         if (is.null(Entries[i][[1]]) & i == 1) {
           Entries[[i]] <- in_progress_entries_df %>%
             replacement_entries(
-              j = 4,
+              j_helper = 4,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
         } else {
           Entries[[i]] <- Entries[[i]] %>%
             replacement_entries(
-              j = 4,
+              j_helper = 4,
               row_to_add_replacement = row_to_add,
               e_df_replacement = e_df
             )
@@ -1344,7 +1347,7 @@ if(max_entries_helper > 3){
           ) == TRUE)]
 
         events_remaining <-
-          stack(purrr::map(
+          utils::stack(purrr::map(
             purrr::map(events_competed_helper, stringr::str_count, "X"),
             sum
           )) %>%
@@ -1400,7 +1403,7 @@ if(max_entries_helper > 3){
 #' @importFrom dplyr ungroup
 #'
 #' @param x a data frame of entries, either df_helper_2 or Entries
-#' @param j an integer denoting which element of e_df_replacement is
+#' @param j_helper an integer denoting which element of e_df_replacement is
 #'   under test for removal.  Should be 1, 2, 3 or 4 depending on the minimum
 #'   number of entries
 #' @param row_to_add_replacement a row containing an improved entry that should
@@ -1408,7 +1411,7 @@ if(max_entries_helper > 3){
 #' @param e_df_replacement a data frame of entries that may be replaced
 #' @return a data frame containing entries updated to include new rows from
 #'   row_to_add_replacement and to not contain rows from e_df_replacement, based
-#'   on j
+#'   on j_helper
 
 replacement_entries <- function(x, j_helper, row_to_add_replacement, e_df_replacement){
 
@@ -1432,7 +1435,7 @@ replacement_entries <- function(x, j_helper, row_to_add_replacement, e_df_replac
 #' @importFrom dplyr mutate
 #'
 #' @param df_helper_2 a  master data frame of athlete ranks by event
-#' @param e_rank_helper a data frame of candidate athlete entries to add to a
+#' @param e_rank_helper_2 a data frame of candidate athlete entries to add to a
 #'   given event
 #' @param k an integer denoting which element of e_rank_helper is under
 #'   evaluation for addition.  Should be 1, 2, 3 or 4 depending on the minimum
@@ -1464,8 +1467,8 @@ generate_row_to_add <- function(df_helper_2, e_rank_helper_2, k, e_helper){
 #' @importFrom dplyr summarize
 #' @importFrom purrr reduce
 #'
-#' @param x a  master data frame of athlete ranks by event
-#' @param e_rank_helper a data frame of candidate athlete entries to add to a
+#' @param rank_helper_2 a  master data frame of athlete ranks by event
+#' @param e_rank_helper_2 a data frame of candidate athlete entries to add to a
 #'   given event
 #' @param k an integer denoting which element of e_rank_helper is under
 #'   evaluation for addition.  Should be 1, 2, 3 or 4 depending on the minimum

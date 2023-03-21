@@ -14,6 +14,11 @@ update_rank_helper(
 )
 }
 \arguments{
+\item{rank_helper_2}{a  master data frame of athlete ranks by event}
+
+\item{e_rank_helper_2}{a data frame of candidate athlete entries to add to a
+given event}
+
 \item{k}{an integer denoting which element of e_rank_helper is under
 evaluation for addition.  Should be 1, 2, 3 or 4 depending on the minimum
 number of entries}
@@ -22,11 +27,6 @@ number of entries}
 
 \item{events_remaining_helper}{a data frame with two columns, \code{Name} and
 \code{Events_Remaining}}
-
-\item{x}{a  master data frame of athlete ranks by event}
-
-\item{e_rank_helper}{a data frame of candidate athlete entries to add to a
-given event}
 }
 \value{
 a one row data frame containing an improved entry

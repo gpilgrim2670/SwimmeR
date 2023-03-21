@@ -46,15 +46,15 @@
 #'
 #' df %>%
 #'   place() %>%
-#'   arrange(Event)
+#'   dplyr::arrange(Event)
 #'
 #' df %>%
 #'   place(result_col = Prelims) %>%
-#'   arrange(Event)
+#'   dplyr::arrange(Event)
 #'
 #' df %>%
 #'   place(result_col = "Prelims") %>%
-#'   arrange(Event)
+#'   dplyr::arrange(Event)
 #'
 #' @export
 

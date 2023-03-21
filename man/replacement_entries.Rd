@@ -9,19 +9,19 @@ replacement_entries(x, j_helper, row_to_add_replacement, e_df_replacement)
 \arguments{
 \item{x}{a data frame of entries, either df_helper_2 or Entries}
 
+\item{j_helper}{an integer denoting which element of e_df_replacement is
+under test for removal.  Should be 1, 2, 3 or 4 depending on the minimum
+number of entries}
+
 \item{row_to_add_replacement}{a row containing an improved entry that should
 be added to x}
 
 \item{e_df_replacement}{a data frame of entries that may be replaced}
-
-\item{j}{an integer denoting which element of e_df_replacement is
-under test for removal.  Should be 1, 2, 3 or 4 depending on the minimum
-number of entries}
 }
 \value{
 a data frame containing entries updated to include new rows from
   row_to_add_replacement and to not contain rows from e_df_replacement, based
-  on j
+  on j_helper
 }
 \description{
 Replaces superseded rows

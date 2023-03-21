@@ -4,7 +4,7 @@
 #' extracts split times and associated row numbers
 #'
 #' @importFrom dplyr bind_rows
-#' @importFrom dplyr rename_at
+#' @importFrom dplyr rename_with
 #' @importFrom dplyr vars
 #' @importFrom stringr str_replace_all
 #' @importFrom stringr str_remove_all
@@ -178,6 +178,8 @@ splits_parse_ISL <- function(text) {
 
     data_splits <- data_splits %>%
       dplyr::rename_at(dplyr::vars(old_names), ~ new_names)
+    # data_splits <- data_splits %>%
+    #    dplyr::rename_with(~ new_names[which(old_names == .x)], cols = old_names)
 
   } else { # if there are no rows with valid splits return blank dataframe
     data_splits <- data.frame(Row_Numb = as.numeric())

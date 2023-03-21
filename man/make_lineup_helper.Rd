@@ -27,8 +27,12 @@ contain column \code{Event} with the same event naming convention as
 \code{df}, a column with name matching \code{result_col} containing times or
 diving scores, and a column called \code{Name} containing athlete names}
 
+\item{end_seq}{how many events score}
+
 \item{max_ind_entries_helper}{a numeric value denoting the maximum number of
 individual events that may be entered by a single athlete}
+
+\item{result_col_helper}{name of column with results in it}
 }
 \value{
 a data frame containing athletes entered into events

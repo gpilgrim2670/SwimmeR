@@ -15,11 +15,11 @@
 `library(SwimmeR)`
 
 ### Latest Development Version from Github
-Version 0.13.9
+Version 0.13.10
 
+* function `make_lineup` will take two data frames containing athlete/event/time combinations (one for each team) and create a lineup maximizing returns for one team
 * `swim_parse` handles some Hytek psych sheets (single column only)
 * `read_results` now handles both pdf and html results at .aspx addresses
-* `make_lineup` works to make lineups based on top times reports and an opponent lineup.  Still under development.
 * `swim_parse` handles Hytek Top Times reports via `toptimes_parse_hytek`.  Still under development.
 * new function `place` supersedes `swim_place` and `dive_place`, handling both swimming and diving
 *  *major change* `swim_parse` output columns `Finals_Time` and `Prelims_Time` have been renamed `Finals` and `Prelims`

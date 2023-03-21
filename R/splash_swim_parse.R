@@ -89,9 +89,9 @@ swim_parse_splash <-
     #   read_results()
     # file_splash <- "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Splash/Open_Belgian_Champs_2017.pdf" %>%
     #   read_results()
-    # file_splash <- "http://www.toptime.be/oresults/ResultList_111_us.pdf" %>%
+    # file_splash <- "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Splash/EURO_MEET_2018.pdf" %>%
     #   read_results()
-    # file_splash <- "http://www.toptime.be/oresults/ResultList_75_us.pdf" %>%
+    # file_splash <- "https://raw.githubusercontent.com/gpilgrim2670/Pilgrim_Data/master/Splash/Arena_European_Junior_Swimming_Champs_2013.pdf" %>%
     #   read_results()
     # file_splash <- "https://eoz.in.th/eozlive/ResultList_101.pdf" %>%
     #   read_results()

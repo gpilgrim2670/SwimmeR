@@ -41,6 +41,17 @@ splash_clean_strings <-
            reaction_string = Reaction_String,
            rule_string = Rule_String) {
 
+
+    # testing
+    # x <- as_lines_list_2
+    # indent_length <- 12
+    # time_score_string <- "1?\\:?\\d{0,2}\\:?\\d{1,3}\\.\\d{2}"
+    # record_string <- "^NMR|^E J C|^W J C|^Open [W|M] |[:alpha:] Record "
+    # header_string <- "\\sDisqualified\\s|\\sReaction\\sTime\\s|Prelims|Finals|Semifinal"
+    # sponsorship_string <- "sponsored by"
+    # reaction_string <-
+    #   "^\\+\\s?\\d\\.\\d{3}$|^\\-\\s?\\d\\.\\d{3}$|^0\\.00$|^0\\.\\d\\d$"
+    # rule_string <- "SW \\d\\d?\\.\\d\\d?"
     #### check input types ####
 
     if (all.equal(indent_length, as.integer(indent_length)) == FALSE) {
