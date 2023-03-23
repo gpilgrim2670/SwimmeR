@@ -15,7 +15,7 @@
 `library(SwimmeR)`
 
 ### Latest Development Version from Github
-Version 0.14.0
+Version 0.14.1
 
 * function `make_lineup` will take two data frames containing athlete/event/time combinations (one for each team) and create a lineup maximizing returns for one team
 * `swim_parse` handles some Hytek psych sheets (single column only)

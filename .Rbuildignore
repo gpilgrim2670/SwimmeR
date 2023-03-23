@@ -18,3 +18,4 @@
 ^R/splits_scratch\.R$
 ^R/scratch_paper\.R$
 ^\.github$
+^CRAN-SUBMISSION$
