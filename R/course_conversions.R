@@ -29,7 +29,7 @@
 #'
 #' @note Relays are not presently supported.
 #' @references Uses the USA swimming age group method described here:
-#'   \url{https://support.gomotionapp.com/en/articles/6457476-how-to-perform-course-conversion-factoring-of-times/}
+#'   \url{https://support.gomotionapp.com/en/articles/6457476-how-to-perform-course-conversion-factoring-of-times}
 #' @export
 
 
@@ -365,7 +365,7 @@ course_convert_helper <-
 #'
 #' @note Relays are not presently supported.
 #' @references Uses the USA swimming age group method described here
-#'   \url{https://support.gomotionapp.com/en/articles/6457476-how-to-perform-course-conversion-factoring-of-times/}
+#'   \url{https://support.gomotionapp.com/en/articles/6457476-how-to-perform-course-conversion-factoring-of-times}
 
 course_convert_DF <- function(time, event, course, course_to) {
 

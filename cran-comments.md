@@ -1,4 +1,4 @@
-# Version 0.14.1
+# Version 0.14.2
 * Updated link per CRAN communication
 
 ## Test environments
